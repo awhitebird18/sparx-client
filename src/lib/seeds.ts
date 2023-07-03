@@ -1,5 +1,6 @@
 import { Message } from '@/features/messages';
 import { User } from '@/features/users';
+import { Space } from '@/features/spaces';
 import dayjs from 'dayjs';
 
 export const users: User[] = [
@@ -138,5 +139,23 @@ export const messages: Message[] = [
     userId: 'df8de1d0-e52a-4eca-b98f-6a1d5ede6900',
     timezone: 'America/Los_Angeles',
     createdAt: dayjs('2023-07-02T18:00:00.000Z'),
+  },
+];
+
+export const spaces: Space[] = [
+  {
+    uuid: 'c0277c38-9493-4975-a60b-f66f02a7b18e',
+    name: 'Research and Development',
+    image: '/images/space-1.png',
+  },
+  {
+    uuid: '997e11d5-91d3-442a-bc20-5fdbabaaf39d',
+    name: 'Customer Service',
+    image: '/images/space-2.png',
+  },
+  {
+    uuid: '67b3ffe0-11f4-4be1-8e29-a122c7ac494c',
+    name: 'Implementation',
+    image: '/images/space-3.png',
   },
 ];

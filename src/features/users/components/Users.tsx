@@ -11,13 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Input } from '@/components/ui/Input';
-
-const mockUsers = Array.from({ length: 100 }, (_, i) => ({
-  id: i,
-  name: `User ${i}`,
-  email: `user${i}@example.com`,
-  image: `/images/profile-image-${i + 1}.png`,
-}));
+import { useStore } from '@/stores/stores';
 
 const USERS_PER_PAGE = 10;
 
@@ -28,13 +22,12 @@ enum UserMenuOptions {
 }
 
 const Users: React.FC = () => {
+  const { users } = useStore('userStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredUsers = mockUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredUsers = users.filter((user) =>
+    user.displayName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const displayedUsers = filteredUsers.slice(
@@ -56,17 +49,20 @@ const Users: React.FC = () => {
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1">
         {displayedUsers.map((user) => (
-          <Card key={user.id} className="border p-4 rounded shadow relative h-min">
+          <Card
+            key={user.uuid}
+            className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-accent hover:bg-accent"
+          >
             <DropdownMenu>
               <DropdownMenuTrigger className="absolute top-0 right-4">
-                <button className="mt-2 text-right">⋮</button>
+                <button className="mt-2 text-right text-2xl">⋮</button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onSelect={() => console.log(`Message ${user.name}`)}>
+                <DropdownMenuItem onSelect={() => console.log(`Message ${user.displayName}`)}>
                   {UserMenuOptions.PROFILE}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onSelect={() => console.log(`View Profile ${user.name}s profile`)}
+                  onSelect={() => console.log(`View Profile ${user.displayName}s profile`)}
                 >
                   {UserMenuOptions.SETTINGS}
                 </DropdownMenuItem>
@@ -80,7 +76,7 @@ const Users: React.FC = () => {
             </CardContent>
             <CardFooter className="flex-col p-0">
               <div className="flex items-center gap-2">
-                <p className="font-semibold">{user.name}</p>
+                <p className="font-semibold">{user.displayName}</p>
                 <div className="h-3 w-3 bg-green-500 rounded-full"></div>
               </div>
 
