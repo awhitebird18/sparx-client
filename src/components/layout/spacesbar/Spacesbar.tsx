@@ -1,17 +1,15 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
+import { useStore } from '@/stores/stores';
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 
 const Spacesbar = () => {
-  const spaces = [
-    {
-      id: 1,
-      name: 'Research and Development',
-      backgroundColor: '#3f51b5',
-      image: '/',
-    },
-    { id: 2, name: 'Customer Service', backgroundColor: '#e91e63', image: '/' },
-    { id: 3, name: 'Office', backgroundColor: '#673ab7', image: '/' },
-  ];
+  const { spaces, fetchSpaces } = useStore('spacesStore');
+
+  useEffect(() => {
+    fetchSpaces();
+  }, [fetchSpaces]);
 
   const onClick = () => {
     console.log('changing space');
@@ -26,11 +24,14 @@ const Spacesbar = () => {
       {spaces.map((space) => (
         <Tooltip>
           <TooltipTrigger>
-            <Avatar className="w-10 mb-1 h-10 cursor-pointer" onClick={onClick}>
-              {<AvatarImage src={space.image} />}
+            <Avatar
+              className="w-10 mb-2 h-10 cursor-pointer hover:bg-accent dark:hover:bg-accent"
+              onClick={onClick}
+            >
+              <AvatarImage src={space.image} />
               <AvatarFallback
                 children={space.name.substring(0, 2).toLowerCase()}
-                className="w-10 h-10 rounded-md"
+                className="w-10 h-10 rounded-md dark:bg-transparent border border-border dark:hover:bg-accent "
               />
             </Avatar>
           </TooltipTrigger>
@@ -41,7 +42,10 @@ const Spacesbar = () => {
       <Tooltip>
         <TooltipTrigger>
           <Avatar className="w-10 mb-1 h-10 cursor-pointer" onClick={addSpace}>
-            <AvatarFallback children="+" className="w-10 h-10 rounded-md" />
+            <AvatarFallback
+              children="+"
+              className="w-10 h-10 rounded-md dark:bg-transparent border border-border dark:hover:bg-accent hover:bg-accent"
+            />
           </Avatar>
         </TooltipTrigger>
         <TooltipContent>Add a new space</TooltipContent>
@@ -50,4 +54,4 @@ const Spacesbar = () => {
   );
 };
 
-export default Spacesbar;
+export default observer(Spacesbar);

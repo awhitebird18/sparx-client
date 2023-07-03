@@ -1,16 +1,6 @@
-import { makeObservable, observable, action } from "mobx";
-
-interface Space {
-  id: string;
-  name: string;
-  // Add more fields as necessary for your application
-}
-
-interface UpdateSpace {
-  id: string;
-  name?: string;
-  // Add more fields as necessary for your application
-}
+import { makeObservable, observable, action } from 'mobx';
+import { spaces } from '@/lib/seeds';
+import { Space, UpdateSpace } from '@/features/spaces';
 
 export class SpacesStore {
   spaces: Space[] = [];
@@ -18,30 +8,38 @@ export class SpacesStore {
   constructor() {
     makeObservable(this, {
       spaces: observable,
-      addWorkspace: action,
-      updateWorkspace: action,
-      deleteWorkspace: action,
+      addSpace: action,
+      updateSpace: action,
+      deleteSpace: action,
+      fetchSpaces: action,
     });
   }
 
-  addWorkspace(workspace: Space) {
-    this.spaces.push(workspace);
+  setSpaces = (spaces: Space[]) => {
+    this.spaces = spaces;
+  };
+
+  addSpace(space: Space) {
+    this.spaces.push(space);
   }
 
-  updateWorkspace(updatedFields: UpdateSpace) {
-    const workspaceIndex = this.spaces.findIndex(
-      (workspace) => workspace.id === updatedFields.id
-    );
+  updateSpace(updatedFields: UpdateSpace) {
+    const spaceIndex = this.spaces.findIndex((space) => space.uuid === updatedFields.uuid);
 
-    if (workspaceIndex !== -1) {
-      this.spaces[workspaceIndex] = {
-        ...this.spaces[workspaceIndex],
+    if (spaceIndex !== -1) {
+      this.spaces[spaceIndex] = {
+        ...this.spaces[spaceIndex],
         ...updatedFields,
       };
     }
   }
 
-  deleteWorkspace(id: string) {
-    this.spaces = this.spaces.filter((workspace) => workspace.id !== id);
+  deleteSpace(uuid: string) {
+    this.spaces = this.spaces.filter((space) => space.uuid !== uuid);
   }
+
+  fetchSpaces = () => {
+    console.log(spaces);
+    this.setSpaces(spaces);
+  };
 }
