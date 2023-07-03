@@ -31,7 +31,7 @@ const ListItem = ({ uuid, src, title }: ListitemProps) => {
           )}
         </div>
 
-        <div className="font-semibold">{title}</div>
+        <div className="font-semibold text-muted-foreground">{title}</div>
       </div>
     </Link>
   );
