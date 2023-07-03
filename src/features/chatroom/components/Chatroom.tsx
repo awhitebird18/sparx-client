@@ -66,7 +66,7 @@ const ChatRoom: React.FC = () => {
                 key={message.id}
                 className={`px-2 py-1 ${
                   index === 0 || (messages[index - 1].userId !== message.userId ? 'mt-2' : 'mt-1')
-                } rounded-lg hover:bg-slate-100`}
+                } rounded-lg hover:bg-accent dark:hover:bg-accent`}
               >
                 <div className="flex flex-col">
                   {index === 0 || messages[index - 1].userId !== message.userId ? (

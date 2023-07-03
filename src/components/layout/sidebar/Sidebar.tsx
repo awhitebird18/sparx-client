@@ -13,7 +13,7 @@ import ListItem from './ListItem';
 import { useStore } from '@/stores/stores';
 import { User } from '@/features/users';
 
-const Divider = () => <div className="w-100 m-4 h-px border-border border-b" />;
+const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
 
 interface Channel {
   uuid: string;

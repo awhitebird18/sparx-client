@@ -15,7 +15,7 @@ const ListItem = ({ uuid, src, title }: ListitemProps) => {
     <Link to={uuid}>
       <div
         onClick={onClick}
-        className="h-8 mx-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden"
+        className="h-8 mx-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden dark:hover:bg-accent hover:bg-accent"
       >
         <div className="w-6 h-6 rounded-sm">
           {typeof src === 'string' ? (
