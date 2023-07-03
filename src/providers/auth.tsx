@@ -10,10 +10,13 @@ type User = {
   firstName: string;
   lastName: string;
   image?: string;
+  theme: string;
 };
 
 interface AuthContextData {
   currentUser: User;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   register: (username: string, email: string, password: string) => Promise<void>;
@@ -42,6 +45,7 @@ const authenticateUser = async (email: string, password: string): Promise<User> 
       firstName: 'Aaron',
       lastName: 'Whitebird',
       image: '/images/profile-image-1.png',
+      theme: 'dark',
     };
   } else {
     throw new Error('Invalid username or password');
@@ -108,6 +112,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const value = {
     currentUser,
+    setCurrentUser,
     login,
     logout,
     register,
