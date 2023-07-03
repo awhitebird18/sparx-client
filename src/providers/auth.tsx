@@ -15,6 +15,7 @@ type User = {
 
 interface AuthContextData {
   currentUser: User;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;

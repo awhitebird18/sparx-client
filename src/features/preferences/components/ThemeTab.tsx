@@ -27,6 +27,7 @@ enum PrimaryColorType {
 
 const ThemeTab = () => {
   const { currentUser, setCurrentUser } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleThemeSelect = (e: any) => {
     window.localStorage.setItem('theme', e.target.value);
 
