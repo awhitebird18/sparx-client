@@ -10,66 +10,65 @@ import {
 import Section from './Section';
 
 import ListItem from './ListItem';
+import { useStore } from '@/stores/stores';
+import { User } from '@/features/users';
 
 const Divider = () => <div className="w-100 m-4 h-px border-border border-b" />;
 
 interface Channel {
-  id: string;
+  uuid: string;
   name: string;
   image?: string | JSX.Element;
 }
 
 interface Section {
-  id: string;
+  uuid: string;
   name: string;
   channels: Channel[];
 }
 
 const Sidebar = () => {
+  const { users } = useStore('userStore');
   const sections = [
     {
-      id: '1',
+      uuid: '1',
       name: 'Direct Messages',
-      channels: [
-        { id: '1', name: 'Shanu Shanu', image: '/images/profile-image-1.png' },
-        {
-          id: '2',
-          name: 'Danika Jones',
-          image: '/images/profile-image-2.png',
-        },
-        { id: '3', name: 'Eric Black', image: '/images/profile-image-3.png' },
-      ],
+      channels: users.map((user: User) => ({
+        uuid: user.uuid,
+        name: user.displayName,
+        image: user.image,
+      })),
     },
     {
-      id: '2',
+      uuid: '2',
       name: 'Channels',
       channels: [
         {
-          id: '4',
+          uuid: '4',
           name: 'Announcements',
           image: <MegaphoneFill />,
         },
         {
-          id: '5',
+          uuid: '5',
           name: 'Bug Reporting',
           image: <BugFill />,
         },
-        { id: '6', name: 'App Updates', image: <ArrowDown /> },
+        { uuid: '6', name: 'App Updates', image: <ArrowDown /> },
       ],
     },
   ];
 
   return (
     <div className="border-border border-r flex flex-col py-2 max-w-[14rem] w-full">
-      <ListItem id="users" title="Users" src={<PeopleFill />} />
-      <ListItem id="channels" title="Channels" src={<TvFill />} />
-      <ListItem id="mentions" title="Mentions" src={<At />} />
-      <ListItem id="drafts" title="Drafts" src={<Files />} />
+      <ListItem uuid="users" title="Users" src={<PeopleFill />} />
+      <ListItem uuid="channels" title="Channels" src={<TvFill />} />
+      <ListItem uuid="mentions" title="Mentions" src={<At />} />
+      <ListItem uuid="drafts" title="Drafts" src={<Files />} />
       <Divider />
 
       {sections.map((section: Section, index: number) => (
         <>
-          <Section id={section.id} name={section.name} channels={section.channels} />
+          <Section uuid={section.uuid} name={section.name} channels={section.channels} />
 
           {index !== sections.length - 1 && <Divider />}
         </>
