@@ -66,7 +66,7 @@ const ChatRoom: React.FC = () => {
       <div className="flex-1 overflow-auto pr-4 mt-4" ref={scrollRef}>
         {groupedMessagesWithUser.map(({ date, messages }: any) => (
           <div key={date} className="relative">
-            <div className="w-full flex relative">
+            <div className="w-full flex relative my-2">
               <Badge
                 variant="outline"
                 className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
@@ -82,13 +82,13 @@ const ChatRoom: React.FC = () => {
               return (
                 <div
                   key={message.id}
-                  className={`px-2 rounded-lg hover:bg-accent dark:hover:bg-accent ${
+                  className={`px-2 py-1 rounded-lg hover:bg-accent dark:hover:bg-accent ${
                     displayUser ? 'py-2' : ''
                   }`}
                 >
                   <div className="flex gap-2">
                     {displayUser ? (
-                      <div className="w-10 mt-2">
+                      <div className="w-10">
                         <Avatar className="h-10 w-10 overflow-hidden rounded-sm">
                           <AvatarImage src={message.user?.image} className="rounded-sm h-10 w-10" />
                           <AvatarFallback
@@ -107,11 +107,11 @@ const ChatRoom: React.FC = () => {
 
                     <div className="flex flex-col">
                       {displayUser && (
-                        <div className="flex items-center h-5 mt-2">
-                          <h2 className="font-semibold dark:text-gray-100">
+                        <div className="flex gap-2 items-center">
+                          <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
                             {message.user.displayName}
                           </h2>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-muted-foreground mb-1">
                             {message.createdAt.format('h:mm a')}
                           </p>
                         </div>
