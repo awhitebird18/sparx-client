@@ -18,7 +18,7 @@ function formatDate(date: any) {
 
   if (messageDate.add(1, 'day').isSame(todaysDate, 'day')) return 'Yesterday';
 
-  return messageDate.format('MMM D YYYY');
+  return messageDate.format('MMM DD YYYY');
 }
 
 const ChatRoom: React.FC = () => {
@@ -76,36 +76,53 @@ const ChatRoom: React.FC = () => {
               <div className="w-full bg-gray-800 h-px absolute top-[50%] left-0 opacity-50" />
             </div>
 
-            {messages.map((message: any, index: number) => (
-              <div
-                key={message.id}
-                className={`px-2 py-1 ${
-                  index === 0 || (messages[index - 1].userId !== message.userId ? 'mt-2' : 'mt-1')
-                } rounded-lg hover:bg-accent dark:hover:bg-accent`}
-              >
-                <div className="flex flex-col">
-                  {index === 0 || messages[index - 1].userId !== message.userId ? (
-                    <div className="flex gap-2">
-                      <Avatar className="h-9 w-9 overflow-hidden rounded-sm">
-                        <AvatarImage src={message.user?.image} className="rounded-sm" />
-                        <AvatarFallback
-                          children={<img src="/images/default-avatar.png" className="opacity-40" />}
-                        />
-                      </Avatar>
-                      <div>
-                        <h2 className="font-semibold dark:text-gray-100 leading-5">
-                          {message.user.displayName}
-                        </h2>
-                        <p className="text-sm text-muted-foreground leading-4">
-                          {message.createdAt.format('h:mm a')}
-                        </p>
+            {messages.map((message: any, index: number) => {
+              const displayUser = index === 0 || messages[index - 1].userId !== message.userId;
+
+              return (
+                <div
+                  key={message.id}
+                  className={`px-2 rounded-lg hover:bg-accent dark:hover:bg-accent ${
+                    displayUser ? 'py-2' : ''
+                  }`}
+                >
+                  <div className="flex gap-2">
+                    {displayUser ? (
+                      <div className="w-10 mt-2">
+                        <Avatar className="h-10 w-10 overflow-hidden rounded-sm">
+                          <AvatarImage src={message.user?.image} className="rounded-sm h-10 w-10" />
+                          <AvatarFallback
+                            children={
+                              <img
+                                src="/images/default-avatar.png"
+                                className="opacity-40 h-10 w-10"
+                              />
+                            }
+                          />
+                        </Avatar>
                       </div>
+                    ) : (
+                      <div className="w-10" />
+                    )}
+
+                    <div className="flex flex-col">
+                      {displayUser && (
+                        <div className="flex items-center h-5 mt-2">
+                          <h2 className="font-semibold dark:text-gray-100">
+                            {message.user.displayName}
+                          </h2>
+                          <p className="text-xs text-muted-foreground">
+                            {message.createdAt.format('h:mm a')}
+                          </p>
+                        </div>
+                      )}
+
+                      <p className="text-gray-600 dark:text-gray-300">{message.content}</p>
                     </div>
-                  ) : null}
-                  <p className="text-gray-600 dark:text-gray-300 ml-11">{message.content}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ))}
       </div>
