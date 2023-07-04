@@ -1,7 +1,9 @@
 import { Message } from '@/features/messages';
 import { User } from '@/features/users';
 import { Space } from '@/features/spaces';
+import { Channel } from '@/features/channels';
 import dayjs from 'dayjs';
+import { v4 as uuid } from 'uuid';
 
 export const users: User[] = [
   {
@@ -157,5 +159,168 @@ export const spaces: Space[] = [
     uuid: '67b3ffe0-11f4-4be1-8e29-a122c7ac494c',
     name: 'Implementation',
     image: '/images/space-3.png',
+  },
+];
+
+export const channels: Channel[] = [
+  {
+    uuid: uuid(),
+    name: 'General Discussion',
+    joinedAt: dayjs('2023-01-05T12:00:00Z'),
+    createdAt: dayjs('2023-01-01T08:00:00Z'),
+    topic: 'Daily updates and conversations',
+    description: 'A place for everyday conversations and updates.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Product Team',
+    joinedAt: dayjs('2023-01-10T15:00:00Z'),
+    createdAt: dayjs('2023-01-02T11:00:00Z'),
+    topic: 'Product development and strategy',
+    description: 'Discussions related to the product, including new features and improvements.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Marketing Team',
+    joinedAt: null,
+    createdAt: dayjs('2023-01-03T14:00:00Z'),
+    topic: 'Marketing strategies and updates',
+    description: 'Everything related to marketing our product.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Sales Team',
+    joinedAt: dayjs('2023-01-20T21:00:00Z'),
+    createdAt: dayjs('2023-01-04T17:00:00Z'),
+    topic: 'Sales targets and updates',
+    description: 'Discussions about sales goals, strategies, and updates.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Customer Support',
+    joinedAt: dayjs('2023-01-25T09:00:00Z'),
+    createdAt: dayjs('2023-01-05T13:00:00Z'),
+    topic: 'Support tickets and updates',
+    description: 'Updates on customer queries, tickets, and related discussions.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Tech Talk',
+    joinedAt: null,
+    createdAt: dayjs('2023-01-07T15:00:00Z'),
+    topic: 'Technology discussions',
+    description: 'Talks about latest technologies, libraries, frameworks, etc.',
+  },
+  {
+    uuid: uuid(),
+    name: 'HR Updates',
+    joinedAt: dayjs('2023-02-05T11:00:00Z'),
+    createdAt: dayjs('2023-01-08T16:00:00Z'),
+    topic: 'HR announcements and updates',
+    description: 'Updates on company policies, employee benefits, etc.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Design Team',
+    joinedAt: dayjs('2023-02-10T12:00:00Z'),
+    createdAt: dayjs('2023-01-10T10:00:00Z'),
+    topic: 'Design discussions',
+    description: 'Discussions about UX/UI, design systems, and more.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Company Announcements',
+    joinedAt: null,
+    createdAt: dayjs('2023-01-12T12:00:00Z'),
+    topic: 'Important company updates',
+    description: 'Important updates and announcements from the company.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Weekly Standup',
+    joinedAt: dayjs('2023-02-20T15:00:00Z'),
+    createdAt: dayjs('2023-01-15T09:00:00Z'),
+    topic: 'Weekly team updates',
+    description: 'Weekly standup meeting updates from the entire team.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Party Planning',
+    joinedAt: dayjs('2023-02-25T16:00:00Z'),
+    createdAt: dayjs('2023-01-17T11:00:00Z'),
+    topic: 'Office party discussions',
+    description: 'Planning and discussion about office parties and events.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Book Club',
+    joinedAt: null,
+    createdAt: dayjs('2023-01-20T14:00:00Z'),
+    topic: 'Book discussions',
+    description: 'Discuss about books and share recommendations.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Fun Friday',
+    joinedAt: dayjs('2023-03-05T18:00:00Z'),
+    createdAt: dayjs('2023-01-22T08:00:00Z'),
+    topic: 'Friday fun activities',
+    description: 'Discuss and plan about Friday fun activities.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Game Night',
+    joinedAt: null,
+    createdAt: dayjs('2023-01-24T12:00:00Z'),
+    topic: 'Gaming events and discussions',
+    description: 'Plan and discuss about gaming events.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Fitness Club',
+    joinedAt: dayjs('2023-03-15T20:00:00Z'),
+    createdAt: dayjs('2023-01-25T16:00:00Z'),
+    topic: 'Fitness and wellness',
+    description: 'Share fitness goals, routines and wellness tips.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Project X',
+    joinedAt: dayjs('2023-03-20T08:00:00Z'),
+    createdAt: dayjs('2023-01-27T10:00:00Z'),
+    topic: 'Project X discussions',
+    description: 'Discuss about project X related tasks, updates.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Project Y',
+    joinedAt: dayjs('2023-03-25T09:00:00Z'),
+    createdAt: dayjs('2023-01-29T11:00:00Z'),
+    topic: 'Project Y discussions',
+    description: 'Discuss about project Y related tasks, updates.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Project Z',
+    joinedAt: dayjs('2023-03-30T10:00:00Z'),
+    createdAt: dayjs('2023-01-31T13:00:00Z'),
+    topic: 'Project Z discussions',
+    description: 'Discuss about project Z related tasks, updates.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Learning and Development',
+    joinedAt: dayjs('2023-04-01T11:00:00Z'),
+    createdAt: dayjs('2023-02-02T09:00:00Z'),
+    topic: 'Employee development',
+    description: 'Share learning resources and plan development activities.',
+  },
+  {
+    uuid: uuid(),
+    name: 'Q&A',
+    joinedAt: dayjs('2023-04-05T12:00:00Z'),
+    createdAt: dayjs('2023-02-04T10:00:00Z'),
+    topic: 'Questions and Answers',
+    description: 'Ask questions and get answers from the team.',
   },
 ];
