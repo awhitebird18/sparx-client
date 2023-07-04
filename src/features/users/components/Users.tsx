@@ -47,7 +47,7 @@ const Users: React.FC = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="p-2 border border-gray-200 rounded mb-4"
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr]">
         {displayedUsers.map((user) => (
           <Card
             key={user.uuid}
