@@ -14,12 +14,14 @@ export class ChannelStore {
   channels: Channel[] = [];
   page = 1;
   pageSize = 10;
+  isLoading = true;
 
   constructor() {
     makeObservable(this, {
       channels: observable,
       page: observable,
       pageSize: observable,
+      isLoading: observable,
       findById: action,
       addChannel: action,
       updateChannel: action,
@@ -36,6 +38,10 @@ export class ChannelStore {
 
   setChannels = (Channels: Channel[]) => {
     this.channels = Channels;
+  };
+
+  setIsLoading = (bool: boolean) => {
+    this.isLoading = bool;
   };
 
   addChannel = (channel: Channel) => {
@@ -60,6 +66,12 @@ export class ChannelStore {
   };
 
   fetchChannels = () => {
+    this.setIsLoading(true);
+
     this.setChannels(channels);
+
+    setTimeout(() => {
+      this.setIsLoading(false);
+    }, 2000);
   };
 }

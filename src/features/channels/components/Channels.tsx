@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react';
 import { Channel } from '@/features/channels';
 import { useStore } from '@/stores/stores';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import Spinner from '@/components/ui/Spinner';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -15,7 +17,7 @@ enum ChannelActions {
 }
 
 const Channels: React.FC = () => {
-  const { channels, fetchChannels } = useStore('channelStore');
+  const { channels, fetchChannels, isLoading } = useStore('channelStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -60,43 +62,49 @@ const Channels: React.FC = () => {
         className="mb-4"
       />
       <ul className="space-y-3 overflow-auto flex-1 pr-2">
-        {displayedChannels.map((channel) => (
-          <li
-            key={channel.uuid}
-            className="flex justify-between items-center border border-border p-4 cursor-pointer rounded-md group hover:bg-accent"
-            onClick={() => handleViewChannel(channel.uuid)}
-          >
-            <div>
-              <p className="font-semibold">{channel.name}</p>
-              {channel.joinedAt ? (
-                <p className="text-sm h-6 ">
-                  <span className="text-emerald-500">Joined</span>
-                  {` - ${channel.joinedAt.format('MMM DD YYYY')}`}
-                </p>
-              ) : null}
-            </div>
-            <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
-              {channel.joinedAt ? (
-                <Button
-                  variant="outline"
-                  onClick={() => handleChannelAction(channel.uuid, ChannelActions.LEAVE)}
-                  disabled={!channel.joinedAt}
-                  className="py-1 px-2 font-semibold rounded text-black bg-popover dark:bg-muted-foreground hover:bg-muted-foreground w-20"
-                >
-                  {ChannelActions.LEAVE}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => handleChannelAction(channel.uuid, ChannelActions.JOIN)}
-                  disabled={Boolean(channel.joinedAt)}
-                  className="py-1 px-2 font-semibold rounded shadow-md  bg-green-400 hover:bg-green-700 w-20"
-                >
-                  {ChannelActions.JOIN}
-                </Button>
-              )}
-            </div>
-          </li>
-        ))}
+        {isLoading ? (
+          <div className="mt-10">
+            <Spinner />
+          </div>
+        ) : (
+          displayedChannels.map((channel) => (
+            <li
+              key={channel.uuid}
+              className="flex justify-between items-center border border-border p-4 cursor-pointer rounded-md group hover:bg-accent"
+              onClick={() => handleViewChannel(channel.uuid)}
+            >
+              <div>
+                <p className="font-semibold">{channel.name}</p>
+                {channel.joinedAt ? (
+                  <p className="text-sm h-6 ">
+                    <span className="text-emerald-500">Joined</span>
+                    {` - ${channel.joinedAt.format('MMM DD YYYY')}`}
+                  </p>
+                ) : null}
+              </div>
+              <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+                {channel.joinedAt ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => handleChannelAction(channel.uuid, ChannelActions.LEAVE)}
+                    disabled={!channel.joinedAt}
+                    className="py-1 px-2 font-semibold rounded text-black bg-popover dark:bg-muted-foreground hover:bg-muted-foreground w-20"
+                  >
+                    {ChannelActions.LEAVE}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleChannelAction(channel.uuid, ChannelActions.JOIN)}
+                    disabled={Boolean(channel.joinedAt)}
+                    className="py-1 px-2 font-semibold rounded shadow-md  bg-green-400 hover:bg-green-700 w-20"
+                  >
+                    {ChannelActions.JOIN}
+                  </Button>
+                )}
+              </div>
+            </li>
+          ))
+        )}
       </ul>
       <div className="flex justify-between items-center mt-4">
         <Button
@@ -121,4 +129,6 @@ const Channels: React.FC = () => {
   );
 };
 
-export default Channels;
+observer;
+
+export default observer(Channels);
