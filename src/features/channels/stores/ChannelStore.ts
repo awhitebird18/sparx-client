@@ -72,6 +72,6 @@ export class ChannelStore {
 
     setTimeout(() => {
       this.setIsLoading(false);
-    }, 2000);
+    }, 500);
   };
 }
