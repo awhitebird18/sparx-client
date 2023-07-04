@@ -18,8 +18,7 @@ const USERS_PER_PAGE = 10;
 
 enum UserMenuOptions {
   PROFILE = 'Profile',
-  SETTINGS = 'Settings',
-  LOGOUT = 'Logout',
+  MESSAGE = 'Message',
 }
 
 const Users: React.FC = () => {
@@ -71,7 +70,7 @@ const Users: React.FC = () => {
                 <DropdownMenuItem
                   onSelect={() => console.log(`View Profile ${user.displayName}s profile`)}
                 >
-                  {UserMenuOptions.SETTINGS}
+                  {UserMenuOptions.MESSAGE}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
