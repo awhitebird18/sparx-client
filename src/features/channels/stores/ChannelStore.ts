@@ -12,6 +12,7 @@ dayjs.extend(timezone);
 
 export class ChannelStore {
   channels: Channel[] = [];
+  currentChannel: Channel | null = null;
   page = 1;
   pageSize = 10;
   isLoading = true;
@@ -22,6 +23,7 @@ export class ChannelStore {
       page: observable,
       pageSize: observable,
       isLoading: observable,
+      currentChannel: observable,
       findById: action,
       addChannel: action,
       updateChannel: action,
@@ -29,6 +31,7 @@ export class ChannelStore {
       fetchChannels: action,
       incrementPage: action,
       setChannels: action,
+      fetchChannel: action,
     });
   }
 
@@ -38,6 +41,10 @@ export class ChannelStore {
 
   setChannels = (Channels: Channel[]) => {
     this.channels = Channels;
+  };
+
+  setCurrentChannel = (channel: Channel) => {
+    this.currentChannel = channel;
   };
 
   setIsLoading = (bool: boolean) => {
@@ -63,6 +70,14 @@ export class ChannelStore {
 
   deleteChannel = (uuid: string) => {
     this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
+  };
+
+  fetchChannel = (channelUUID: string) => {
+    const currentChannel = channels.find((channel: Channel) => channel.uuid === channelUUID);
+
+    if (!currentChannel) return;
+
+    this.setCurrentChannel(currentChannel);
   };
 
   fetchChannels = () => {

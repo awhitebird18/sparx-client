@@ -99,7 +99,8 @@ export class MessageStore {
     this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
   };
 
-  fetchMessages = () => {
+  fetchMessages = (channelId: string) => {
+    console.log(channelId);
     const messagesWithUsers = messages.map((message: Message) => {
       const user = users.find((user: User) => {
         user.uuid === message.userId;

@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 const Editor: React.FC = () => {
   const [message, setMessage] = useState('');
   const { addMessage } = useStore('messageStore');
+  const { currentChannel } = useStore('channelStore');
   const { currentUser } = useAuth();
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -33,8 +34,8 @@ const Editor: React.FC = () => {
       multiple
       onChange={(e) => setMessage(e.target.value)}
       onKeyDown={handleKeyDown}
-      placeholder="Type your message..."
-      className="w-full border rounded-lg text-gray-700 focus:outline-none"
+      placeholder={`${currentChannel?.name}...`}
+      className="w-full border rounded-lg focus:outline-none"
     />
   );
 };
