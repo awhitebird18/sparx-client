@@ -4,8 +4,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 
-import { channels } from '@/lib/seeds';
+import { channels, users } from '@/lib/seeds';
 import { Channel, UpdateChannel } from '@/features/channels';
+import { User } from '@/features/users';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -84,6 +85,26 @@ export class ChannelStore {
     this.setIsLoading(true);
 
     this.setChannels(channels);
+
+    setTimeout(() => {
+      this.setIsLoading(false);
+    }, 500);
+  };
+
+  fetchUserChannels = () => {
+    this.setIsLoading(true);
+
+    this.setChannels(
+      users.map((user: User) => ({
+        uuid: user.uuid,
+        name: user.displayName,
+        joinedAt: dayjs(),
+        createdAt: dayjs(),
+        topic: '',
+        description: '',
+        image: user.image,
+      })),
+    );
 
     setTimeout(() => {
       this.setIsLoading(false);
