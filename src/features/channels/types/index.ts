@@ -7,6 +7,7 @@ export type Channel = {
   createdAt: Dayjs;
   topic: string;
   description: string;
+  image?: string;
 };
 
 export type UpdateChannel = {
