@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/stores';
 import { Badge } from '@/components/ui/Badge';
@@ -7,6 +7,8 @@ import Editor from './Editor';
 import dayjs from 'dayjs';
 import { Avatar } from '@radix-ui/react-avatar';
 import { AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
+import { useParams } from 'react-router-dom';
+import Spinner from '@/components/ui/Spinner';
 
 function formatDate(date: any) {
   const messageDate = dayjs(date);
@@ -21,11 +23,23 @@ function formatDate(date: any) {
 
 const ChatRoom: React.FC = () => {
   const { groupedMessagesWithUser, fetchMessages } = useStore('messageStore');
+  const [isLoading, setIsLoading] = useState(true);
+  const { currentChannel, fetchChannel } = useStore('channelStore');
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const { channelId } = useParams();
 
   useEffect(() => {
-    fetchMessages();
-  }, [fetchMessages]);
+    setIsLoading(true);
+    if (!channelId) return;
+    fetchMessages(channelId);
+
+    console.log(channelId);
+    fetchChannel(channelId);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, [fetchMessages, channelId, fetchChannel]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -42,13 +56,14 @@ const ChatRoom: React.FC = () => {
     }
   }, [groupedMessagesWithUser]);
 
-  console.log(groupedMessagesWithUser);
+  if (isLoading || !currentChannel) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <h3 className="text-lg leading-6 font-medium">Chatroom</h3>
+      <h3 className="text-lg leading-6 font-medium">{currentChannel.name}</h3>
       <div className="flex-1 overflow-auto pr-4 mt-4" ref={scrollRef}>
-        {/* <div ref={setLoadMoreRef} className="h-6 relative"></div> */}
         {groupedMessagesWithUser.map(({ date, messages }: any) => (
           <div key={date} className="relative">
             <div className="w-full flex relative">

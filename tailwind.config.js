@@ -85,20 +85,19 @@ module.exports = {
     require('tailwindcss-animate'),
     function ({ addBase, theme }) {
       addBase({
-        html: {
-          scrollbarWidth: 'thin',
-          scrollbarColor: `${theme('colors.scrollbar-thumb')} ${theme('colors.scrollbar-bg')}`,
-          '&::-webkit-scrollbar': {
-            width: '8px',
-          },
-          '&::-webkit-scrollbar-track': {
-            backgroundColor: theme('colors.scrollbar-bg'),
-          },
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: theme('colors.scrollbar-thumb'),
-            '&:hover': {
-              backgroundColor: theme('colors.scrollbar-thumb-hover'),
-            },
+        '::-webkit-scrollbar': {
+          width: theme('spacing.2'),
+          height: theme('spacing.2'),
+        },
+        '::-webkit-scrollbar-track': {
+          background: theme('colors.gray.500'),
+          borderRadius: '0.5rem',
+        },
+        '::-webkit-scrollbar-thumb': {
+          backgroundColor: theme('colors.gray.700'),
+          borderRadius: theme('borderRadius.DEFAULT'),
+          '&:hover': {
+            backgroundColor: theme('colors.gray.700'),
           },
         },
       });
