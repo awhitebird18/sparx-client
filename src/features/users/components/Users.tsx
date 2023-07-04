@@ -12,19 +12,20 @@ import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Input } from '@/components/ui/Input';
 import { useStore } from '@/stores/stores';
+import { useNavigate } from 'react-router-dom';
 
 const USERS_PER_PAGE = 10;
 
 enum UserMenuOptions {
   PROFILE = 'Profile',
-  SETTINGS = 'Settings',
-  LOGOUT = 'Logout',
+  MESSAGE = 'Message',
 }
 
 const Users: React.FC = () => {
   const { users } = useStore('userStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   const filteredUsers = users.filter((user) =>
     user.displayName.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -37,6 +38,10 @@ const Users: React.FC = () => {
 
   const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
 
+  const handleClickUser = (id: string) => {
+    navigate(`/app/${id}`);
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <h3 className="text-lg leading-6 font-medium mb-3">Users</h3>
@@ -47,11 +52,12 @@ const Users: React.FC = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="p-2 border border-gray-200 rounded mb-4"
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr]">
         {displayedUsers.map((user) => (
           <Card
             key={user.uuid}
             className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-accent hover:bg-accent"
+            onClick={() => handleClickUser(user.uuid)}
           >
             <DropdownMenu>
               <DropdownMenuTrigger className="absolute top-0 right-4">
@@ -64,7 +70,7 @@ const Users: React.FC = () => {
                 <DropdownMenuItem
                   onSelect={() => console.log(`View Profile ${user.displayName}s profile`)}
                 >
-                  {UserMenuOptions.SETTINGS}
+                  {UserMenuOptions.MESSAGE}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
