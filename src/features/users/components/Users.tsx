@@ -63,7 +63,7 @@ const Users: React.FC = () => {
           <Spinner />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 pr-2 overflow-auto">
           {displayedChannels.map((channel) => (
             <Card
               key={channel.uuid}
@@ -101,7 +101,7 @@ const Users: React.FC = () => {
           ))}
         </div>
       )}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pt-2">
         <Button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((page) => page - 1)}
