@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Message, UpdateMessage } from '@/features/messages';
-import { messages, users } from '@/lib/seeds';
+import { messages, users } from '@/utils/seeds';
 import { stores } from '@/stores/stores';
 import { User } from '@/features/users';
 

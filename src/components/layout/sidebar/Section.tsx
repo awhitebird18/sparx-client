@@ -24,7 +24,7 @@ const Section = ({ uuid, name, channels }: SectionProps) => {
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <ListHeader
-        id={uuid}
+        uuid={uuid}
         title={name}
         icon={
           <CollapsibleTrigger>

@@ -1,18 +1,20 @@
 import { Dayjs } from 'dayjs';
+import { ChannelTypes } from './channelEnums';
 
-export type Channel = {
-  uuid: string;
+export interface CreateChannel {
   name: string;
+  type: ChannelTypes;
+}
+
+export interface Channel extends CreateChannel {
+  uuid: string;
   joinedAt?: Dayjs | null;
   createdAt: Dayjs;
   topic: string;
   description: string;
   image?: string;
-};
+}
 
-export type UpdateChannel = {
+export interface UpdateChannel extends Partial<Channel> {
   uuid: string;
-  name: string;
-  topic: string;
-  description: string;
-};
+}

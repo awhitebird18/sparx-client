@@ -13,12 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { ChannelTypes } from '../types/channelEnums';
+import { useStore } from '@/stores/stores';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
 const CreateChanneForm = () => {
+  const { createChannel } = useStore('channelStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,9 +30,8 @@ const CreateChanneForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log({ name: values.name, type: ChannelTypes.PUBLIC });
+    createChannel({ name: values.name, type: ChannelTypes.PUBLIC });
   }
   return (
     <Form {...form}>
@@ -48,20 +50,7 @@ const CreateChanneForm = () => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Private</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter a channel name" {...field} />
-              </FormControl>
-              <FormDescription>This is your publicly displayed channel name</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <Button className="ml-auto w-28" type="submit">
           Submit
         </Button>

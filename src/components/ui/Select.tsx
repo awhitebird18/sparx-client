@@ -3,7 +3,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 
 import { ChevronExpand, Check } from 'react-bootstrap-icons';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 const Select = SelectPrimitive.Root;
 
