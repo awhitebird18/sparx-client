@@ -11,34 +11,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useAuth } from '@/providers/auth';
-import CreateChannelForm from '@/features/channels/components/CreateChannelForm';
-import { DialogDescription, DialogTitle } from '@/components/ui/Dialog';
 import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
-import InviteUserForm from '@/features/users/components/InviteUserForm';
-import { DropdownDialogItem } from '@/components/ui/DropdownDialogItem';
+import { ModalName } from '@/components/modal/modalList';
+import { useStore } from '@/stores/stores';
 
 const CompanyDropdown = () => {
+  const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [hasOpenDialog, setHasOpenDialog] = useState(false);
   const dropdownTriggerRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { logout } = useAuth();
 
-  const handleClickItem = (uuid: string) => {
-    console.log(uuid);
+  const handleOpenModal = ({ name }: { name: ModalName }) => {
+    setActiveModal({ name });
   };
-
-  function handleDialogItemSelect() {
-    focusRef.current = dropdownTriggerRef.current;
-  }
-
-  function handleDialogItemOpenChange(open: boolean) {
-    setHasOpenDialog(open);
-    if (open === false) {
-      setDropdownOpen(false);
-    }
-  }
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -58,7 +45,6 @@ const CompanyDropdown = () => {
       <DropdownMenuContent
         className="DropdownMenuContent w-60"
         sideOffset={5}
-        hidden={hasOpenDialog}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -68,35 +54,31 @@ const CompanyDropdown = () => {
         }}
       >
         <DropdownMenuGroup>
-          <DropdownDialogItem
-            triggerChildren="Create a channel"
-            onSelect={handleDialogItemSelect}
-            onOpenChange={handleDialogItemOpenChange}
-          >
-            <DialogTitle className="DialogTitle">Create a channel</DialogTitle>
-            <DialogDescription className="DialogDescription">
-              Channels are a way for teams to openly collaborate. Create a channel around a topic
-              and people can join or follow the conversation.
-            </DialogDescription>
-            <CreateChannelForm />
-          </DropdownDialogItem>
-
-          <DropdownDialogItem
-            triggerChildren="Invite people to ChatApp"
-            onSelect={handleDialogItemSelect}
-            onOpenChange={handleDialogItemOpenChange}
-          >
-            <DialogTitle className="DialogTitle">Invite people to ChatApp</DialogTitle>
-            <DialogDescription className="DialogDescription">Send invite to:</DialogDescription>
-            <InviteUserForm />
-          </DropdownDialogItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'CreateChannelModal' })}>
+            Create Channel
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'InviteUserModal' })}>
+            Invite people to ChatApp
+          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleClickItem('support')}>Support</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleClickItem('feedback')}>Feedback</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              console.log('support');
+            }}
+          >
+            Support
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              console.log('feedback');
+            }}
+          >
+            Feedback
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={logout}>Sign out of ChatApp</DropdownMenuItem>
         </DropdownMenuGroup>
 

@@ -29,6 +29,7 @@ const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
 
   const handleClickItem = ({ name }: { name: ModalName }) => {
     setActiveModal({ name });
+    console.log(uuid);
   };
 
   return (

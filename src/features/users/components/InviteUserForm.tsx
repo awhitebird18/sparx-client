@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import Modal from '@/components/modal/Modal';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -30,34 +31,36 @@ const InviteUserForm = () => {
     console.log(values);
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-96">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="name@gmail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          variant="ghost"
-          className="text-blue-500 font-semibold flex items-center gap-2 hover:bg-transparent px-0"
-        >
-          <Link size={24} />
-          Copy invite link
-        </Button>
+    <Modal title="Invite users to Chat App">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-96">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="name@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            variant="ghost"
+            className="text-blue-500 font-semibold flex items-center gap-2 hover:bg-transparent px-0"
+          >
+            <Link size={24} />
+            Copy invite link
+          </Button>
 
-        <Button className="ml-auto" type="submit">
-          Send Invite
-        </Button>
-      </form>
-    </Form>
+          <Button className="ml-auto" type="submit">
+            Send Invite
+          </Button>
+        </form>
+      </Form>
+    </Modal>
   );
 };
 
