@@ -17,8 +17,6 @@ const Sidebar = () => {
     fetchsections();
   }, [fetchsections]);
 
-  if (isLoading) return null;
-
   return (
     <div className="border-border border-r flex flex-col py-2 max-w-[14rem] w-full">
       <ListItem uuid="users" title="Users" src={<PeopleFill />} />
@@ -27,9 +25,10 @@ const Sidebar = () => {
       <ListItem uuid="drafts" title="Drafts" src={<Files />} />
       <Divider />
 
-      {sections.map((section: SectionType) => (
-        <Section key={section.uuid} uuid={section.uuid} name={section.name} channels={[]} />
-      ))}
+      {!isLoading &&
+        sections.map((section: SectionType) => (
+          <Section key={section.uuid} uuid={section.uuid} name={section.name} channels={[]} />
+        ))}
     </div>
   );
 };

@@ -34,49 +34,53 @@ const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger asChild>
-        <div className="h-7 m-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
-          <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+      <div className="h-7 m-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
+        <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+        <DropdownMenuTrigger asChild>
           <div className="font-semibold">{title}</div>
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="DropdownMenuContent w-60"
-        sideOffset={5}
-        hidden={hasOpenDialog}
-        onCloseAutoFocus={(event) => {
-          if (focusRef.current) {
-            focusRef.current.focus();
-            focusRef.current = null;
-            event.preventDefault();
-          }
-        }}
-      >
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateChannelModal' })}>
-                Create Channel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateSectionModal' })}>
-                Create Section
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Manage</DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem>Rename Section</DropdownMenuItem>
-              <DropdownMenuItem>Delete Section</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Manage Sections</DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-      </DropdownMenuContent>
+        </DropdownMenuTrigger>
+      </div>
+      <div className="relative">
+        <DropdownMenuContent
+          className="DropdownMenuContent w-60"
+          sideOffset={5}
+          align="start"
+          alignOffset={-40}
+          hidden={hasOpenDialog}
+          onCloseAutoFocus={(event) => {
+            if (focusRef.current) {
+              focusRef.current.focus();
+              focusRef.current = null;
+              event.preventDefault();
+            }
+          }}
+        >
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateChannelModal' })}>
+                  Create Channel
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateSectionModal' })}>
+                  Create Section
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Manage</DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>Rename Section</DropdownMenuItem>
+                <DropdownMenuItem>Delete Section</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Manage Sections</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </div>
     </DropdownMenu>
   );
 };
