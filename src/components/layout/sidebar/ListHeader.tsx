@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { useStore } from '@/stores/stores';
 import { useRef, useState } from 'react';
+import { ModalName } from '@/components/modal/modalList';
 
 interface ListHeaderProps {
   uuid: string;
@@ -19,15 +20,15 @@ interface ListHeaderProps {
 }
 
 const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
-  const { openModal } = useStore('modalStore');
+  const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasOpenDialog] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
 
-  const handleClickItem = ({ type, title }: { type: string; title: string }) => {
-    openModal({ type, title, payload: { uuid } });
+  const handleClickItem = ({ name }: { name: ModalName }) => {
+    setActiveModal({ name });
   };
 
   return (
@@ -54,14 +55,10 @@ const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
           <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
-              <DropdownMenuItem
-                onClick={() => handleClickItem({ title: 'Create Channel', type: 'CREATE_CHANNEL' })}
-              >
+              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateChannelModal' })}>
                 Create Channel
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleClickItem({ title: 'Create Section', type: 'CREATE_SECTION' })}
-              >
+              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateSectionModal' })}>
                 Create Section
               </DropdownMenuItem>
             </DropdownMenuSubContent>

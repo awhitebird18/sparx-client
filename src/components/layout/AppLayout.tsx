@@ -6,7 +6,7 @@ import Sidebar from '@/components/layout/sidebar/Sidebar';
 import WorkspaceBar from '@/components/layout/spacesbar/Spacesbar';
 import { useAuth } from '@/providers/auth';
 import { isUser } from '@/utils/isUser';
-import Modal from '../modal/Modal';
+import ModalController from '../modal/ModalController';
 
 export const AppLayout = () => {
   const { currentUser } = useAuth();
@@ -27,7 +27,7 @@ export const AppLayout = () => {
           </div>
         </Suspense>
       </div>
-      <Modal />
+      <ModalController />
     </div>
   );
 };
