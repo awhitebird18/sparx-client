@@ -22,7 +22,7 @@ const Spacesbar = () => {
   return (
     <div className="border-r border-border flex flex-col items-center p-2 h-full">
       {spaces.map((space) => (
-        <Tooltip>
+        <Tooltip key={space.uuid}>
           <TooltipTrigger>
             <Avatar
               className="w-10 mb-2 h-10 cursor-pointer hover:bg-accent dark:hover:bg-accent"

@@ -1,25 +1,85 @@
-import { Link } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+import { useStore } from '@/stores/stores';
+import { useRef, useState } from 'react';
 
 interface ListHeaderProps {
-  id: string;
+  uuid: string;
   icon?: JSX.Element;
   title: string;
 }
 
-const ListHeader = ({ id, icon, title }: ListHeaderProps) => {
-  const onClick = () => {
-    console.log(id);
+const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
+  const { openModal } = useStore('modalStore');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hasOpenDialog] = useState(false);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const focusRef = useRef<any>(null);
+
+  const handleClickItem = ({ type, title }: { type: string; title: string }) => {
+    openModal({ type, title, payload: { uuid } });
   };
+
   return (
-    <Link to={id}>
-      <div
-        onClick={onClick}
-        className="h-7 m-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden"
+    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+      <DropdownMenuTrigger asChild>
+        <div className="h-7 m-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
+          <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+          <div className="font-semibold">{title}</div>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="DropdownMenuContent w-60"
+        sideOffset={5}
+        hidden={hasOpenDialog}
+        onCloseAutoFocus={(event) => {
+          if (focusRef.current) {
+            focusRef.current.focus();
+            focusRef.current = null;
+            event.preventDefault();
+          }
+        }}
       >
-        <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
-        <div className="font-semibold">{title}</div>
-      </div>
-    </Link>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem
+                onClick={() => handleClickItem({ title: 'Create Channel', type: 'CREATE_CHANNEL' })}
+              >
+                Create Channel
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleClickItem({ title: 'Create Section', type: 'CREATE_SECTION' })}
+              >
+                Create Section
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Manage</DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem>Rename Section</DropdownMenuItem>
+              <DropdownMenuItem>Delete Section</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Manage Sections</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

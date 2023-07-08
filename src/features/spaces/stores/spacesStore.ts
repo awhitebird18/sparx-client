@@ -1,5 +1,5 @@
 import { makeObservable, observable, action } from 'mobx';
-import { spaces } from '@/lib/seeds';
+import { spaces } from '@/utils/seeds';
 import { Space, UpdateSpace } from '@/features/spaces';
 
 export class SpacesStore {
@@ -39,7 +39,6 @@ export class SpacesStore {
   }
 
   fetchSpaces = () => {
-    console.log(spaces);
     this.setSpaces(spaces);
   };
 }

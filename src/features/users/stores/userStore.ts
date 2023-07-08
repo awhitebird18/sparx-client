@@ -1,6 +1,6 @@
 import { makeObservable, observable, action } from 'mobx';
 import { User } from '@/features/users';
-import { users } from '@/lib/seeds';
+import { users } from '@/utils/seeds';
 
 export class UserStore {
   users: User[] = users;

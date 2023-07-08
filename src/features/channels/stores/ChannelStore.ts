@@ -4,9 +4,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 
-import { channels, users } from '@/lib/seeds';
-import { Channel, UpdateChannel } from '@/features/channels';
+import { channels, users } from '@/utils/seeds';
+import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
 import { User } from '@/features/users';
+import { createChannel } from '../api/createChannel';
+import { ChannelTypes } from '../types/channelEnums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -26,7 +28,7 @@ export class ChannelStore {
       isLoading: observable,
       currentChannel: observable,
       findById: action,
-      addChannel: action,
+      createChannel: action,
       updateChannel: action,
       deleteChannel: action,
       fetchChannels: action,
@@ -52,7 +54,8 @@ export class ChannelStore {
     this.isLoading = bool;
   };
 
-  addChannel = (channel: Channel) => {
+  createChannel = async (newChannel: CreateChannel) => {
+    const channel = await createChannel(newChannel);
     this.channels.push(channel);
   };
 
@@ -84,7 +87,9 @@ export class ChannelStore {
   fetchChannels = () => {
     this.setIsLoading(true);
 
-    this.setChannels(channels);
+    this.setChannels(
+      channels.map((channel: Channel) => ({ ...channel, type: ChannelTypes.PUBLIC })),
+    );
 
     setTimeout(() => {
       this.setIsLoading(false);
@@ -103,6 +108,7 @@ export class ChannelStore {
         topic: '',
         description: '',
         image: user.image,
+        type: ChannelTypes.DIRECT,
       })),
     );
 
