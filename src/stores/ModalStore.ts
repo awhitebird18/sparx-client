@@ -1,26 +1,18 @@
-import { autorun, makeAutoObservable, toJS } from 'mobx';
+import { makeAutoObservable } from 'mobx';
+import { ModalName } from '@/components/modal/modalList';
+
+interface ActiveModal {
+  name: ModalName;
+}
 
 export class ModalStore {
-  isOpen = false;
-  title = '';
-  type: string | null = null;
+  activeModal: ActiveModal | null = null;
 
   constructor() {
     makeAutoObservable(this);
-    autorun(() => console.log(toJS(this.isOpen)));
   }
 
-  openModal = ({ title, type }: { title: string; type: string; payload: unknown }) => {
-    this.title = title;
-    this.type = type;
-    this.isOpen = true;
-  };
-
-  setModal = (value: boolean) => {
-    this.isOpen = value;
-  };
-
-  closeModal = () => {
-    this.isOpen = false;
+  setActiveModal = (activeModal: ActiveModal | null) => {
+    this.activeModal = activeModal;
   };
 }

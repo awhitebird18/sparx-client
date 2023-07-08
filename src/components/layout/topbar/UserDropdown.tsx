@@ -10,33 +10,20 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/DropdownMenu';
 import { useRef, useState } from 'react';
-import { DialogTitle } from '@radix-ui/react-dialog';
-import { DropdownDialogItem } from '@/components/ui/DropdownDialogItem';
-import Profile from '@/features/profile/components/Profile';
-import Preferences from '@/features/preferences/components/Preferences';
+import { ModalName } from '@/components/modal/modalList';
+import { useStore } from '@/stores/stores';
 
 const UserDropdown: React.FC = () => {
+  const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [hasOpenDialog, setHasOpenDialog] = useState(false);
   const dropdownTriggerRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { currentUser, logout } = useAuth();
 
-  const handleClickItem = (uuid: string) => {
-    console.log(uuid);
+  const handleOpenModal = ({ name }: { name: ModalName }) => {
+    setActiveModal({ name });
   };
-
-  function handleDialogItemSelect() {
-    focusRef.current = dropdownTriggerRef.current;
-  }
-
-  function handleDialogItemOpenChange(open: boolean) {
-    setHasOpenDialog(open);
-    if (open === false) {
-      setDropdownOpen(false);
-    }
-  }
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -59,7 +46,6 @@ const UserDropdown: React.FC = () => {
 
       <DropdownMenuContent
         className="DropdownMenuContent w-56"
-        hidden={hasOpenDialog}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -85,10 +71,10 @@ const UserDropdown: React.FC = () => {
           </div>
         </div>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleClickItem('changeStatus')}>
+          <DropdownMenuItem onClick={() => console.log('changeStatus')}>
             Set yourself as away
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleClickItem('pauseNotifications')}>
+          <DropdownMenuItem onClick={() => console.log('pauseNotifications')}>
             Pause notifications
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -96,23 +82,12 @@ const UserDropdown: React.FC = () => {
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
 
         <DropdownMenuGroup>
-          <DropdownDialogItem
-            triggerChildren="Profile"
-            onSelect={handleDialogItemSelect}
-            onOpenChange={handleDialogItemOpenChange}
-          >
-            <DialogTitle className="DialogTitle">Profile</DialogTitle>
-            <Profile />
-          </DropdownDialogItem>
-
-          <DropdownDialogItem
-            triggerChildren="Preferences"
-            onSelect={handleDialogItemSelect}
-            onOpenChange={handleDialogItemOpenChange}
-          >
-            <DialogTitle className="DialogTitle">Preferences</DialogTitle>
-            <Preferences />
-          </DropdownDialogItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'ProfileModal' })}>
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'PreferencesModal' })}>
+            Preferences
+          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
