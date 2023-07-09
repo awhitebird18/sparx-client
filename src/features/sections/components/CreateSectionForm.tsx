@@ -22,6 +22,7 @@ const formSchema = z.object({
 
 const CreateSectionForm = () => {
   const { createSection } = useStore('sectionStore');
+  const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,6 +32,7 @@ const CreateSectionForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createSection({ name: values.name, type: SectionTypes.ANY });
+    setActiveModal(null);
   }
 
   return (

@@ -2,7 +2,6 @@ import { makeObservable, observable, action } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
-import { sections } from '@/utils/seeds';
 import { Section, CreateSection, UpdateSection } from '@/features/sections';
 import { createSection } from '../api/createSection';
 import { getSections } from '../api/getSections';
@@ -56,12 +55,9 @@ export class SectionStore {
     this.setIsLoading(true);
 
     const userSections = await getSections();
-    console.log(userSections);
 
-    this.setSections([...sections]);
+    this.setSections(userSections);
 
-    setTimeout(() => {
-      this.setIsLoading(false);
-    }, 500);
+    this.setIsLoading(false);
   };
 }

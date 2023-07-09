@@ -2,21 +2,24 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/stores';
+import { Section } from '..';
 
-export const getSections = async () => {
+export const getSections = async (): Promise<Section[]> => {
   try {
-    const data = await axios.get('/sections');
+    const res = await axios.get('/sections');
 
     stores.notificationStore.addNotification({
       title: 'Section created',
       type: NotificationType.SUCCESS,
     });
 
-    return data;
+    return res.data;
   } catch (err) {
-    return stores.notificationStore.addNotification({
+    stores.notificationStore.addNotification({
       title: 'Error creating section',
       type: NotificationType.ERROR,
     });
+
+    return [];
   }
 };

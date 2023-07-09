@@ -35,7 +35,7 @@ const CompanyDropdown = () => {
           variant="ghost"
           ref={dropdownTriggerRef}
         >
-          <Logo size={7} />
+          <Logo size={8} />
           <div className="flex items-center gap-1">
             <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl">Chat App</h1>
             <ChevronDown size={13} className="mt-1 opacity-75" />

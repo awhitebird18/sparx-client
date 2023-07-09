@@ -8,6 +8,7 @@ export interface CreateSection {
 export interface Section extends CreateSection {
   uuid: string;
   userId?: string;
+  isSystem?: boolean;
 }
 
 export type UpdateSection = Partial<Section>;
