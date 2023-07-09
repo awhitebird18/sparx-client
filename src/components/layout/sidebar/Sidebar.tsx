@@ -36,7 +36,7 @@ const Sidebar = () => {
             key={section.uuid}
             type={section.type}
             name={section.name}
-            channels={[]}
+            channels={section.channels}
             isSystem={section.isSystem}
           />
         ))}
