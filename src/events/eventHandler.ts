@@ -4,6 +4,7 @@ type EventListeners<T> = {
   [eventName: string]: Array<EventListenerCallback<T>>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const eventListeners: EventListeners<any> = {};
 
 export function addEventListener<T>(eventName: string, callback: EventListenerCallback<T>): void {
