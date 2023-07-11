@@ -9,17 +9,17 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
 
 interface ListHeaderProps {
-  uuid: string;
   icon?: JSX.Element;
   title: string;
+  isSystem?: boolean;
 }
 
-const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
+const ListHeader = ({ icon, title, isSystem }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasOpenDialog] = useState(false);
@@ -29,20 +29,21 @@ const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
 
   const handleClickItem = ({ name }: { name: ModalName }) => {
     setActiveModal({ name });
-    console.log(uuid);
   };
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger asChild>
-        <div className="h-7 m-1 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
-          <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+      <div className="h-8 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
+        <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+        <DropdownMenuTrigger asChild>
           <div className="font-semibold">{title}</div>
-        </div>
-      </DropdownMenuTrigger>
+        </DropdownMenuTrigger>
+      </div>
+
       <DropdownMenuContent
         className="DropdownMenuContent w-60"
         sideOffset={5}
+        align="start"
         hidden={hasOpenDialog}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
@@ -69,9 +70,15 @@ const ListHeader = ({ uuid, icon, title }: ListHeaderProps) => {
           <DropdownMenuSubTrigger>Manage</DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
-              <DropdownMenuItem>Rename Section</DropdownMenuItem>
-              <DropdownMenuItem>Delete Section</DropdownMenuItem>
-              <DropdownMenuSeparator />
+              {!isSystem && (
+                <>
+                  <DropdownMenuItem>Rename Section</DropdownMenuItem>
+
+                  <DropdownMenuItem className="text-red-500">{`Delete ${title}`}</DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem>Manage Sections</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>

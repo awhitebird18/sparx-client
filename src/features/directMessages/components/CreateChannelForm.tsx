@@ -7,12 +7,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
+
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { SectionTypes } from '../types/sectionEnums';
+import { ChannelTypes } from '../types/channelEnums';
 import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
 
@@ -20,8 +21,8 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const CreateSectionForm = () => {
-  const { createSection } = useStore('sectionStore');
+const CreateChanneForm = () => {
+  const { createChannel } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,12 +32,11 @@ const CreateSectionForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createSection({ name: values.name, type: SectionTypes.ANY });
+    createChannel({ name: values.name, type: ChannelTypes.CHANNEL });
     setActiveModal(null);
   }
-
   return (
-    <Modal title="Create Section">
+    <Modal title="Create Channel">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col max-w-lg">
           <FormField
@@ -46,9 +46,9 @@ const CreateSectionForm = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter a section name" {...field} />
+                  <Input placeholder="Enter a channel name" {...field} />
                 </FormControl>
-                <FormDescription>This is the name of your new sidebar section</FormDescription>
+                <FormDescription>This is your publicly displayed channel name</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -63,4 +63,4 @@ const CreateSectionForm = () => {
   );
 };
 
-export default CreateSectionForm;
+export default CreateChanneForm;

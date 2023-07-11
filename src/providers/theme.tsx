@@ -9,7 +9,7 @@ interface ThemeProviderProps {
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const { currentUser } = useAuth();
-  const [theme, setTheme] = useState<string>(currentUser.theme);
+  const [theme, setTheme] = useState<string>(currentUser?.theme || 'light');
 
   const toggleTheme = useCallback(() => {
     const toggleTheme = theme === 'light' ? 'dark' : 'light';

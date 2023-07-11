@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ChannelTypes } from '../types/channelEnums';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
 
 const formSchema = z.object({
@@ -23,6 +23,7 @@ const formSchema = z.object({
 
 const CreateChanneForm = () => {
   const { createChannel } = useStore('channelStore');
+  const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,8 +32,8 @@ const CreateChanneForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ name: values.name, type: ChannelTypes.PUBLIC });
-    createChannel({ name: values.name, type: ChannelTypes.PUBLIC });
+    createChannel({ name: values.name, type: ChannelTypes.CHANNEL });
+    setActiveModal(null);
   }
   return (
     <Modal title="Create Channel">

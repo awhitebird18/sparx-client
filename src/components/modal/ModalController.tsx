@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 
 import modalList from './modalList';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { Suspense } from 'react';
 
 const ModalController = () => {

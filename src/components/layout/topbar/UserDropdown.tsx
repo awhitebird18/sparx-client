@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
