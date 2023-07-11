@@ -2,7 +2,7 @@ import Axios, { AxiosInstance } from 'axios';
 
 import { API_URL } from '@/config';
 
-import { stores } from '@/stores/stores';
+import { stores } from '@/stores/RootStore';
 import { NotificationType } from '@/stores/NotificationStore';
 
 export const axios: AxiosInstance = Axios.create({

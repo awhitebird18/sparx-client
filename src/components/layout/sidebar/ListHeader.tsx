@@ -9,7 +9,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
 

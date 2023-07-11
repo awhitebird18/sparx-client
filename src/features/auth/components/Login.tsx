@@ -8,15 +8,16 @@ import { Input } from '@/components/ui/Input';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const { userLogin } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await login(username, password);
+      const data = await userLogin({ email, password });
+
+      console.log(data);
 
       navigate('/app');
     } catch (error) {
@@ -41,16 +42,16 @@ const Login: React.FC = () => {
         <div className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium">
+                Email
               </label>
               <div className="mt-1">
                 <Input
-                  id="username"
-                  name="username"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>

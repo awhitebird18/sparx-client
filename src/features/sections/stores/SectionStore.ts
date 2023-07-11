@@ -5,6 +5,7 @@ import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Section, CreateSection, UpdateSection } from '@/features/sections';
 import { createSection } from '../api/createSection';
 import { getSections } from '../api/getSections';
+import { addEventListener } from '@/events/eventHandler';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,6 +24,8 @@ export class SectionStore {
       fetchsections: action,
       setSections: action,
     });
+
+    addEventListener('channelUpdate', this.fetchsections);
   }
 
   setSections = (sections: Section[]) => {

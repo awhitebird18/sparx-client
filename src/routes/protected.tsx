@@ -20,7 +20,7 @@ export const protectedRoutes = [
       { path: 'mentions', element: <MentionRoutes /> },
       { path: 'drafts', element: <DraftRoutes /> },
       { path: ':channelId/*', element: <ChatroomRoutes /> },
-      { path: '*', element: <Navigate to="." /> },
+      { path: '*', element: <Navigate to="/" /> },
     ],
   },
 ];

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { Badge } from '@/components/ui/Badge';
 import Editor from './Editor';
 import dayjs from 'dayjs';
@@ -29,17 +29,17 @@ const ChatRoom: React.FC = () => {
   const { channelId } = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
-    if (!channelId) return;
-    fetchMessages(channelId);
-
     console.log(channelId);
-    fetchChannel(channelId);
+    setIsLoading(true);
+
+    fetchMessages();
+
+    // fetchChannel();
 
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
-  }, [fetchMessages, channelId, fetchChannel]);
+  }, [fetchMessages, fetchChannel, channelId]);
 
   useEffect(() => {
     if (scrollRef.current) {

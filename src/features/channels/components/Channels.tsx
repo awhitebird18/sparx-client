@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import React, { useEffect, useState } from 'react';
 import { Channel } from '@/features/channels';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';

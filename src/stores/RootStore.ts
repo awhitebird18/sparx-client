@@ -7,6 +7,7 @@ import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { NotificationStore } from './NotificationStore';
 import { ModalStore } from './ModalStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
+import { SocketStore } from './SocketStore';
 
 export const stores = Object.freeze({
   messageStore: new MessageStore(),
@@ -16,6 +17,7 @@ export const stores = Object.freeze({
   notificationStore: new NotificationStore(),
   modalStore: new ModalStore(),
   sectionStore: new SectionStore(),
+  socketStore: new SocketStore(),
 });
 
 export const storeContext = createContext(stores);

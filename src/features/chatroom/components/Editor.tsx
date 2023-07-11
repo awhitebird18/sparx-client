@@ -1,7 +1,7 @@
 // src/components/MessageInput.tsx
 
 import React, { useState, KeyboardEvent } from 'react';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/providers/auth';
 import dayjs from 'dayjs';

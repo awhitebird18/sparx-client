@@ -31,8 +31,6 @@ const ThemeTab = () => {
   const handleThemeSelect = (e: any) => {
     window.localStorage.setItem('theme', e.target.value);
 
-    console.log(e.target.value);
-
     setCurrentUser((prev: User) => ({ ...prev, theme: e.target.value }));
     // Need to db call to set user
   };

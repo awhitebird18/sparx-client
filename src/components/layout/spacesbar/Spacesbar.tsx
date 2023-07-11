@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 

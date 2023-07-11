@@ -13,7 +13,7 @@ import {
 import { useAuth } from '@/providers/auth';
 import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 import { ModalName } from '@/components/modal/modalList';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 
 const CompanyDropdown = () => {
   const { setActiveModal } = useStore('modalStore');

@@ -4,11 +4,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 
-import { channels, users } from '@/utils/seeds';
 import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
-import { User } from '@/features/users';
 import { createChannel } from '../api/createChannel';
-import { ChannelTypes } from '../types/channelEnums';
+import { getSubscribedChannels } from '../api/getSubscribedChannels';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -31,10 +29,9 @@ export class ChannelStore {
       createChannel: action,
       updateChannel: action,
       deleteChannel: action,
-      fetchChannels: action,
       incrementPage: action,
       setChannels: action,
-      fetchChannel: action,
+      fetchSubscribedChannels: action,
     });
   }
 
@@ -77,40 +74,19 @@ export class ChannelStore {
   };
 
   fetchChannel = (channelUUID: string) => {
-    const currentChannel = channels.find((channel: Channel) => channel.uuid === channelUUID);
+    const currentChannel = this.channels.find((channel: Channel) => channel.uuid === channelUUID);
 
     if (!currentChannel) return;
 
     this.setCurrentChannel(currentChannel);
   };
 
-  fetchChannels = () => {
+  fetchSubscribedChannels = async () => {
     this.setIsLoading(true);
 
-    this.setChannels(
-      channels.map((channel: Channel) => ({ ...channel, type: ChannelTypes.PUBLIC })),
-    );
+    const channels = await getSubscribedChannels();
 
-    setTimeout(() => {
-      this.setIsLoading(false);
-    }, 500);
-  };
-
-  fetchUserChannels = () => {
-    this.setIsLoading(true);
-
-    this.setChannels(
-      users.map((user: User) => ({
-        uuid: user.uuid,
-        name: user.displayName,
-        joinedAt: dayjs(),
-        createdAt: dayjs(),
-        topic: '',
-        description: '',
-        image: user.image,
-        type: ChannelTypes.DIRECT,
-      })),
-    );
+    this.setChannels(channels);
 
     setTimeout(() => {
       this.setIsLoading(false);

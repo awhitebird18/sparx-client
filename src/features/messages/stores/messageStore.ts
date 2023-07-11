@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Message, UpdateMessage } from '@/features/messages';
 import { messages, users } from '@/utils/seeds';
-import { stores } from '@/stores/stores';
+import { stores } from '@/stores/RootStore';
 import { User } from '@/features/users';
 
 dayjs.extend(utc);
@@ -45,7 +45,6 @@ export class MessageStore {
   }
 
   get groupedMessagesWithUser() {
-    console.log(this.groupedMessages);
     return Object.entries(this.groupedMessages).map(([date, messages]) => {
       return {
         date,
@@ -99,8 +98,7 @@ export class MessageStore {
     this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
   };
 
-  fetchMessages = (channelId: string) => {
-    console.log(channelId);
+  fetchMessages = () => {
     const messagesWithUsers = messages.map((message: Message) => {
       const user = users.find((user: User) => {
         user.uuid === message.userId;

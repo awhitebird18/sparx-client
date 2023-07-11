@@ -1,8 +1,8 @@
-// src/AuthProvider.tsx
-
-import { isUser } from '@/utils/isUser';
-import { isValidJson } from '@/utils/isValidJson';
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { LoginCredentials } from '@/features/auth';
+import { login } from '@/features/auth/api/login';
+import { axios } from '@/lib/axios';
+import { verifyUser } from '@/features/auth/api/verifyUser';
 
 type User = {
   uuid: string;
@@ -14,10 +14,10 @@ type User = {
 };
 
 interface AuthContextData {
-  currentUser: User;
+  currentUser: User | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
-  login: (username: string, password: string) => Promise<void>;
+  userLogin: (loginCredentials: LoginCredentials) => Promise<void>;
   logout: () => void;
   register: (username: string, email: string, password: string) => Promise<void>;
   loading: boolean;
@@ -33,43 +33,25 @@ export const useAuth = (): AuthContextData => {
   return context;
 };
 
-const authenticateUser = async (email: string, password: string): Promise<User> => {
-  // Call your API here
-  // Replace with actual authentication logic
-  // For now, we'll just return a mock user object if the credentials are correct
-
-  if (email === 'test' && password === 'password') {
-    return {
-      uuid: '3c82abba-2ce9-4805-a978-1bedf848dfe9',
-      email: 'aaron@gmail.com',
-      firstName: 'Aaron',
-      lastName: 'Whitebird',
-      image: '/images/profile-image-1.png',
-      theme: 'dark',
-    };
-  } else {
-    throw new Error('Invalid username or password');
-  }
-};
-
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User>({} as User);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const login = async (username: string, password: string) => {
+  const userLogin = async (loginCredentials: LoginCredentials) => {
     try {
-      const user = await authenticateUser(username, password);
+      const res = await login(loginCredentials);
+      const { access_token: token } = res;
 
-      if (!user) {
-        throw Error('Email or password is incorrect');
-      }
+      localStorage.setItem('auth', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      window.localStorage.setItem('user', JSON.stringify(user));
-      setCurrentUser(user);
+      // Fetch user data
+      const data = await axios.get('/auth/verify');
+      setCurrentUser(data.data);
     } catch (error) {
       console.error(error);
       throw error;
@@ -77,18 +59,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    // Clear the user data
-    setCurrentUser({} as User);
-    window.localStorage.removeItem('user');
-    // Maybe do other cleanup tasks
+    setCurrentUser(null);
+    window.localStorage.removeItem('auth');
   };
 
   const register = async () => {
     try {
-      // Call your API here to register the user
-      // For now, we'll just log the details
-
-      setCurrentUser({} as User); // Set the current user after successful registration
+      setCurrentUser(null);
     } catch (error) {
       console.error(error);
       throw error;
@@ -96,29 +73,42 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // Check if user is logged in on initial load
-    // Again, replace this with actual logic
+    const fn = async () => {
+      setLoading(true);
+      const token = localStorage.getItem('auth');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-    const user = window.localStorage.getItem('user');
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
-    if (user && isValidJson(user)) {
-      const parsedUser = JSON.parse(user);
+      const data = await verifyUser();
 
-      setCurrentUser(isUser(parsedUser) ? parsedUser : {});
+      console.log(data);
+
+      setCurrentUser(data);
+
+      setLoading(false);
+    };
+
+    try {
+      fn();
+    } catch (err) {
+      setCurrentUser(null);
     }
-
-    setLoading(false);
   }, []);
 
   const value = {
     currentUser,
     setCurrentUser,
-    login,
+    userLogin,
     logout,
     register,
     loading,
   };
 
+  console.log(loading);
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 

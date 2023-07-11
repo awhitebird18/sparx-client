@@ -5,13 +5,12 @@ import Topbar from '@/components/layout/topbar/Topbar';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import WorkspaceBar from '@/components/layout/spacesbar/Spacesbar';
 import { useAuth } from '@/providers/auth';
-import { isUser } from '@/utils/isUser';
 import ModalController from '../modal/ModalController';
 
 export const AppLayout = () => {
   const { currentUser } = useAuth();
 
-  if (!isUser(currentUser)) {
+  if (!currentUser) {
     return <Navigate to="/auth/login" />;
   }
 

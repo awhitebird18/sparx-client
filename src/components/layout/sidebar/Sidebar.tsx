@@ -1,7 +1,7 @@
 import { TvFill, PeopleFill, At, Files } from 'react-bootstrap-icons';
 
 import ListItem from './ListItem';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { useEffect } from 'react';
 
 import { Section as SectionType } from '@/features/sections';
@@ -13,13 +13,12 @@ const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
 
 const Sidebar = () => {
   const { isLoading, sections, fetchsections } = useStore('sectionStore');
+
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchsections();
   }, [fetchsections]);
-
-  console.log(sections);
 
   return (
     <div className="border-border border-r flex flex-col py-2 max-w-[14rem] w-full">

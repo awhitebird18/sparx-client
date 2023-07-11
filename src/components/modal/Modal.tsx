@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
-import { useStore } from '@/stores/stores';
+import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
 interface ModalProps {
