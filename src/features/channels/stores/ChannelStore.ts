@@ -86,7 +86,7 @@ export class ChannelStore {
 
     const channels = await getSubscribedChannels();
 
-    console.log(channels);
+    console.info('user-joined channels', channels);
 
     this.setChannels(channels);
 

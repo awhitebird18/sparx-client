@@ -12,11 +12,11 @@ const Spacesbar = () => {
   }, [fetchSpaces]);
 
   const onClick = () => {
-    console.log('changing space');
+    console.info('changing space');
   };
 
   const addSpace = () => {
-    console.log('adding a new space');
+    console.info('adding a new space');
   };
 
   return (

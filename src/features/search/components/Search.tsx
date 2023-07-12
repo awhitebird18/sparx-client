@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/Button';
 
 const Search = () => {
   const onClick = () => {
-    console.log('open search component');
+    console.info('open search component');
   };
   return (
     <Button

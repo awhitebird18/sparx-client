@@ -45,11 +45,11 @@ const ProfileModal = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.info(values);
   }
 
   const handleCancel = () => {
-    console.log('handle cancel');
+    console.info('handle cancel');
   };
 
   return (

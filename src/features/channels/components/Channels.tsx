@@ -43,10 +43,10 @@ const Channels: React.FC = () => {
   const handleChannelAction = (channelId: string, action: ChannelActions) => {
     switch (action) {
       case ChannelActions.JOIN:
-        console.log(`Join channel: ${channelId}`);
+        console.info(`Join channel: ${channelId}`);
         break;
       case ChannelActions.LEAVE:
-        console.log(`Leave channel: ${channelId}`);
+        console.info(`Leave channel: ${channelId}`);
         break;
     }
   };

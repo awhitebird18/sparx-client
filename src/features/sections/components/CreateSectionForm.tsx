@@ -29,8 +29,6 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
     },
   });
 
-  console.log(id);
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (id) {
       updateSection(id, { name: values.name });

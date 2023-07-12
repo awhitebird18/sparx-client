@@ -6,8 +6,6 @@ const DeleteSection = ({ id, name }: { id: string; name: string }) => {
   const { deleteSection } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
 
-  console.log(id);
-
   function handleDelete() {
     deleteSection(id);
 

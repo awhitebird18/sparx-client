@@ -15,9 +15,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const data = await userLogin({ email, password });
-
-      console.log(data);
+      await userLogin({ email, password });
 
       navigate('/app');
     } catch (error) {

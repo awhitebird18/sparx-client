@@ -20,8 +20,7 @@ const RegisterPage: React.FC = () => {
 
     if (password !== confirmPassword) return;
     try {
-      const res = await registerUser({ email, firstName, lastName, password });
-      console.log(res);
+      await registerUser({ email, firstName, lastName, password });
     } catch (error) {
       console.error(error);
     }

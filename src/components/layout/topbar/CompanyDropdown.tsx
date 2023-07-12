@@ -67,14 +67,14 @@ const CompanyDropdown = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
-              console.log('support');
+              console.info('support');
             }}
           >
             Support
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              console.log('feedback');
+              console.info('feedback');
             }}
           >
             Feedback

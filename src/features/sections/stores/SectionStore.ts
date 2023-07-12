@@ -54,9 +54,8 @@ export class SectionStore {
   };
 
   deleteSection = async (sectionId: string) => {
-    const res = await deleteSection(sectionId);
+    await deleteSection(sectionId);
 
-    console.log(res);
     this.sections = this.sections.filter((Section: Section) => Section.uuid !== sectionId);
   };
 
