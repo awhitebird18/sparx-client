@@ -6,6 +6,8 @@ import { Section, CreateSection, UpdateSection } from '@/features/sections';
 import { createSection } from '../api/createSection';
 import { getSections } from '../api/getSections';
 import { addEventListener } from '@/events/eventHandler';
+import { updateSection } from '../api/updateSection';
+import { deleteSection } from '../api/deleteSection';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -41,17 +43,21 @@ export class SectionStore {
     this.sections.push(Section);
   };
 
-  updateSection = (updatedSection: UpdateSection) => {
-    const index = this.sections.findIndex(
-      (section: Section) => section.uuid === updatedSection.uuid,
-    );
-    if (index === -1) return null;
+  updateSection = async (sectionId: string, updatedFields: UpdateSection) => {
+    const updatedSection = await updateSection(sectionId, updatedFields);
 
-    this.sections[index] = { ...this.sections[index], ...updatedSection };
+    const index = this.sections.findIndex((section) => section.uuid === sectionId);
+
+    if (index !== -1) {
+      this.sections[index] = updatedSection;
+    }
   };
 
-  deleteSection = (uuid: string) => {
-    this.sections = this.sections.filter((Section: Section) => Section.uuid !== uuid);
+  deleteSection = async (sectionId: string) => {
+    const res = await deleteSection(sectionId);
+
+    console.log(res);
+    this.sections = this.sections.filter((Section: Section) => Section.uuid !== sectionId);
   };
 
   fetchsections = async () => {

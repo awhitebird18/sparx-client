@@ -33,6 +33,7 @@ const Sidebar = () => {
         sections.map((section: SectionType) => (
           <Section
             key={section.uuid}
+            id={section.uuid}
             type={section.type}
             name={section.name}
             channels={section.channels}

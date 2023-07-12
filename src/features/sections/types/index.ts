@@ -4,7 +4,6 @@ import { Channel } from '@/features/channels';
 
 export interface CreateSection {
   name: string;
-  type: SectionTypes;
 }
 
 export interface Section extends BaseEntity {

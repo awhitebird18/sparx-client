@@ -2,7 +2,8 @@ import { makeAutoObservable } from 'mobx';
 import { ModalName } from '@/components/modal/modalList';
 
 interface ActiveModal {
-  name: ModalName;
+  type: ModalName;
+  payload: any | null;
 }
 
 export class ModalStore {
