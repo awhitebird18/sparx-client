@@ -17,14 +17,14 @@ enum ChannelActions {
 }
 
 const Channels: React.FC = () => {
-  const { channels, fetchChannels, isLoading } = useStore('channelStore');
+  const { channels, fetchSubscribedChannels, isLoading } = useStore('channelStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchChannels();
-  }, [fetchChannels]);
+    fetchSubscribedChannels();
+  }, [fetchSubscribedChannels]);
 
   const handleViewChannel = (id: string) => {
     navigate(`/app/${id}`);

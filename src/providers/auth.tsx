@@ -3,6 +3,8 @@ import { LoginCredentials } from '@/features/auth';
 import { login } from '@/features/auth/api/login';
 import { axios } from '@/lib/axios';
 import { verifyUser } from '@/features/auth/api/verifyUser';
+import { RegistrationData } from '@/features/auth';
+import { register } from '@/features/auth/api/register';
 
 type User = {
   uuid: string;
@@ -19,7 +21,7 @@ interface AuthContextData {
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
   userLogin: (loginCredentials: LoginCredentials) => Promise<void>;
   logout: () => void;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  registerUser: (registrationData: RegistrationData) => Promise<void>;
   loading: boolean;
 }
 
@@ -63,9 +65,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     window.localStorage.removeItem('auth');
   };
 
-  const register = async () => {
+  const registerUser = async (registrationData: RegistrationData) => {
     try {
       setCurrentUser(null);
+      const res = await register(registrationData);
+
+      setCurrentUser(res);
     } catch (error) {
       console.error(error);
       throw error;
@@ -104,7 +109,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setCurrentUser,
     userLogin,
     logout,
-    register,
+    registerUser,
     loading,
   };
 

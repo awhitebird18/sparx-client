@@ -37,7 +37,7 @@ const Section = ({ type, name, channels, isSystem }: SectionProps) => {
       />
 
       <CollapsibleContent>
-        {channels.length
+        {channels?.length
           ? channels.map((channel: Channel) => (
               <ListItem
                 title={channel.name}

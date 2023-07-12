@@ -1,18 +1,18 @@
-import { Suspense } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import Topbar from '@/components/layout/topbar/Topbar';
 import Sidebar from '@/components/layout/sidebar/Sidebar';
 import WorkspaceBar from '@/components/layout/spacesbar/Spacesbar';
-import { useAuth } from '@/providers/auth';
 import ModalController from '../modal/ModalController';
+import { useStore } from '@/stores/RootStore';
 
 export const AppLayout = () => {
-  const { currentUser } = useAuth();
+  const { fetchSubscribedChannels } = useStore('channelStore');
 
-  if (!currentUser) {
-    return <Navigate to="/auth/login" />;
-  }
+  useEffect(() => {
+    fetchSubscribedChannels();
+  }, [fetchSubscribedChannels]);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">

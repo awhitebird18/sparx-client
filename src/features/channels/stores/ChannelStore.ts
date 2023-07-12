@@ -86,6 +86,8 @@ export class ChannelStore {
 
     const channels = await getSubscribedChannels();
 
+    console.log(channels);
+
     this.setChannels(channels);
 
     setTimeout(() => {
