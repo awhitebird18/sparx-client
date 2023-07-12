@@ -12,8 +12,8 @@ const modalList = {
   CreateSectionModal: (props: { id: string; name: string }) => <CreateSectionModal {...props} />,
   DeleteSectionModal: (props: { id: string; name: string }) => <DeleteSection {...props} />,
   InviteUserModal: () => <InviteUserModal />,
-  PreferencesModal: (props: any) => <PreferencesModal {...props} />,
-  ProfileModal: (props: any) => <ProfileModal {...props} />,
+  PreferencesModal: () => <PreferencesModal />,
+  ProfileModal: () => <ProfileModal />,
 };
 
 export type ModalName = keyof typeof modalList; // this line is new
