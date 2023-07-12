@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 
 export const getSubscribedChannels = async (): Promise<Channel[]> => {
   try {
-    const res = await axios.get('/channels');
+    const res = await axios.get('/userchannels');
 
     return res.data;
   } catch (err: unknown) {

@@ -9,14 +9,19 @@ import { Input } from '@/components/ui/Input';
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
-  const { register } = useAuth();
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { registerUser } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) return;
     try {
-      await register(username, email, password);
+      const res = await registerUser({ email, firstName, lastName, password });
+      console.log(res);
     } catch (error) {
       console.error(error);
     }
@@ -55,19 +60,36 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium">
-                Username
+              <label htmlFor="firstName" className="block text-sm font-medium">
+                First Name
               </label>
               <div className="mt-1">
                 <Input
-                  id="username"
-                  name="username"
+                  id="firstName"
+                  name="firstName"
                   type="text"
-                  autoComplete="username"
+                  autoComplete="firstName"
                   required
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium">
+                Last Name
+              </label>
+              <div className="mt-1">
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  autoComplete="lastName"
+                  required
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
             </div>
@@ -86,6 +108,23 @@ const RegisterPage: React.FC = () => {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium">
+                Confirm Password
+              </label>
+              <div className="mt-1">
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="confirmPassword"
+                  autoComplete="confirmPassword"
+                  required
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
             </div>
