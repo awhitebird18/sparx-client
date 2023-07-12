@@ -7,12 +7,14 @@ import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
+import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export class ChannelStore {
   channels: Channel[] = [];
+  subscribedChannels: Channel[] = [];
   currentChannel: Channel | null = null;
   page = 1;
   pageSize = 10;
@@ -40,6 +42,10 @@ export class ChannelStore {
   };
 
   setChannels = (Channels: Channel[]) => {
+    this.channels = Channels;
+  };
+
+  setSubscribedChannels = (Channels: Channel[]) => {
     this.channels = Channels;
   };
 
@@ -85,6 +91,20 @@ export class ChannelStore {
     this.setIsLoading(true);
 
     const channels = await getSubscribedChannels();
+
+    console.info('user-joined channels', channels);
+
+    this.setSubscribedChannels(channels);
+
+    setTimeout(() => {
+      this.setIsLoading(false);
+    }, 500);
+  };
+
+  fetchWorkspaceChannels = async () => {
+    this.setIsLoading(true);
+
+    const channels = await getWorkspaceChannels();
 
     console.info('user-joined channels', channels);
 
