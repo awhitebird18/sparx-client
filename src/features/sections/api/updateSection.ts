@@ -1,22 +1,21 @@
 import { axios } from '@/lib/axios';
+import { UpdateSection } from '..';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
-import { CreateSection } from '..';
 
-export const createSection = async (createSection: CreateSection) => {
+export const updateSection = async (sectionId: string, updateSection: UpdateSection) => {
   try {
-    const { data } = await axios.post('/sections', createSection);
+    const { data } = await axios.patch(`/sections/${sectionId}`, updateSection);
 
     stores.notificationStore.addNotification({
-      title: 'Section created',
+      title: 'Section updated',
       type: NotificationType.SUCCESS,
     });
 
     return data;
   } catch (err) {
     return stores.notificationStore.addNotification({
-      title: 'Error creating section',
+      title: 'Error updating section',
       type: NotificationType.ERROR,
     });
   }

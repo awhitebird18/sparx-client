@@ -30,8 +30,6 @@ export const buttonVariants = cva(
   },
 );
 
-console.log('testing');
-
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {

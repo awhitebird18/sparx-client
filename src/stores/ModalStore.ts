@@ -2,7 +2,9 @@ import { makeAutoObservable } from 'mobx';
 import { ModalName } from '@/components/modal/modalList';
 
 interface ActiveModal {
-  name: ModalName;
+  type: ModalName;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any | null;
 }
 
 export class ModalStore {

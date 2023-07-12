@@ -14,12 +14,13 @@ import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
 
 interface ListHeaderProps {
+  id: string;
   icon?: JSX.Element;
   title: string;
   isSystem?: boolean;
 }
 
-const ListHeader = ({ icon, title, isSystem }: ListHeaderProps) => {
+const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasOpenDialog] = useState(false);
@@ -27,8 +28,14 @@ const ListHeader = ({ icon, title, isSystem }: ListHeaderProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
 
-  const handleClickItem = ({ name }: { name: ModalName }) => {
-    setActiveModal({ name });
+  const handleClickItem = ({
+    type,
+    payload,
+  }: {
+    type: ModalName;
+    payload?: { id: string; name: string };
+  }) => {
+    setActiveModal({ type, payload });
   };
 
   return (
@@ -57,10 +64,10 @@ const ListHeader = ({ icon, title, isSystem }: ListHeaderProps) => {
           <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateChannelModal' })}>
+              <DropdownMenuItem onClick={() => handleClickItem({ type: 'CreateChannelModal' })}>
                 Create Channel
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleClickItem({ name: 'CreateSectionModal' })}>
+              <DropdownMenuItem onClick={() => handleClickItem({ type: 'CreateSectionModal' })}>
                 Create Section
               </DropdownMenuItem>
             </DropdownMenuSubContent>
@@ -72,9 +79,20 @@ const ListHeader = ({ icon, title, isSystem }: ListHeaderProps) => {
             <DropdownMenuSubContent>
               {!isSystem && (
                 <>
-                  <DropdownMenuItem>Rename Section</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleClickItem({ type: 'CreateSectionModal', payload: { id, name: title } })
+                    }
+                  >
+                    {`Rename ${title}`}
+                  </DropdownMenuItem>
 
-                  <DropdownMenuItem className="text-red-500">{`Delete ${title}`}</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-rose-500"
+                    onClick={() =>
+                      handleClickItem({ type: 'DeleteSectionModal', payload: { id, name: title } })
+                    }
+                  >{`Delete ${title}`}</DropdownMenuItem>
 
                   <DropdownMenuSeparator />
                 </>

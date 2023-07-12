@@ -12,19 +12,21 @@ import { useNavigate } from 'react-router-dom';
 import { SectionTypes } from '@/features/sections/types/sectionEnums';
 
 interface SectionProps {
+  id: string;
   type: SectionTypes;
   name: string;
   channels: Channel[];
   isSystem?: boolean;
 }
 
-const Section = ({ type, name, channels, isSystem }: SectionProps) => {
+const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="mb-2">
       <ListHeader
+        id={id}
         title={name}
         isSystem={isSystem}
         icon={

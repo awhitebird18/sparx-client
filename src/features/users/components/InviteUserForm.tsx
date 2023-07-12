@@ -28,7 +28,7 @@ const InviteUserForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    console.info(values);
   }
   return (
     <Modal title="Invite users to Chat App">

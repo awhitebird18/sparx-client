@@ -90,10 +90,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const data = await verifyUser();
 
-      console.log(data);
-
       setCurrentUser(data);
-
       setLoading(false);
     };
 
@@ -113,7 +110,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
   };
 
-  console.log(loading);
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 

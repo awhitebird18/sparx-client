@@ -71,10 +71,10 @@ const UserDropdown: React.FC = () => {
           </div>
         </div>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => console.log('changeStatus')}>
+          <DropdownMenuItem onClick={() => console.info('changeStatus')}>
             Set yourself as away
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => console.log('pauseNotifications')}>
+          <DropdownMenuItem onClick={() => console.info('pauseNotifications')}>
             Pause notifications
           </DropdownMenuItem>
         </DropdownMenuGroup>

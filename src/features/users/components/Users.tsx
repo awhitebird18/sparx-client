@@ -75,11 +75,11 @@ const Users: React.FC = () => {
                   <button className="mt-2 text-right text-2xl">⋮</button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onSelect={() => console.log(`Message ${channel.name}`)}>
+                  <DropdownMenuItem onSelect={() => console.info(`Message ${channel.name}`)}>
                     {UserMenuOptions.PROFILE}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => console.log(`View Profile ${channel.name}s profile`)}
+                    onSelect={() => console.info(`View Profile ${channel.name}s profile`)}
                   >
                     {UserMenuOptions.MESSAGE}
                   </DropdownMenuItem>

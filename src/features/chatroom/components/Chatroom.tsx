@@ -29,7 +29,7 @@ const ChatRoom: React.FC = () => {
   const { channelId } = useParams();
 
   useEffect(() => {
-    console.log(channelId);
+    console.info(channelId);
     setIsLoading(true);
 
     fetchMessages();
