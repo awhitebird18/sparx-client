@@ -4,9 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Message, UpdateMessage } from '@/features/messages';
-import { messages, users } from '@/utils/seeds';
-
-import { User } from '@/features/users';
+import { getMessages } from '../api/getMessages';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -14,13 +12,12 @@ dayjs.extend(timezone);
 export class MessageStore {
   messages: Message[] = [];
   page = 1;
-  pageSize = 10;
+  isLoading = true;
 
   constructor() {
     makeObservable(this, {
       messages: observable,
       page: observable,
-      pageSize: observable,
       findById: action,
       addMessage: action,
       updateMessage: action,
@@ -29,13 +26,13 @@ export class MessageStore {
       incrementPage: action,
       setMessages: action,
       groupedMessages: computed,
-      // groupedMessagesWithUser: computed,
+      groupedMessagesWithUser: computed,
     });
   }
 
   get groupedMessages() {
     return this.messages.reduce((groups: { [key: string]: Message[] }, message) => {
-      const date = message.createdAt.format('MM-DD-YYYY');
+      const date = message?.createdAt?.format('MM-DD-YYYY');
       if (!groups[date]) {
         groups[date] = [];
       }
@@ -44,30 +41,14 @@ export class MessageStore {
     }, {});
   }
 
-  // get groupedMessagesWithUser() {
-  //   return Object.entries(this.groupedMessages).map(([date, messages]) => {
-  //     return {
-  //       date,
-  //       messages: messages.map((message) => {
-  //         const user = stores.userStore.users.find((user: User) => user.uuid === message.userId);
-
-  //         const currentUser = {
-  //           email: 'aaron@gmail.com',
-  //           uuid: '3c82abba-2ce9-4805-a978-1bedf848dfe9',
-  //           firstName: 'Aaron',
-  //           lastName: 'Whitebird',
-  //           image: '/images/profile-image-1.png',
-  //           displayName: 'Aaron Whitebird',
-  //         };
-
-  //         return {
-  //           ...message,
-  //           user: user ? user : currentUser, // this will add the whole user object to each message
-  //         };
-  //       }),
-  //     };
-  //   });
-  // }
+  get groupedMessagesWithUser() {
+    return Object.entries(this.groupedMessages).map(([date, messages]) => {
+      return {
+        date,
+        messages,
+      };
+    });
+  }
 
   findById = (uuid: string) => {
     return this.messages.find((message: Message) => message.uuid === uuid);
@@ -77,8 +58,20 @@ export class MessageStore {
     this.messages = messages;
   };
 
+  setPage = (page: number) => {
+    this.page = page;
+  };
+
   addMessage = (message: Message) => {
     this.messages.push(message);
+  };
+
+  setIsLoading = (bool: boolean) => {
+    this.isLoading = bool;
+  };
+
+  addMessages = (newMessages: Message[]) => {
+    this.messages = [...this.messages, ...newMessages];
   };
 
   incrementPage = () => {
@@ -98,18 +91,12 @@ export class MessageStore {
     this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
   };
 
-  fetchMessages = () => {
-    const messagesWithUsers = messages.map((message: Message) => {
-      const user = users.find((user: User) => {
-        user.uuid === message.userId;
-      });
+  fetchMessages = async (channelId: string) => {
+    this.setIsLoading(true);
+    const messages = await getMessages(this.page, channelId);
 
-      message.user = user;
-
-      return message;
-    });
-
-    this.setMessages(messagesWithUsers);
+    this.addMessages(messages);
     this.incrementPage();
+    this.setIsLoading(false);
   };
 }

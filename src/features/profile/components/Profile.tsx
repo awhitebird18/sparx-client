@@ -55,7 +55,7 @@ const ProfileModal = () => {
   return (
     <Modal title="Profile">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col w-fit">
           <div className="flex gap-4">
             <div className="flex flex-col items-center gap-2">
               <Avatar>

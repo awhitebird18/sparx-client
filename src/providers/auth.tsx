@@ -45,6 +45,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
   const { setSubscribedChannels } = useStore('channelStore');
+  const { setUsers } = useStore('userStore');
 
   const [loading, setLoading] = useState(true);
 
@@ -95,9 +96,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const data = await verifyUser();
 
+      console.log(data);
+
       setSections(data.sections);
       setSubscribedChannels(data.channels);
-
+      setUsers(data.workspaceUsers);
       setCurrentUser(data.user);
       setLoading(false);
     };
@@ -107,7 +110,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       setCurrentUser(null);
     }
-  }, [setSections, setSubscribedChannels]);
+  }, [setSections, setSubscribedChannels, setUsers]);
 
   const value = {
     currentUser,

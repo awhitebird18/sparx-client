@@ -14,7 +14,7 @@ export const AppLayout = () => {
         <WorkspaceBar />
         <Sidebar />
         <Suspense fallback={<div />}>
-          <div className="w-full p-4">
+          <div className="w-full">
             <Outlet />
           </div>
         </Suspense>

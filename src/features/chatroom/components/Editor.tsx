@@ -14,7 +14,7 @@ const Editor: React.FC = () => {
   const { currentUser } = useAuth();
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter' && message.trim() !== '') {
+    if (currentUser && event.key === 'Enter' && message.trim() !== '') {
       // Here you can replace "userId" with the actual user id and "timezone" with actual user timezone
       addMessage({
         uuid: uuid(), // you should replace this with a real uuid in production code
