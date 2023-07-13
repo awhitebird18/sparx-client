@@ -161,8 +161,6 @@ export class ChannelStore {
 
     const channels = await getWorkspaceChannels();
 
-    console.info('user-joined channels', channels);
-
     this.setChannels(channels);
 
     setTimeout(() => {
