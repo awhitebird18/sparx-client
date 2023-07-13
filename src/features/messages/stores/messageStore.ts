@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Message, UpdateMessage } from '@/features/messages';
 import { messages, users } from '@/utils/seeds';
-import { stores } from '@/stores/RootStore';
+
 import { User } from '@/features/users';
 
 dayjs.extend(utc);
@@ -29,7 +29,7 @@ export class MessageStore {
       incrementPage: action,
       setMessages: action,
       groupedMessages: computed,
-      groupedMessagesWithUser: computed,
+      // groupedMessagesWithUser: computed,
     });
   }
 
@@ -44,30 +44,30 @@ export class MessageStore {
     }, {});
   }
 
-  get groupedMessagesWithUser() {
-    return Object.entries(this.groupedMessages).map(([date, messages]) => {
-      return {
-        date,
-        messages: messages.map((message) => {
-          const user = stores.userStore.users.find((user: User) => user.uuid === message.userId);
+  // get groupedMessagesWithUser() {
+  //   return Object.entries(this.groupedMessages).map(([date, messages]) => {
+  //     return {
+  //       date,
+  //       messages: messages.map((message) => {
+  //         const user = stores.userStore.users.find((user: User) => user.uuid === message.userId);
 
-          const currentUser = {
-            email: 'aaron@gmail.com',
-            uuid: '3c82abba-2ce9-4805-a978-1bedf848dfe9',
-            firstName: 'Aaron',
-            lastName: 'Whitebird',
-            image: '/images/profile-image-1.png',
-            displayName: 'Aaron Whitebird',
-          };
+  //         const currentUser = {
+  //           email: 'aaron@gmail.com',
+  //           uuid: '3c82abba-2ce9-4805-a978-1bedf848dfe9',
+  //           firstName: 'Aaron',
+  //           lastName: 'Whitebird',
+  //           image: '/images/profile-image-1.png',
+  //           displayName: 'Aaron Whitebird',
+  //         };
 
-          return {
-            ...message,
-            user: user ? user : currentUser, // this will add the whole user object to each message
-          };
-        }),
-      };
-    });
-  }
+  //         return {
+  //           ...message,
+  //           user: user ? user : currentUser, // this will add the whole user object to each message
+  //         };
+  //       }),
+  //     };
+  //   });
+  // }
 
   findById = (uuid: string) => {
     return this.messages.find((message: Message) => message.uuid === uuid);

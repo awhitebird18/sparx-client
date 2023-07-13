@@ -8,6 +8,7 @@ import { useStore } from '@/stores/RootStore';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';
+import { toJS } from 'mobx';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -17,7 +18,8 @@ enum ChannelActions {
 }
 
 const Channels: React.FC = () => {
-  const { channels, fetchWorkspaceChannels, isLoading } = useStore('channelStore');
+  const { channels, fetchWorkspaceChannels, isLoading, joinChannel, leaveChannel } =
+    useStore('channelStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -38,18 +40,22 @@ const Channels: React.FC = () => {
     (currentPage - 1) * CHANNELS_PER_PAGE,
     currentPage * CHANNELS_PER_PAGE,
   );
+
   const totalPages = Math.ceil(filteredChannels.length / CHANNELS_PER_PAGE);
 
   const handleChannelAction = (channelId: string, action: ChannelActions) => {
     switch (action) {
       case ChannelActions.JOIN:
-        console.info(`Join channel: ${channelId}`);
+        joinChannel(channelId);
         break;
       case ChannelActions.LEAVE:
-        console.info(`Leave channel: ${channelId}`);
+        leaveChannel(channelId);
+
         break;
     }
   };
+
+  console.log(toJS(channels));
 
   return (
     <div className="w-full overflow-hidden h-full flex flex-col">
@@ -83,19 +89,23 @@ const Channels: React.FC = () => {
                 ) : null}
               </div>
               <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
-                {channel.joinedAt ? (
+                {channel.isSubscribed ? (
                   <Button
                     variant="outline"
-                    onClick={() => handleChannelAction(channel.uuid, ChannelActions.LEAVE)}
-                    disabled={!channel.joinedAt}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleChannelAction(channel.uuid, ChannelActions.LEAVE);
+                    }}
                     className="py-1 px-2 font-semibold rounded text-black bg-popover dark:bg-muted-foreground hover:bg-muted-foreground w-20"
                   >
                     {ChannelActions.LEAVE}
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => handleChannelAction(channel.uuid, ChannelActions.JOIN)}
-                    disabled={Boolean(channel.joinedAt)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleChannelAction(channel.uuid, ChannelActions.JOIN);
+                    }}
                     className="py-1 px-2 font-semibold rounded shadow-md  bg-green-400 hover:bg-green-700 w-20"
                   >
                     {ChannelActions.JOIN}
@@ -128,7 +138,5 @@ const Channels: React.FC = () => {
     </div>
   );
 };
-
-observer;
 
 export default observer(Channels);

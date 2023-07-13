@@ -21,16 +21,16 @@ const UserDropdown: React.FC = () => {
   const focusRef = useRef<any>(null);
   const { currentUser, logout } = useAuth();
 
-  const handleOpenModal = ({ name }: { name: ModalName }) => {
-    setActiveModal({ name });
+  const handleOpenModal = ({ type }: { type: ModalName }) => {
+    setActiveModal({ type, payload: {} });
   };
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger className="flex items-center">
-        {currentUser && (
-          <Tooltip>
-            <TooltipTrigger>
+      {currentUser && (
+        <Tooltip>
+          <TooltipTrigger>
+            <DropdownMenuTrigger className="flex items-center" asChild>
               <Avatar className="w-8 h-8 cursor-pointer" ref={dropdownTriggerRef}>
                 {<AvatarImage src={currentUser.image} />}
                 <AvatarFallback
@@ -38,11 +38,11 @@ const UserDropdown: React.FC = () => {
                   className="rounded-md"
                 />
               </Avatar>
-            </TooltipTrigger>
-            <TooltipContent>{currentUser.firstName}</TooltipContent>
-          </Tooltip>
-        )}
-      </DropdownMenuTrigger>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>{currentUser.firstName}</TooltipContent>
+        </Tooltip>
+      )}
 
       <DropdownMenuContent
         className="DropdownMenuContent w-56"
@@ -58,12 +58,12 @@ const UserDropdown: React.FC = () => {
           <Avatar className="w-10 h-10 " ref={dropdownTriggerRef}>
             {<AvatarImage src={currentUser?.image} />}
             <AvatarFallback
-              children={currentUser.firstName.substring(0, 2).toLowerCase()}
+              children={currentUser?.firstName.substring(0, 2).toLowerCase()}
               className="rounded-md"
             />
           </Avatar>
           <div>
-            <p>{currentUser.firstName}</p>
+            <p>{currentUser?.firstName}</p>
             <div className="flex items-center gap-1">
               <div className="rounded-full bg-gray-600 h-2.5 w-2.5"></div>
               <p className="text-xs text-gray-400">Away</p>
@@ -82,10 +82,10 @@ const UserDropdown: React.FC = () => {
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'ProfileModal' })}>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ProfileModal' })}>
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'PreferencesModal' })}>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
             Preferences
           </DropdownMenuItem>
         </DropdownMenuGroup>

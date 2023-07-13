@@ -8,6 +8,9 @@ import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
+import { joinChannel } from '../api/joinChannel';
+import { leaveChannel } from '../api/leaveChannel';
+import { updateChannel } from '../api/updateChannel';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,12 +26,14 @@ export class ChannelStore {
   constructor() {
     makeObservable(this, {
       channels: observable,
+      subscribedChannels: observable,
       page: observable,
       pageSize: observable,
       isLoading: observable,
       currentChannel: observable,
       findById: action,
       createChannel: action,
+      updateSubscribedChannel: action,
       updateChannel: action,
       deleteChannel: action,
       incrementPage: action,
@@ -41,12 +46,12 @@ export class ChannelStore {
     return this.channels.find((channel: Channel) => channel.uuid === uuid);
   };
 
-  setChannels = (Channels: Channel[]) => {
-    this.channels = Channels;
+  setChannels = (channels: Channel[]) => {
+    this.channels = channels;
   };
 
-  setSubscribedChannels = (Channels: Channel[]) => {
-    this.channels = Channels;
+  setSubscribedChannels = (channels: Channel[]) => {
+    this.subscribedChannels = channels;
   };
 
   setCurrentChannel = (channel: Channel) => {
@@ -59,20 +64,36 @@ export class ChannelStore {
 
   createChannel = async (newChannel: CreateChannel) => {
     const channel = await createChannel(newChannel);
-    this.channels.push(channel);
+
+    console.log(channel);
+
+    this.subscribedChannels.push(channel);
+  };
+
+  updateSubscribedChannel = async (channelId: string, updateFields: UpdateChannel) => {
+    const updatedChannel = await updateChannel(channelId, updateFields);
+
+    const index = this.subscribedChannels.findIndex(
+      (channel: Channel) => channel.uuid === updatedChannel.uuid,
+    );
+    if (index === -1) return null;
+
+    this.subscribedChannels[index] = { ...this.subscribedChannels[index], ...updatedChannel };
+  };
+
+  updateChannel = async (channelId: string, updateFields: UpdateChannel) => {
+    const updatedChannel = await updateChannel(channelId, updateFields);
+
+    const index = this.channels.findIndex(
+      (channel: Channel) => channel.uuid === updatedChannel.uuid,
+    );
+    if (index === -1) return null;
+
+    this.channels[index] = { ...this.channels[index], ...updatedChannel };
   };
 
   incrementPage = () => {
     this.page = this.page + 1;
-  };
-
-  updateChannel = (updatedchannel: UpdateChannel) => {
-    const index = this.channels.findIndex(
-      (channel: Channel) => channel.uuid === updatedchannel.uuid,
-    );
-    if (index === -1) return null;
-
-    this.channels[index] = { ...this.channels[index], ...updatedchannel };
   };
 
   deleteChannel = (uuid: string) => {
@@ -85,6 +106,32 @@ export class ChannelStore {
     if (!currentChannel) return;
 
     this.setCurrentChannel(currentChannel);
+  };
+
+  joinChannel = async (channelId: string) => {
+    const channel = await joinChannel(channelId);
+
+    this.subscribedChannels = [...this.subscribedChannels, channel];
+
+    const index = this.channels.findIndex((channel: Channel) => channel.uuid === channelId);
+    if (index === -1) return null;
+
+    this.channels[index] = { ...this.channels[index], isSubscribed: true };
+  };
+
+  leaveChannel = async (channelId: string) => {
+    const res = await leaveChannel(channelId);
+
+    console.log(res);
+
+    this.subscribedChannels = this.subscribedChannels.filter(
+      (channel: Channel) => channel.uuid !== channelId,
+    );
+
+    const index = this.channels.findIndex((channel: Channel) => channel.uuid === channelId);
+    if (index === -1) return null;
+
+    this.channels[index] = { ...this.channels[index], isSubscribed: false };
   };
 
   fetchSubscribedChannels = async () => {

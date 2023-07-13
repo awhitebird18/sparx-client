@@ -5,6 +5,8 @@ import { axios } from '@/lib/axios';
 import { verifyUser } from '@/features/auth/api/verifyUser';
 import { RegistrationData } from '@/features/auth';
 import { register } from '@/features/auth/api/register';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
 type User = {
   uuid: string;
@@ -41,6 +43,9 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const { setSections } = useStore('sectionStore');
+  const { setSubscribedChannels } = useStore('channelStore');
+
   const [loading, setLoading] = useState(true);
 
   const userLogin = async (loginCredentials: LoginCredentials) => {
@@ -90,7 +95,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const data = await verifyUser();
 
-      setCurrentUser(data);
+      console.log(data);
+
+      setSections(data.sections);
+      setSubscribedChannels(data.channels);
+
+      setCurrentUser(data.user);
       setLoading(false);
     };
 
@@ -99,7 +109,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       setCurrentUser(null);
     }
-  }, []);
+  }, [setSections, setSubscribedChannels]);
 
   const value = {
     currentUser,
@@ -113,4 +123,4 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 
-export default AuthProvider;
+export default observer(AuthProvider);
