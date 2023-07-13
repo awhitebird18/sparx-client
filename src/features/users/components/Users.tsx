@@ -24,20 +24,23 @@ enum UserMenuOptions {
 }
 
 const Users: React.FC = () => {
-  const { fetchUserChannels, channels, isLoading } = useStore('channelStore');
+  // const { fetchWorkspaceChannels, , isLoading } = useStore('channelStore');
+  const { users, fetchUsers, isLoading } = useStore('userStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserChannels();
-  }, [fetchUserChannels]);
+    fetchUsers();
+  }, [fetchUsers]);
 
-  const filteredUsers = channels.filter((channel) =>
-    channel.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  console.log();
+
+  const filteredUsers = users.filter((user) =>
+    user.firstName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const displayedChannels = filteredUsers.slice(
+  const displayedUsers = filteredUsers.slice(
     (currentPage - 1) * USERS_PER_PAGE,
     currentPage * USERS_PER_PAGE,
   );
@@ -64,22 +67,22 @@ const Users: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 pr-2 overflow-auto">
-          {displayedChannels.map((channel) => (
+          {displayedUsers.map((user) => (
             <Card
-              key={channel.uuid}
+              key={user.uuid}
               className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-accent hover:bg-accent"
-              onClick={() => handleClickUser(channel.uuid)}
+              onClick={() => handleClickUser(user.uuid)}
             >
               <DropdownMenu>
                 <DropdownMenuTrigger className="absolute top-0 right-4">
                   <button className="mt-2 text-right text-2xl">⋮</button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem onSelect={() => console.info(`Message ${channel.name}`)}>
+                  <DropdownMenuItem onSelect={() => console.info(`Message ${user.firstName}`)}>
                     {UserMenuOptions.PROFILE}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => console.info(`View Profile ${channel.name}s profile`)}
+                    onSelect={() => console.info(`View Profile ${user.firstName}s profile`)}
                   >
                     {UserMenuOptions.MESSAGE}
                   </DropdownMenuItem>
@@ -87,13 +90,13 @@ const Users: React.FC = () => {
               </DropdownMenu>
               <CardContent className="flex items-center justify-center p-0 mb-2">
                 <Avatar className="h-32 w-32 ">
-                  <AvatarImage src={channel.image} className="h-32 w-32 rounded-md" />
+                  <AvatarImage src={user.profileImage} className="h-32 w-32 rounded-md" />
                   <AvatarFallback children="Fallback" className="rounded-md" />
                 </Avatar>
               </CardContent>
               <CardFooter className="flex-col p-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-semibold">{channel.name}</p>
+                  <p className="font-semibold">{user.firstName}</p>
                   <div className="h-3 w-3 bg-green-500 rounded-full"></div>
                 </div>
               </CardFooter>
@@ -123,6 +126,5 @@ const Users: React.FC = () => {
     </div>
   );
 };
-observer;
 
 export default observer(Users);

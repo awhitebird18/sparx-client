@@ -1,9 +1,11 @@
 export type User = {
-  uuid: string;
-  displayName: string;
-  image: string;
+  address?: string;
   email: string;
-  status: string;
-  timezone: string;
-  admin: boolean;
+  firstName: string;
+  lastName: string;
+  isAdmin: boolean;
+  primaryColor: string;
+  profileImage: string;
+  theme: string;
+  uuid: string;
 };
