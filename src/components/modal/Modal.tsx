@@ -3,7 +3,7 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
 interface ModalProps {
-  title: string;
+  title: string | JSX.Element;
   children: JSX.Element;
 }
 
