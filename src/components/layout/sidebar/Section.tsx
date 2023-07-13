@@ -42,13 +42,15 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
         {channels?.length
           ? channels.map((channel: Channel) => (
               <ListItem
+                key={channel.uuid}
+                id={channel.uuid}
                 title={channel.name}
                 icon={
-                  <Avatar className="w-100 h-100">
+                  <Avatar className="w-full h-full rounded-sm">
                     {<AvatarImage src={channel.image} />}
                     <AvatarFallback
                       children={channel.name.substring(0, 2).toUpperCase()}
-                      className="w-100 h-100"
+                      className="w-full h-full text-sm rounded-sm"
                     />
                   </Avatar>
                 }

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import Logo from '@/components/logo/Logo';
-import { Button } from '@/components/ui/Button';
+
 import { ChevronDown } from 'react-bootstrap-icons';
 import {
   DropdownMenu,
@@ -23,16 +23,15 @@ const CompanyDropdown = () => {
   const focusRef = useRef<any>(null);
   const { logout } = useAuth();
 
-  const handleOpenModal = ({ name }: { name: ModalName }) => {
-    setActiveModal({ name });
+  const handleOpenModal = ({ type }: { type: ModalName }) => {
+    setActiveModal({ type, payload: {} });
   };
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger asChild>
-        <Button
-          className="flex gap-3 hover:bg-transparent px-0"
-          variant="ghost"
+        <div
+          className="flex gap-3 hover:bg-transparent px-0 cursor-pointer"
           ref={dropdownTriggerRef}
         >
           <Logo size={8} />
@@ -40,7 +39,7 @@ const CompanyDropdown = () => {
             <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl">Chat App</h1>
             <ChevronDown size={13} className="mt-1 opacity-75" />
           </div>
-        </Button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="DropdownMenuContent w-60"
@@ -54,10 +53,10 @@ const CompanyDropdown = () => {
         }}
       >
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'CreateChannelModal' })}>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'CreateChannelModal' })}>
             Create Channel
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOpenModal({ name: 'InviteUserModal' })}>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'InviteUserModal' })}>
             Invite people to ChatApp
           </DropdownMenuItem>
         </DropdownMenuGroup>

@@ -1,5 +1,3 @@
-import { useContext, createContext } from 'react';
-
 import { MessageStore } from '@/features/messages/stores/messageStore';
 import { UserStore } from '@/features/users/stores/userStore';
 import { SpacesStore } from '@/features/spaces/stores/spacesStore';
@@ -8,21 +6,41 @@ import { NotificationStore } from './NotificationStore';
 import { ModalStore } from './ModalStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
 import { SocketStore } from './SocketStore';
+import { SidebarStore } from './SidebarStore';
+import { createContext } from 'react';
+import { useContext } from 'react';
 
-export const stores = Object.freeze({
-  messageStore: new MessageStore(),
-  userStore: new UserStore(),
-  spacesStore: new SpacesStore(),
-  channelStore: new ChannelStore(),
-  notificationStore: new NotificationStore(),
-  modalStore: new ModalStore(),
-  sectionStore: new SectionStore(),
-  socketStore: new SocketStore(),
-});
+interface RootStore {
+  messageStore: MessageStore;
+  userStore: UserStore;
+  spacesStore: SpacesStore;
+  channelStore: ChannelStore;
+  notificationStore: NotificationStore;
+  modalStore: ModalStore;
+  sectionStore: SectionStore;
+  socketStore: SocketStore;
+  sidebarStore: SidebarStore;
+  // ... other stores go here
+}
 
-export const storeContext = createContext(stores);
+class RootStoreImpl implements RootStore {
+  messageStore = new MessageStore();
+  userStore = new UserStore();
+  spacesStore = new SpacesStore();
+  channelStore = new ChannelStore();
+  notificationStore = new NotificationStore();
+  modalStore = new ModalStore();
+  sectionStore = new SectionStore();
+  socketStore = new SocketStore();
+  sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
+  // ... other stores go here
+}
 
-export const useStores = () => useContext(storeContext);
+export const stores = new RootStoreImpl();
 
-export const useStore = <T extends keyof typeof stores>(store: T): (typeof stores)[T] =>
+export const storeContext = createContext<RootStore>(stores);
+
+export const useStores = (): RootStore => useContext(storeContext);
+
+export const useStore = <T extends keyof RootStore>(store: T): RootStore[T] =>
   useContext(storeContext)[store];

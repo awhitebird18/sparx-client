@@ -25,30 +25,37 @@ const Spacesbar = () => {
         <Tooltip key={space.uuid}>
           <TooltipTrigger>
             <Avatar
-              className="w-10 mb-2 h-10 cursor-pointer hover:bg-accent dark:hover:bg-accent"
+              className="w-10 mb-2 h-10 cursor-pointer hover:bg-accent dark:hover:bg-accent relative border border-border "
               onClick={onClick}
             >
               <AvatarImage src={space.image} />
-              <AvatarFallback
-                children={space.name.substring(0, 2).toLowerCase()}
-                className="w-10 h-10 rounded-md dark:bg-transparent border border-border dark:hover:bg-accent "
-              />
+
+              <p className="absolute leading-9 justify-center items-center w-full h-full hover:bg-opacity-60 hover:bg-slate-800">
+                {space.name.substring(0, 2).toLowerCase()}
+              </p>
             </Avatar>
           </TooltipTrigger>
-          <TooltipContent>{space.name}</TooltipContent>
+          <TooltipContent side="right" align="start">
+            {space.name}
+          </TooltipContent>
         </Tooltip>
       ))}
 
       <Tooltip>
         <TooltipTrigger>
-          <Avatar className="w-10 mb-1 h-10 cursor-pointer" onClick={addSpace}>
+          <Avatar
+            className="w-10 mb-1 h-10 cursor-pointer flex justify-center items-center"
+            onClick={addSpace}
+          >
             <AvatarFallback
-              children="+"
+              children={<span className="leading-8">+</span>}
               className="w-10 h-10 rounded-md dark:bg-transparent border border-border dark:hover:bg-accent hover:bg-accent"
             />
           </Avatar>
         </TooltipTrigger>
-        <TooltipContent>Add a new space</TooltipContent>
+        <TooltipContent side="right" align="start">
+          Add a new space
+        </TooltipContent>
       </Tooltip>
     </div>
   );

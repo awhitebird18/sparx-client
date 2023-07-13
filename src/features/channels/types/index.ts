@@ -13,8 +13,8 @@ export interface Channel extends CreateChannel {
   topic: string;
   description: string;
   image?: string;
+  sectionId: string;
+  isSubscribed?: boolean;
 }
 
-export interface UpdateChannel extends Partial<Channel> {
-  uuid: string;
-}
+export type UpdateChannel = Partial<Channel>;
