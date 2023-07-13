@@ -8,7 +8,6 @@ import { useStore } from '@/stores/RootStore';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';
-import { toJS } from 'mobx';
 
 const CHANNELS_PER_PAGE = 10;
 
