@@ -23,22 +23,20 @@ interface ListitemProps {
 
 const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
-  const { updateUserChannel, leaveChannel } = useStore('channelStore');
+  const { updateChannelSection, leaveChannel } = useStore('channelStore');
 
   const handleMoveChannel = ({
-    sectionId,
     channelId,
+    sectionId,
   }: {
-    sectionId: string;
     channelId?: string;
+    sectionId: string;
   }) => {
     if (!channelId) return;
-
-    updateUserChannel(channelId, { sectionId });
+    updateChannelSection(channelId, sectionId);
   };
 
   const handleLeaveChannel = () => {
-    console.log(id, title);
     if (!id) return;
     leaveChannel(id);
   };

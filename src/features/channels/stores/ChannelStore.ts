@@ -10,7 +10,8 @@ import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
 import { joinChannel } from '../api/joinChannel';
 import { leaveChannel } from '../api/leaveChannel';
-import { updateChannel } from '../api/updateChannel';
+import { updateUserChannel } from '../api/updateUserChannel';
+import { updateChannelSection } from '../api/updateChannelSection';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -65,13 +66,22 @@ export class ChannelStore {
   createChannel = async (newChannel: CreateChannel) => {
     const channel = await createChannel(newChannel);
 
-    console.log(channel);
-
     this.subscribedChannels.push(channel);
   };
 
+  updateChannelSection = async (channelId: string, sectionId: string) => {
+    const res = await updateChannelSection(channelId, sectionId);
+
+    const index = this.subscribedChannels.findIndex(
+      (channel: Channel) => channel.uuid === res.uuid,
+    );
+    if (index === -1) return null;
+
+    this.subscribedChannels[index] = { ...this.subscribedChannels[index], ...res };
+  };
+
   updateSubscribedChannel = async (channelId: string, updateFields: UpdateChannel) => {
-    const updatedChannel = await updateChannel(channelId, updateFields);
+    const updatedChannel = await updateUserChannel(channelId, updateFields);
 
     const index = this.subscribedChannels.findIndex(
       (channel: Channel) => channel.uuid === updatedChannel.uuid,
@@ -82,7 +92,7 @@ export class ChannelStore {
   };
 
   updateChannel = async (channelId: string, updateFields: UpdateChannel) => {
-    const updatedChannel = await updateChannel(channelId, updateFields);
+    const updatedChannel = await updateUserChannel(channelId, updateFields);
 
     const index = this.channels.findIndex(
       (channel: Channel) => channel.uuid === updatedChannel.uuid,
@@ -120,9 +130,7 @@ export class ChannelStore {
   };
 
   leaveChannel = async (channelId: string) => {
-    const res = await leaveChannel(channelId);
-
-    console.log(res);
+    await leaveChannel(channelId);
 
     this.subscribedChannels = this.subscribedChannels.filter(
       (channel: Channel) => channel.uuid !== channelId,

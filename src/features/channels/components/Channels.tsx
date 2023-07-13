@@ -55,8 +55,6 @@ const Channels: React.FC = () => {
     }
   };
 
-  console.log(toJS(channels));
-
   return (
     <div className="w-full overflow-hidden h-full flex flex-col">
       <h3 className="text-lg leading-6 font-medium mb-3">Channels</h3>
