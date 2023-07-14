@@ -6,7 +6,7 @@ import { Channel } from '..';
 import About from './About';
 import Members from './Members';
 import Settings from './Settings';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
 

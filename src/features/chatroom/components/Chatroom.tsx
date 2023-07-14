@@ -9,7 +9,9 @@ import { Avatar } from '@radix-ui/react-avatar';
 import { AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { useParams } from 'react-router-dom';
 import Spinner from '@/components/ui/Spinner';
-import Header from './Header';
+import Header from '@/components/layout/containers/Header';
+import ChannelTitle from './ChannelTitle';
+import AvatarGroup from './AvatarGroup';
 
 function formatDate(date: any) {
   const messageDate = dayjs(date);
@@ -53,7 +55,10 @@ const ChatRoom: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full overflow-hidden w-full">
-      <Header />
+      <Header>
+        <ChannelTitle />
+        <AvatarGroup />
+      </Header>
 
       {isLoading ? (
         <Spinner />

@@ -1,13 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+
 import { ScrollArea } from '@/components/ui/ScrollArea';
+import SearchInput from '@/components/ui/SearchInput';
 import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { UserStatus } from '@/features/users/types/enums';
 import { useStore } from '@/stores/RootStore';
 import { useState } from 'react';
-import { Search, PersonAdd, X } from 'react-bootstrap-icons';
+import { PersonAdd } from 'react-bootstrap-icons';
 
 const Members = () => {
   const { users } = useStore('userStore');
@@ -25,30 +26,9 @@ const Members = () => {
     console.info('Open modal to search for user to add to channel');
   };
 
-  const handleClearSearch = () => {
-    setSearch('');
-  };
-
   return (
     <div className="space-y-2 py-1.5">
-      <div className="relative flex items-center">
-        <Input
-          placeholder="Search members"
-          className="pl-12"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-        />
-        <Search className="absolute left-3.5 top-auto text-base" />
-        {search ? (
-          <Button
-            className="h-6 w-6 absolute right-2 top-auto text-base rounded-full p-0"
-            variant="secondary"
-            onClick={handleClearSearch}
-          >
-            <X />
-          </Button>
-        ) : null}
-      </div>
+      <SearchInput value={search} setValue={setSearch} />
 
       <ScrollArea>
         <div>

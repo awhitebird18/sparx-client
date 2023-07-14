@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { Channel } from '..';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@/components/ui/Textarea';
 import { useState } from 'react';
 import Modal from '@/components/modal/Modal';
 
@@ -70,8 +70,10 @@ const About = ({ channel }: { channel: Channel }) => {
         Leave Channel
       </Button>
 
+      <div className="flex-grow" />
+
       <Button
-        className="justify-start text-muted dark:hover:bg-transparent hover:bg-transparent flex-auto"
+        className="justify-start text-muted dark:hover:bg-transparent hover:bg-transparent p-0"
         variant="ghost"
         onClick={() => console.info('copy channel id')}
       >

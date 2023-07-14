@@ -18,12 +18,12 @@ const ChannelTitle = () => {
 
   return (
     <Button
-      className="flex items-center h-7 px-3 p-0 hover:bg-transparent"
+      className="flex items-center h-7 p-0 hover:bg-transparent"
       variant="ghost"
       onClick={handleOpenChannelDetails}
     >
       {currentChannel ? (
-        <Avatar className="rounded-sm w-7 h-7 mr-1">
+        <Avatar className="rounded-sm w-7 h-7 mr-0.5">
           {<AvatarImage src={currentChannel.image} />}
           <AvatarFallback
             children={<Hash className="text-lg" />}
