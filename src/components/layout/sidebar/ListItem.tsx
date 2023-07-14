@@ -23,6 +23,7 @@ interface ListitemProps {
 
 const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
+  const { setActiveModal } = useStore('modalStore');
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
 
   const handleMoveChannel = ({
@@ -41,6 +42,14 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
     leaveChannel(id);
   };
 
+  const handleOpenChannelDetails = () => {
+    if (!id) return;
+    setActiveModal({
+      type: 'ChannelDetailsModal',
+      payload: { id, defaultTab: 'about' },
+    });
+  };
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -56,7 +65,9 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset>View channel details</ContextMenuItem>
+        <ContextMenuItem inset onClick={handleOpenChannelDetails}>
+          View channel details
+        </ContextMenuItem>
 
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Copy</ContextMenuSubTrigger>

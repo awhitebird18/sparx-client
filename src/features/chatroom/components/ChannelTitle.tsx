@@ -9,7 +9,6 @@ const ChannelTitle = () => {
   const { setActiveModal } = useStore('modalStore');
 
   const handleOpenChannelDetails = () => {
-    console.log(currentChannel);
     if (!currentChannel) return;
     setActiveModal({
       type: 'ChannelDetailsModal',
