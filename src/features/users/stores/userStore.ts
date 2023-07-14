@@ -22,7 +22,6 @@ export class UserStore {
   };
 
   setUsers = (users: User[]) => {
-    console.log(users);
     this.users = users;
   };
 
@@ -33,8 +32,6 @@ export class UserStore {
   fetchUsers = async () => {
     this.setIsLoading(true);
     const users = await getUsers();
-
-    console.log(users);
 
     this.setUsers(users);
 
