@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/Button';
 import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
 
-const ChannelDetails = ({ id }: { id: string }) => {
+const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { findById } = useStore('channelStore');
   const [channel, setChannel] = useState<Channel>();
 
@@ -38,7 +38,10 @@ const ChannelDetails = ({ id }: { id: string }) => {
             Get Notifications for All Messages <ChevronDown className="text-xs" />
           </Button>
         </div>
-        <Tabs defaultValue="about" className="flex flex-col flex-1 h-[65vh] w-[45vw]">
+        <Tabs
+          defaultValue={defaultTab || 'about'}
+          className="flex flex-col flex-1 h-[65vh] w-[45vw]"
+        >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="about">About</TabsTrigger>
             <TabsTrigger value="members">Members</TabsTrigger>

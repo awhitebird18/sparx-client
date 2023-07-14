@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/Input';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import { UserStatus } from '@/features/users/types/enums';
 import { useStore } from '@/stores/RootStore';
 import { useState } from 'react';
 import { Search, PersonAdd, X } from 'react-bootstrap-icons';
@@ -81,7 +82,7 @@ const Members = () => {
                     />
                   </Avatar>
                   <p>{`${user.firstName} ${user.lastName}`}</p>
-                  <OnlineStatusIndicator status={user.status} />
+                  <OnlineStatusIndicator status={UserStatus.ONLINE} />
                 </div>
               ))}
             </>

@@ -11,7 +11,7 @@ const ChannelDetails = lazy(() => import('@/features/channels/components/Channel
 const modalList = {
   CreateChannelModal: () => <CreateChanneModal />,
   CreateSectionModal: (props: { id: string; name: string }) => <CreateSectionModal {...props} />,
-  ChannelDetailsModal: (props: { id: string }) => <ChannelDetails {...props} />,
+  ChannelDetailsModal: (props: { id: string; defaultTab: string }) => <ChannelDetails {...props} />,
   DeleteSectionModal: (props: { id: string; name: string }) => <DeleteSection {...props} />,
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
