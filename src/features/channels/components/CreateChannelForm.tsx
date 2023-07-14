@@ -38,7 +38,7 @@ const CreateChanneForm = () => {
   return (
     <Modal title="Create Channel">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col max-w-lg">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col w-96">
           <FormField
             control={form.control}
             name="name"

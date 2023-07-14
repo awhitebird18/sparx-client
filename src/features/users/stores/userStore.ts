@@ -13,16 +13,17 @@ export class UserStore {
       addUser: action,
       updateUser: action,
       deleteUser: action,
+      setUsers: action,
     });
   }
 
-  addUser(user: User) {
+  addUser = (user: User) => {
     this.users.push(user);
-  }
+  };
 
-  setUsers(users: User[]) {
+  setUsers = (users: User[]) => {
     this.users = users;
-  }
+  };
 
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
@@ -32,22 +33,20 @@ export class UserStore {
     this.setIsLoading(true);
     const users = await getUsers();
 
-    console.log(users);
-
     this.setUsers(users);
 
     this.setIsLoading(false);
   };
 
-  updateUser(uuid: string, updatedFields: Partial<User>) {
+  updateUser = (uuid: string, updatedFields: Partial<User>) => {
     const userIndex = this.users.findIndex((user) => user.uuid === uuid);
 
     if (userIndex !== -1) {
       this.users[userIndex] = { ...this.users[userIndex], ...updatedFields };
     }
-  }
+  };
 
-  deleteUser(uuid: string) {
+  deleteUser = (uuid: string) => {
     this.users = this.users.filter((user) => user.uuid !== uuid);
-  }
+  };
 }

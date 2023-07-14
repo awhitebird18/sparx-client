@@ -1,3 +1,5 @@
+import { UserStatus } from './enums';
+
 export type User = {
   address?: string;
   email: string;
@@ -8,4 +10,5 @@ export type User = {
   profileImage: string;
   theme: string;
   uuid: string;
+  status: UserStatus;
 };

@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/providers/theme';
 import AuthProvider from '@/providers/auth';
 
 import '@/styles/app.css';
+import '@/styles/chatroom.css';
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
@@ -19,7 +19,7 @@ dayjs.extend(timezone);
 export class ChannelStore {
   channels: Channel[] = [];
   subscribedChannels: Channel[] = [];
-  currentChannel: Channel | null = null;
+  currentChannelId: string | null = null;
   page = 1;
   pageSize = 10;
   isLoading = true;
@@ -28,10 +28,11 @@ export class ChannelStore {
     makeObservable(this, {
       channels: observable,
       subscribedChannels: observable,
+      currentChannelId: observable,
       page: observable,
       pageSize: observable,
       isLoading: observable,
-      currentChannel: observable,
+      currentChannel: computed,
       findById: action,
       createChannel: action,
       updateSubscribedChannel: action,
@@ -40,11 +41,16 @@ export class ChannelStore {
       incrementPage: action,
       setChannels: action,
       fetchSubscribedChannels: action,
+      setCurrentChannelId: action,
     });
   }
 
+  get currentChannel(): Channel | undefined {
+    return this.subscribedChannels.find((channel) => channel.uuid === this.currentChannelId);
+  }
+
   findById = (uuid: string) => {
-    return this.channels.find((channel: Channel) => channel.uuid === uuid);
+    return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
   };
 
   setChannels = (channels: Channel[]) => {
@@ -55,10 +61,6 @@ export class ChannelStore {
     this.subscribedChannels = channels;
   };
 
-  setCurrentChannel = (channel: Channel) => {
-    this.currentChannel = channel;
-  };
-
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
@@ -67,6 +69,10 @@ export class ChannelStore {
     const channel = await createChannel(newChannel);
 
     this.subscribedChannels.push(channel);
+  };
+
+  setCurrentChannelId = (channelId: string) => {
+    this.currentChannelId = channelId;
   };
 
   updateChannelSection = async (channelId: string, sectionId: string) => {
@@ -108,14 +114,6 @@ export class ChannelStore {
 
   deleteChannel = (uuid: string) => {
     this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
-  };
-
-  fetchChannel = (channelUUID: string) => {
-    const currentChannel = this.channels.find((channel: Channel) => channel.uuid === channelUUID);
-
-    if (!currentChannel) return;
-
-    this.setCurrentChannel(currentChannel);
   };
 
   joinChannel = async (channelId: string) => {

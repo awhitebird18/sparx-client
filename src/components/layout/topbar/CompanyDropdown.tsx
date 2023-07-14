@@ -43,7 +43,7 @@ const CompanyDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="DropdownMenuContent w-60"
-        sideOffset={5}
+        align="start"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();

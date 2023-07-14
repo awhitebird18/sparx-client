@@ -19,10 +19,12 @@ interface ListitemProps {
   icon?: JSX.Element;
   onClick?: () => void;
   primary?: boolean;
+  isChannel?: boolean;
 }
 
-const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
+const ListItem = ({ id, title, icon, onClick, primary, isChannel }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
+  const { setActiveModal } = useStore('modalStore');
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
 
   const handleMoveChannel = ({
@@ -41,9 +43,17 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
     leaveChannel(id);
   };
 
+  const handleOpenChannelDetails = () => {
+    if (!id) return;
+    setActiveModal({
+      type: 'ChannelDetailsModal',
+      payload: { id, defaultTab: 'about' },
+    });
+  };
+
   return (
     <ContextMenu>
-      <ContextMenuTrigger>
+      <ContextMenuTrigger disabled={!isChannel}>
         <div
           onClick={onClick}
           className={`h-8  w-100 flex items-center ${
@@ -52,11 +62,16 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center">{icon}</div>
 
-          <div className="font-semibold ">{title}</div>
+          <div className="font-semibold">
+            {title.charAt(0).toUpperCase()}
+            {title.substring(1).toLocaleLowerCase()}
+          </div>
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset>View channel details</ContextMenuItem>
+        <ContextMenuItem inset onClick={handleOpenChannelDetails}>
+          View channel details
+        </ContextMenuItem>
 
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Copy</ContextMenuSubTrigger>

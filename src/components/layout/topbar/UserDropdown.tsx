@@ -34,8 +34,8 @@ const UserDropdown: React.FC = () => {
               <Avatar className="w-8 h-8 cursor-pointer" ref={dropdownTriggerRef}>
                 {<AvatarImage src={currentUser.image} />}
                 <AvatarFallback
-                  children={currentUser.firstName.substring(0, 2).toLowerCase()}
-                  className="rounded-md"
+                  children={currentUser.firstName.charAt(0).toUpperCase()}
+                  className="rounded-md font-semibold"
                 />
               </Avatar>
             </DropdownMenuTrigger>
@@ -45,6 +45,8 @@ const UserDropdown: React.FC = () => {
       )}
 
       <DropdownMenuContent
+        align="end"
+        sideOffset={8}
         className="DropdownMenuContent w-56"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
