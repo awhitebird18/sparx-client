@@ -61,7 +61,10 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center">{icon}</div>
 
-          <div className="font-semibold ">{title}</div>
+          <div className="font-semibold">
+            {title.charAt(0).toUpperCase()}
+            {title.substring(1).toLocaleLowerCase()}
+          </div>
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">

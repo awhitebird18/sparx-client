@@ -49,7 +49,7 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
                   <Avatar className="w-full h-full rounded-sm">
                     {<AvatarImage src={channel.image} />}
                     <AvatarFallback
-                      children={channel.name.substring(0, 2).toUpperCase()}
+                      children={channel.name.charAt(0).toUpperCase()}
                       className="w-full h-full text-sm rounded-sm"
                     />
                   </Avatar>

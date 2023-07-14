@@ -11,7 +11,7 @@ const AvatarGroup = () => {
 
   const userCount = Math.min(3, users.length);
 
-  const componentWidth = `${(userCount - 1) * 16 + 26.5}px`;
+  const componentWidth = `${(userCount - 1) * 16 + 46.5}px`;
 
   const handleOpenChannelDetails = () => {
     if (!currentChannel) return;
@@ -23,10 +23,13 @@ const AvatarGroup = () => {
 
   return (
     <div
-      className={`relative h-full flex justify-end items-center overflow-hidden`}
+      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer`}
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >
+      <p className="w-[20px] h-full flex justify-center items-center text-sm text-muted-foreground">
+        {users.length}
+      </p>
       {users ? (
         users.slice(0, userCount).map((user: User, index: number) => (
           <Avatar
@@ -36,7 +39,7 @@ const AvatarGroup = () => {
             <AvatarImage src={user.profileImage} />
             <AvatarFallback
               children={user.firstName.charAt(0).toUpperCase()}
-              className={`w-full h-full text-sm font-semibold rounded-sm cursor-pointer`}
+              className={`w-full h-full text-sm font-semibold rounded-sm`}
             />
           </Avatar>
         ))

@@ -45,6 +45,8 @@ const UserDropdown: React.FC = () => {
       )}
 
       <DropdownMenuContent
+        align="end"
+        sideOffset={8}
         className="DropdownMenuContent w-56"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
