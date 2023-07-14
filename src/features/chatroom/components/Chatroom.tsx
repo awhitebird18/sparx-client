@@ -71,7 +71,7 @@ const ChatRoom: React.FC = () => {
                   >
                     {formatDate(date)}
                   </Badge>
-                  <div className="bg-gray-800 h-px absolute top-[50%] left-0 opacity-50 w-full" />
+                  <div className="bg-gray-800 h-px absolute top-[50%] left-44 right-44 opacity-50" />
                 </div>
 
                 {messages.map((message: any, index: number) => {
