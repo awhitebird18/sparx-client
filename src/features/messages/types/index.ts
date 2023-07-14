@@ -4,6 +4,7 @@ import { BaseEntity } from '@/types';
 export type Message = {
   content: string;
   userId: string;
+  channelId: string;
   timezone: string;
   user?: User;
 } & BaseEntity;
