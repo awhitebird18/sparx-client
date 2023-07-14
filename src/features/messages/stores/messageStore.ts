@@ -42,12 +42,14 @@ export class MessageStore {
   }
 
   get groupedMessagesWithUser() {
-    return Object.entries(this.groupedMessages).map(([date, messages]) => {
-      return {
-        date,
-        messages,
-      };
-    });
+    return Object.entries(this.groupedMessages)
+      .map(([date, messages]) => {
+        return {
+          date,
+          messages,
+        };
+      })
+      .reverse();
   }
 
   findById = (uuid: string) => {

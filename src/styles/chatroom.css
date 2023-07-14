@@ -1,0 +1,7 @@
+.message:hover .timestamp {
+  display: inline;
+}
+
+.timestamp {
+  display: none;
+}
