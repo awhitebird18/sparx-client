@@ -45,6 +45,7 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
                 key={channel.uuid}
                 id={channel.uuid}
                 title={channel.name}
+                isChannel
                 icon={
                   <Avatar className="w-full h-full rounded-sm">
                     {<AvatarImage src={channel.image} />}

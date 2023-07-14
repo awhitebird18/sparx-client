@@ -19,9 +19,10 @@ interface ListitemProps {
   icon?: JSX.Element;
   onClick?: () => void;
   primary?: boolean;
+  isChannel?: boolean;
 }
 
-const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
+const ListItem = ({ id, title, icon, onClick, primary, isChannel }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
@@ -52,7 +53,7 @@ const ListItem = ({ id, title, icon, onClick, primary }: ListitemProps) => {
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>
+      <ContextMenuTrigger disabled={!isChannel}>
         <div
           onClick={onClick}
           className={`h-8  w-100 flex items-center ${
