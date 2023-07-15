@@ -73,7 +73,6 @@ export class MessageStore {
   };
 
   createMessage = async (createMessage: CreateMesssage) => {
-    console.log(createMessage);
     try {
       const newMessage = await createMessageApi(createMessage);
 
@@ -126,7 +125,6 @@ export class MessageStore {
   fetchMessages = async (channelId: string) => {
     this.setIsLoading(true);
     const messages = await getMessages(this.page, channelId);
-    console.log(messages);
 
     const formattedMessages = messages.map((message: Message) => ({
       ...message,
