@@ -19,7 +19,7 @@ dayjs.extend(timezone);
 export class ChannelStore {
   channels: Channel[] = [];
   subscribedChannels: Channel[] = [];
-  currentChannelId: string | null = null;
+  currentChannelId: string | undefined;
   page = 1;
   pageSize = 10;
   isLoading = true;

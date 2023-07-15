@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Badge } from '@/components/ui/Badge';
@@ -10,19 +10,16 @@ import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
 import Content from '@/components/layout/containers/Content';
-import Editor from '@/features/messageInput/Editor';
 import { formatDate } from '../utils/datefns';
-import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+import MessageInput from './MessageInput';
 
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage } = useStore('messageStore');
-  const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
+  const { setCurrentChannelId, currentChannelId } = useStore('channelStore');
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams();
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const [, setEditorState] = useState<string>(
-    '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dfg","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
-  );
 
   useEffect(() => {
     if (!channelId || channelId === currentChannelId) return;
@@ -30,7 +27,6 @@ const ChatRoom: React.FC = () => {
     setPage(1);
     setCurrentChannelId(channelId);
     fetchMessages(channelId);
-    setEditorState('');
   }, [fetchMessages, channelId, setPage, setCurrentChannelId, currentChannelId]);
 
   useEffect(() => {
@@ -39,12 +35,8 @@ const ChatRoom: React.FC = () => {
     }
   }, [groupedMessagesWithUser]);
 
-  const handleSubmit = (val: any) => {
-    console.log(val);
-  };
-
   return (
-    <div className="flex flex-col h-full overflow-hidden w-full">
+    <div className="flex flex-col h-full">
       <Header>
         <ChannelTitle />
         <AvatarGroup />
@@ -60,7 +52,7 @@ const ChatRoom: React.FC = () => {
             <Spinner />
           ) : (
             groupedMessagesWithUser.map(({ date, messages }: any) => (
-              <div key={date} className="relative ">
+              <div key={date} className="relative">
                 <div className="w-full flex my-2 sticky top-0">
                   <Badge
                     variant="outline"
@@ -81,13 +73,7 @@ const ChatRoom: React.FC = () => {
           )}
         </div>
 
-        <div className="py-4 rounded-xl shadow-md p-2">
-          <Editor
-            placeholder={`Message ${currentChannel?.name}`}
-            config={editorConfig}
-            onSubmit={handleSubmit}
-          />
-        </div>
+        <MessageInput />
       </Content>
     </div>
   );
