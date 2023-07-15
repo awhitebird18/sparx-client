@@ -2,6 +2,10 @@
   display: inline;
 }
 
+.message:hover .options-panel {
+  display: flex;
+}
+
 .timestamp {
   display: none;
 }

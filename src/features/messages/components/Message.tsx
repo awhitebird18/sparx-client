@@ -1,14 +1,18 @@
 import { Message } from '..';
 import { Avatar } from '@radix-ui/react-avatar';
 import { AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
-import DisplayEditor from '@/features/messageInput/DisplayEditor';
+import MessageDisplay from '@/features/messageInput/MessageDisplay';
+import OptionsPanel from './OptionsPanel';
+import { useState } from 'react';
+import MessageEditor from '@/features/messageInput/MessageEditor';
 
 const Message = ({ message, showUser }: { message: Message; showUser: boolean }) => {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
   return (
     <div
-      key={message.uuid}
       className={
-        'message px-4 rounded-lg hover:bg-accent dark:hover:bg-accent py-1.5 overflow-hidden mr-2'
+        'message px-4 rounded-lg hover:bg-accent dark:hover:bg-accent py-1.5 mr-2 relative'
       }
     >
       <div className="flex gap-2">
@@ -24,7 +28,7 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
           <div className="w-10" />
         )}
 
-        <div className={`flex flex-col ${showUser ? 'h-10' : 'h-6'} w-full`}>
+        <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
               <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">Username</h2>
@@ -34,7 +38,11 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
             </div>
           ) : null}
 
-          <DisplayEditor content={message.content} />
+          {isEditing ? (
+            <MessageEditor message={message} setIsEditing={setIsEditing} />
+          ) : (
+            <MessageDisplay content={message.content} />
+          )}
           {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
           {!showUser ? (
             <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">
@@ -42,6 +50,7 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
             </span>
           ) : null}
         </div>
+        <OptionsPanel message={message} setIsEditing={setIsEditing} />
       </div>
     </div>
   );

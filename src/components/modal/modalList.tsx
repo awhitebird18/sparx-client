@@ -1,3 +1,5 @@
+import { Message } from '@/features/messages';
+import DeleteMessage from '@/features/messages/components/DeleteMessage';
 import PreferencesModal from '@/features/preferences/components/PreferencesModal';
 import ProfileModal from '@/features/profile/components/Profile';
 import DeleteSection from '@/features/sections/components/DeleteSection';
@@ -13,6 +15,7 @@ const modalList = {
   CreateSectionModal: (props: { id: string; name: string }) => <CreateSectionModal {...props} />,
   ChannelDetailsModal: (props: { id: string; defaultTab: string }) => <ChannelDetails {...props} />,
   DeleteSectionModal: (props: { id: string; name: string }) => <DeleteSection {...props} />,
+  DeleteMessageModal: (props: { message: Message }) => <DeleteMessage {...props} />,
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
   ProfileModal: () => <ProfileModal />,

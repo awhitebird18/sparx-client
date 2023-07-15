@@ -1,22 +1,25 @@
 import { Button } from '@/components/ui/Button';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { Send } from 'react-bootstrap-icons';
 import { CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_HIGH } from 'lexical';
 import { useCallback, useEffect } from 'react';
 import { KEY_ENTER_COMMAND } from 'lexical';
 import { mergeRegister } from '@lexical/utils';
+import { $getRoot } from 'lexical';
 
-type props = { onSubmit: (val: string) => void };
+type props = { onSubmit: (val: string) => void; label: React.ReactNode };
 
-const SubmitButtonPlugin = ({ onSubmit }: props) => {
+const SubmitButtonPlugin = ({ onSubmit, label }: props) => {
   const [editor] = useLexicalComposerContext();
 
   const handleSubmit = useCallback(() => {
     const editorState = editor.getEditorState();
 
-    onSubmit(JSON.stringify(editorState));
-
-    editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
+    editorState.read(() => {
+      const textContent = $getRoot().getTextContent();
+      if (!textContent) return;
+      onSubmit(JSON.stringify(editorState));
+      editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
+    });
   }, [editor, onSubmit]);
 
   const onEnterPress = useCallback(
@@ -37,13 +40,8 @@ const SubmitButtonPlugin = ({ onSubmit }: props) => {
   }, [editor, onEnterPress]);
 
   return (
-    <Button
-      onClick={handleSubmit}
-      className="absolute right-1.5 bottom-1.5"
-      variant="outline"
-      size="sm"
-    >
-      <Send className="mr-2 text-xs mt-0.5" /> Send
+    <Button onClick={handleSubmit} variant="outline" size="sm" className="w-20 bg-emerald-500">
+      {label}
     </Button>
   );
 };
