@@ -14,8 +14,6 @@ const SubmitButtonPlugin = ({ onSubmit }: props) => {
   const handleSubmit = useCallback(() => {
     const editorState = editor.getEditorState();
 
-    console.log(JSON.stringify(editorState));
-
     onSubmit(JSON.stringify(editorState));
 
     editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
