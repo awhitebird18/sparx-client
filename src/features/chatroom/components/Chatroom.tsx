@@ -10,18 +10,13 @@ import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
 import Content from '@/components/layout/containers/Content';
-import Editor from '@/features/messageInput/Editor';
 import { formatDate } from '../utils/datefns';
-import { editorConfig } from '@/features/messageInput/configs/editorConfig';
-import { useAuth } from '@/providers/auth';
-import { v4 as uuid } from 'uuid';
-import dayjs from 'dayjs';
+import MessageInput from './MessageInput';
 
 const ChatRoom: React.FC = () => {
-  const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
-    useStore('messageStore');
-  const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
-  const { currentUser } = useAuth();
+  const { isLoading, groupedMessagesWithUser, fetchMessages, setPage } = useStore('messageStore');
+  const { setCurrentChannelId, currentChannelId } = useStore('channelStore');
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams();
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -39,17 +34,6 @@ const ChatRoom: React.FC = () => {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [groupedMessagesWithUser]);
-
-  const handleSubmit = async (messageContent: string) => {
-    await createMessage({
-      content: messageContent,
-      channelId: currentChannelId,
-      userId: currentUser?.uuid,
-      uuid: uuid(),
-      createdAt: dayjs(),
-      timezone: 'toronto',
-    });
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -89,13 +73,7 @@ const ChatRoom: React.FC = () => {
           )}
         </div>
 
-        <div className="rounded-xl shadow-md p-2">
-          <Editor
-            placeholder={`Message ${currentChannel?.name}`}
-            config={editorConfig}
-            onSubmit={handleSubmit}
-          />
-        </div>
+        <MessageInput />
       </Content>
     </div>
   );

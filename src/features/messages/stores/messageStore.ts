@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action, computed, autorun, toJS } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -31,16 +31,17 @@ export class MessageStore {
       groupedMessages: computed,
       groupedMessagesWithUser: computed,
     });
+
+    autorun(() => console.log(toJS(this.groupedMessagesWithUser)));
   }
 
   get groupedMessages() {
     return this.messages.reduce((groups: { [key: string]: Message[] }, message) => {
-      console.log(message);
       const date = message?.createdAt.format('MM-DD-YYYY');
       if (!groups[date]) {
         groups[date] = [];
       }
-      groups[date].push(message);
+      groups[date].unshift(message);
       return groups;
     }, {});
   }
@@ -69,7 +70,7 @@ export class MessageStore {
   };
 
   addMessage = (message: Message) => {
-    this.messages.push(message);
+    this.messages.unshift(message);
   };
 
   createMessage = async (createMessage: CreateMesssage) => {

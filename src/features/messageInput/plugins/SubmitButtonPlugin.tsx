@@ -12,7 +12,9 @@ const SubmitButtonPlugin = ({ onSubmit }: props) => {
   const [editor] = useLexicalComposerContext();
 
   const handleSubmit = useCallback(() => {
-    const editorState = editor.toJSON();
+    const editorState = editor.getEditorState();
+
+    console.log(JSON.stringify(editorState));
 
     onSubmit(JSON.stringify(editorState));
 
