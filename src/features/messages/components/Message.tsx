@@ -6,14 +6,22 @@ import OptionsPanel from './OptionsPanel';
 import { useState } from 'react';
 import MessageEditor from '@/features/messageInput/MessageEditor';
 
-const Message = ({ message, showUser }: { message: Message; showUser: boolean }) => {
+const Message = ({
+  message,
+  showUser,
+  disabled,
+}: {
+  message: Message;
+  showUser: boolean;
+  disabled: boolean;
+}) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <div
-      className={
-        'message px-4 rounded-lg hover:bg-accent dark:hover:bg-accent py-1.5 mr-2 relative'
-      }
+      className={`message px-4 rounded-lg ${
+        !disabled ? 'hover:bg-accent dark:hover:bg-accent' : ''
+      } py-1.5 mr-2 relative`}
     >
       <div className="flex gap-2">
         {showUser ? (
@@ -50,7 +58,7 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
             </span>
           ) : null}
         </div>
-        <OptionsPanel message={message} setIsEditing={setIsEditing} />
+        {!disabled ? <OptionsPanel message={message} setIsEditing={setIsEditing} /> : null}
       </div>
     </div>
   );
