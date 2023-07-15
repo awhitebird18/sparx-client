@@ -2,11 +2,24 @@ import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
 
 import Message from './Message';
+import { useStore } from '@/stores/RootStore';
 
 type DeletemessageProps = { message: Message };
 
 const DeleteMessage = ({ message }: DeletemessageProps) => {
-  if (!message) return;
+  const { deleteMessage } = useStore('messageStore');
+  const { setActiveModal } = useStore('modalStore');
+
+  const handleDeleteMessage = () => {
+    deleteMessage(message.uuid);
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setActiveModal(null);
+  };
+
+  if (!message) return null;
 
   return (
     <Modal title="Delete message">
@@ -14,15 +27,15 @@ const DeleteMessage = ({ message }: DeletemessageProps) => {
         <div className="flex flex-col gap-3">
           <p>Are you sure you wnat to delete this message? This cannot be undone.</p>
 
-          <div className="border border-border p-4">
-            <Message message={message} showUser />
+          <div className="border border-border pl-2 py-2 rounded-md">
+            <Message message={message} showUser disabled />
           </div>
         </div>
         <div className="flex gap-2 ml-auto">
-          <Button className=" w-28" type="submit">
+          <Button className=" w-28" onClick={handleCloseModal} variant="outline">
             Cancel
           </Button>
-          <Button className="ml-auto w-28" type="submit">
+          <Button className="ml-auto w-28" onClick={handleDeleteMessage} variant="destructive">
             Submit
           </Button>
         </div>

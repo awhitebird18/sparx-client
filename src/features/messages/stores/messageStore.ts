@@ -6,6 +6,7 @@ import { CreateMesssage, Message } from '@/features/messages';
 import { getMessages } from '../api/getMessages';
 import { createMessageApi } from '../api/createMessage';
 import { editMessageApi } from '../api/editMessageApi';
+import { deleteMessageApi } from '../api/deleteMessageApi';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -81,7 +82,9 @@ export class MessageStore {
         createdAt: dayjs(newMessage.createdAt),
       });
     } catch (err) {
-      this.deleteMessage(createMessage.uuid);
+      if (createMessage.uuid) {
+        this.deleteMessage(createMessage.uuid);
+      }
     }
   };
 
@@ -117,9 +120,10 @@ export class MessageStore {
     this.messages[index] = { ...this.messages[index], ...updatedMessage };
   };
 
-  deleteMessage = (uuid: string | undefined) => {
-    if (!uuid) return;
+  deleteMessage = async (uuid: string) => {
     this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
+
+    await deleteMessageApi(uuid);
   };
 
   fetchMessages = async (channelId: string) => {
