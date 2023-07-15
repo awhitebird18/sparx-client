@@ -41,7 +41,7 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
           {isEditing ? (
             <MessageEditor message={message} setIsEditing={setIsEditing} />
           ) : (
-            <MessageDisplay content={message.content} />
+            <MessageDisplay content={message.content} id={message.uuid} />
           )}
           {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
           {!showUser ? (

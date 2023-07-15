@@ -27,8 +27,10 @@ type EditorProps = {
 
 export default function MessageEditor({ message, setIsEditing }: EditorProps) {
   const { editMessageContent } = useStore('messageStore');
+  console.log(message);
 
   const handleSubmit = async (messageContent: string) => {
+    console.log(message.uuid, messageContent);
     await editMessageContent(message.uuid, messageContent);
     setIsEditing(false);
   };
