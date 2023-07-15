@@ -14,6 +14,8 @@ export class UserStore {
       updateUser: action,
       deleteUser: action,
       setUsers: action,
+      setIsLoading: action,
+      fetchUsers: action,
     });
   }
 

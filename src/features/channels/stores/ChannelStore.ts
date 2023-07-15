@@ -41,7 +41,13 @@ export class ChannelStore {
       incrementPage: action,
       setChannels: action,
       fetchSubscribedChannels: action,
+      fetchWorkspaceChannels: action,
       setCurrentChannelId: action,
+      setSubscribedChannels: action,
+      setIsLoading: action,
+      updateChannelSection: action,
+      joinChannel: action,
+      leaveChannel: action,
     });
   }
 

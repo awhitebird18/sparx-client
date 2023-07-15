@@ -51,6 +51,7 @@ const Members = () => {
               ) : null}
               {filteredUsers.map((user: User) => (
                 <div
+                  key={user.uuid}
                   className="flex items-center gap-4 hover:bg-muted py-1.5 rounded-md cursor-pointer"
                   onClick={() => handleOpenUserProfile(user.uuid)}
                 >

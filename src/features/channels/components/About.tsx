@@ -41,6 +41,7 @@ const About = ({ channel }: { channel: Channel }) => {
     <div className="flex flex-col space-y-6 pt-2 flex-1 h-full">
       {fields.map((field: FieldEnum) => (
         <Button
+          key={field}
           className="flex-col justify-start items-start h-20 border border-border relative space-y-1"
           variant="ghost"
           onClick={() => handleOpenForm(field)}
@@ -108,7 +109,7 @@ const EditField = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      [type]: content,
+      [type]: content || '',
     },
   });
 
