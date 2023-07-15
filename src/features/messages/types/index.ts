@@ -1,13 +1,13 @@
-import { User } from '@/features/users';
 import { BaseEntity } from '@/types';
 
 export type Message = {
   content: string;
-  userId: string;
   channelId: string;
-  timezone: string;
-  user?: User;
+  timezone?: string;
+  userId: string;
 } & BaseEntity;
+
+export type CreateMesssage = Partial<Message>;
 
 export type UpdateMessage = {
   uuid: string;

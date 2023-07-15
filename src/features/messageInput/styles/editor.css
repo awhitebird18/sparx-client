@@ -53,6 +53,9 @@
   caret-color: blue !important;
 }
 
+.display-editor {
+}
+
 .editor-placeholder {
   color: #999;
   overflow: hidden;

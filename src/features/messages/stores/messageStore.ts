@@ -1,10 +1,10 @@
 import { makeObservable, observable, action, computed } from 'mobx';
-
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc'; // import utc plugin
-import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
-import { Message, UpdateMessage } from '@/features/messages';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { CreateMesssage, Message } from '@/features/messages';
 import { getMessages } from '../api/getMessages';
+import { createMessageApi } from '../api/createMessage';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -35,7 +35,8 @@ export class MessageStore {
 
   get groupedMessages() {
     return this.messages.reduce((groups: { [key: string]: Message[] }, message) => {
-      const date = message?.createdAt?.format('MM-DD-YYYY');
+      console.log(message);
+      const date = message?.createdAt.format('MM-DD-YYYY');
       if (!groups[date]) {
         groups[date] = [];
       }
@@ -71,6 +72,23 @@ export class MessageStore {
     this.messages.push(message);
   };
 
+  createMessage = async (createMessage: CreateMesssage) => {
+    try {
+      this.addMessage({
+        ...createMessage,
+      } as Message);
+
+      const newMessage = await createMessageApi(createMessage);
+
+      this.updateMessage(createMessage.uuid as string, {
+        ...newMessage,
+        createdAt: dayjs(newMessage.createdAt),
+      });
+    } catch (err) {
+      this.deleteMessage(createMessage.uuid);
+    }
+  };
+
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
@@ -83,16 +101,15 @@ export class MessageStore {
     this.page = this.page + 1;
   };
 
-  updateMessage = (updatedMessage: UpdateMessage) => {
-    const index = this.messages.findIndex(
-      (message: Message) => message.uuid === updatedMessage.uuid,
-    );
+  updateMessage = (uuid: string, updatedMessage: Message) => {
+    const index = this.messages.findIndex((message: Message) => message.uuid === uuid);
     if (index === -1) return null;
 
     this.messages[index] = { ...this.messages[index], ...updatedMessage };
   };
 
-  deleteMessage = (uuid: string) => {
+  deleteMessage = (uuid: string | undefined) => {
+    if (!uuid) return;
     this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
   };
 
@@ -100,7 +117,12 @@ export class MessageStore {
     this.setIsLoading(true);
     const messages = await getMessages(this.page, channelId);
 
-    this.addMessages(messages);
+    const formattedMessages = messages.map((message: Message) => ({
+      ...message,
+      createdAt: dayjs(message.createdAt),
+    }));
+    console.log(formattedMessages);
+    this.setMessages(formattedMessages);
     this.incrementPage();
     this.setIsLoading(false);
   };
