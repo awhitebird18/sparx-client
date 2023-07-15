@@ -5,6 +5,7 @@ import timezone from 'dayjs/plugin/timezone';
 import { CreateMesssage, Message } from '@/features/messages';
 import { getMessages } from '../api/getMessages';
 import { createMessageApi } from '../api/createMessage';
+import { editMessageApi } from '../api/editMessageApi';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,24 +29,24 @@ export class MessageStore {
       setMessages: action,
       setPage: action,
       setIsLoading: action,
-      groupedMessages: computed,
       groupedMessagesWithUser: computed,
     });
   }
 
-  get groupedMessages() {
-    return this.messages.reduce((groups: { [key: string]: Message[] }, message) => {
-      const date = message?.createdAt.format('MM-DD-YYYY');
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].unshift(message);
-      return groups;
-    }, {});
-  }
-
   get groupedMessagesWithUser() {
-    return Object.entries(this.groupedMessages)
+    const groupedMessages = this.messages.reduce(
+      (groups: { [key: string]: Message[] }, message) => {
+        const date = message?.createdAt.format('MM-DD-YYYY');
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].unshift(message);
+        return groups;
+      },
+      {},
+    );
+
+    return Object.entries(groupedMessages)
       .map(([date, messages]) => {
         return {
           date,
@@ -73,13 +74,9 @@ export class MessageStore {
 
   createMessage = async (createMessage: CreateMesssage) => {
     try {
-      this.addMessage({
-        ...createMessage,
-      } as Message);
-
       const newMessage = await createMessageApi(createMessage);
 
-      this.updateMessage(createMessage.uuid as string, {
+      this.addMessage({
         ...newMessage,
         createdAt: dayjs(newMessage.createdAt),
       });
@@ -90,9 +87,12 @@ export class MessageStore {
 
   editMessageContent = async (id: string, content: string) => {
     try {
-      // const updatedMessage = await editMessageApi(id, content);
+      const updatedMessage = await editMessageApi(id, { content });
 
-      this.updateMessage(id, { content });
+      this.updateMessage(updatedMessage.uuid, {
+        ...updatedMessage,
+        createdAt: dayjs(updatedMessage.createdAt),
+      });
     } catch (err) {
       console.error(err);
     }

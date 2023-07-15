@@ -7,9 +7,11 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import { editorConfig } from './configs/editorConfig';
 
-export default function MessageDisplay({ content }: { content: string }) {
+export default function MessageDisplay({ content, id }: { content: string; id: string }) {
   return (
-    <LexicalComposer initialConfig={{ ...editorConfig, editable: false, editorState: content }}>
+    <LexicalComposer
+      initialConfig={{ ...editorConfig, editable: false, editorState: content, namespace: id }}
+    >
       <RichTextPlugin
         contentEditable={<ContentEditable />}
         placeholder={<></>}
