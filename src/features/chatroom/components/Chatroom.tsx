@@ -39,14 +39,6 @@ const ChatRoom: React.FC = () => {
     }
   }, [groupedMessagesWithUser]);
 
-  // useEffect(() => {
-  //   console.log(editorState);
-  // }, [editorState]);
-
-  if (channelId === '821e606c-a28d-4edc-9d81-613f5c465d07') {
-    console.log('derp', channelId);
-  }
-
   const handleSubmit = (val: any) => {
     console.log(val);
   };
