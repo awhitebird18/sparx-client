@@ -12,7 +12,7 @@ const BottomToolbarPLugin = () => {
     hiddenFileInput.current.click();
   };
 
-  const buttonClasses = 'toolbar-item text-muted-foreground';
+  const buttonClasses = 'p-0 toolbar-item text-muted-foreground w-9 h-9';
   return (
     <div className="toolbar">
       <>

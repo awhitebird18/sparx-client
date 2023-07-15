@@ -88,6 +88,16 @@ export class MessageStore {
     }
   };
 
+  editMessageContent = async (id: string, content: string) => {
+    try {
+      // const updatedMessage = await editMessageApi(id, content);
+
+      this.updateMessage(id, { content });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
@@ -100,7 +110,7 @@ export class MessageStore {
     this.page = this.page + 1;
   };
 
-  updateMessage = (uuid: string, updatedMessage: Message) => {
+  updateMessage = (uuid: string, updatedMessage: CreateMesssage) => {
     const index = this.messages.findIndex((message: Message) => message.uuid === uuid);
     if (index === -1) return null;
 

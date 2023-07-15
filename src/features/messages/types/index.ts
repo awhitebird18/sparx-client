@@ -10,6 +10,5 @@ export type Message = {
 export type CreateMesssage = Partial<Message>;
 
 export type UpdateMessage = {
-  uuid: string;
   content: string;
 };

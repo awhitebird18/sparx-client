@@ -1,4 +1,4 @@
-import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -15,27 +15,32 @@ import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
-import { Send } from 'react-bootstrap-icons';
-
-function Placeholder({ value }: { value?: string }) {
-  return <div className="editor-placeholder text-muted-foreground">{value}</div>;
-}
+import { Message } from '../messages';
+import { useStore } from '@/stores/RootStore';
+import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+import CancelButtonPlugin from './plugins/CancelButtonPlugin';
 
 type EditorProps = {
-  placeholder?: string;
-  config: InitialConfigType;
-  onSubmit: (val: string) => void;
+  message: Message;
+  setIsEditing: (bool: boolean) => void;
 };
 
-export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
+export default function MessageEditor({ message, setIsEditing }: EditorProps) {
+  const { editMessageContent } = useStore('messageStore');
+
+  const handleSubmit = async (messageContent: string) => {
+    await editMessageContent(message.uuid, messageContent);
+    setIsEditing(false);
+  };
+
   return (
-    <LexicalComposer initialConfig={config}>
-      <div className="editor-container border border-border rounded-md">
+    <LexicalComposer initialConfig={{ ...editorConfig, editorState: message.content }}>
+      <div className="editor-container border border-border rounded-md bg-background">
         <TopToolbarPlugin />
         <div className="editor-inner">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={<Placeholder value={placeholder} />}
+            placeholder={<></>}
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />
@@ -48,14 +53,8 @@ export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
         <div className="absolute right-1.5 bottom-1.5 gap-2 flex">
-          <SubmitButtonPlugin
-            onSubmit={onSubmit}
-            label={
-              <>
-                <Send className="mr-2 text-xs" /> Send
-              </>
-            }
-          />
+          <CancelButtonPlugin setIsEditing={setIsEditing} />
+          <SubmitButtonPlugin onSubmit={handleSubmit} label="Update" />
         </div>
         <BottomToolbarPLugin />
       </div>

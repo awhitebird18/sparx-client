@@ -18,7 +18,7 @@ import { useStore } from '@/stores/RootStore';
 const CompanyDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownTriggerRef = useRef(null);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { logout } = useAuth();
@@ -30,10 +30,7 @@ const CompanyDropdown = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger asChild>
-        <div
-          className="flex gap-3 hover:bg-transparent px-0 cursor-pointer"
-          ref={dropdownTriggerRef}
-        >
+        <div className="flex gap-3 hover:bg-transparent px-0 cursor-pointer">
           <Logo size={8} />
           <div className="flex items-center gap-1">
             <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl">Chat App</h1>
