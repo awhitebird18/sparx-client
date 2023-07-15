@@ -33,6 +33,7 @@ const AvatarGroup = () => {
       {users ? (
         users.slice(0, userCount).map((user: User, index: number) => (
           <Avatar
+            key={user.uuid}
             className={`absolute w-7 h-7 rounded-sm shadow-md shadow-background `}
             style={{ left: `${index * 16}px` }}
           >

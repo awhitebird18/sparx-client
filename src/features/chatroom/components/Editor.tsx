@@ -20,6 +20,7 @@ const Editor: React.FC = () => {
         uuid: uuid(), // you should replace this with a real uuid in production code
         userId: currentUser.uuid,
         content: message,
+        channelId: 'channelId',
         createdAt: dayjs(),
         timezone: 'America/New_York', // replace with the user's actual timezone
       });
