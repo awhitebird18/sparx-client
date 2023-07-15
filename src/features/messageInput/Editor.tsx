@@ -4,7 +4,7 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-import ToolbarPlugin from './plugins/ToolbarPlugin';
+import TopToolbarPlugin from './plugins/TopToolbarPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
@@ -14,6 +14,7 @@ import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
+import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
 
 function Placeholder({ value }: { value?: string }) {
   return <div className="editor-placeholder text-muted-foreground">{value}</div>;
@@ -29,14 +30,13 @@ export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
   return (
     <LexicalComposer initialConfig={config}>
       <div className="editor-container border border-border rounded-md">
-        <ToolbarPlugin />
+        <TopToolbarPlugin />
         <div className="editor-inner">
           <RichTextPlugin
             contentEditable={<ContentEditable className="editor-input" />}
             placeholder={<Placeholder value={placeholder} />}
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <SubmitButtonPlugin onSubmit={onSubmit} />
           <HistoryPlugin />
           <AutoFocusPlugin />
           <CodeHighlightPlugin />
@@ -46,6 +46,8 @@ export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
           <AutoLinkPlugin />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
+        <SubmitButtonPlugin onSubmit={onSubmit} />
+        <BottomToolbarPLugin />
       </div>
     </LexicalComposer>
   );

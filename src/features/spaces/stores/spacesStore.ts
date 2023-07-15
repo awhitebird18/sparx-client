@@ -12,6 +12,7 @@ export class SpacesStore {
       updateSpace: action,
       deleteSpace: action,
       fetchSpaces: action,
+      setSpaces: action,
     });
   }
 

@@ -1,17 +1,19 @@
-import { makeAutoObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { ModalName } from '@/components/modal/modalList';
 
 interface ActiveModal {
   type: ModalName;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any | null;
+  payload: unknown | null;
 }
 
 export class ModalStore {
   activeModal: ActiveModal | null = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {
+      activeModal: observable,
+      setActiveModal: action,
+    });
   }
 
   setActiveModal = (activeModal: ActiveModal | null) => {

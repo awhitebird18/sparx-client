@@ -25,6 +25,7 @@ export class SectionStore {
       deleteSection: action,
       fetchsections: action,
       setSections: action,
+      setIsLoading: action,
     });
 
     addEventListener('channelUpdate', this.fetchsections);

@@ -39,7 +39,7 @@ const SubmitButtonPlugin = ({ onSubmit }: props) => {
   return (
     <Button
       onClick={handleSubmit}
-      className="absolute right-2 bottom-2"
+      className="absolute right-1.5 bottom-1.5"
       variant="outline"
       size="sm"
     >

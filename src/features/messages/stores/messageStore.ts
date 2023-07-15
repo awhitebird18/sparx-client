@@ -20,11 +20,14 @@ export class MessageStore {
       page: observable,
       findById: action,
       addMessage: action,
+      addMessages: action,
       updateMessage: action,
       deleteMessage: action,
       fetchMessages: action,
       incrementPage: action,
       setMessages: action,
+      setPage: action,
+      setIsLoading: action,
       groupedMessages: computed,
       groupedMessagesWithUser: computed,
     });
@@ -73,7 +76,7 @@ export class MessageStore {
   };
 
   addMessages = (newMessages: Message[]) => {
-    this.messages = [...this.messages, ...newMessages];
+    this.setMessages([...this.messages, ...newMessages]);
   };
 
   incrementPage = () => {

@@ -3,7 +3,7 @@
 }
 
 .editor-input {
-  min-height: 60px;
+  min-height: 40px;
   resize: none;
   position: relative;
   tab-size: 1;

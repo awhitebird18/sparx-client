@@ -72,7 +72,7 @@ const Users: React.FC = () => {
               >
                 <DropdownMenu>
                   <DropdownMenuTrigger className="absolute top-0 right-4">
-                    <button className="mt-2 text-right text-2xl">⋮</button>
+                    <div className="mt-2 text-right text-2xl">⋮</div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem onSelect={() => console.info(`Message ${user.firstName}`)}>

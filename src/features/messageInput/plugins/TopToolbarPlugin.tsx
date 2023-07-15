@@ -319,7 +319,7 @@ export default function ToolbarPlugin() {
 
   const activeClasses = 'text-primary bg-muted';
 
-  const buttonClasses = 'toolbar-item  text-muted-foreground ';
+  const buttonClasses = 'toolbar-item  text-muted-foreground';
 
   return (
     <div className="toolbar" ref={toolbarRef}>
