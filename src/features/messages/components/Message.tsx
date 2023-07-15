@@ -34,7 +34,7 @@ const Message = ({ message, showUser }: { message: Message; showUser: boolean })
             </div>
           ) : null}
 
-          <DisplayEditor content={message.content} />
+          <DisplayEditor />
           {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
           {!showUser ? (
             <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">

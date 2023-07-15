@@ -7,11 +7,7 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import { editorConfig } from './configs/editorConfig';
 
-type EditorProps = {
-  content: string;
-};
-
-export default function DisplayEditor({ content }: EditorProps) {
+export default function DisplayEditor() {
   return (
     <LexicalComposer initialConfig={{ ...editorConfig, editable: false }}>
       <RichTextPlugin
