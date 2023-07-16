@@ -6,21 +6,18 @@ import { useStore } from '@/stores/RootStore';
 import { Section as SectionType } from '@/features/sections';
 import Section from './Section';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
 
 const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
 
 const Sidebar = () => {
   const { organizedChannels } = useStore('sidebarStore');
 
-  const navigate = useNavigate();
-
   return (
     <div className="border-border border-r flex flex-col py-2 max-w-[14rem] w-full">
-      <ListItem title="Users" icon={<People />} onClick={() => navigate('users')} primary />
-      <ListItem title="Channels" icon={<Tv />} onClick={() => navigate('channels')} primary />
-      <ListItem title="Mentions" icon={<At />} onClick={() => navigate('mentions')} primary />
-      <ListItem title="Drafts" icon={<Files />} onClick={() => navigate('drafts')} primary />
+      <ListItem id="users" title="Users" icon={<People />} primary />
+      <ListItem id="channels" title="Channels" icon={<Tv />} primary />
+      <ListItem id="mentions" title="Mentions" icon={<At />} primary />
+      <ListItem id="drafts" title="Drafts" icon={<Files />} primary />
 
       <Divider />
 
