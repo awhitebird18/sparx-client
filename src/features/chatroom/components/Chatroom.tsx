@@ -16,10 +16,9 @@ import MessageInput from './MessageInput';
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage } = useStore('messageStore');
   const { setCurrentChannelId, currentChannelId } = useStore('channelStore');
-
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const { channelId } = useParams();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const { channelId } = useParams();
 
   useEffect(() => {
     if (!channelId || channelId === currentChannelId) return;

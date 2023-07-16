@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
-import { PlusSquare, CaretDownFill } from 'react-bootstrap-icons';
-
+import { PlusSquare, CaretDownFill, Hash } from 'react-bootstrap-icons';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
-
 import { Channel } from '@/features/channels';
-import { useNavigate } from 'react-router-dom';
-
 import { SectionTypes } from '@/features/sections/types/sectionEnums';
 
 interface SectionProps {
@@ -21,7 +17,6 @@ interface SectionProps {
 
 const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
   const [open, setOpen] = useState(true);
-  const navigate = useNavigate();
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="mb-2">
@@ -50,25 +45,21 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
                   <Avatar className="w-full h-full rounded-sm">
                     {<AvatarImage src={channel.image} />}
                     <AvatarFallback
-                      children={channel.name.charAt(0).toUpperCase()}
-                      className="w-full h-full text-sm rounded-sm"
+                      children={<Hash className="text-xl" />}
+                      className="w-full h-full text-sm rounded-sm bg-transparent dark:bg-transparent"
                     />
                   </Avatar>
                 }
-                onClick={() => {
-                  navigate(`/app/${channel.uuid}`);
-                }}
               />
             ))
           : ''}
 
         {isSystem ? (
           <ListItem
+            id={type === 'channel' ? 'channels' : 'users'}
             icon={<PlusSquare />}
             title={type === SectionTypes.DIRECT ? 'View Users' : 'Explore Channels'}
-            onClick={() => {
-              navigate(`/app/${type === SectionTypes.DIRECT ? 'users' : 'channels'}`);
-            }}
+            disabled
           />
         ) : (
           ''

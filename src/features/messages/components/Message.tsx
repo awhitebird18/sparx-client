@@ -13,7 +13,7 @@ const Message = ({
 }: {
   message: Message;
   showUser: boolean;
-  disabled: boolean;
+  disabled?: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
