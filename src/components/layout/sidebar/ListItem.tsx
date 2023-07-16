@@ -61,8 +61,6 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
     setSelectedId(id);
   };
 
-  console.log(selectedId, id);
-
   return (
     <ContextMenu>
       <ContextMenuTrigger disabled={!isChannel}>
