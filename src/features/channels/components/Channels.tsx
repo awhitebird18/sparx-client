@@ -10,6 +10,7 @@ import Spinner from '@/components/ui/Spinner';
 import Header from '@/components/layout/containers/Header';
 import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
+import NoChannelsFallback from './NoChannelsFallback';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -69,49 +70,53 @@ const Channels: React.FC = () => {
             <div className="mt-10">
               <Spinner />
             </div>
-          ) : (
-            displayedChannels.map((channel) => (
-              <li
-                key={channel.uuid}
-                className="flex justify-between items-center border border-border p-4 cursor-pointer rounded-md group hover:bg-accent"
-                onClick={() => handleViewChannel(channel.uuid)}
-              >
-                <div>
-                  <p className="font-semibold">{channel.name}</p>
-                  {channel.joinedAt ? (
-                    <p className="text-sm h-6 ">
-                      <span className="text-emerald-500">Joined</span>
-                      {` - ${channel.joinedAt.format('MMM DD YYYY')}`}
-                    </p>
-                  ) : null}
-                </div>
-                <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
-                  {channel.isSubscribed ? (
-                    <Button
-                      variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleChannelAction(channel.uuid, ChannelActions.LEAVE);
-                      }}
-                      className="py-1 px-2 font-semibold rounded text-black bg-popover dark:bg-muted-foreground hover:bg-muted-foreground w-20"
-                    >
-                      {ChannelActions.LEAVE}
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleChannelAction(channel.uuid, ChannelActions.JOIN);
-                      }}
-                      className="py-1 px-2 font-semibold rounded shadow-md  bg-green-400 hover:bg-green-700 w-20"
-                    >
-                      {ChannelActions.JOIN}
-                    </Button>
-                  )}
-                </div>
-              </li>
-            ))
-          )}
+          ) : null}
+
+          {!isLoading && displayedChannels.length
+            ? displayedChannels.map((channel) => (
+                <li
+                  key={channel.uuid}
+                  className="flex justify-between items-center border border-border p-4 cursor-pointer rounded-md group hover:bg-accent"
+                  onClick={() => handleViewChannel(channel.uuid)}
+                >
+                  <div>
+                    <p className="font-semibold">{channel.name}</p>
+                    {channel.joinedAt ? (
+                      <p className="text-sm h-6 ">
+                        <span className="text-emerald-500">Joined</span>
+                        {` - ${channel.joinedAt.format('MMM DD YYYY')}`}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+                    {channel.isSubscribed ? (
+                      <Button
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleChannelAction(channel.uuid, ChannelActions.LEAVE);
+                        }}
+                        className="py-1 px-2 font-semibold rounded text-black bg-popover dark:bg-muted-foreground hover:bg-muted-foreground w-20"
+                      >
+                        {ChannelActions.LEAVE}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleChannelAction(channel.uuid, ChannelActions.JOIN);
+                        }}
+                        className="py-1 px-2 font-semibold rounded shadow-md  bg-green-400 hover:bg-green-700 w-20"
+                      >
+                        {ChannelActions.JOIN}
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              ))
+            : null}
+
+          {!isLoading && !displayedChannels.length ? <NoChannelsFallback /> : null}
         </ul>
         <div className="flex justify-between items-center mt-4">
           <Button

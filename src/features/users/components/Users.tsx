@@ -58,11 +58,13 @@ const Users: React.FC = () => {
 
       <Content>
         <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
+
         {isLoading ? (
           <div className="mt-10 flex-1">
             <Spinner />
           </div>
-        ) : (
+        ) : null}
+        {displayedUsers.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 overflow-auto">
             {displayedUsers.map((user) => (
               <Card
@@ -100,7 +102,14 @@ const Users: React.FC = () => {
               </Card>
             ))}
           </div>
-        )}
+        ) : null}
+        {!isLoading && !displayedUsers.length ? (
+          <div className="w-full flex flex-col items-center flex-1">
+            <p className="text-xl font-bold mb-4 mt-16">No results</p>
+            <p className="text-sm mb-10">You may want to try adjusting your filters. </p>
+          </div>
+        ) : null}
+
         <div className="flex justify-between items-center pt-2">
           <Button
             disabled={currentPage === 1}
