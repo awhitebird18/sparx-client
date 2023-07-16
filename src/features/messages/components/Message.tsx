@@ -1,10 +1,9 @@
 import { Message } from '..';
-import { Avatar } from '@radix-ui/react-avatar';
-import { AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import MessageDisplay from '@/features/messageInput/MessageDisplay';
 import OptionsPanel from './OptionsPanel';
 import { useState } from 'react';
 import MessageEditor from '@/features/messageInput/MessageEditor';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 const Message = ({
   message,
@@ -24,17 +23,7 @@ const Message = ({
       } py-1.5 mr-2 relative`}
     >
       <div className="flex gap-2">
-        {showUser ? (
-          <Avatar className="h-10 w-10">
-            <AvatarImage src="/" className="h-full w-full" />
-            <AvatarFallback
-              className="opacity-40 h-full w-full rounded-sm border"
-              children={<img src="/images/default-avatar.png" />}
-            />
-          </Avatar>
-        ) : (
-          <div className="w-10" />
-        )}
+        {showUser ? <UserAvatar size={10} /> : <div className="w-10" />}
 
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (

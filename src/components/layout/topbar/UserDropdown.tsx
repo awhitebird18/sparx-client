@@ -1,5 +1,4 @@
 import { useAuth } from '@/providers/auth';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 import {
   DropdownMenu,
@@ -12,11 +11,11 @@ import {
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownTriggerRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { currentUser, logout } = useAuth();
@@ -30,14 +29,8 @@ const UserDropdown: React.FC = () => {
       {currentUser && (
         <Tooltip>
           <TooltipTrigger>
-            <DropdownMenuTrigger className="flex items-center" asChild>
-              <Avatar className="w-8 h-8 cursor-pointer" ref={dropdownTriggerRef}>
-                {<AvatarImage src={currentUser.image} />}
-                <AvatarFallback
-                  children={currentUser.firstName.charAt(0).toUpperCase()}
-                  className="rounded-md font-semibold"
-                />
-              </Avatar>
+            <DropdownMenuTrigger className="flex items-center">
+              <UserAvatar size={8} showStatus />
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent>{currentUser.firstName}</TooltipContent>
@@ -57,13 +50,7 @@ const UserDropdown: React.FC = () => {
         }}
       >
         <div className="w-full p-2 flex gap-2 mb-2">
-          <Avatar className="w-10 h-10 " ref={dropdownTriggerRef}>
-            {<AvatarImage src={currentUser?.image} />}
-            <AvatarFallback
-              children={currentUser?.firstName.substring(0, 2).toLowerCase()}
-              className="rounded-md"
-            />
-          </Avatar>
+          <UserAvatar />
           <div>
             <p>{currentUser?.firstName}</p>
             <div className="flex items-center gap-1">
