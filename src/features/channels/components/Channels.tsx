@@ -22,6 +22,7 @@ enum ChannelActions {
 const Channels: React.FC = () => {
   const { channels, fetchWorkspaceChannels, isLoading, joinChannel, leaveChannel } =
     useStore('channelStore');
+  const { setActiveModal } = useStore('modalStore');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
@@ -32,6 +33,10 @@ const Channels: React.FC = () => {
 
   const handleViewChannel = (id: string) => {
     navigate(`/app/${id}`);
+  };
+
+  const handleClickCreateChannel = () => {
+    setActiveModal({ type: 'CreateChannelModal', payload: null });
   };
 
   const filteredChannels = channels.filter((channel: Channel) =>
@@ -61,6 +66,13 @@ const Channels: React.FC = () => {
     <div className="w-full overflow-hidden h-full flex flex-col">
       <Header>
         <h3 className="text-lg leading-6 font-medium">Channels</h3>
+        <Button
+          className="dark:bg-indigo-500 text-white h-8 px-2"
+          onClick={handleClickCreateChannel}
+          size="sm"
+        >
+          Create Channel
+        </Button>
       </Header>
 
       <Content>
