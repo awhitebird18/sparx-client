@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -30,6 +31,8 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
   const { selectedId, setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
+
+  const isSelected = selectedId === id && !disabled;
 
   const handleMoveChannel = ({
     channelId,
@@ -64,13 +67,14 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
   return (
     <ContextMenu>
       <ContextMenuTrigger disabled={!isChannel}>
-        <div
+        <Button
           onClick={handleClick}
-          className={`h-8 w-100 flex items-center ${
-            selectedId === id && !disabled ? 'bg-indigo-700 hover:bg-indigo-800 text-white' : ''
-          } ${
-            !primary ? 'text-muted-foreground' : 'text-secondary-foreground'
-          } gap-2 px-2 cursor-pointer rounded-sm overflow-hidden mx-2`}
+          variant="ghost"
+          className={`h-8 w-full text-base justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
+            isSelected
+              ? 'bg-indigo-700 hover:bg-indigo-800 text-white hover:text-white'
+              : 'text-muted-foreground'
+          } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
             {icon}
@@ -80,7 +84,7 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
             {title.charAt(0).toUpperCase()}
             {title.substring(1).toLocaleLowerCase()}
           </div>
-        </div>
+        </Button>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         <ContextMenuItem inset onClick={handleOpenChannelDetails}>

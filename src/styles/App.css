@@ -18,4 +18,5 @@ html {
   top: 10px;
   bottom: 0;
   position: absolute;
+  background: transparent;
 }

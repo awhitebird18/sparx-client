@@ -12,6 +12,7 @@ import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import { observer } from 'mobx-react-lite';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -88,4 +89,4 @@ const UserDropdown: React.FC = () => {
   );
 };
 
-export default UserDropdown;
+export default observer(UserDropdown);

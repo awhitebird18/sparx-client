@@ -19,7 +19,7 @@ const Message = ({
   return (
     <div
       className={`message rounded-lg ${
-        !disabled ? 'hover:bg-hover dark:hover:bg-hover' : ''
+        !disabled ? 'hover:bg-hover dark:hover:bg-muted/50' : ''
       } p-1.5 relative`}
     >
       <div className="flex gap-3">

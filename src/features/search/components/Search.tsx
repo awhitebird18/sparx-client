@@ -1,19 +1,37 @@
 import { Button } from '@/components/ui/Button';
+import SearchInput from '@/components/ui/SearchInput';
+import { useState } from 'react';
+import { Clock } from 'react-bootstrap-icons';
 
 const Search = () => {
-  const onClick = () => {
-    console.info('open search component');
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = (val: string) => {
+    setSearchValue(val);
   };
+
   return (
-    <Button
-      className="w-full border border-border rounded-md px-3 h-8 justify-start flex-grow-3 max-w-xl overflow-hidden"
-      variant="ghost"
-      onClick={onClick}
-    >
-      <span className="text-ellipsis overflow-hidden whitespace-nowrap">
-        Search Chat Application
-      </span>
-    </Button>
+    <div className="w-full max-w-xl relative">
+      <SearchInput
+        value={searchValue}
+        setValue={handleSearch}
+        placeholder="Search Chat Application"
+      />
+
+      {searchValue ? (
+        <div className="w-full max-h-72 border border-border rounded-md absolute top-11 left-0 bg-background z-10 p-3 space-y-3">
+          <div className="flex flex-col gap-2">
+            <div className="text-sm text-muted-foreground">Recent Searchs</div>
+            {['Channel name 1', 'Channel name 2'].map((name: string) => (
+              <Button className="w-full justify-start flex gap-2" variant="ghost">
+                <Clock />
+                {name}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
