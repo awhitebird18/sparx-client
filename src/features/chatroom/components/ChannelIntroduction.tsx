@@ -22,9 +22,9 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
       <div className="w-12">
         <MegaphoneFill className="text-yellow-300 -rotate-45 text-3xl mt-2" />
       </div>
-      <div className="flex flex-col gap-5 ">
+      <div className="flex flex-col gap-5">
         <p className="text-3xl font-bold space-y-6">
-          You're looking at the <span className="text-indigo-600 px-1.5">#{channel.name}</span>
+          You're looking at the <span className="text-indigo-600">#{channel.name} </span>
           channel
           <span className="text-muted-foreground text-base block font-normal">
             This is the one channel that will always include everyone. It’s a great spot for

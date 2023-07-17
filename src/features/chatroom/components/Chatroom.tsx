@@ -41,6 +41,7 @@ const ChatRoom: React.FC = () => {
         <ChannelTitle />
         <AvatarGroup />
       </Header>
+      {/* <Body> */}
       <div className="bg-card dark:bg-background rounded-xl shadow-md max-h-full p-2 overflow-hidden flex flex-col flex-1">
         <div
           className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
@@ -74,6 +75,7 @@ const ChatRoom: React.FC = () => {
         </div>
         <MessageInput />
       </div>
+      {/* </Body> */}
     </Content>
   );
 };
