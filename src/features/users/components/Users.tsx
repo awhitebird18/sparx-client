@@ -87,7 +87,7 @@ const Users: React.FC = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <CardContent className="flex items-center justify-center p-0 mb-2">
+                <CardContent className="flex items-center justify-center">
                   <UserAvatar size={36} />
                 </CardContent>
                 <CardFooter className="flex-col p-0">

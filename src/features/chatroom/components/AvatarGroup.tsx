@@ -25,7 +25,7 @@ const AvatarGroup = () => {
 
   return (
     <div
-      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer bg-popover`}
+      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer bg-background`}
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >
@@ -38,7 +38,7 @@ const AvatarGroup = () => {
       >
         <AvatarFallback
           children={users.length}
-          className={`w-full h-full text-sm font-medium rounded-sm bg-slate-400 text-white`}
+          className={`w-full h-full text-sm font-medium rounded-sm bg-ring text-white`}
         />
       </Avatar>
       {users ? (
@@ -51,7 +51,7 @@ const AvatarGroup = () => {
             <AvatarImage src={user.profileImage} />
             <AvatarFallback
               children={user.firstName.charAt(0).toUpperCase()}
-              className={`w-full h-full text-sm font-light rounded-sm bg-indigo-500 text-white`}
+              className={`w-full h-full text-sm font-light rounded-sm bg-indigo-600 dark:bg-indigo text-white`}
             />
           </Avatar>
         ))

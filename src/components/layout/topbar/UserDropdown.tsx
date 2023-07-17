@@ -42,8 +42,8 @@ const UserDropdown: React.FC = () => {
 
       <DropdownMenuContent
         align="end"
-        sideOffset={8}
-        className="DropdownMenuContent w-56"
+        sideOffset={5}
+        className="DropdownMenuContent w-60"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -52,13 +52,13 @@ const UserDropdown: React.FC = () => {
           }
         }}
       >
-        <div className="w-full p-2 flex gap-2 mb-2">
-          <UserAvatar />
+        <div className="w-full p-2 flex gap-2 mb-1">
+          <UserAvatar size={11} />
           <div>
-            <p>{currentUser?.firstName}</p>
+            <p>{`${currentUser?.firstName} ${currentUser?.lastName}`}</p>
             <div className="flex items-center gap-1">
-              <div className="rounded-full bg-gray-600 h-2.5 w-2.5"></div>
-              <p className="text-xs text-gray-400">Away</p>
+              <div className="rounded-full bg-green-600 h-2.5 w-2.5"></div>
+              <p className="text-sm text-secondary-foreground">Online</p>
             </div>
           </div>
         </div>

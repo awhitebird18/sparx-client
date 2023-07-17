@@ -40,7 +40,7 @@ const ChannelTitle = () => {
             {currentChannel.name.charAt(0).toUpperCase()}
             {currentChannel.name.substring(1).toLowerCase()}
           </p>
-          <ChevronDown className="text-muted-foreground" />
+          <ChevronDown />
         </>
       ) : (
         <Skeleton className="h-7 w-36" />
