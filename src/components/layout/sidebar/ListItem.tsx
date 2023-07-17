@@ -70,9 +70,11 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
         <Button
           onClick={handleClick}
           variant="ghost"
-          className={`h-8 w-full justify-start flex items-center gap-2 px-2 cursor-pointer overflow-hidden rounded-none ${
-            isSelected ? 'bg-indigo-700 hover:bg-indigo-800' : 'text-muted-foreground'
-          } ${isSelected || primary ? 'text-white' : ''}`}
+          className={`h-8 w-full text-base justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
+            isSelected
+              ? 'bg-indigo-700 hover:bg-indigo-800 text-white hover:text-white'
+              : 'text-muted-foreground'
+          } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
             {icon}

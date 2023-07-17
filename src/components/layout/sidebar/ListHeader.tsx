@@ -40,7 +40,7 @@ const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <div className="h-8 w-100 flex items-center gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden mx-2">
+      <div className="h-8 w-100 flex items-center gap-2 px-4 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
         <DropdownMenuTrigger asChild>
           <div className="font-semibold whitespace-nowrap text-ellipsis overflow-hidden">

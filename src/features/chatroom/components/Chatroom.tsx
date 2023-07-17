@@ -12,6 +12,7 @@ import Message from '@/features/messages/components/Message';
 import Content from '@/components/layout/containers/Content';
 import { formatDate } from '../utils/datefns';
 import MessageInput from './MessageInput';
+import ChannelIntroduction from './ChannelIntroduction';
 
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage } = useStore('messageStore');
@@ -42,7 +43,7 @@ const ChatRoom: React.FC = () => {
       </Header>
       <div className="bg-card dark:bg-background rounded-xl shadow-md max-h-full p-2 overflow-hidden flex flex-col flex-1">
         <div
-          className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1"
+          className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
           ref={scrollRef}
         >
           <div ref={bottomRef} />
@@ -69,6 +70,7 @@ const ChatRoom: React.FC = () => {
               </div>
             ))
           )}
+          <ChannelIntroduction channelId={channelId} />
         </div>
         <MessageInput />
       </div>

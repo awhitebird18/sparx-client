@@ -6,22 +6,25 @@ const SearchInput = ({
   value,
   setValue,
   placeholder,
+  onFocus,
 }: {
   value: string | undefined;
   setValue: (value: string) => void;
   placeholder?: string;
+  onFocus?: () => void;
 }) => {
   const handleClearSearch = () => {
     setValue('');
   };
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center w-full">
       <Input
         placeholder={placeholder}
         className="pl-12"
         onChange={(e) => setValue(e.target.value)}
         value={value}
+        onFocus={onFocus}
       />
       <Search className="absolute left-3.5 top-auto text-base" />
       {value ? (

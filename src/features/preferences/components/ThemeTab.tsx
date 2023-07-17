@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-import { User } from '@/features/users';
-import { useAuth } from '@/providers/auth';
+
+import { useTheme } from '@/providers/theme';
 
 enum ThemeType {
   LIGHT = 'light',
@@ -26,13 +26,12 @@ enum PrimaryColorType {
 }
 
 const ThemeTab = () => {
-  const { currentUser, setCurrentUser } = useAuth();
+  const { theme, setAppTheme } = useTheme();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleThemeSelect = (e: any) => {
     window.localStorage.setItem('theme', e.target.value);
 
-    setCurrentUser((prev: User) => ({ ...prev, theme: e.target.value }));
-    // Need to db call to set user
+    setAppTheme(e.target.value);
   };
 
   return (
@@ -43,7 +42,7 @@ const ThemeTab = () => {
         <h2 className="font-semibold mb-1 mt-3">App theme</h2>
 
         <RadioGroup
-          defaultValue={currentUser.theme}
+          defaultValue={theme}
           onClick={(e) => handleThemeSelect(e)}
           className="space-y-4"
         >
