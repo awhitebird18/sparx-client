@@ -5,6 +5,7 @@ import { useStore } from '@/stores/RootStore';
 
 import { Section as SectionType } from '@/features/sections';
 import Section from './Section';
+import CompanyDropdown from '../topbar/CompanyDropdown';
 import { observer } from 'mobx-react-lite';
 
 const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
@@ -13,7 +14,8 @@ const Sidebar = () => {
   const { organizedChannels } = useStore('sidebarStore');
 
   return (
-    <div className="border-border border-r flex flex-col py-2 max-w-[14rem] w-full">
+    <div className="border-border border-r flex flex-col max-w-[17rem] w-full">
+      <CompanyDropdown />
       <ListItem id="users" title="Users" icon={<People />} primary />
       <ListItem id="channels" title="Channels" icon={<Tv />} primary />
       <ListItem id="mentions" title="Mentions" icon={<At />} primary />

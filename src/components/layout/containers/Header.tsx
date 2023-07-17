@@ -1,11 +1,7 @@
 import { ReactElement } from 'react';
 
 const Header = ({ children }: { children: ReactElement | ReactElement[] }) => {
-  return (
-    <div className="h-12 px-3 flex items-center justify-between border-b border-border">
-      {children}
-    </div>
-  );
+  return <div className="h-12 flex items-center justify-between px-2">{children}</div>;
 };
 
 export default Header;

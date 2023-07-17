@@ -35,15 +35,14 @@ const ChatRoom: React.FC = () => {
   }, [groupedMessagesWithUser]);
 
   return (
-    <div className="flex flex-col h-full">
+    <Content>
       <Header>
         <ChannelTitle />
         <AvatarGroup />
       </Header>
-
-      <Content>
+      <div className="bg-card rounded-xl shadow-md max-h-full p-2 overflow-hidden flex flex-col flex-1">
         <div
-          className="flex-1 overflow-auto mt-4 h-full flex flex-col-reverse justify-start"
+          className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1"
           ref={scrollRef}
         >
           <div ref={bottomRef} />
@@ -52,7 +51,7 @@ const ChatRoom: React.FC = () => {
           ) : (
             groupedMessagesWithUser.map(({ date, messages }: any) => (
               <div key={date} className="relative">
-                <div className="w-full flex my-2 sticky top-0">
+                <div className="w-full flex my-2 sticky top-2">
                   <Badge
                     variant="outline"
                     className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
@@ -71,10 +70,9 @@ const ChatRoom: React.FC = () => {
             ))
           )}
         </div>
-
         <MessageInput />
-      </Content>
-    </div>
+      </div>
+    </Content>
   );
 };
 

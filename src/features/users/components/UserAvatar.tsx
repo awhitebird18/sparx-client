@@ -5,10 +5,10 @@ type UserAvatarProps = { size?: number; showStatus?: boolean };
 
 const UserAvatar = ({ size = 10, showStatus }: UserAvatarProps) => {
   return (
-    <Avatar className={`h-${size} w-${size} relative overflow-visible`}>
+    <Avatar className={`h-${size} w-${size} relative overflow-visible mr-2`}>
       <AvatarImage src="/" className="h-full w-full" />
       <AvatarFallback
-        className=" h-full w-full rounded-sm border border-border"
+        className="h-full w-full rounded-sm border border-border overflow-hidden"
         children={<PersonFill className="text-5xl mt-3 text-indigo-500" />}
       />
 

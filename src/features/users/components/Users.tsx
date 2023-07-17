@@ -69,7 +69,7 @@ const Users: React.FC = () => {
             {displayedUsers.map((user) => (
               <Card
                 key={user.uuid}
-                className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-accent hover:bg-accent"
+                className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-hovers hover:bg-hover"
                 onClick={() => handleClickUser(user.uuid)}
               >
                 <DropdownMenu>

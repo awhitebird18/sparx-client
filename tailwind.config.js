@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
   ],
+
   theme: {
     container: {
       center: true,
@@ -23,7 +24,6 @@ module.exports = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        hover: 'hsl(var(--hover)',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
@@ -33,6 +33,10 @@ module.exports = {
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+        },
+        hover: {
+          DEFAULT: 'hsl(var(--hovered))',
+          foreground: 'hsl(var(--hovered))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

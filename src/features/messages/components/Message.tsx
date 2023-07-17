@@ -19,11 +19,11 @@ const Message = ({
   return (
     <div
       className={`message px-4 rounded-lg ${
-        !disabled ? 'hover:bg-accent dark:hover:bg-accent' : ''
+        !disabled ? 'hover:bg-hover dark:hover:bg-hover' : ''
       } py-1.5 mr-2 relative`}
     >
       <div className="flex gap-2">
-        {showUser ? <UserAvatar size={10} /> : <div className="w-10" />}
+        {showUser ? <UserAvatar size={10} /> : <div className="w-10 mr-3" />}
 
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (

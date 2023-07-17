@@ -26,7 +26,7 @@ const ChannelTitle = () => {
         <Avatar className="rounded-sm w-7 h-7 mr-0.5">
           {<AvatarImage src={currentChannel.image} />}
           <AvatarFallback
-            children={<Hash className="text-lg" />}
+            children={<Hash className="text-2xl" />}
             className="w-full h-full text-sm rounded-sm dark:bg-transparent"
           />
         </Avatar>

@@ -30,7 +30,7 @@ const UserDropdown: React.FC = () => {
         <Tooltip>
           <TooltipTrigger>
             <DropdownMenuTrigger className="flex items-center">
-              <UserAvatar size={8} showStatus />
+              <UserAvatar size={9} showStatus />
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent>{currentUser.firstName}</TooltipContent>

@@ -30,11 +30,11 @@ const CompanyDropdown = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger asChild>
-        <div className="flex gap-3 hover:bg-transparent px-0 cursor-pointer">
-          <Logo size={8} />
-          <div className="flex items-center gap-1">
+        <div className="flex gap-1.5 hover:bg-transparent px-3.5 h-12 cursor-pointer items-center">
+          <Logo size={7} />
+          <div className="flex items-center gap-1 flex-1">
             <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl">Chat App</h1>
-            <ChevronDown size={13} className="mt-1 opacity-75" />
+            <ChevronDown size={13} className="mt-1 ml-2 opacity-75" />
           </div>
         </div>
       </DropdownMenuTrigger>
