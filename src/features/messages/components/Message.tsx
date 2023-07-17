@@ -23,7 +23,7 @@ const Message = ({
       } py-1.5 mr-2 relative`}
     >
       <div className="flex gap-2">
-        {showUser ? <UserAvatar size={10} /> : <div className="w-10 mr-3" />}
+        {showUser ? <UserAvatar size={10} /> : <div className="w-11" />}
 
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (
@@ -42,7 +42,7 @@ const Message = ({
           )}
           {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
           {!showUser ? (
-            <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">
+            <span className="timestamp absolute top-auto left-8 text-xs leading-6 text-muted-foreground w-12">
               {message.createdAt.format('h:mm')}
             </span>
           ) : null}
