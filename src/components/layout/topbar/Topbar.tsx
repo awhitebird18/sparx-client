@@ -4,7 +4,7 @@ import UserDropdown from './UserDropdown';
 
 const Topbar = () => {
   return (
-    <div className="h-12 border-b border-border flex items-center justify-between px-2">
+    <div className="h-12 border-b border-border flex items-center justify-between px-4">
       <div />
       <Search />
       <UserDropdown />
