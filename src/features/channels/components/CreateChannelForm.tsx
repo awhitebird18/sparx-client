@@ -43,12 +43,12 @@ const CreateChanneForm = () => {
   return (
     <Modal title="Create Channel">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col w-96">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2 flex flex-col w-96">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="space-y-3">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter a channel name" {...field} />
@@ -59,7 +59,7 @@ const CreateChanneForm = () => {
             )}
           />
 
-          <div className="flex ml-auto gap-3">
+          <div className="flex ml-auto gap-3 mt-10">
             <Button className="ml-auto w-28" variant="outline" onClick={handleCloseModal}>
               Cancel
             </Button>

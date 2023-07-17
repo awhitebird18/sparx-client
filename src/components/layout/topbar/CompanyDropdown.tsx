@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useAuth } from '@/providers/auth';
-import { DropdownMenuArrow } from '@radix-ui/react-dropdown-menu';
 import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
 
@@ -29,7 +28,7 @@ const CompanyDropdown = () => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <div className="flex gap-1.5 hover:bg-transparent px-3.5 h-12 cursor-pointer items-center">
           <Logo size={7} />
           <div className="flex items-center gap-1 flex-1">
@@ -39,8 +38,10 @@ const CompanyDropdown = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="DropdownMenuContent w-60"
+        className="w-60"
         align="start"
+        alignOffset={10}
+        sideOffset={0}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -75,10 +76,9 @@ const CompanyDropdown = () => {
           >
             Feedback
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={logout}>Sign out of ChatApp</DropdownMenuItem>
+          <DropdownMenuSeparator className="DropdownMenuSeparator" />
+          <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
         </DropdownMenuGroup>
-
-        <DropdownMenuArrow className="DropdownMenuArrow" />
       </DropdownMenuContent>
     </DropdownMenu>
   );
