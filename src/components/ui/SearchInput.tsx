@@ -19,7 +19,7 @@ const SearchInput = ({
     <div className="relative flex items-center">
       <Input
         placeholder={placeholder}
-        className="pl-12 dark:bg-background"
+        className="pl-12"
         onChange={(e) => setValue(e.target.value)}
         value={value}
       />

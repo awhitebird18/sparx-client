@@ -13,7 +13,7 @@ import {
 import { Section } from '@/features/sections';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface ListitemProps {
   id: string;
@@ -30,9 +30,6 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
   const { selectedId, setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
-
-  const params = useParams();
-  console.log(params);
 
   const handleMoveChannel = ({
     channelId,

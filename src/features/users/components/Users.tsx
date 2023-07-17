@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { useStore } from '@/stores/RootStore';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
@@ -17,6 +16,8 @@ import Spinner from '@/components/ui/Spinner';
 import Header from '@/components/layout/containers/Header';
 import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
+import Body from '@/components/layout/containers/Body';
+import UserAvatar from './UserAvatar';
 
 const USERS_PER_PAGE = 10;
 
@@ -51,12 +52,11 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <Content>
       <Header>
         <h3 className="text-lg leading-6 font-medium">Users</h3>
       </Header>
-
-      <Content>
+      <Body>
         <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
 
         {isLoading ? (
@@ -65,11 +65,11 @@ const Users: React.FC = () => {
           </div>
         ) : null}
         {displayedUsers.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 flex-1 grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 overflow-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
             {displayedUsers.map((user) => (
               <Card
                 key={user.uuid}
-                className="border p-4 rounded shadow relative h-min cursor-pointer dark:hover:bg-hovers hover:bg-hover"
+                className="border p-4 rounded shadow relative h-min cursor-pointer dark:bg-card"
                 onClick={() => handleClickUser(user.uuid)}
               >
                 <DropdownMenu>
@@ -88,10 +88,7 @@ const Users: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <CardContent className="flex items-center justify-center p-0 mb-2">
-                  <Avatar className="h-32 w-32 ">
-                    <AvatarImage src={user.profileImage} className="h-32 w-32 rounded-md" />
-                    <AvatarFallback children="Fallback" className="rounded-md" />
-                  </Avatar>
+                  <UserAvatar size={36} />
                 </CardContent>
                 <CardFooter className="flex-col p-0">
                   <div className="flex items-center gap-2">
@@ -109,6 +106,8 @@ const Users: React.FC = () => {
             <p className="text-sm mb-10">You may want to try adjusting your filters. </p>
           </div>
         ) : null}
+
+        <div className="flex-1" />
 
         <div className="flex justify-between items-center pt-2">
           <Button
@@ -129,8 +128,8 @@ const Users: React.FC = () => {
             Next
           </Button>
         </div>
-      </Content>
-    </div>
+      </Body>
+    </Content>
   );
 };
 
