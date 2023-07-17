@@ -18,11 +18,11 @@ const Message = ({
 
   return (
     <div
-      className={`message px-4 rounded-lg ${
+      className={`message rounded-lg ${
         !disabled ? 'hover:bg-hover dark:hover:bg-hover' : ''
-      } py-1.5 mr-2 relative`}
+      } p-1.5 relative`}
     >
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         {showUser ? <UserAvatar size={10} /> : <div className="w-11" />}
 
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
@@ -42,7 +42,7 @@ const Message = ({
           )}
           {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
           {!showUser ? (
-            <span className="timestamp absolute top-auto left-8 text-xs leading-6 text-muted-foreground w-12">
+            <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">
               {message.createdAt.format('h:mm')}
             </span>
           ) : null}
