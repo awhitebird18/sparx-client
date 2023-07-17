@@ -7,3 +7,15 @@
 html {
   font-size: 15px;
 }
+
+/* resizable.css */
+.react-resizable-handle-e {
+  cursor: ew-resize;
+  width: 15px;
+  right: -7px;
+  transform: rotate(180deg);
+  height: 100%;
+  top: 10px;
+  bottom: 0;
+  position: absolute;
+}

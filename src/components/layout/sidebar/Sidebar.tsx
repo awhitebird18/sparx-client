@@ -14,7 +14,7 @@ const Sidebar = () => {
   const { organizedChannels } = useStore('sidebarStore');
 
   return (
-    <div className="border-border border-r flex flex-col max-w-[17rem] w-full">
+    <div className="flex flex-col w-full overflow-hidden">
       <CompanyDropdown />
       <ListItem id="users" title="Users" icon={<People />} primary />
       <ListItem id="channels" title="Channels" icon={<Tv />} primary />

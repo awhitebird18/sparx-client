@@ -72,9 +72,11 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
             !primary ? 'text-muted-foreground' : 'text-secondary-foreground'
           } gap-2 px-2 cursor-pointer rounded-sm overflow-hidden mx-2`}
         >
-          <div className="w-6 h-6 rounded-sm flex justify-center items-center">{icon}</div>
+          <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
+            {icon}
+          </div>
 
-          <div className="font-medium">
+          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">
             {title.charAt(0).toUpperCase()}
             {title.substring(1).toLocaleLowerCase()}
           </div>

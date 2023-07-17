@@ -6,10 +6,12 @@ export class SidebarStore {
   channelStore: ChannelStore;
   sectionStore: SectionStore;
   selectedId: string | undefined;
+  sidebarWidth: number;
 
   constructor(channelStore: ChannelStore, sectionStore: SectionStore) {
     makeObservable(this, {
       channelStore: observable,
+      sidebarWidth: observable,
       sectionStore: observable,
       selectedId: observable,
       organizedChannels: computed,
@@ -19,6 +21,7 @@ export class SidebarStore {
     this.channelStore = channelStore;
     this.sectionStore = sectionStore;
     this.selectedId = undefined;
+    this.sidebarWidth = 250;
   }
 
   get organizedChannels() {
@@ -34,5 +37,8 @@ export class SidebarStore {
 
   setSelectedId = (id: string) => {
     this.selectedId = id;
+  };
+  setSidebarWidth = (val: number) => {
+    this.sidebarWidth = val;
   };
 }
