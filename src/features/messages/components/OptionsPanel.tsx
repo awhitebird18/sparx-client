@@ -25,7 +25,7 @@ const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
   };
 
   return (
-    <div className="options-panel hidden border border-border absolute -top-3/4 right-5 rounded-md bg-black">
+    <div className="options-panel hidden border border-border absolute -top-3/4 right-5 rounded-md bg-background">
       <TopReactions />
       <Button size="icon" variant="ghost" className="p-0 w-9 h-9 relative">
         <EmojiSmile />

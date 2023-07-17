@@ -1,5 +1,3 @@
-// src/Channels.tsx
-
 import { Button } from '@/components/ui/Button';
 import React, { useEffect, useState } from 'react';
 import { Channel } from '@/features/channels';
@@ -11,6 +9,14 @@ import Header from '@/components/layout/containers/Header';
 import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
 import NoChannelsFallback from './NoChannelsFallback';
+import Body from '@/components/layout/containers/Body';
+import { Check, ChevronDown, Dot } from 'react-bootstrap-icons';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -26,6 +32,8 @@ const Channels: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   useEffect(() => {
     fetchWorkspaceChannels();
@@ -63,21 +71,48 @@ const Channels: React.FC = () => {
   };
 
   return (
-    <div className="w-full overflow-hidden h-full flex flex-col">
+    <Content>
       <Header>
         <h3 className="text-lg leading-6 font-medium">Channels</h3>
         <Button
-          className="dark:bg-indigo-500 text-white h-8 px-2"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white h-8 px-2"
           onClick={handleClickCreateChannel}
           size="sm"
         >
           Create Channel
         </Button>
       </Header>
-
-      <Content>
+      <Body>
         <SearchInput value={searchValue} setValue={setSearchValue} placeholder="Search channels" />
-        <ul className="space-y-3 overflow-auto flex-1 pr-2">
+        <div className="flex gap-2 mt-3">
+          <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2" size="sm">
+                Sort: Alphabetically <ChevronDown className="text-xs" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+              <DropdownMenuItem>Alphabetical</DropdownMenuItem>
+              <DropdownMenuItem>Most members</DropdownMenuItem>
+              <DropdownMenuItem>Least members</DropdownMenuItem>
+              <DropdownMenuItem>Newest channel</DropdownMenuItem>
+              <DropdownMenuItem>Oldest channel</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2" size="sm">
+                Channel Type <ChevronDown className="text-xs" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+              <DropdownMenuItem>Alphabetical</DropdownMenuItem>
+              <DropdownMenuItem>Most members</DropdownMenuItem>
+              <DropdownMenuItem>Least members</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <ul className="mt-3 flex-1 overflow-auto">
           {isLoading ? (
             <div className="mt-10">
               <Spinner />
@@ -88,15 +123,24 @@ const Channels: React.FC = () => {
             ? displayedChannels.map((channel) => (
                 <li
                   key={channel.uuid}
-                  className="flex justify-between items-center border border-border p-4 cursor-pointer rounded-md group hover:bg-accent"
+                  className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
                   onClick={() => handleViewChannel(channel.uuid)}
                 >
                   <div>
                     <p className="font-semibold">{channel.name}</p>
-                    {channel.joinedAt ? (
-                      <p className="text-sm h-6 ">
-                        <span className="text-emerald-500">Joined</span>
-                        {` - ${channel.joinedAt.format('MMM DD YYYY')}`}
+                    {channel.isSubscribed ? (
+                      <p className="text-sm h-6 flex gap-2 text-muted-foreground">
+                        <span className="text-emerald-500 flex items-center gap-1">
+                          <Check className="text-lg mt-1" /> <span>Joined</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Dot className="text-lg" />
+                          <span>2 members</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Dot className="text-lg" />
+                          <span>This is a sample channel description</span>
+                        </span>
                       </p>
                     ) : null}
                   </div>
@@ -149,8 +193,8 @@ const Channels: React.FC = () => {
             Next
           </Button>
         </div>
-      </Content>
-    </div>
+      </Body>
+    </Content>
   );
 };
 

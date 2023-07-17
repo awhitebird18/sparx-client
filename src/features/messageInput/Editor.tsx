@@ -30,7 +30,7 @@ type EditorProps = {
 export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
   return (
     <LexicalComposer initialConfig={config}>
-      <div className="editor-container border border-border rounded-md">
+      <div className="editor-container rounded-md ">
         <TopToolbarPlugin />
         <div className="editor-inner">
           <RichTextPlugin

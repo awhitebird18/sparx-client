@@ -40,7 +40,12 @@ const SubmitButtonPlugin = ({ onSubmit, label }: props) => {
   }, [editor, onEnterPress]);
 
   return (
-    <Button onClick={handleSubmit} variant="outline" size="sm" className="w-20 bg-emerald-500">
+    <Button
+      onClick={handleSubmit}
+      variant="outline"
+      size="sm"
+      className="w-20 bg-indigo-700 hover:bg-indigo-800 text-white"
+    >
       {label}
     </Button>
   );

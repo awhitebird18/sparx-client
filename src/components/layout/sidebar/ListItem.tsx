@@ -66,15 +66,15 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
       <ContextMenuTrigger disabled={!isChannel}>
         <div
           onClick={handleClick}
-          className={`h-8  w-100 flex items-center ${
-            selectedId === id && !disabled ? 'bg-indigo-500 text-white' : ''
+          className={`h-8 w-100 flex items-center ${
+            selectedId === id && !disabled ? 'bg-indigo-700 hover:bg-indigo-800 text-white' : ''
           } ${
-            !primary && 'text-muted-foreground'
-          } gap-2 px-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden dark:hover:bg-accent hover:bg-accent mx-2`}
+            !primary ? 'text-muted-foreground' : 'text-secondary-foreground'
+          } gap-2 px-2 cursor-pointer rounded-sm overflow-hidden mx-2`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center">{icon}</div>
 
-          <div className="font-semibold">
+          <div className="font-medium">
             {title.charAt(0).toUpperCase()}
             {title.substring(1).toLocaleLowerCase()}
           </div>

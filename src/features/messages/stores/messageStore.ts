@@ -47,14 +47,13 @@ export class MessageStore {
       {},
     );
 
-    return Object.entries(groupedMessages)
-      .map(([date, messages]) => {
-        return {
-          date,
-          messages,
-        };
-      })
-      .reverse();
+    return Object.entries(groupedMessages).map(([date, messages]) => {
+      return {
+        date,
+        messages,
+      };
+    });
+    // .reverse();
   }
 
   findById = (uuid: string) => {

@@ -22,7 +22,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="rounded-xl shadow-md p-2">
+    <div className="border dark:border-indigo-800  dark:shadow-indigo-400 shadow-sm mx-1 my-3 p-2 rounded-lg bg-popover/50">
       <Editor
         placeholder={`Message ${currentChannel?.name}`}
         config={editorConfig}

@@ -33,8 +33,13 @@ const CreateChanneForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createChannel({ name: values.name, type: ChannelTypes.CHANNEL });
-    setActiveModal(null);
+    handleCloseModal();
   }
+
+  const handleCloseModal = () => {
+    setActiveModal(null);
+  };
+
   return (
     <Modal title="Create Channel">
       <Form {...form}>
@@ -54,9 +59,17 @@ const CreateChanneForm = () => {
             )}
           />
 
-          <Button className="ml-auto w-28" type="submit">
-            Submit
-          </Button>
+          <div className="flex ml-auto gap-3">
+            <Button className="ml-auto w-28" variant="outline" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button
+              className="ml-auto w-28 bg-indigo-600 hover:bg-indigo-800 text-white"
+              type="submit"
+            >
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </Modal>

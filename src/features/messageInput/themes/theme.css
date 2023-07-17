@@ -13,6 +13,7 @@
 
 .editor-inner {
   position: relative;
+  padding: 0.5rem 0rem;
 }
 
 .editor-placeholder {
@@ -21,7 +22,7 @@
   text-overflow: ellipsis;
   top: 0px;
   left: 0px;
-  padding: 0.5rem 1rem;
+  padding: 1rem 0.9rem;
   user-select: none;
   display: inline-block;
   pointer-events: none;
@@ -31,7 +32,7 @@
   display: flex;
   gap: 0.25rem;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.25rem;
 }
 
 .toolbar-item {
