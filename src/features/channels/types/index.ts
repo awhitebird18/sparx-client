@@ -4,6 +4,7 @@ import { ChannelTypes } from './channelEnums';
 export interface CreateChannel {
   name: string;
   type: ChannelTypes;
+  icon?: string;
 }
 
 export interface Channel extends CreateChannel {
@@ -12,7 +13,6 @@ export interface Channel extends CreateChannel {
   createdAt: Dayjs;
   topic: string;
   description: string;
-  image?: string;
   sectionId: string;
   isSubscribed?: boolean;
 }

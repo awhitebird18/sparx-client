@@ -15,9 +15,10 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { Channel } from '..';
 import { Textarea } from '@/components/ui/Textarea';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -29,6 +30,8 @@ const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 const About = ({ channel }: { channel: Channel }) => {
   const [editField, setEditField] = useState<FieldEnum | null>(null);
   const { leaveChannel } = useStore('channelStore');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fileInput = useRef<any>(null);
 
   const handleOpenForm = (field: FieldEnum) => {
     setEditField(field);
@@ -38,22 +41,58 @@ const About = ({ channel }: { channel: Channel }) => {
     await leaveChannel(channel.uuid);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectImage = (e: any) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      // const imageBase64 = reader.result as string;
+      // const updatedUser = await uploadProfileImage(currentUser?.uuid as string, imageBase64);
+      // updateUser(updatedUser.uuid, { profileImage: updatedUser.profileImage });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="flex flex-col space-y-6 pt-2 flex-1 h-full">
       {fields.map((field: FieldEnum) => (
         <Button
           key={field}
-          className="flex-col justify-start items-start h-20 border border-border relative space-y-1"
-          variant="ghost"
+          className="flex-col justify-start items-start h-20 border border-border relative space-y-1 hover:bg-secondary/50"
+          variant="outline"
           onClick={() => handleOpenForm(field)}
         >
-          <p className="text-md font-semibold">{field}</p>
+          <p className="text-md font-semibold">{`${field.charAt(0).toUpperCase()}${field
+            .substring(1)
+            .toLowerCase()}`}</p>
           <p className="text-muted-foreground">{channel[field] ?? `Enter a ${field}`}</p>
           <span className="absolute top-2 right-3">
             <PencilFill />
           </span>
         </Button>
       ))}
+
+      <Button
+        variant="outline"
+        className="text-indigo-500 w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
+        onClick={() => {
+          fileInput.current.click();
+        }}
+      >
+        <UserAvatar size={60} userId={channel?.icon} />
+
+        <p className="mt-0.5 text-primary">Change channel image</p>
+
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          ref={fileInput}
+          onChange={handleSelectImage}
+        />
+      </Button>
 
       <Button
         className="flex-col justify-start items-start h-20 border border-border space-y-1"
