@@ -18,7 +18,7 @@ const modalList = {
   DeleteMessageModal: (props: { message: Message }) => <DeleteMessage {...props} />,
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
-  ProfileModal: () => <ProfileModal />,
+  ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
 };
 
 export type ModalName = keyof typeof modalList; // this line is new

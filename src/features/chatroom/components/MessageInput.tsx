@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { useStore } from '@/stores/RootStore';
 import Editor from '@/features/messageInput/Editor';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+import { observer } from 'mobx-react-lite';
 
 const MessageInput = () => {
   const { currentUser } = useAuth();
@@ -31,5 +32,6 @@ const MessageInput = () => {
     </div>
   );
 };
+observer;
 
-export default MessageInput;
+export default observer(MessageInput);

@@ -69,7 +69,7 @@ const Users: React.FC = () => {
             {displayedUsers.map((user) => (
               <Card
                 key={user.uuid}
-                className="border p-4 rounded shadow relative h-min cursor-pointer dark:bg-card"
+                className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
                 onClick={() => handleClickUser(user.uuid)}
               >
                 <DropdownMenu>
@@ -88,7 +88,7 @@ const Users: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <CardContent className="flex items-center justify-center">
-                  <UserAvatar size={36} />
+                  <UserAvatar size={120} />
                 </CardContent>
                 <CardFooter className="flex-col p-0">
                   <div className="flex items-center gap-2">

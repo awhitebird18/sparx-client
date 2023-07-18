@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { API_URL } from '@/config';
 import { User } from '@/features/users';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -48,7 +49,7 @@ const AvatarGroup = () => {
             className={`absolute w-7 h-7 rounded-md border-2 border-background`}
             style={{ left: `${index * avatarSize}px` }}
           >
-            <AvatarImage src={user.profileImage} />
+            <AvatarImage src={`${API_URL}${user.profileImage}`} />
             <AvatarFallback
               children={user.firstName.charAt(0).toUpperCase()}
               className={`w-full h-full text-sm font-light rounded-sm bg-indigo-600 dark:bg-indigo text-white`}

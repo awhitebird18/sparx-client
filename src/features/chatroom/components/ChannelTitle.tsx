@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 import { ChevronDown, Hash } from 'react-bootstrap-icons';
 
 const ChannelTitle = () => {
@@ -49,4 +50,4 @@ const ChannelTitle = () => {
   );
 };
 
-export default ChannelTitle;
+export default observer(ChannelTitle);

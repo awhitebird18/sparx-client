@@ -13,85 +13,145 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useAuth } from '@/providers/auth';
 import Modal from '@/components/modal/Modal';
+import { User } from '@/features/users';
+import { useEffect, useRef, useState } from 'react';
+import { useStore } from '@/stores/RootStore';
+import UserAvatar from '@/features/users/components/UserAvatar';
+import { Pencil } from 'react-bootstrap-icons';
+import { observer } from 'mobx-react-lite';
+import { uploadProfileImage } from '@/features/users/api/uploadProfileImage';
+import { updateUserApi } from '@/features/users/api/updateUser';
 
 const formSchema = z.object({
-  username: z.string().min(2).max(30),
   firstName: z.string().min(2).max(30),
   lastName: z.string().min(2).max(30),
-  company: z.string().min(2).max(30),
-  department: z.string().min(2).max(30),
-  location: z.string().min(2).max(30),
-  phone: z.string().min(2).max(30),
 });
 
-const ProfileModal = () => {
+type ProfileModalProps = { userId: string };
+const ProfileModal = ({ userId }: ProfileModalProps) => {
+  const { findUser, updateUser } = useStore('userStore');
+  const [user, setUser] = useState<User>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fileInput = useRef<any>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const { currentUser } = useAuth();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      firstName: '',
-      lastName: '',
-      company: '',
-      department: '',
-      location: '',
-      phone: '',
+      firstName: currentUser?.firstName,
+      lastName: currentUser?.lastName,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.info(values);
+  useEffect(() => {
+    setUser(findUser(userId));
+  }, [currentUser, findUser, userId]);
+
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    const updatedUser = await updateUserApi(userId, values);
+
+    updateUser(userId, { firstName: updatedUser.firstName, lastName: updatedUser.lastName });
   }
 
-  const handleCancel = () => {
-    console.info('handle cancel');
+  const handleEditForm = () => {
+    setIsEditing(true);
+    if (userId === currentUser?.uuid) {
+      setIsEditing(true);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectImage = (e: any) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      const imageBase64 = reader.result as string;
+
+      const updatedUser = await uploadProfileImage(currentUser?.uuid as string, imageBase64);
+
+      console.log(updatedUser);
+
+      updateUser(updatedUser.uuid, { profileImage: updatedUser.profileImage });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
-    <Modal title="Profile">
+    <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col w-fit">
-          <div className="flex gap-4">
-            <div className="flex flex-col items-center gap-2">
-              <Avatar>
-                <AvatarImage src={currentUser?.image} className="rounded-lg overflow-hidden" />
-                <AvatarFallback children={currentUser?.firstName} />
-              </Avatar>
-              <Button
-                variant="ghost"
-                className="text-indigo-500"
-                onClick={(e) => e.preventDefault()}
-              >
-                Change profile image
-              </Button>
-            </div>
-            <div className="flex flex-col flex-1 space-y-4 w-96">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter username" {...field} />
-                    </FormControl>
-                    <FormDescription>This is your publicly displayed username</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <div className="flex gap-10 mt-4">
+          <div className="flex flex-col items-center gap-6">
+            <UserAvatar size={165} userId={currentUser?.uuid} />
+            <Button
+              variant="outline"
+              className="text-indigo-500 w-full"
+              onClick={(e) => {
+                e.preventDefault();
 
+                fileInput.current.click();
+              }}
+            >
+              Change profile image
+            </Button>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInput}
+              onChange={handleSelectImage}
+            />
+          </div>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col w-max space-y-6"
+          >
+            <div className="flex flex-col flex-1 space-y-6 w-96 mb-6">
+              <div className="space-y-2">
+                <div className="text-2xl flex items-center gap-4">
+                  <p>Shanu Shanu</p>
+                  {!isEditing && (
+                    <Button
+                      className="h-7 py-0 gap-2 text-base text-muted-foreground"
+                      size="sm"
+                      variant="outline"
+                      onClick={handleEditForm}
+                      type="button"
+                    >
+                      <Pencil className="text-sm" /> Edit
+                    </Button>
+                  )}
+                </div>
+                <FormDescription>This is your publicly displayed username</FormDescription>
+              </div>
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel className="text-base">First name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your first name" {...field} />
+                      {isEditing ? (
+                        <Input
+                          className="text-base"
+                          placeholder="Enter your first name"
+                          {...field}
+                        />
+                      ) : (
+                        <p
+                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
+                          className="text-base"
+                        >
+                          {user?.firstName}
+                        </p>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,53 +162,44 @@ const ProfileModal = () => {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last name</FormLabel>
+                    <FormLabel className="text-base">Last name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your last name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="department"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Deparment</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your department" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your location" {...field} />
+                      {isEditing ? (
+                        <Input
+                          className="text-base"
+                          placeholder="Enter your last name"
+                          {...field}
+                        />
+                      ) : (
+                        <p
+                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
+                          className="text-base"
+                        >
+                          {user?.lastName}
+                        </p>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-          </div>
 
-          <div className="flex gap-2 w-fit ml-auto">
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button className="bg-indigo-600 text-white" type="submit">
-              Save Changes
-            </Button>
-          </div>
-        </form>
+            <div className="flex gap-2 w-fit ml-auto h-10">
+              {isEditing ? (
+                <>
+                  <Button onClick={handleCancelEdit}>Cancel</Button>
+                  <Button className="bg-indigo-600 text-white" type="submit">
+                    Save Changes
+                  </Button>
+                </>
+              ) : null}
+            </div>
+          </form>
+        </div>
       </Form>
     </Modal>
   );
 };
 
-export default ProfileModal;
+export default observer(ProfileModal);

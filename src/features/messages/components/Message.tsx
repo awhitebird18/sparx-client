@@ -19,11 +19,11 @@ const Message = ({
   return (
     <div
       className={`message rounded-lg ${
-        !disabled ? 'hover:bg-hover dark:hover:bg-muted/50' : ''
+        !disabled ? 'hover:bg-secondary dark:hover:bg-secondary/50' : ''
       } p-1.5 relative`}
     >
       <div className="flex gap-3">
-        {showUser ? <UserAvatar size={10} /> : <div className="w-11" />}
+        {showUser ? <UserAvatar size={39} userId={message.userId} /> : <div className="w-11" />}
 
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (
