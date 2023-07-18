@@ -33,10 +33,15 @@ const Users: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+  const { setActiveModal } = useStore('modalStore');
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  const handleViewUserProfile = (userId: string) => {
+    setActiveModal({ type: 'ProfileModal', payload: { userId } });
+  };
 
   const filteredUsers = users.filter((user) =>
     user.firstName.toLowerCase().includes(searchValue.toLowerCase()),
@@ -49,8 +54,8 @@ const Users: React.FC = () => {
 
   const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
 
-  const handleClickUser = (id: string) => {
-    navigate(`/app/${id}`);
+  const handleMessageUser = (uuid: string) => {
+    navigate(`/app/${uuid}`);
   };
 
   return (
@@ -72,18 +77,33 @@ const Users: React.FC = () => {
               <Card
                 key={user.uuid}
                 className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
-                onClick={() => handleClickUser(user.uuid)}
+                onClick={() => {
+                  handleMessageUser(user.uuid);
+                }}
               >
                 <DropdownMenu>
                   <DropdownMenuTrigger className="absolute top-0 right-4">
-                    <div className="mt-2 text-right text-2xl">⋮</div>
+                    <Button
+                      className="mt-2 text-right text-2xl hover:bg-transparent p-1"
+                      variant="ghost"
+                    >
+                      ⋮
+                    </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onSelect={() => console.info(`Message ${user.firstName}`)}>
+                  <DropdownMenuContent align="start" side="bottom">
+                    <DropdownMenuItem
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        handleViewUserProfile(user.uuid);
+                      }}
+                    >
                       {UserMenuOptions.PROFILE}
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onSelect={() => console.info(`View Profile ${user.firstName}s profile`)}
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        handleMessageUser(user.uuid);
+                      }}
                     >
                       {UserMenuOptions.MESSAGE}
                     </DropdownMenuItem>

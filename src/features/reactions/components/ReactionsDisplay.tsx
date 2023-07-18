@@ -17,7 +17,7 @@ const ReactionsDisplay = ({ messageId }: ReactionsDisplayProps) => {
           { emojiId: 'heart_eyes', messageId: 'd' },
         ]
       : [];
-  console.log(messageId);
+
   return (
     <div className="flex gap-1">
       {reactions.map((reaction: Reaction) => {
