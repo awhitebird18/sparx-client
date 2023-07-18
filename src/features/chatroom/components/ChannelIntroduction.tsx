@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button';
 import { Channel } from '@/features/channels';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 
 import { MegaphoneFill, Person, Plus } from 'react-bootstrap-icons';
@@ -18,11 +19,11 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
 
   if (!channel) return;
   return (
-    <div className="flex my-6 ">
-      <div className="w-12">
-        <MegaphoneFill className="text-yellow-300 -rotate-45 text-3xl mt-2" />
+    <div className="flex my-6 gap-5">
+      <div className="flex">
+        <MegaphoneFill className="text-yellow-300 -rotate-45 text-3xl mt-1 ml-2" />
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 overflow-hidden">
         <p className="text-3xl font-bold space-y-6">
           You're looking at the <span className="text-indigo-600">#{channel.name} </span>
           channel
@@ -41,4 +42,4 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
   );
 };
 
-export default ChannelIntroduction;
+export default observer(ChannelIntroduction);

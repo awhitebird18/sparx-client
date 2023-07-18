@@ -13,7 +13,7 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
-  image?: string;
+  profileImage?: string;
   theme: string;
 };
 
@@ -48,6 +48,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUsers } = useStore('userStore');
 
   const [loading, setLoading] = useState(true);
+
+  console.log(currentUser);
 
   const userLogin = async (loginCredentials: LoginCredentials) => {
     try {

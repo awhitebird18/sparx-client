@@ -21,8 +21,8 @@ const UserDropdown: React.FC = () => {
   const focusRef = useRef<any>(null);
   const { currentUser, logout } = useAuth();
 
-  const handleOpenModal = ({ type }: { type: ModalName }) => {
-    setActiveModal({ type, payload: {} });
+  const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
+    setActiveModal({ type, payload });
   };
 
   return (
@@ -32,7 +32,7 @@ const UserDropdown: React.FC = () => {
           <TooltipTrigger>
             <DropdownMenuTrigger className="flex items-center" asChild>
               <div>
-                <UserAvatar size={9} showStatus />
+                <UserAvatar size={30} userId={currentUser?.uuid} showStatus />
               </div>
             </DropdownMenuTrigger>
           </TooltipTrigger>
@@ -53,7 +53,7 @@ const UserDropdown: React.FC = () => {
         }}
       >
         <div className="w-full p-2 flex gap-2 mb-1">
-          <UserAvatar size={11} />
+          <UserAvatar size={40} userId={currentUser?.uuid} />
           <div>
             <p>{`${currentUser?.firstName} ${currentUser?.lastName}`}</p>
             <div className="flex items-center gap-1">
@@ -74,7 +74,11 @@ const UserDropdown: React.FC = () => {
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ProfileModal' })}>
+          <DropdownMenuItem
+            onClick={() =>
+              handleOpenModal({ type: 'ProfileModal', payload: { userId: currentUser?.uuid } })
+            }
+          >
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>

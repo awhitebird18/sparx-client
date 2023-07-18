@@ -7,6 +7,7 @@ import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { UserStatus } from '@/features/users/types/enums';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { PersonAdd } from 'react-bootstrap-icons';
 
@@ -90,4 +91,4 @@ const Members = () => {
   );
 };
 
-export default Members;
+export default observer(Members);

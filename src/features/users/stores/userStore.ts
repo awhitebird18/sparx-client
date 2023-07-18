@@ -1,6 +1,7 @@
 import { makeObservable, observable, action } from 'mobx';
 import { User } from '@/features/users';
 import { getUsers } from '../api/getUsers';
+import { uploadProfileImage } from '../api/uploadProfileImage';
 
 export class UserStore {
   users: User[] = [];
@@ -27,6 +28,10 @@ export class UserStore {
     this.users = users;
   };
 
+  findUser = (userId: string) => {
+    return this.users.find((user: User) => user.uuid === userId);
+  };
+
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
@@ -41,10 +46,19 @@ export class UserStore {
   };
 
   updateUser = (uuid: string, updatedFields: Partial<User>) => {
-    const userIndex = this.users.findIndex((user) => user.uuid === uuid);
+    const user = this.users.find((user) => user.uuid === uuid);
+
+    if (user) {
+      Object.assign(user, updatedFields);
+    }
+  };
+
+  uploadProfileImage = async (userId: string, profileImage: string) => {
+    const updatedUser = await uploadProfileImage(userId, profileImage);
+    const userIndex = this.users.findIndex((user) => user.uuid === updatedUser.uuid);
 
     if (userIndex !== -1) {
-      this.users[userIndex] = { ...this.users[userIndex], ...updatedFields };
+      this.users[userIndex] = { ...this.users[userIndex], profileImage: updatedUser.profileImage };
     }
   };
 

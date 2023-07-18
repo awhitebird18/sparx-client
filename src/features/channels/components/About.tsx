@@ -17,6 +17,7 @@ import { Channel } from '..';
 import { Textarea } from '@/components/ui/Textarea';
 import { useState } from 'react';
 import Modal from '@/components/modal/Modal';
+import { observer } from 'mobx-react-lite';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -88,61 +89,55 @@ const About = ({ channel }: { channel: Channel }) => {
   );
 };
 
-export default About;
+export default observer(About);
 
 const formSchema = z.object({
   topic: z.string().max(200),
   description: z.string().max(200),
 });
 
-const EditField = ({
-  type,
-  content,
-  channelId,
-}: {
-  type: FieldEnum;
-  content: string;
-  channelId: string;
-}) => {
-  const { updateChannel } = useStore('channelStore');
-  const { setActiveModal } = useStore('modalStore');
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      [type]: content || '',
-    },
-  });
+const EditField = observer(
+  ({ type, content, channelId }: { type: FieldEnum; content: string; channelId: string }) => {
+    const { updateChannel } = useStore('channelStore');
+    const { setActiveModal } = useStore('modalStore');
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        [type]: content || '',
+      },
+    });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    updateChannel(channelId, values);
-    setActiveModal(null);
-  }
-  return (
-    <Modal title={`Edit ${type}`}>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 flex flex-col pt-2 h-full w-[28rem]"
-        >
-          <FormField
-            control={form.control}
-            name={type}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Textarea placeholder={`Enter a ${type}`} {...field} className="resize-none" />
-                </FormControl>
-                <FormDescription>{`This is your publicly displayed channel ${type}`}</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    function onSubmit(values: z.infer<typeof formSchema>) {
+      updateChannel(channelId, values);
+      setActiveModal(null);
+    }
+    return (
+      <Modal title={`Edit ${type}`}>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 flex flex-col pt-2 h-full w-[28rem]"
+          >
+            <FormField
+              control={form.control}
+              name={type}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea placeholder={`Enter a ${type}`} {...field} className="resize-none" />
+                  </FormControl>
+                  <FormDescription>{`This is your publicly displayed channel ${type}`}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <Button className="ml-auto" type="submit">
-            Submit
-          </Button>
-        </form>
-      </Form>
-    </Modal>
-  );
-};
+            <Button className="ml-auto" type="submit">
+              Submit
+            </Button>
+          </form>
+        </Form>
+      </Modal>
+    );
+  },
+);

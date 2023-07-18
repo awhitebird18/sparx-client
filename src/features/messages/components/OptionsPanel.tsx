@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/Button';
 import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
-import TopReactions from './TopReactions';
 import { useStore } from '@/stores/RootStore';
 import { ModalName } from '@/components/modal/modalList';
 import { Message } from '..';
@@ -25,8 +24,7 @@ const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
   };
 
   return (
-    <div className="options-panel hidden border border-border absolute -top-3/4 right-5 rounded-md bg-background">
-      <TopReactions />
+    <div className="options-panel hidden border border-border absolute -top-5 right-5 rounded-md bg-card">
       <Button size="icon" variant="ghost" className="p-0 w-9 h-9 relative">
         <EmojiSmile />
         <Plus className="absolute top-0.5 right-0.5" />
