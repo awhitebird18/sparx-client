@@ -5,6 +5,7 @@ import { useState } from 'react';
 import MessageEditor from '@/features/messageInput/MessageEditor';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
+import ReactionsDisplay from '@/features/reactions/components/ReactionsDisplay';
 
 const Message = ({
   message,
@@ -26,7 +27,7 @@ const Message = ({
       <div className="flex gap-3">
         {showUser ? <UserAvatar size={39} userId={message.userId} /> : <div className="w-11" />}
 
-        <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
+        <div className={`flex flex-col gap-1 ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
               <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
@@ -49,6 +50,7 @@ const Message = ({
               {message.createdAt.format('h:mm')}
             </span>
           ) : null}
+          <ReactionsDisplay messageId={message.uuid} />
         </div>
         {!disabled && !isEditing ? (
           <OptionsPanel message={message} setIsEditing={setIsEditing} />
