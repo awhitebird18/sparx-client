@@ -18,6 +18,8 @@ import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
 import Body from '@/components/layout/containers/Body';
 import UserAvatar from './UserAvatar';
+import { User } from '..';
+import Username from './Username';
 
 const USERS_PER_PAGE = 10;
 
@@ -66,7 +68,7 @@ const Users: React.FC = () => {
         ) : null}
         {displayedUsers.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
-            {displayedUsers.map((user) => (
+            {displayedUsers.map((user: User) => (
               <Card
                 key={user.uuid}
                 className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
@@ -88,11 +90,11 @@ const Users: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <CardContent className="flex items-center justify-center">
-                  <UserAvatar size={120} />
+                  <UserAvatar size={120} userId={user.uuid} />
                 </CardContent>
                 <CardFooter className="flex-col p-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{user.firstName}</p>
+                    <Username userId={user.uuid} />
                     <div className="h-3 w-3 bg-green-500 rounded-full"></div>
                   </div>
                 </CardFooter>

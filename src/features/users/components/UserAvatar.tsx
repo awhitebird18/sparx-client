@@ -13,7 +13,7 @@ type UserAvatarProps = {
   userId: string | undefined;
 };
 
-const UserAvatar = ({ size = 10, showStatus, userId }: UserAvatarProps) => {
+const UserAvatar = ({ size = 40, showStatus, userId }: UserAvatarProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const { findUser } = useStore('userStore');
 

@@ -1,10 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import SearchInput from '@/components/ui/SearchInput';
 import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import UserAvatar from '@/features/users/components/UserAvatar';
+import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/types/enums';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -36,10 +38,10 @@ const Members = () => {
           {filteredUsers.length ? (
             <>
               <div
-                className="flex items-center gap-4 hover:bg-muted py-1.5 rounded-md cursor-pointer opacity-60 hover:opacity-100"
+                className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer opacity-60 hover:opacity-100"
                 onClick={handleOpenAddUserToChannelModal}
               >
-                <Avatar className="w-10 h-10 rounded-sm">
+                <Avatar className="w-11 h-11 rounded-sm">
                   <AvatarFallback
                     children={<PersonAdd className="text-xl" />}
                     className="w-full h-full text-sm rounded-sm"
@@ -53,17 +55,11 @@ const Members = () => {
               {filteredUsers.map((user: User) => (
                 <div
                   key={user.uuid}
-                  className="flex items-center gap-4 hover:bg-muted py-1.5 rounded-md cursor-pointer"
+                  className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer"
                   onClick={() => handleOpenUserProfile(user.uuid)}
                 >
-                  <Avatar className="w-10 h-10 rounded-sm">
-                    {<AvatarImage src={user.profileImage} />}
-                    <AvatarFallback
-                      children={user.firstName.substring(0, 2).toUpperCase()}
-                      className="w-full h-full text-sm rounded-sm"
-                    />
-                  </Avatar>
-                  <p>{`${user.firstName} ${user.lastName}`}</p>
+                  <UserAvatar userId={user.uuid} />
+                  <Username userId={user.uuid} />
                   <OnlineStatusIndicator status={UserStatus.ONLINE} />
                 </div>
               ))}

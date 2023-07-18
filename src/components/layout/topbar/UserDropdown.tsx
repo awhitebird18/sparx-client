@@ -13,6 +13,7 @@ import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { observer } from 'mobx-react-lite';
+import Username from '@/features/users/components/Username';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -36,7 +37,9 @@ const UserDropdown: React.FC = () => {
               </div>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent>{currentUser.firstName}</TooltipContent>
+          <TooltipContent>
+            <Username userId={currentUser.uuid} />
+          </TooltipContent>
         </Tooltip>
       )}
 
@@ -52,10 +55,12 @@ const UserDropdown: React.FC = () => {
           }
         }}
       >
-        <div className="w-full p-2 flex gap-2 mb-1">
+        <div className="w-full p-2 flex gap-2 mb-1 overflow-hidden">
           <UserAvatar size={40} userId={currentUser?.uuid} />
           <div>
-            <p>{`${currentUser?.firstName} ${currentUser?.lastName}`}</p>
+            <div className="w-40">
+              <Username userId={currentUser?.uuid} />
+            </div>
             <div className="flex items-center gap-1">
               <div className="rounded-full bg-green-600 h-2.5 w-2.5"></div>
               <p className="text-sm text-secondary-foreground">Online</p>
