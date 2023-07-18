@@ -6,6 +6,12 @@ import MessageEditor from '@/features/messageInput/MessageEditor';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import ReactionsDisplay from '@/features/reactions/components/ReactionsDisplay';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/HoverCard';
+import { Clock } from 'react-bootstrap-icons';
+import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import { UserStatus } from '@/features/users/types/enums';
+import { Button } from '@/components/ui/Button';
+import { useStore } from '@/stores/RootStore';
 
 const Message = ({
   message,
@@ -17,17 +23,46 @@ const Message = ({
   disabled?: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const { setActiveModal } = useStore('modalStore');
+
+  const handleViewUserProfile = () => {
+    setActiveModal({ type: 'ProfileModal', payload: { userId: message.userId } });
+  };
 
   return (
     <div
       className={`message rounded-lg ${
         !disabled ? 'hover:bg-secondary dark:hover:bg-secondary/50' : ''
-      } p-1.5 relative`}
+      } relative`}
     >
-      <div className="flex gap-3">
-        {showUser ? <UserAvatar size={39} userId={message.userId} /> : <div className="w-11" />}
+      <div className="flex gap-3 p-1.5 h-min">
+        {showUser ? (
+          <HoverCard>
+            <HoverCardTrigger>
+              <UserAvatar size={38} userId={message.userId} />
+            </HoverCardTrigger>
 
-        <div className={`flex flex-col gap-1 ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
+            <HoverCardContent align="start" side="top" className="p-4 flex gap-4">
+              <Button variant="ghost" onClick={handleViewUserProfile} className="w-fit h-fit p-0">
+                <UserAvatar size={80} userId={message.userId} />
+              </Button>
+
+              <div className="flex gap-2 h-5 flex-col">
+                <h2 className="font-semibold dark:text-gray-100 h-5 leading-4 flex gap-2 items-center">
+                  <Username userId={message.userId} />{' '}
+                  <OnlineStatusIndicator status={UserStatus.ONLINE} />
+                </h2>
+                <p className="text-xs text-muted-foreground mb-1 flex gap-2 items-center">
+                  <Clock /> 5:35 PM Local time
+                </p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        ) : (
+          <div className="w-11" />
+        )}
+
+        <div className={`flex flex-col ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
               <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">

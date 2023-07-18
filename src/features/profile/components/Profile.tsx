@@ -86,19 +86,21 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
         <div className="flex gap-10 mt-4">
-          <div className="flex flex-col items-center gap-6">
-            <UserAvatar size={165} userId={currentUser?.uuid} />
-            <Button
-              variant="outline"
-              className="text-indigo-500 w-full"
-              onClick={(e) => {
-                e.preventDefault();
+          <div className="flex flex-col items-center gap-4">
+            <UserAvatar size={165} userId={user?.uuid} />
+            {user?.uuid === currentUser?.uuid && (
+              <Button
+                variant="outline"
+                className="text-indigo-500 w-full cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
 
-                fileInput.current.click();
-              }}
-            >
-              Change profile image
-            </Button>
+                  fileInput.current.click();
+                }}
+              >
+                Change profile image
+              </Button>
+            )}
             <input
               type="file"
               accept="image/*"
@@ -109,13 +111,13 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
           </div>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col w-max space-y-6"
+            className="flex flex-col w-max space-y-4"
           >
-            <div className="flex flex-col flex-1 space-y-6 w-96 mb-6">
+            <div className="flex flex-col flex-1 space-y-4 w-96 mb-4">
               <div className="space-y-2">
                 <div className="text-2xl flex items-center gap-4">
                   <Username userId={user?.uuid} />
-                  {!isEditing && (
+                  {!isEditing && user?.uuid === currentUser?.uuid && (
                     <Button
                       className="h-7 py-0 gap-2 text-base text-muted-foreground"
                       size="sm"
@@ -134,7 +136,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base">First name</FormLabel>
+                    <FormLabel className="text-base font-semibold">First name</FormLabel>
                     <FormControl>
                       {isEditing ? (
                         <Input
@@ -145,7 +147,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                       ) : (
                         <p
                           style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base"
+                          className="text-base text-muted-foreground"
                         >
                           {user?.firstName}
                         </p>
@@ -171,7 +173,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                       ) : (
                         <p
                           style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base"
+                          className="text-base text-muted-foreground"
                         >
                           {user?.lastName}
                         </p>

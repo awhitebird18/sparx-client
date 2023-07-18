@@ -21,6 +21,6 @@ const modalList = {
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
 };
 
-export type ModalName = keyof typeof modalList; // this line is new
+export type ModalName = keyof typeof modalList;
 
 export default modalList;
