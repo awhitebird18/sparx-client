@@ -12,7 +12,7 @@ const EmojiPicker = ({ messageId, onClickAway, position }: EmojiPickerProps) => 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEmojiClick = (value: any) => {
     onClickAway();
-    console.log(value);
+    console.log(value, messageId);
   };
 
   return (
