@@ -4,6 +4,7 @@ import OptionsPanel from './OptionsPanel';
 import { useState } from 'react';
 import MessageEditor from '@/features/messageInput/MessageEditor';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import Username from '@/features/users/components/Username';
 
 const Message = ({
   message,
@@ -28,7 +29,9 @@ const Message = ({
         <div className={`flex flex-col ${showUser ? 'h-10' : 'h-fit'} w-full`}>
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
-              <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">Username</h2>
+              <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
+                <Username userId={message.userId} />
+              </h2>
               <p className="text-xs text-muted-foreground mb-1">
                 {message.createdAt.format('h:mm a')}
               </p>
@@ -40,14 +43,16 @@ const Message = ({
           ) : (
             <MessageDisplay content={message.content} id={message.uuid} />
           )}
-          {/* <p className="text-gray-600 dark:text-gray-300 h-5">{message.content}</p> */}
+
           {!showUser ? (
             <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">
               {message.createdAt.format('h:mm')}
             </span>
           ) : null}
         </div>
-        {!disabled ? <OptionsPanel message={message} setIsEditing={setIsEditing} /> : null}
+        {!disabled && !isEditing ? (
+          <OptionsPanel message={message} setIsEditing={setIsEditing} />
+        ) : null}
       </div>
     </div>
   );

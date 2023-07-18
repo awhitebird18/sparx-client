@@ -23,6 +23,7 @@ import { Pencil } from 'react-bootstrap-icons';
 import { observer } from 'mobx-react-lite';
 import { uploadProfileImage } from '@/features/users/api/uploadProfileImage';
 import { updateUserApi } from '@/features/users/api/updateUser';
+import Username from '@/features/users/components/Username';
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(30),
@@ -113,7 +114,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex flex-col flex-1 space-y-6 w-96 mb-6">
               <div className="space-y-2">
                 <div className="text-2xl flex items-center gap-4">
-                  <p>{`${user?.firstName} ${user?.lastName}`}</p>
+                  <Username userId={user?.uuid} />
                   {!isEditing && (
                     <Button
                       className="h-7 py-0 gap-2 text-base text-muted-foreground"
