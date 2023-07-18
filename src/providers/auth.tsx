@@ -49,8 +49,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
 
-  console.log(currentUser);
-
   const userLogin = async (loginCredentials: LoginCredentials) => {
     try {
       const res = await login(loginCredentials);
