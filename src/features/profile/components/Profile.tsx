@@ -51,8 +51,9 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     const updatedUser = await updateUserApi(userId, values);
-
     updateUser(userId, { firstName: updatedUser.firstName, lastName: updatedUser.lastName });
+
+    setIsEditing(false);
   }
 
   const handleEditForm = () => {
@@ -73,11 +74,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
-
       const updatedUser = await uploadProfileImage(currentUser?.uuid as string, imageBase64);
-
-      console.log(updatedUser);
-
       updateUser(updatedUser.uuid, { profileImage: updatedUser.profileImage });
     };
 
@@ -116,7 +113,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex flex-col flex-1 space-y-6 w-96 mb-6">
               <div className="space-y-2">
                 <div className="text-2xl flex items-center gap-4">
-                  <p>Shanu Shanu</p>
+                  <p>{`${user?.firstName} ${user?.lastName}`}</p>
                   {!isEditing && (
                     <Button
                       className="h-7 py-0 gap-2 text-base text-muted-foreground"
