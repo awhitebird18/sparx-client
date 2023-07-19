@@ -25,11 +25,16 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
       </div>
       <div className="flex flex-col gap-5 overflow-hidden">
         <p className="text-3xl font-bold space-y-6">
-          You're looking at the <span className="text-indigo-600">#{channel.name} </span>
+          You're looking at the{' '}
+          <span className="text-indigo-600">
+            #{channel.name.charAt(0).toUpperCase()}
+            {channel.name.substring(1).toLowerCase()}{' '}
+          </span>
           channel
           <span className="text-muted-foreground text-base block font-normal">
-            This is the one channel that will always include everyone. It’s a great spot for
-            announcements and team-wide conversations.
+            {channel.description
+              ? channel.description
+              : 'This is the one channel that will always include everyone. Its a great spot for announcements and team-wide conversations.'}
           </span>
         </p>
         <Button variant="outline" className="w-fit flex gap-2 text-base font-normal items-center">

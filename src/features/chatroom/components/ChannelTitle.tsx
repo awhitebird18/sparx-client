@@ -19,7 +19,7 @@ const ChannelTitle = () => {
 
   return (
     <Button
-      className="flex items-center h-7 p-0 hover:bg-transparent"
+      className="flex items-center h-7 p-0 hover:bg-transparent gap-3 justify-start"
       variant="ghost"
       onClick={handleOpenChannelDetails}
     >
@@ -30,15 +30,20 @@ const ChannelTitle = () => {
       )}
 
       {currentChannel ? (
-        <>
-          <p className="h-7 text-xl px-2">
+        <div className="flex items-center gap-3">
+          <p className="h-7 text-xl flex items-center whitespace-nowrap overflow-hidden text-ellipsis w-min">
             {currentChannel.name.charAt(0).toUpperCase()}
             {currentChannel.name.substring(1).toLowerCase()}
+            <ChevronDown className="mt-1 text-sm ml-2" />
           </p>
-          <ChevronDown className="mt-1" />
-        </>
+        </div>
       ) : (
         <Skeleton className="h-7 w-36" />
+      )}
+      {currentChannel?.topic && (
+        <p className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap w-60">
+          {currentChannel.topic}
+        </p>
       )}
     </Button>
   );

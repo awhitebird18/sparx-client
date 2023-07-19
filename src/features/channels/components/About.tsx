@@ -57,18 +57,18 @@ const About = ({ channel }: { channel: Channel }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-6 pt-2 flex-1 h-full">
+    <div className="flex flex-col space-y-5 pt-2 flex-1 h-full">
       {fields.map((field: FieldEnum) => (
         <Button
           key={field}
-          className="flex-col justify-start items-start h-20 border border-border relative space-y-1 hover:bg-secondary/50"
+          className="flex-col justify-start items-start h-28 border border-border relative space-y-1 hover:bg-secondary/50 gap-2"
           variant="outline"
           onClick={() => handleOpenForm(field)}
         >
           <p className="text-md font-semibold">{`${field.charAt(0).toUpperCase()}${field
             .substring(1)
             .toLowerCase()}`}</p>
-          <p className="text-muted-foreground">{channel[field] ?? `Enter a ${field}`}</p>
+          <p className="text-muted-foreground text-left">{channel[field] ?? `Enter a ${field}`}</p>
           <span className="absolute top-2 right-3">
             <PencilFill />
           </span>
@@ -115,7 +115,7 @@ const About = ({ channel }: { channel: Channel }) => {
       <div className="flex-grow" />
 
       <Button
-        className="justify-start text-muted dark:hover:bg-transparent hover:bg-transparent p-0"
+        className="justify-start text-muted dark:hover:bg-transparent hover:bg-transparent"
         variant="ghost"
         onClick={() => console.info('copy channel id')}
       >
@@ -131,13 +131,11 @@ const About = ({ channel }: { channel: Channel }) => {
 
 export default observer(About);
 
-const formSchema = z.object({
-  topic: z.string().max(200),
-  description: z.string().max(200),
-});
-
 const EditField = observer(
   ({ type, content, channelId }: { type: FieldEnum; content: string; channelId: string }) => {
+    const formSchema = z.object({
+      [type]: z.string().max(200),
+    });
     const { updateChannel } = useStore('channelStore');
     const { setActiveModal } = useStore('modalStore');
     const form = useForm<z.infer<typeof formSchema>>({
@@ -147,10 +145,12 @@ const EditField = observer(
       },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-      updateChannel(channelId, values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+      const updatedChannel = await updateChannelApi(channelId, values);
+      updateChannel(channelId, { [type]: updatedChannel[type] });
       setActiveModal(null);
     }
+
     return (
       <Modal title={`Edit ${type}`}>
         <Form {...form}>
