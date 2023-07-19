@@ -11,6 +11,7 @@ import {
   ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
+import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { Section } from '@/features/sections';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -25,7 +26,7 @@ interface ListitemProps {
   disabled?: boolean;
 }
 
-const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemProps) => {
+const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
   const { updateChannelSection, leaveChannel } = useStore('channelStore');
@@ -77,7 +78,7 @@ const ListItem = ({ id, title, icon, primary, isChannel, disabled }: ListitemPro
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
-            {icon}
+            {icon ? icon : <ChannelIcon channelId={id} isSelected={isSelected} size={24} />}
           </div>
 
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">
