@@ -137,10 +137,12 @@ const Channels: React.FC = () => {
                           <Dot className="text-lg" />
                           <span>2 members</span>
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Dot className="text-lg" />
-                          <span>This is a sample channel description</span>
-                        </span>
+                        {channel.description && (
+                          <span className="flex items-center gap-1">
+                            <Dot className="text-lg" />
+                            <span>{channel.description}</span>
+                          </span>
+                        )}
                       </p>
                     ) : null}
                   </div>
