@@ -103,15 +103,12 @@ export class ChannelStore {
     this.subscribedChannels[index] = { ...this.subscribedChannels[index], ...updatedChannel };
   };
 
-  updateChannel = async (channelId: string, updateFields: UpdateChannel) => {
-    const updatedChannel = await updateUserChannel(channelId, updateFields);
+  updateChannel = async (channelId: string, updatedFields: UpdateChannel) => {
+    const channel = this.subscribedChannels.find((channel) => channel.uuid === channelId);
 
-    const index = this.channels.findIndex(
-      (channel: Channel) => channel.uuid === updatedChannel.uuid,
-    );
-    if (index === -1) return null;
-
-    this.channels[index] = { ...this.channels[index], ...updatedChannel };
+    if (channel) {
+      Object.assign(channel, updatedFields);
+    }
   };
 
   incrementPage = () => {

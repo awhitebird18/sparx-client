@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
-import { PlusSquare, CaretDownFill, Hash } from 'react-bootstrap-icons';
+import { PlusSquare, CaretDownFill } from 'react-bootstrap-icons';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
 import { Channel } from '@/features/channels';
@@ -36,21 +35,7 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
       <CollapsibleContent>
         {channels?.length
           ? channels.map((channel: Channel) => (
-              <ListItem
-                key={channel.uuid}
-                id={channel.uuid}
-                title={channel.name}
-                isChannel
-                icon={
-                  <Avatar className="w-full h-full rounded-sm">
-                    {<AvatarImage src={channel.image} />}
-                    <AvatarFallback
-                      children={<Hash className="text-xl" />}
-                      className="w-full h-full text-sm rounded-sm bg-transparent dark:bg-transparent"
-                    />
-                  </Avatar>
-                }
-              />
+              <ListItem key={channel.uuid} id={channel.uuid} title={channel.name} isChannel />
             ))
           : ''}
 

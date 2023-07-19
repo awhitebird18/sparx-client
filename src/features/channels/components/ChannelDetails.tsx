@@ -9,6 +9,7 @@ import Settings from './Settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
+import ChannelIcon from './ChannelIcon';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { findById } = useStore('channelStore');
@@ -23,7 +24,13 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
   if (!channel) return;
 
   return (
-    <Modal title={<p className="text-2xl"># {channel.name}</p>}>
+    <Modal
+      title={
+        <p className="text-2xl flex gap-3 items-center">
+          <ChannelIcon channelId={channel.uuid} size={25} isSelected /> {channel.name}
+        </p>
+      }
+    >
       <>
         <div className="flex gap-3">
           <Button className="p-0 text-base text-muted-foreground h-7 w-12 gap-1" variant="outline">

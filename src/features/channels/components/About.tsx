@@ -7,7 +7,6 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { PencilFill, Files } from 'react-bootstrap-icons';
-
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -18,7 +17,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useRef, useState } from 'react';
 import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
-import UserAvatar from '@/features/users/components/UserAvatar';
+import { updateChannelApi } from '../api/updateChannel';
+import ChannelIcon from './ChannelIcon';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -29,7 +29,7 @@ const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 
 const About = ({ channel }: { channel: Channel }) => {
   const [editField, setEditField] = useState<FieldEnum | null>(null);
-  const { leaveChannel } = useStore('channelStore');
+  const { leaveChannel, updateChannel } = useStore('channelStore');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
 
@@ -47,9 +47,10 @@ const About = ({ channel }: { channel: Channel }) => {
     const reader = new FileReader();
 
     reader.onloadend = async () => {
-      // const imageBase64 = reader.result as string;
-      // const updatedUser = await uploadProfileImage(currentUser?.uuid as string, imageBase64);
-      // updateUser(updatedUser.uuid, { profileImage: updatedUser.profileImage });
+      const imageBase64 = reader.result as string;
+      const updatedChannel = await updateChannelApi(channel.uuid, { icon: imageBase64 });
+
+      updateChannel(updatedChannel.uuid, { icon: updatedChannel.icon });
     };
 
     reader.readAsDataURL(file);
@@ -81,7 +82,7 @@ const About = ({ channel }: { channel: Channel }) => {
           fileInput.current.click();
         }}
       >
-        <UserAvatar size={60} userId={channel?.icon} />
+        <ChannelIcon size={60} channelId={channel?.uuid} />
 
         <p className="mt-0.5 text-primary">Change channel image</p>
 
