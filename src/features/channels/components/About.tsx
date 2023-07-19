@@ -146,7 +146,6 @@ const EditField = observer(
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-      console.log(values);
       const updatedChannel = await updateChannelApi(channelId, values);
       updateChannel(channelId, { [type]: updatedChannel[type] });
       setActiveModal(null);
