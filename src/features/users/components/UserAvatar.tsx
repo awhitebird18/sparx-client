@@ -5,6 +5,7 @@ import { PersonFill } from 'react-bootstrap-icons';
 import { User } from '..';
 import { API_URL } from '@/config';
 import { observer } from 'mobx-react-lite';
+import OnlineStatusIndicator from './OnlineStatusIndicator';
 
 type UserAvatarProps = {
   size?: number;
@@ -15,7 +16,7 @@ type UserAvatarProps = {
 
 const UserAvatar = ({ size = 40, showStatus, userId }: UserAvatarProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const { findUser } = useStore('userStore');
+  const { findUser, onlineUsers } = useStore('userStore');
 
   useEffect(() => {
     if (!userId) return;
@@ -46,7 +47,7 @@ const UserAvatar = ({ size = 40, showStatus, userId }: UserAvatarProps) => {
 
       {showStatus && (
         <div className="rounded-full absolute -bottom-1.5 -right-1.5 w-4 h-4 flex justify-center items-center">
-          <div className="rounded-full w-2.5 h-2.5 bg-teal-500"></div>
+          {user && onlineUsers.has(user.uuid) && <OnlineStatusIndicator userId={user.uuid} />}
         </div>
       )}
     </Avatar>

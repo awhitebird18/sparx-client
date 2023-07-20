@@ -7,9 +7,7 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import ReactionsDisplay from '@/features/reactions/components/ReactionsDisplay';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/HoverCard';
-import { ChevronRight, Clock } from 'react-bootstrap-icons';
-import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
-import { UserStatus } from '@/features/users/types/enums';
+import { ChevronRight } from 'react-bootstrap-icons';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -45,23 +43,13 @@ const Message = ({
         {showUser ? (
           <HoverCard>
             <HoverCardTrigger>
-              <UserAvatar size={38} userId={message.userId} />
+              <UserAvatar size={38} userId={message.userId} showStatus />
             </HoverCardTrigger>
 
             <HoverCardContent align="start" side="top" className="p-4 flex gap-4">
               <Button variant="ghost" onClick={handleViewUserProfile} className="w-fit h-fit p-0">
                 <UserAvatar size={80} userId={message.userId} />
               </Button>
-
-              <div className="flex gap-2 h-5 flex-col">
-                <h2 className="font-semibold dark:text-gray-100 h-5 leading-4 flex gap-2 items-center">
-                  <Username userId={message.userId} />{' '}
-                  <OnlineStatusIndicator status={UserStatus.ONLINE} />
-                </h2>
-                <p className="text-xs text-muted-foreground mb-1 flex gap-2 items-center">
-                  <Clock /> 5:35 PM Local time
-                </p>
-              </div>
             </HoverCardContent>
           </HoverCard>
         ) : (

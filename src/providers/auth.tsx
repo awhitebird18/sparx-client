@@ -1,4 +1,11 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react';
 import { LoginCredentials } from '@/features/auth';
 import { login } from '@/features/auth/api/login';
 import { axios } from '@/lib/axios';
@@ -45,7 +52,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
   const { setSubscribedChannels } = useStore('channelStore');
-  const { setUsers } = useStore('userStore');
+  const { setUsers, connectToSocketServer, disconnectFromSocketServer } = useStore('userStore');
 
   const [loading, setLoading] = useState(true);
 
@@ -67,8 +74,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    setCurrentUser(null);
     window.localStorage.removeItem('auth');
+    disconnectFromSocketServer();
+    setCurrentUser(null);
   };
 
   const registerUser = async (registrationData: RegistrationData) => {
@@ -83,32 +91,33 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const fn = async () => {
-      setLoading(true);
-      const token = localStorage.getItem('auth');
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-
-      const data = await verifyUser();
-
-      setSections(data.sections);
-      setSubscribedChannels(data.channels);
-      setUsers(data.workspaceUsers);
-      setCurrentUser(data.user);
+  const verifyAndLoginUser = useCallback(async () => {
+    setLoading(true);
+    const token = localStorage.getItem('auth');
+    if (!token) {
       setLoading(false);
-    };
+      return;
+    }
 
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+
+    const data = await verifyUser();
+
+    setSections(data.sections);
+    setSubscribedChannels(data.channels);
+    setUsers(data.workspaceUsers);
+    setCurrentUser(data.user);
+    connectToSocketServer(data.user);
+    setLoading(false);
+  }, [connectToSocketServer, setSections, setSubscribedChannels, setUsers]);
+
+  useEffect(() => {
     try {
-      fn();
+      verifyAndLoginUser();
     } catch (err) {
       setCurrentUser(null);
     }
-  }, [setSections, setSubscribedChannels, setUsers]);
+  }, [verifyAndLoginUser]);
 
   const value = {
     currentUser,

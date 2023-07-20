@@ -1,14 +1,11 @@
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
-
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import SearchInput from '@/components/ui/SearchInput';
 import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
-import { UserStatus } from '@/features/users/types/enums';
-
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { PersonAdd } from 'react-bootstrap-icons';
@@ -61,7 +58,7 @@ const Members = ({ users }: MembersProps) => {
                 >
                   <UserAvatar userId={user.uuid} />
                   <Username userId={user.uuid} />
-                  <OnlineStatusIndicator status={UserStatus.ONLINE} />
+                  <OnlineStatusIndicator userId={user.uuid} />
                 </div>
               ))}
             </>
