@@ -8,13 +8,14 @@ import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndic
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/types/enums';
-import { useStore } from '@/stores/RootStore';
+
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { PersonAdd } from 'react-bootstrap-icons';
 
-const Members = () => {
-  const { users } = useStore('userStore');
+type MembersProps = { users: User[] };
+
+const Members = ({ users }: MembersProps) => {
   const [search, setSearch] = useState<string | undefined>('');
 
   const filteredUsers = search
