@@ -22,8 +22,6 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
   const { currentChannelId } = useStore('channelStore');
   const { currentUser } = useAuth();
 
-  console.log(message);
-
   const childMessages = message.childMessages;
 
   const onResize = (_event: unknown, { size }: { size: { width: number } }) => {
@@ -39,20 +37,20 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
   const resizeHandles: ResizeHandle[] = ['w'];
 
   const handleSubmit = async (messageContent: string) => {
-    await createMessage({
-      content: messageContent,
-      channelId: currentChannelId,
-      userId: currentUser?.uuid,
-      uuid: uuid(),
-      createdAt: dayjs(),
-      timezone: 'toronto',
-      parentMessage: message,
-    });
+    await createMessage(
+      {
+        content: messageContent,
+        channelId: currentChannelId,
+        userId: currentUser?.uuid,
+        uuid: uuid(),
+        createdAt: dayjs(),
+        timezone: 'toronto',
+      },
+      message,
+    );
   };
 
   const user = findUser(message.userId);
-
-  console.log(message.childMessages);
 
   return (
     <Resizable
@@ -61,13 +59,12 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
       onResize={onResize}
       resizeHandles={resizeHandles}
       minConstraints={[400, Infinity]}
-      maxConstraints={[1000, Infinity]}
+      maxConstraints={[1200, Infinity]}
       transformScale={0.4}
     >
       <div
-        className="flex flex-col max-w-md border-l border-border"
+        className="flex flex-col border-l border-border overflow-hidden"
         style={{
-          maxWidth: '48rem',
           width: `${containerWidth}px`,
         }}
       >
@@ -82,23 +79,26 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
             <X />
           </Button>
         </Header>
-        <div className="pl-2 bg-card dark:bg-background rounded-xl shadow-md max-h-full flex flex-col m-2">
+        <div className="p-3 bg-card dark:bg-background rounded-xl shadow-md max-h-full flex flex-col m-2 overflow-hidden">
           <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2 pt-5">
-            {childMessages?.map((messageR: MessageDto, index: number) => {
-              const displayUser =
-                index === 0 || childMessages[index - 1].userId !== messageR.userId;
+            {childMessages
+              ?.slice()
+              .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1))
+              .map((message: MessageDto, index: number) => {
+                const displayUser =
+                  index === 0 || childMessages[index - 1].userId !== message.userId;
 
-              return (
-                <Message
-                  key={messageR.uuid}
-                  message={messageR}
-                  showUser={displayUser}
-                  setThread={setMessage}
-                  isThread
-                />
-              );
-            })}
-
+                return (
+                  <Message
+                    key={message.uuid}
+                    message={message}
+                    showUser={displayUser}
+                    setThread={setMessage}
+                    isThread
+                  />
+                );
+              })
+              .reverse()}
             <Message message={message} setThread={setMessage} showUser={true} isThread />
           </div>
           <Editor

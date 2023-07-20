@@ -72,30 +72,22 @@ export class MessageStore {
     this.messages.unshift(message);
   };
 
-  createMessage = async (createMessage: CreateMesssage) => {
+  createMessage = async (createMessage: CreateMesssage, parentMessage?: Message) => {
     try {
-      const newMessage = await createMessageApi(createMessage);
-      console.log(createMessage);
+      const newMessage = await createMessageApi({
+        ...createMessage,
+        ...(parentMessage && { parentId: parentMessage.uuid }),
+      });
+      newMessage.createdAt = dayjs(newMessage.createdAt);
 
-      if (createMessage.parentMessage) {
-        console.log({
-          childMessages: [{ ...newMessage, parentMessageId: createMessage.parentMessage.uuid }],
-        });
-        this.updateMessage(createMessage.parentMessage.uuid, {
-          childMessages: [
-            {
-              ...newMessage,
-              parentMessageId: createMessage.parentMessage.uuid,
-              createdAt: dayjs(),
-            },
-          ],
+      if (parentMessage) {
+        const childMessages = parentMessage.childMessages || [];
+
+        this.updateMessage(parentMessage.uuid, {
+          childMessages: [...childMessages, newMessage],
         });
       } else {
-        this.addMessage({
-          ...newMessage,
-          createdAt: dayjs(newMessage.createdAt),
-          parentMessageId: createMessage.uuid,
-        });
+        this.addMessage(newMessage);
       }
     } catch (err) {
       if (createMessage.uuid) {
@@ -130,17 +122,45 @@ export class MessageStore {
   };
 
   updateMessage = (uuid: string, updatedMessage: CreateMesssage) => {
-    const message = this.messages.find((message: Message) => message.uuid === uuid);
+    this.findAndUpdateMessage(this.messages, uuid, updatedMessage);
+  };
 
-    if (message) {
-      Object.assign(message, updatedMessage);
+  findAndUpdateMessage = (messages: Message[], uuid: string, updatedMessage: CreateMesssage) => {
+    for (const message of messages) {
+      if (message.uuid === uuid) {
+        Object.assign(message, updatedMessage);
+        return true; // Stop searching when we found and updated the message
+      } else if (
+        message.childMessages &&
+        this.findAndUpdateMessage(message.childMessages, uuid, updatedMessage)
+      ) {
+        return true; // Stop searching further when we found and updated the message in childMessages
+      }
     }
+    return false; // Return false when we didn't find the message in the current list
   };
 
   deleteMessage = async (uuid: string) => {
-    this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
-
+    this.findAndDeleteMessage(this.messages, uuid);
     await deleteMessageApi(uuid);
+  };
+
+  findAndDeleteMessage = (messages: Message[] | undefined, uuid: string) => {
+    if (!messages) return;
+
+    for (let i = 0; i < messages.length; i++) {
+      if (messages[i].uuid === uuid) {
+        // Remove the message from array
+        messages.splice(i, 1);
+        return true; // Stop searching when we found and deleted the message
+      } else if (
+        messages[i].childMessages &&
+        this.findAndDeleteMessage(messages[i].childMessages, uuid)
+      ) {
+        return true; // Stop searching further when we found and deleted the message in childMessages
+      }
+    }
+    return false; // Return false when we didn't find the message in the current list
   };
 
   fetchMessages = async (channelId: string) => {

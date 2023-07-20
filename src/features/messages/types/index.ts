@@ -8,8 +8,7 @@ export type Message = {
   userId: string;
   reactions: Reaction[];
   childMessages?: Message[];
-  parentMessage?: Message;
-  parentMessageId?: string;
+  parentId?: string;
 } & BaseEntity;
 
 export type CreateMesssage = Partial<Message>;

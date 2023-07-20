@@ -86,10 +86,7 @@ const ChatRoom: React.FC = () => {
                       </div>
 
                       {messages
-                        .filter(
-                          (message: MessageDto) =>
-                            !message.parentMessage || !message.parentMessageId,
-                        )
+                        .filter((message: MessageDto) => !message.parentId)
                         .map((message: any, index: number) => {
                           const displayUser =
                             index === 0 || messages[index - 1].userId !== message.userId;
