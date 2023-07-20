@@ -1,3 +1,4 @@
+import { Reaction } from '@/features/reactions';
 import { BaseEntity } from '@/types';
 
 export type Message = {
@@ -5,6 +6,7 @@ export type Message = {
   channelId: string;
   timezone?: string;
   userId: string;
+  reactions: Reaction[];
 } & BaseEntity;
 
 export type CreateMesssage = Partial<Message>;

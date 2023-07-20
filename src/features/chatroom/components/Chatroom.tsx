@@ -65,7 +65,7 @@ const ChatRoom: React.FC = () => {
                 {messages.map((message: any, index: number) => {
                   const displayUser = index === 0 || messages[index - 1].userId !== message.userId;
 
-                  return <Message message={message} showUser={displayUser} />;
+                  return <Message key={message.uuid} message={message} showUser={displayUser} />;
                 })}
               </div>
             ))

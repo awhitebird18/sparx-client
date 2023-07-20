@@ -57,7 +57,7 @@ const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
         </Button>
         {showEmojiPicker && (
           <EmojiPicker
-            messageId={message.uuid}
+            message={message}
             onClickAway={handleCloseEmojiPicker}
             position={showEmojiPicker}
           />

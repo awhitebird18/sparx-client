@@ -1,25 +1,35 @@
 import { useTheme } from '@/providers/theme';
 import Picker from '@emoji-mart/react';
+import { addMessageReactionApi } from '../api/addReaction';
+import { Message } from '@/features/messages';
+import { useStore } from '@/stores/RootStore';
 
 type EmojiPickerProps = {
-  messageId: string;
+  message: Message;
   onClickAway: () => void;
   position: { top: number; left: number };
 };
 
-const EmojiPicker = ({ messageId, onClickAway, position }: EmojiPickerProps) => {
+const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
+  const { updateMessage } = useStore('messageStore');
   const { theme } = useTheme();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleEmojiClick = (value: any) => {
-    onClickAway();
-    console.info(value, messageId);
+
+  const handleAddReaction = async (emojiId: string) => {
+    const updatedMessage = await addMessageReactionApi({
+      emojiId,
+      userId: message.userId,
+      messageId: message.uuid,
+    });
+
+    updateMessage(message.uuid, { reactions: updatedMessage.reactions });
   };
 
   return (
     <>
       <div className="flex fixed z-30" style={position}>
         <Picker
-          onEmojiSelect={handleEmojiClick}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onEmojiSelect={(emojiObj: any) => handleAddReaction(emojiObj.id)}
           set="apple"
           theme={theme}
           emojiButtonRadius="5px"

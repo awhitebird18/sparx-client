@@ -8,6 +8,4 @@ export type Reaction = {
 
 export type CreateReaction = Partial<Reaction>;
 
-export type UpdateReaction = {
-  emojiId: string;
-};
+export type UpdateReaction = Partial<Reaction>;
