@@ -33,6 +33,4 @@ const Username = ({ userId }: UsernameProps) => {
   );
 };
 
-observer;
-
 export default observer(Username);

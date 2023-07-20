@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/Button';
 
 import Message from './Message';
 import { useStore } from '@/stores/RootStore';
+import { Message as MessageDto } from '..';
 
-type DeletemessageProps = { message: Message };
+type DeletemessageProps = { message: MessageDto };
 
 const DeleteMessage = ({ message }: DeletemessageProps) => {
   const { deleteMessage } = useStore('messageStore');

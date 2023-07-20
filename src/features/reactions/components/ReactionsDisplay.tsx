@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/providers/auth';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 import Username from '@/features/users/components/Username';
+import { observer } from 'mobx-react-lite';
 
 type ReactionsDisplayProps = { message: Message };
 
@@ -25,7 +26,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
     updateMessage(message.uuid, { reactions: updatedMessage.reactions });
   };
 
-  if (!message?.reactions || !message.reactions.length) return null;
+  if (!message?.reactions?.length) return null;
 
   return (
     <div className="flex gap-1 max-w-xl flex-wrap">
@@ -71,4 +72,4 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
   );
 };
 
-export default ReactionsDisplay;
+export default observer(ReactionsDisplay);

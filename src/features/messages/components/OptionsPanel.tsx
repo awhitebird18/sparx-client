@@ -9,10 +9,11 @@ import { useState, useRef } from 'react';
 type OptionsPanelProps = {
   message: Message;
   setIsEditing: (bool: boolean) => void;
-  setThread: (message: Message) => void;
+  setThread?: (message: Message) => void;
+  isThread?: boolean;
 };
 
-const OptionsPanel = ({ message, setIsEditing, setThread }: OptionsPanelProps) => {
+const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
@@ -47,8 +48,7 @@ const OptionsPanel = ({ message, setIsEditing, setThread }: OptionsPanelProps) =
   };
 
   const handleReply = () => {
-    console.log(message);
-    setThread(message);
+    setThread?.(message);
   };
 
   return (
@@ -72,9 +72,11 @@ const OptionsPanel = ({ message, setIsEditing, setThread }: OptionsPanelProps) =
           />
         )}
       </div>
-      <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleReply}>
-        <ChatDots />
-      </Button>
+      {!isThread && (
+        <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleReply}>
+          <ChatDots />
+        </Button>
+      )}
       <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleEditMessage}>
         <Pencil />
       </Button>

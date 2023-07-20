@@ -3,6 +3,7 @@ import Picker from '@emoji-mart/react';
 import { addMessageReactionApi } from '../api/addReaction';
 import { Message } from '@/features/messages';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
 type EmojiPickerProps = {
   message: Message;
@@ -42,4 +43,4 @@ const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
   );
 };
 
-export default EmojiPicker;
+export default observer(EmojiPicker);

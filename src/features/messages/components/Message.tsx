@@ -13,6 +13,7 @@ import { UserStatus } from '@/features/users/types/enums';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import dayjs from 'dayjs';
 
 const Message = ({
   message,
@@ -24,7 +25,7 @@ const Message = ({
   message: Message;
   showUser: boolean;
   disabled?: boolean;
-  setThread: (message: Message) => void;
+  setThread?: (message: Message | null) => void;
   isThread?: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -74,7 +75,7 @@ const Message = ({
                 <Username userId={message.userId} />
               </h2>
               <p className="text-xs text-muted-foreground mb-1">
-                {message.createdAt.format('h:mm a')}
+                {dayjs(message.createdAt).format('h:mm a')}
               </p>
             </div>
           ) : null}
@@ -87,7 +88,7 @@ const Message = ({
 
           {!showUser ? (
             <span className="timestamp absolute top-auto left-5 text-xs leading-6 text-muted-foreground w-12">
-              {message.createdAt.format('h:mm')}
+              {dayjs(message.createdAt).format('h:mm')}
             </span>
           ) : null}
           <ReactionsDisplay message={message} />
@@ -96,6 +97,7 @@ const Message = ({
               className="p-0 justify-between px-2 h-7 w-44 hover:border border-background"
               size="sm"
               variant="ghost"
+              onClick={() => setThread?.(message)}
             >
               <span className="text-blue-500">{`${message.childMessages.length} replies`}</span>
               <ChevronRight />
@@ -103,7 +105,12 @@ const Message = ({
           ) : null}
         </div>
         {!disabled && !isEditing ? (
-          <OptionsPanel message={message} setIsEditing={setIsEditing} setThread={setThread} />
+          <OptionsPanel
+            message={message}
+            setIsEditing={setIsEditing}
+            setThread={setThread}
+            isThread={isThread}
+          />
         ) : null}
       </div>
     </div>
