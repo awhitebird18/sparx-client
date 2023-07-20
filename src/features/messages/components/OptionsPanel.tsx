@@ -6,9 +6,13 @@ import { Message } from '..';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 import { useState, useRef } from 'react';
 
-type OptionsPanelProps = { message: Message; setIsEditing: (bool: boolean) => void };
+type OptionsPanelProps = {
+  message: Message;
+  setIsEditing: (bool: boolean) => void;
+  setThread: (message: Message) => void;
+};
 
-const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
+const OptionsPanel = ({ message, setIsEditing, setThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
@@ -42,6 +46,11 @@ const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
     setShowEmojiPicker(null);
   };
 
+  const handleReply = () => {
+    console.log(message);
+    setThread(message);
+  };
+
   return (
     <div className="options-panel hidden border border-border absolute -top-5 right-5 rounded-md bg-card">
       <div className="relative">
@@ -63,7 +72,7 @@ const OptionsPanel = ({ message, setIsEditing }: OptionsPanelProps) => {
           />
         )}
       </div>
-      <Button size="icon" variant="ghost" className="p-0 w-9 h-9">
+      <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleReply}>
         <ChatDots />
       </Button>
       <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleEditMessage}>

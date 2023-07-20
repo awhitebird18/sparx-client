@@ -26,9 +26,12 @@ const ResizableSidebar = () => {
       onResize={onResize}
       resizeHandles={resizeHandles}
       minConstraints={[0, Infinity]} // Minimum width of 0
-      maxConstraints={[600, Infinity]} // Maximum width of 600
+      maxConstraints={[400, Infinity]} // Maximum width of 600
     >
-      <div style={{ width: `${sidebarWidth}px` }} className="border-r border-border">
+      <div
+        style={{ width: `${sidebarWidth}px`, position: 'relative' }}
+        className="border-r border-border"
+      >
         <Sidebar />
       </div>
     </Resizable>

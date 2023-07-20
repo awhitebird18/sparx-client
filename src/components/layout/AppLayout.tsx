@@ -10,7 +10,7 @@ export const AppLayout = () => {
     <div className="h-screen flex overflow-hidden">
       <ResizableSidebar />
       <Suspense fallback={<div />}>
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 overflow-hidden">
           <Topbar />
           <div className="flex-1 overflow-hidden">
             <Outlet />
