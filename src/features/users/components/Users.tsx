@@ -20,6 +20,7 @@ import Body from '@/components/layout/containers/Body';
 import UserAvatar from './UserAvatar';
 import { User } from '..';
 import Username from './Username';
+import OnlineStatusIndicator from './OnlineStatusIndicator';
 
 const USERS_PER_PAGE = 10;
 
@@ -115,7 +116,7 @@ const Users: React.FC = () => {
                 <CardFooter className="flex-col p-0">
                   <div className="flex items-center gap-2">
                     <Username userId={user.uuid} />
-                    <div className="h-3 w-3 bg-green-500 rounded-full"></div>
+                    <OnlineStatusIndicator userId={user.uuid} />
                   </div>
                 </CardFooter>
               </Card>
