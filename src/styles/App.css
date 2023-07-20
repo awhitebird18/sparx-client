@@ -12,7 +12,20 @@ html {
 .react-resizable-handle-e {
   cursor: ew-resize;
   width: 15px;
-  right: -7px;
+  right: 0px;
+  transform: rotate(180deg);
+  height: 100%;
+  top: 10px;
+  bottom: 0;
+  position: absolute;
+  background: transparent;
+}
+
+/* resizable.css */
+.react-resizable-handle-w {
+  cursor: ew-resize;
+  width: 15px;
+  right: 0px;
   transform: rotate(180deg);
   height: 100%;
   top: 10px;

@@ -7,20 +7,25 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import ReactionsDisplay from '@/features/reactions/components/ReactionsDisplay';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/HoverCard';
-import { Clock } from 'react-bootstrap-icons';
+import { ChevronRight, Clock } from 'react-bootstrap-icons';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { UserStatus } from '@/features/users/types/enums';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
 const Message = ({
   message,
   showUser,
   disabled,
+  setThread,
+  isThread,
 }: {
   message: Message;
   showUser: boolean;
   disabled?: boolean;
+  setThread: (message: Message) => void;
+  isThread?: boolean;
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
@@ -62,7 +67,7 @@ const Message = ({
           <div className="w-11" />
         )}
 
-        <div className={`flex flex-col ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
+        <div className={`flex flex-col space-y-1 ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
               <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
@@ -86,13 +91,23 @@ const Message = ({
             </span>
           ) : null}
           <ReactionsDisplay message={message} />
+          {!isThread && message.childMessages?.length ? (
+            <Button
+              className="p-0 justify-between px-2 h-7 w-44 hover:border border-background"
+              size="sm"
+              variant="ghost"
+            >
+              <span className="text-blue-500">{`${message.childMessages.length} replies`}</span>
+              <ChevronRight />
+            </Button>
+          ) : null}
         </div>
         {!disabled && !isEditing ? (
-          <OptionsPanel message={message} setIsEditing={setIsEditing} />
+          <OptionsPanel message={message} setIsEditing={setIsEditing} setThread={setThread} />
         ) : null}
       </div>
     </div>
   );
 };
 
-export default Message;
+export default observer(Message);

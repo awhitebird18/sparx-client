@@ -75,11 +75,28 @@ export class MessageStore {
   createMessage = async (createMessage: CreateMesssage) => {
     try {
       const newMessage = await createMessageApi(createMessage);
+      console.log(createMessage);
 
-      this.addMessage({
-        ...newMessage,
-        createdAt: dayjs(newMessage.createdAt),
-      });
+      if (createMessage.parentMessage) {
+        console.log({
+          childMessages: [{ ...newMessage, parentMessageId: createMessage.parentMessage.uuid }],
+        });
+        this.updateMessage(createMessage.parentMessage.uuid, {
+          childMessages: [
+            {
+              ...newMessage,
+              parentMessageId: createMessage.parentMessage.uuid,
+              createdAt: dayjs(),
+            },
+          ],
+        });
+      } else {
+        this.addMessage({
+          ...newMessage,
+          createdAt: dayjs(newMessage.createdAt),
+          parentMessageId: createMessage.uuid,
+        });
+      }
     } catch (err) {
       if (createMessage.uuid) {
         this.deleteMessage(createMessage.uuid);
@@ -113,10 +130,11 @@ export class MessageStore {
   };
 
   updateMessage = (uuid: string, updatedMessage: CreateMesssage) => {
-    const index = this.messages.findIndex((message: Message) => message.uuid === uuid);
-    if (index === -1) return null;
+    const message = this.messages.find((message: Message) => message.uuid === uuid);
 
-    this.messages[index] = { ...this.messages[index], ...updatedMessage };
+    if (message) {
+      Object.assign(message, updatedMessage);
+    }
   };
 
   deleteMessage = async (uuid: string) => {

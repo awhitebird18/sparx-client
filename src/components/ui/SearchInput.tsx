@@ -21,7 +21,7 @@ const SearchInput = ({
     <div className="relative flex items-center w-full">
       <Input
         placeholder={placeholder}
-        className="pl-12"
+        className="pl-12 h-full"
         onChange={(e) => setValue(e.target.value)}
         value={value}
         onFocus={onFocus}

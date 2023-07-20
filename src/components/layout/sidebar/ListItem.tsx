@@ -71,7 +71,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
         <Button
           onClick={handleClick}
           variant="ghost"
-          className={`h-8 w-full text-base justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
+          className={`h-8 w-full hover:bg-card text-sm justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
             isSelected
               ? 'bg-indigo-700 hover:bg-indigo-800 text-white hover:text-white'
               : 'text-muted-foreground'
