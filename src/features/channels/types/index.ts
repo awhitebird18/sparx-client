@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { ChannelTypes } from './channelEnums';
+import { User } from '@/features/users';
 
 export interface CreateChannel {
   name: string;
@@ -15,6 +16,7 @@ export interface Channel extends CreateChannel {
   description: string;
   sectionId: string;
   isSubscribed?: boolean;
+  users: User[];
 }
 
 export type UpdateChannel = Partial<Channel>;
