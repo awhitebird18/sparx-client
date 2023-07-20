@@ -1,31 +1,70 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React from 'react';
+import { Message } from '@/features/messages';
+import { Reaction } from '@/features/reactions';
+import { addMessageReactionApi } from '../api/addReaction';
+import { useStore } from '@/stores/RootStore';
+import { Button } from '@/components/ui/Button';
+import { useAuth } from '@/providers/auth';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
+import Username from '@/features/users/components/Username';
 
-type Reaction = {
-  reactionId: string;
-  messageId: string;
-};
+type ReactionsDisplayProps = { message: Message };
 
-type ReactionsDisplayProps = { messageId: string };
+const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
+  const { updateMessage } = useStore('messageStore');
+  const { currentUser } = useAuth();
 
-const ReactionsDisplay = ({ messageId }: ReactionsDisplayProps) => {
-  const reactions =
-    messageId === 'b7dc58ac-d8cc-4d43-ab98-195157af478e'
-      ? [
-          { emojiId: '+1', messageId: 'd' },
-          { emojiId: 'heart_eyes', messageId: 'd' },
-        ]
-      : [];
+  const handleClickReaction = async (emojiId) => {
+    const updatedMessage = await addMessageReactionApi({
+      emojiId,
+      userId: message.userId,
+      messageId: message.uuid,
+    });
+
+    updateMessage(message.uuid, { reactions: updatedMessage.reactions });
+  };
+
+  if (!message?.reactions || !message.reactions.length) return null;
 
   return (
-    <div className="flex gap-1">
-      {reactions.map((reaction: Reaction) => {
+    <div className="flex gap-1 max-w-xl flex-wrap">
+      {message.reactions.map((reaction: Reaction) => {
         return (
-          <div className="flex items-center justify-center w-11 rounded-full border border-border pb-0.5 pl-0.5 gap-0.5">
-            <em-emoji id={reaction.emojiId} set="twitter"></em-emoji>
-            <span className="text-muted-foreground text-xs self-end">1</span>
-          </div>
+          <Tooltip key={reaction.uuid}>
+            <TooltipTrigger asChild>
+              <Button
+                className={`h-fit rounded-2xl w-10 gap-0.5 ${
+                  reaction.users.includes(currentUser.uuid) && 'bg-indigo-700'
+                }`}
+                style={{ padding: '0.15rem 0.2rem' }}
+                size="icon"
+                variant="outline"
+                onClick={() => handleClickReaction(reaction.emojiId)}
+              >
+                <em-emoji
+                  id={reaction.emojiId}
+                  set="apple"
+                  style={{ fontSize: '1.2rem', lineHeight: '1rem' }}
+                ></em-emoji>
+                <span className="text-muted-foreground text-xs mt">{reaction.users.length}</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <div className="items-center justify-center gap-2 flex flex-col w-44 p-0">
+                <div className="border border-border rounded-lg p-1">
+                  <em-emoji id={reaction.emojiId} set="apple" style={{ fontSize: '4rem' }} />
+                </div>
+
+                <div className="text-center">
+                  {reaction.users.map((userId: string) => (
+                    <Username key={userId} userId={userId} />
+                  ))}
+                  reacted
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
         );
       })}
     </div>

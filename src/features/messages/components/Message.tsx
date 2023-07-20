@@ -85,7 +85,7 @@ const Message = ({
               {message.createdAt.format('h:mm')}
             </span>
           ) : null}
-          <ReactionsDisplay messageId={message.uuid} />
+          <ReactionsDisplay message={message} />
         </div>
         {!disabled && !isEditing ? (
           <OptionsPanel message={message} setIsEditing={setIsEditing} />
