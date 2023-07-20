@@ -63,7 +63,7 @@ const ChatRoom: React.FC = () => {
             <ChannelTitle />
             <AvatarGroup />
           </Header>
-          <div className="flex flex-1 bg-card dark:bg-background rounded-xl shadow-md p-3 overflow-hidden">
+          <div className="flex flex-1 bg-card dark:bg-background rounded-xl shadow-md p-3 overflow-hidden m-2">
             <div className="flex flex-col flex-1 overflow-hidden w-full">
               <div
                 className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"

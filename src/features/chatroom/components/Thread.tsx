@@ -82,7 +82,7 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
             <X />
           </Button>
         </Header>
-        <div className="pl-2 w-full bg-card dark:bg-background rounded-xl shadow-md max-h-full flex flex-col">
+        <div className="pl-2 bg-card dark:bg-background rounded-xl shadow-md max-h-full flex flex-col m-2">
           <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2 pt-5">
             {childMessages?.map((messageR: MessageDto, index: number) => {
               const displayUser =
