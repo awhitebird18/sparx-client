@@ -47,9 +47,11 @@ const NotificationsTab = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col h-100flex-1 h-full"
+        className="space-y-4 flex flex-col h-100flex-1 h-full"
       >
-        <p>Change the appearance of ChatApp across all of your workspaces.</p>
+        <p className="text-sm text-muted-foreground">
+          Change the appearance of ChatApp across all of your workspaces.
+        </p>
         <FormField
           control={form.control}
           name="theme"

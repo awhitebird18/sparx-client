@@ -22,6 +22,7 @@ type User = {
   lastName: string;
   profileImage?: string;
   theme: string;
+  primaryColor: string;
 };
 
 interface AuthContextData {

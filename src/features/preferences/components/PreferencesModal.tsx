@@ -32,13 +32,18 @@ const PreferencesModal: React.FC = () => {
 
   return (
     <Modal title="Preferences">
-      <div className="flex transform transition-all sm:w-full h-96 max-h-screen">
-        <nav className="space-y-1 border-r border-border pr-2 sm:w-52 w-32">
+      <div
+        className="flex transform transition-all sm:w-full"
+        style={{ width: '50vw', height: '55vh' }}
+      >
+        <nav className="space-y-1 border-r border-border pr-4 w-44">
           <Button
             variant="ghost"
             onClick={() => setActiveTab(PreferenceTabs.THEMING)}
-            className={`text-gray-700 py-0 px-1 h-8 block w-full text-left ${
-              activeTab === PreferenceTabs.THEMING ? 'bg-muted text-primary' : ''
+            className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
+              activeTab === PreferenceTabs.THEMING
+                ? 'bg-userMedium text-white hover:bg-userDark hover:text-text-white px-2'
+                : ''
             }`}
           >
             Theming
@@ -46,8 +51,10 @@ const PreferencesModal: React.FC = () => {
           <Button
             variant="ghost"
             onClick={() => setActiveTab(PreferenceTabs.NOTIFICATIONS)}
-            className={`text-gray-700 py-0 px-1 h-8 block w-full text-left ${
-              activeTab === PreferenceTabs.NOTIFICATIONS ? 'bg-hover' : ''
+            className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
+              activeTab === PreferenceTabs.NOTIFICATIONS
+                ? 'bg-userMedium text-white hover:bg-userDark hover:text-text-white px-2'
+                : ''
             }`}
           >
             Notifications
@@ -55,15 +62,17 @@ const PreferencesModal: React.FC = () => {
           <Button
             variant="ghost"
             onClick={() => setActiveTab(PreferenceTabs.ACCOUNT)}
-            className={`text-gray-700 py-0 px-1 h-8 block w-full text-left ${
-              activeTab === PreferenceTabs.ACCOUNT ? 'bg-hover' : ''
+            className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
+              activeTab === PreferenceTabs.ACCOUNT
+                ? 'bg-userMedium text-white hover:bg-userDark hover:text-text-white px-2'
+                : ''
             }`}
           >
             Account
           </Button>
         </nav>
 
-        <div className="flex-1 pl-4 w-96 h-100">{renderTabContent()}</div>
+        <div className="flex-1 px-4 h-96">{renderTabContent()}</div>
       </div>
     </Modal>
   );

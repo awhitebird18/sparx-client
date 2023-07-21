@@ -26,7 +26,7 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
       <div className="flex flex-col gap-5 overflow-hidden">
         <p className="text-3xl font-bold space-y-6">
           You're looking at the{' '}
-          <span className="text-indigo-600">
+          <span className="text-userMedium">
             #{channel.name.charAt(0).toUpperCase()}
             {channel.name.substring(1).toLowerCase()}{' '}
           </span>

@@ -36,7 +36,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
             <TooltipTrigger asChild>
               <Button
                 className={`h-fit rounded-2xl w-10 gap-0.5 ${
-                  reaction.users.includes(currentUser.uuid) && 'bg-indigo-700'
+                  reaction.users.includes(currentUser.uuid) && 'bg-userMedium hover:bg-userDark'
                 }`}
                 style={{ padding: '0.15rem 0.2rem' }}
                 size="icon"
@@ -48,7 +48,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
                   set="apple"
                   style={{ fontSize: '1.2rem', lineHeight: '1rem' }}
                 ></em-emoji>
-                <span className="text-muted-foreground text-xs mt">{reaction.users.length}</span>
+                <span className="text-primary text-xs">{reaction.users.length}</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>

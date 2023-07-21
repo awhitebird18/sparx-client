@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, useCallback, createContext, useContext } from 'react';
-
+import { primaryColors } from '@/utils/primaryColors';
 import { useAuth } from './auth';
 
 interface ThemeProviderProps {
@@ -8,8 +8,10 @@ interface ThemeProviderProps {
 
 interface ThemeContextData {
   theme: string;
+  primaryColor: string;
   toggleAppTheme: () => void;
   setAppTheme: (val: string) => void;
+  setPrimaryColor: (val: string) => void;
 }
 
 const ThemeContext = createContext<ThemeContextData | undefined>(undefined);
@@ -25,6 +27,7 @@ export const useTheme = (): ThemeContextData => {
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const { currentUser } = useAuth();
   const [theme, setTheme] = useState<string>(currentUser?.theme || 'light');
+  const [primaryColor, setPrimaryColor] = useState<string>(currentUser?.primaryColor || 'red');
 
   const toggleAppTheme = useCallback(() => {
     const toggleTheme = theme === 'light' ? 'dark' : 'light';
@@ -41,20 +44,34 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   );
 
   useEffect(() => {
-    const localTheme = window.localStorage.getItem('theme');
-    localTheme && setTheme(localTheme);
+    const storedTheme = window.localStorage.getItem('theme');
+    const storedPrimaryColor = window.localStorage.getItem('primaryColor');
+    storedTheme && setTheme(storedTheme);
+    storedPrimaryColor && setPrimaryColor(storedPrimaryColor);
   }, []);
 
   useEffect(() => {
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.body.classList.add('light');
+      document.body.classList.remove('dark');
     }
   }, [theme]);
 
+  useEffect(() => {
+    for (let i = 0; i < primaryColors.length; i++) {
+      document.body.classList.remove(primaryColors[i]);
+    }
+
+    document.body.classList.add(primaryColor);
+  }, [primaryColor]);
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleAppTheme, setAppTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, toggleAppTheme, setAppTheme, primaryColor, setPrimaryColor }}
+    >
       {children}
     </ThemeContext.Provider>
   );

@@ -73,7 +73,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
           variant="ghost"
           className={`h-8 w-full hover:bg-card text-sm justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
             isSelected
-              ? 'bg-indigo-700 hover:bg-indigo-800 text-white hover:text-white'
+              ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
               : 'text-muted-foreground'
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >

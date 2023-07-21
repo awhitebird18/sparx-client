@@ -89,7 +89,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             {user?.uuid === currentUser?.uuid && (
               <Button
                 variant="outline"
-                className="text-indigo-500 w-full cursor-pointer"
+                className="text-userMedium w-full cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
 
@@ -187,7 +187,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
               {isEditing ? (
                 <>
                   <Button onClick={handleCancelEdit}>Cancel</Button>
-                  <Button className="bg-indigo-600 text-white" type="submit">
+                  <Button className="bg-userMedium text-white" type="submit">
                     Save Changes
                   </Button>
                 </>
