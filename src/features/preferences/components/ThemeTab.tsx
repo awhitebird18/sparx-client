@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-
 import { useTheme } from '@/providers/theme';
 import { primaryColors } from '@/utils/primaryColors';
 import { Moon, Sun } from 'react-bootstrap-icons';
@@ -38,8 +37,8 @@ const ThemeTab = () => {
         Change the appearance of ChatApp across all of your spaces.
       </p>
 
-      <ScrollArea className="overflow-hidden h-full pr-1 space-y-6">
-        <div className="pr-3 mb-6">
+      <ScrollArea className="h-full pr-1 space-y-6">
+        <div className="mb-6">
           <h2 className="text-sm mb-2">App theme</h2>
           <RadioGroup
             defaultValue={theme}
@@ -53,20 +52,20 @@ const ThemeTab = () => {
               <div
                 className={`${
                   theme === 'light' ? 'bg-yellow-500' : 'bg-secondary'
-                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center`}
+                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
               >
                 Light
                 {theme === 'light' && <Sun className="mt-0.5" />}
               </div>
             </div>
             <div className="flex items-center border border-border rounded-lg overflow-hidden">
-              <div className="gap-2 px-4 mt-1 border-r border-border">
+              <div className="px-4 mt-1 border-r border-border">
                 <RadioGroupItem value={ThemeType.DARK} id="dark" />
               </div>
               <div
                 className={`${
                   theme === 'dark' ? 'bg-indigo-800' : 'bg-secondary'
-                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center`}
+                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
               >
                 Dark
                 {theme === 'dark' && <Moon className="mt-0.5" />}
@@ -77,13 +76,18 @@ const ThemeTab = () => {
         <div>
           <p className="text-sm my-2">Primary Color</p>
           <Select onValueChange={handlePrimaryColorSelect} defaultValue={primaryColor}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="h-14">
               <SelectValue placeholder="Select primary color" />
             </SelectTrigger>
             <SelectContent className="max-h-48">
               <SelectGroup>
                 {primaryColors.map((color: string) => (
-                  <SelectItem value={color}>{color}</SelectItem>
+                  <SelectItem value={color}>
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 bg-${color}-500 rounded-lg`} />
+                      {`${color.charAt(0).toUpperCase()}${color.substring(1).toLowerCase()}`}
+                    </div>
+                  </SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
