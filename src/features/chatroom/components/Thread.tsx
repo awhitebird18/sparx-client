@@ -69,7 +69,7 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
         }}
       >
         <Header>
-          <p className="text-xl pl-2">Thread</p>
+          <p className="text-xl">Thread</p>
           <Button
             variant="ghost"
             className="p-0 text-2xl"
@@ -79,8 +79,8 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
             <X />
           </Button>
         </Header>
-        <div className="p-3 bg-card dark:bg-background rounded-xl shadow-md max-h-full flex flex-col m-2 overflow-hidden">
-          <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2 pt-5">
+        <div className="p-3 bg-card dark:bg-background rounded-xl shadow-lg max-h-full flex flex-col m-3 overflow-hidden">
+          <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2">
             {childMessages
               ?.slice()
               .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1))

@@ -1,5 +1,3 @@
-import { Label } from '@/components/ui/Label';
-
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
@@ -7,78 +5,90 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
 
 import { useTheme } from '@/providers/theme';
+import { primaryColors } from '@/utils/primaryColors';
+import { Moon, Sun } from 'react-bootstrap-icons';
 
 enum ThemeType {
   LIGHT = 'light',
   DARK = 'dark',
 }
 
-enum PrimaryColorType {
-  BLUE = 'blue',
-  RED = 'red',
-  GREEN = 'green',
-}
-
 const ThemeTab = () => {
-  const { theme, setAppTheme } = useTheme();
+  const { theme, setAppTheme, primaryColor, setPrimaryColor } = useTheme();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleThemeSelect = (e: any) => {
     window.localStorage.setItem('theme', e.target.value);
-
     setAppTheme(e.target.value);
   };
 
+  const handlePrimaryColorSelect = (value: string) => {
+    window.localStorage.setItem('primaryColor', value);
+    setPrimaryColor(value);
+  };
+
   return (
-    <div className="flex flex-col h-100 flex-1 h-full overflow-auto ">
-      <ScrollArea className="h-100 overflow-hidden pr-4">
-        <p>Change the appearance of ChatApp across all of your spaces.</p>
+    <div className="flex flex-col h-100 flex-1 h-full">
+      <p className="text-sm text-muted-foreground">
+        Change the appearance of ChatApp across all of your spaces.
+      </p>
 
-        <h2 className="font-semibold mb-1 mt-3">App theme</h2>
-
-        <RadioGroup
-          defaultValue={theme}
-          onClick={(e) => handleThemeSelect(e)}
-          className="space-y-4"
-        >
-          <div className="flex flex-col border border-border rounded-lg overflow-hidden">
-            <div className="w-full bg-accent text-accent-foreground p-3 border-b border-border">
-              Light
+      <ScrollArea className="overflow-hidden h-full pr-1 space-y-6">
+        <div className="pr-3 mb-6">
+          <h2 className="text-sm mb-2">App theme</h2>
+          <RadioGroup
+            defaultValue={theme}
+            onClick={(e) => handleThemeSelect(e)}
+            className="space-y-4"
+          >
+            <div className="flex items-center border border-border rounded-lg overflow-hidden">
+              <div className="gap-2 px-4 mt-1 border-r border-border">
+                <RadioGroupItem value={ThemeType.LIGHT} id="light" />
+              </div>
+              <div
+                className={`${
+                  theme === 'light' ? 'bg-yellow-500' : 'bg-secondary'
+                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center`}
+              >
+                Light
+                {theme === 'light' && <Sun className="mt-0.5" />}
+              </div>
             </div>
-            <div className="flex gap-2 p-3">
-              <RadioGroupItem value={ThemeType.LIGHT} id="r2" />
-              <Label className="font-normal">Light</Label>
+            <div className="flex items-center border border-border rounded-lg overflow-hidden">
+              <div className="gap-2 px-4 mt-1 border-r border-border">
+                <RadioGroupItem value={ThemeType.DARK} id="dark" />
+              </div>
+              <div
+                className={`${
+                  theme === 'dark' ? 'bg-indigo-800' : 'bg-secondary'
+                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center`}
+              >
+                Dark
+                {theme === 'dark' && <Moon className="mt-0.5" />}
+              </div>
             </div>
-          </div>
-
-          <div className="flex flex-col border border-border rounded-lg overflow-hidden">
-            <div className="w-full bg-border text-foreground p-3 border-b border-border">Dark</div>
-            <div className="flex gap-2 p-3">
-              <RadioGroupItem value={ThemeType.DARK} id="r2" />
-              <Label className="font-normal">Dark</Label>
-            </div>
-          </div>
-        </RadioGroup>
-
-        <h2 className="font-semibold mb-1 mt-3">Primary Color</h2>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a fruit" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Select primary color</SelectLabel>
-              <SelectItem value={PrimaryColorType.BLUE}>Blue</SelectItem>
-              <SelectItem value={PrimaryColorType.GREEN}>Red</SelectItem>
-              <SelectItem value={PrimaryColorType.RED}>Red</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          </RadioGroup>
+        </div>
+        <div>
+          <p className="text-sm my-2">Primary Color</p>
+          <Select onValueChange={handlePrimaryColorSelect} defaultValue={primaryColor}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select primary color" />
+            </SelectTrigger>
+            <SelectContent className="max-h-48">
+              <SelectGroup>
+                {primaryColors.map((color: string) => (
+                  <SelectItem value={color}>{color}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </ScrollArea>
     </div>
   );

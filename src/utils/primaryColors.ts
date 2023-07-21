@@ -16,4 +16,5 @@ export const primaryColors = [
   'fuchsia',
   'pink',
   'rose',
+  'slate',
 ];
