@@ -10,6 +10,7 @@ export const joinChannel = async (channelId: string) => {
     stores.notificationStore.addNotification({
       title: 'Channel joined',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -17,6 +18,7 @@ export const joinChannel = async (channelId: string) => {
     stores.notificationStore.addNotification({
       title: 'Error joining channel',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

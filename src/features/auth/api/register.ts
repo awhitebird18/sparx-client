@@ -9,8 +9,9 @@ export const register = async (registrationData: RegistrationData) => {
     const { data } = await axios.post('/auth/register', registrationData);
 
     stores.notificationStore.addNotification({
-      title: 'Welcome',
+      title: 'Registration successful. Welcome!',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -18,6 +19,7 @@ export const register = async (registrationData: RegistrationData) => {
     stores.notificationStore.addNotification({
       title: 'Something went wrong!',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

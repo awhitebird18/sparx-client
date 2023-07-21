@@ -11,6 +11,7 @@ export const createSection = async (createSection: CreateSection) => {
     stores.notificationStore.addNotification({
       title: 'Section created',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -18,6 +19,7 @@ export const createSection = async (createSection: CreateSection) => {
     return stores.notificationStore.addNotification({
       title: 'Error creating section',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

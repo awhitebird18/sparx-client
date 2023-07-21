@@ -10,6 +10,7 @@ export const updateSection = async (sectionId: string, updateSection: UpdateSect
     stores.notificationStore.addNotification({
       title: 'Section updated',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -17,6 +18,7 @@ export const updateSection = async (sectionId: string, updateSection: UpdateSect
     return stores.notificationStore.addNotification({
       title: 'Error updating section',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

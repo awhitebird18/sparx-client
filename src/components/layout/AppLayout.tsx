@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Topbar from '@/components/layout/topbar/Topbar';
 import ModalController from '../modal/ModalController';
 import ResizableSidebar from './sidebar/ResizeableSidebar';
-import { Toaster } from '../ui/Toaster';
+import NotificationController from '../notifications/NotificationController';
 
 export const AppLayout = () => {
   return (
@@ -15,7 +15,7 @@ export const AppLayout = () => {
           <Topbar />
           <div className="flex-1 overflow-hidden">
             <Outlet />
-            <Toaster duration={3000} />
+            <NotificationController />
           </div>
         </div>
       </Suspense>

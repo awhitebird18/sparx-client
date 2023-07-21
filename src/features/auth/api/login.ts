@@ -9,8 +9,9 @@ export const login = async (loginCredentials: LoginCredentials) => {
     const { data } = await axios.post('/auth/login', loginCredentials);
 
     stores.notificationStore.addNotification({
-      title: 'Welcome',
+      title: 'Welcome back!',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -18,6 +19,7 @@ export const login = async (loginCredentials: LoginCredentials) => {
     stores.notificationStore.addNotification({
       title: 'Something went wrong!',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

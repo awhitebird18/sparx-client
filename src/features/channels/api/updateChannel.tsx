@@ -11,6 +11,7 @@ export const updateChannelApi = async (channelId: string, updateFields: Partial<
     stores.notificationStore.addNotification({
       title: 'Channel updated',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -18,6 +19,7 @@ export const updateChannelApi = async (channelId: string, updateFields: Partial<
     stores.notificationStore.addNotification({
       title: 'Error updating channel',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

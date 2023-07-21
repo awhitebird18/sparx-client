@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
+import { useToast } from '@/components/ui/UseToast';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -34,6 +35,7 @@ const Channels: React.FC = () => {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchWorkspaceChannels();
@@ -65,7 +67,7 @@ const Channels: React.FC = () => {
         break;
       case ChannelActions.LEAVE:
         leaveChannel(channelId);
-
+        toast({ title: 'Left channel!' });
         break;
     }
   };
