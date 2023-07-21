@@ -38,7 +38,7 @@ const ChannelIcon = ({ size = 40, showStatus, channelId, isSelected }: UserAvata
         className={`h-full flex-1 w-full rounded-sm overflow-hidden dark:bg-transparent`}
         children={
           <Hash
-            className={`text-indigo-500 text-xl dark:bg-transparent ${
+            className={`text-userMedium text-xl dark:bg-transparent ${
               isSelected ? 'text-primary bg-background' : 'text-muted-foreground'
             }`}
             style={{

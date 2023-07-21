@@ -32,7 +32,7 @@ const RegisterPage: React.FC = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <img
             className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            src="https://tailwindui.com/img/logos/workflow-mark-userMedium.svg"
             alt="Workflow"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Register for an account</h2>
@@ -132,7 +132,7 @@ const RegisterPage: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userMedium"
                 >
                   Register
                 </button>
@@ -143,7 +143,7 @@ const RegisterPage: React.FC = () => {
             <Button onClick={() => navigate(-1)} variant="ghost" className="hover:bg-transparent">
               <p className="mt-2 text-center text-sm">
                 Already have an account?{' '}
-                <span className="font-medium text-indigo-600 hover:text-indigo-500">
+                <span className="font-medium text-userMedium hover:text-userMedium">
                   Login here
                 </span>
               </p>

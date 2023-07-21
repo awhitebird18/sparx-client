@@ -39,7 +39,7 @@ const UserAvatar = ({ size = 40, showStatus, userId }: UserAvatarProps) => {
         className={`h-full flex-1 w-full rounded-sm border border-border overflow-hidden bg-card`}
         children={
           <PersonFill
-            className={`mt-2 text-indigo-500`}
+            className={`mt-2 text-userMedium`}
             style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
           />
         }

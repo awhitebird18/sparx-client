@@ -44,7 +44,7 @@ const SubmitButtonPlugin = ({ onSubmit, label }: props) => {
       onClick={handleSubmit}
       variant="outline"
       size="sm"
-      className="w-20 bg-indigo-700 hover:bg-indigo-800 text-white"
+      className="w-20 bg-userDark hover:bg-userDark text-white"
     >
       {label}
     </Button>

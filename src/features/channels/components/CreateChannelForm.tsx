@@ -64,7 +64,7 @@ const CreateChanneForm = () => {
               Cancel
             </Button>
             <Button
-              className="ml-auto w-28 bg-indigo-600 hover:bg-indigo-800 text-white"
+              className="ml-auto w-28 bg-userMedium hover:bg-userDark text-white"
               type="submit"
             >
               Submit

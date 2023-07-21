@@ -30,7 +30,7 @@ type EditorProps = {
 export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
   return (
     <LexicalComposer initialConfig={config}>
-      <div className="border dark:border-indigo-800  dark:shadow-indigo-400 shadow-sm mx-1 my-3 p-2 rounded-lg bg-popover/50">
+      <div className="border dark:border-userDark  dark:shadow-userLight shadow-sm mx-1 my-3 p-2 rounded-lg bg-popover/50">
         <div className="editor-container rounded-md ">
           <TopToolbarPlugin />
           <div className="editor-inner">

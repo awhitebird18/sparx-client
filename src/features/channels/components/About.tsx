@@ -77,7 +77,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       <Button
         variant="outline"
-        className="text-indigo-500 w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
+        className="text-userMedium w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
         onClick={() => {
           fileInput.current.click();
         }}
@@ -172,7 +172,7 @@ const EditField = observer(
               )}
             />
 
-            <Button className="ml-auto" type="submit">
+            <Button className="ml-auto bg-userMedium hover:bg-userDark text-primary" type="submit">
               Submit
             </Button>
           </form>
