@@ -11,6 +11,7 @@ export const verifyUser = async () => {
     stores.notificationStore.addNotification({
       title: 'Something went wrong!',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

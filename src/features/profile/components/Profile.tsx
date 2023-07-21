@@ -24,7 +24,6 @@ import { observer } from 'mobx-react-lite';
 import { uploadProfileImage } from '@/features/users/api/uploadProfileImage';
 import { updateUserApi } from '@/features/users/api/updateUser';
 import Username from '@/features/users/components/Username';
-import { useToast } from '@/components/ui/UseToast';
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(30),
@@ -33,7 +32,6 @@ const formSchema = z.object({
 
 type ProfileModalProps = { userId: string };
 const ProfileModal = ({ userId }: ProfileModalProps) => {
-  const { toast } = useToast();
   const { findUser, updateUser } = useStore('userStore');
   const [user, setUser] = useState<User>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,8 +53,6 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     const updatedUser = await updateUserApi(userId, values);
     updateUser(userId, { firstName: updatedUser.firstName, lastName: updatedUser.lastName });
-
-    toast({ title: 'Profile updated!', description: 'This is a description.', variant: 'success' });
   }
 
   const handleEditForm = () => {

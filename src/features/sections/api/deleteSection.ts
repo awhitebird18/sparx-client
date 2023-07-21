@@ -11,6 +11,7 @@ export const deleteSection = async (sectionId: string): Promise<Section[]> => {
     stores.notificationStore.addNotification({
       title: 'Section deleted',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return res.data;
@@ -18,6 +19,7 @@ export const deleteSection = async (sectionId: string): Promise<Section[]> => {
     stores.notificationStore.addNotification({
       title: 'Error deleting section',
       type: NotificationType.ERROR,
+      show: true,
     });
 
     return [];

@@ -11,6 +11,7 @@ export const createChannel = async (createChannel: CreateChannel) => {
     stores.notificationStore.addNotification({
       title: 'Channel created',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -18,6 +19,7 @@ export const createChannel = async (createChannel: CreateChannel) => {
     stores.notificationStore.addNotification({
       title: 'Error creating channel',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

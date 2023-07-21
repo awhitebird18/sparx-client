@@ -10,6 +10,7 @@ export const leaveChannel = async (channelId: string) => {
     stores.notificationStore.addNotification({
       title: 'Left channel',
       type: NotificationType.SUCCESS,
+      show: true,
     });
 
     return data;
@@ -17,6 +18,7 @@ export const leaveChannel = async (channelId: string) => {
     stores.notificationStore.addNotification({
       title: 'Error leaving channel',
       type: NotificationType.ERROR,
+      show: true,
     });
   }
 };

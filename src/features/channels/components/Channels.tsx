@@ -65,7 +65,6 @@ const Channels: React.FC = () => {
         break;
       case ChannelActions.LEAVE:
         leaveChannel(channelId);
-
         break;
     }
   };

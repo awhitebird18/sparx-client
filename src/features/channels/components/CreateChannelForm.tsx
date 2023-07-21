@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/Button';
 import { ChannelTypes } from '../types/channelEnums';
 import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
-import { useToast } from '@/components/ui/UseToast';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -25,7 +24,6 @@ const formSchema = z.object({
 const CreateChanneForm = () => {
   const { createChannel } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
-  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +33,6 @@ const CreateChanneForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createChannel({ name: values.name, type: ChannelTypes.CHANNEL });
-    toast({ title: 'Channel created successfully', variant: 'success' });
     handleCloseModal();
   }
 
