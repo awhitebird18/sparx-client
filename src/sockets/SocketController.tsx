@@ -10,7 +10,7 @@ const SocketController = () => {
     useStore('messageStore');
   const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
     useStore('userStore');
-  const { addSection } = useStore('sectionStore');
+  const { addSection, handleUpdateSectionSocket, deleteSection } = useStore('sectionStore');
 
   /* User Sockets */
   // Online users
@@ -58,7 +58,17 @@ const SocketController = () => {
   // New section
   useEffect(() => {
     return connectSocket(`sections`, addSection);
-  }, [addSection, connectSocket]);
+  }, [connectSocket, addSection]);
+
+  // Update section
+  useEffect(() => {
+    return connectSocket(`sections/update`, handleUpdateSectionSocket);
+  }, [connectSocket, handleUpdateSectionSocket]);
+
+  // Remove section
+  useEffect(() => {
+    return connectSocket(`sections/remove`, deleteSection);
+  }, [connectSocket, deleteSection]);
 
   return null;
 };
