@@ -30,6 +30,7 @@ export class MessageStore {
       setMessages: action,
       setPage: action,
       setIsLoading: action,
+      handleNewMessageSocket: action,
       groupedMessagesWithUser: computed,
     });
   }
@@ -69,7 +70,14 @@ export class MessageStore {
   };
 
   addMessage = (message: Message) => {
+    const messageFound = this.findById(message.uuid);
+    if (messageFound) return;
+
     this.messages.unshift(message);
+  };
+
+  handleNewMessageSocket = (message: Message) => {
+    this.addMessage({ ...message, createdAt: dayjs(message.createdAt) });
   };
 
   createMessage = async (createMessage: CreateMesssage, parentMessage?: Message) => {

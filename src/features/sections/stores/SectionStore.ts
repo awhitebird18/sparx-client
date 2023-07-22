@@ -26,6 +26,7 @@ export class SectionStore {
       fetchsections: action,
       setSections: action,
       setIsLoading: action,
+      addSection: action,
     });
 
     addEventListener('channelUpdate', this.fetchsections);
@@ -37,6 +38,21 @@ export class SectionStore {
 
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
+  };
+
+  findSection = (id: string) => {
+    console.log(typeof id, typeof this.sections[0].uuid);
+    return this.sections.find((section: Section) => section.uuid === id);
+  };
+
+  addSection = (section: Section) => {
+    const sectionFound = this.findSection(section.uuid);
+
+    console.log(sectionFound, 'isFound!');
+
+    if (sectionFound) return;
+
+    this.sections.push(section);
   };
 
   createSection = async (newSection: CreateSection) => {
@@ -64,6 +80,8 @@ export class SectionStore {
     this.setIsLoading(true);
 
     const userSections = await getSections();
+
+    console.log(userSections);
 
     this.setSections(userSections);
 

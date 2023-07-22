@@ -20,10 +20,10 @@ interface RootStore {
   sectionStore: SectionStore;
   socketStore: SocketStore;
   sidebarStore: SidebarStore;
-  // ... other stores go here
 }
 
 class RootStoreImpl implements RootStore {
+  socketStore = new SocketStore();
   messageStore = new MessageStore();
   userStore = new UserStore();
   spacesStore = new SpacesStore();
@@ -31,9 +31,7 @@ class RootStoreImpl implements RootStore {
   notificationStore = new NotificationStore();
   modalStore = new ModalStore();
   sectionStore = new SectionStore();
-  socketStore = new SocketStore();
   sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
-  // ... other stores go here
 }
 
 export const stores = new RootStoreImpl();
