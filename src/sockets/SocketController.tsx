@@ -8,37 +8,54 @@ const SocketController = () => {
   const { currentChannelId } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
     useStore('messageStore');
+  const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
+    useStore('userStore');
   const { addSection } = useStore('sectionStore');
 
   /* User Sockets */
-  // Receives list of online users.
+  // Online users
   useEffect(() => {
     return connectSocket('online-users', setOnlineUsers);
   }, [connectSocket, setOnlineUsers]);
 
-  // Sets user heartbeat. Used in user online status.
+  // User heartbeat
   useEffect(() => {
     setInterval(() => emitSocket('heartbeat', setOnlineUsers), 10000);
   }, [connectSocket, disconnectSocket, emitSocket, setOnlineUsers]);
 
+  // New user
+  useEffect(() => {
+    return connectSocket('users/update', handleNewUserSocket);
+  }, [connectSocket, handleNewUserSocket]);
+
+  // Update user
+  useEffect(() => {
+    return connectSocket('users/update', handleUpdateUserSocket);
+  }, [connectSocket, handleUpdateUserSocket]);
+
+  // Remove user
+  useEffect(() => {
+    return connectSocket('users/remove', handleRemoveserSocket);
+  }, [connectSocket, handleRemoveserSocket]);
+
   /* Message Sockets */
-  // Create and update message
+  // New message
   useEffect(() => {
     return connectSocket(`messages/${currentChannelId}`, handleNewMessageSocket);
   }, [connectSocket, currentChannelId, disconnectSocket, handleNewMessageSocket]);
 
-  // Create and update message
+  // Update message
   useEffect(() => {
     return connectSocket(`messages/${currentChannelId}/update`, handleUpdateMessageSocket);
   }, [connectSocket, currentChannelId, handleUpdateMessageSocket]);
 
-  // Removes message
+  // Remove message
   useEffect(() => {
     return connectSocket(`messages/${currentChannelId}/remove`, handleDeleteMessageSocket);
   }, [connectSocket, currentChannelId, handleDeleteMessageSocket, handleNewMessageSocket]);
 
   /* Section Sockets */
-  // Handles new section
+  // New section
   useEffect(() => {
     return connectSocket(`sections`, addSection);
   }, [addSection, connectSocket]);

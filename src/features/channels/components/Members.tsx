@@ -6,6 +6,7 @@ import { User } from '@/features/users';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
+import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { PersonAdd } from 'react-bootstrap-icons';
@@ -14,6 +15,7 @@ type MembersProps = { users: User[] };
 
 const Members = ({ users }: MembersProps) => {
   const [search, setSearch] = useState<string | undefined>('');
+  const { findUser } = useStore('userStore');
 
   const filteredUsers = search
     ? users.filter((user: User) => `${user.firstName} ${user.lastName}}`.includes(search))
@@ -50,17 +52,22 @@ const Members = ({ users }: MembersProps) => {
               {search && filteredUsers.length ? (
                 <p className="text-xs mt-1">In this channel</p>
               ) : null}
-              {filteredUsers.map((user: User) => (
-                <div
-                  key={user.uuid}
-                  className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer"
-                  onClick={() => handleOpenUserProfile(user.uuid)}
-                >
-                  <UserAvatar userId={user.uuid} />
-                  <Username userId={user.uuid} />
-                  <OnlineStatusIndicator userId={user.uuid} />
-                </div>
-              ))}
+              {filteredUsers.map((user: User) => {
+                const userFound = findUser(user.uuid);
+                if (!userFound) return null;
+
+                return (
+                  <div
+                    key={user.uuid}
+                    className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer"
+                    onClick={() => handleOpenUserProfile(userFound.uuid)}
+                  >
+                    <UserAvatar userId={userFound.uuid} profileImage={userFound.profileImage} />
+                    <Username firstName={userFound.firstName} lastName={userFound.lastName} />
+                    <OnlineStatusIndicator userId={userFound.uuid} />
+                  </div>
+                );
+              })}
             </>
           ) : (
             <div className="w-full flex justify-center flex-col items-center mt-6 space-y-2 ">

@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import { User } from '@/features/users';
 import { getUsers } from '../api/getUsers';
 import { uploadProfileImage } from '../api/uploadProfileImage';
@@ -7,6 +7,9 @@ export class UserStore {
   users: User[] = [];
   isLoading = true;
   onlineUsers: Map<string, Date> = new Map();
+  currentPage = 1;
+  usersPerPage = 10;
+  searchValue = '';
 
   constructor() {
     makeObservable(this, {
@@ -15,19 +18,68 @@ export class UserStore {
       isLoading: observable,
       addUser: action,
       updateUser: action,
-      deleteUser: action,
+      removeUser: action,
       setUsers: action,
       setIsLoading: action,
       fetchUsers: action,
       setOnlineUsers: action,
+      findUser: action,
+      handleUpdateUserSocket: action,
+      handleNewUserSocket: action,
+      setCurrentPage: action,
+      handleRemoveserSocket: action,
+      setSearchValue: action,
+      uploadProfileImage: action,
+      displayedUsers: computed,
+      filteredUsers: computed,
+      totalPages: computed,
     });
   }
+
+  get totalPages() {
+    return Math.ceil(this.filteredUsers.length / this.usersPerPage);
+  }
+
+  get filteredUsers() {
+    return this.users.filter((user: User) =>
+      user.firstName.toLowerCase().includes(this.searchValue.toLowerCase()),
+    );
+  }
+
+  get displayedUsers() {
+    return this.filteredUsers.slice(
+      (this.currentPage - 1) * this.usersPerPage,
+      this.currentPage * this.usersPerPage,
+    );
+  }
+
+  setCurrentPage = (page: number) => {
+    this.currentPage = page;
+  };
+
+  setSearchValue = (value: string) => {
+    this.searchValue = value;
+  };
+
+  handleUpdateUserSocket = (user: User) => {
+    this.updateUser(user.uuid, user);
+  };
+
+  handleNewUserSocket = (user: User) => {
+    this.addUser(user);
+  };
+
+  handleRemoveserSocket = (userId: string) => {
+    this.removeUser(userId);
+  };
 
   setOnlineUsers = (users: Map<string, Date>) => {
     this.onlineUsers = new Map(users);
   };
 
   addUser = (user: User) => {
+    if (this.findUser(user.uuid)) return;
+
     this.users.push(user);
   };
 
@@ -36,7 +88,7 @@ export class UserStore {
   };
 
   findUser = (userId: string) => {
-    return this.users.find((user: User) => user.uuid === userId);
+    return this.displayedUsers.find((user: User) => user.uuid === userId);
   };
 
   setIsLoading = (bool: boolean) => {
@@ -62,14 +114,13 @@ export class UserStore {
 
   uploadProfileImage = async (userId: string, profileImage: string) => {
     const updatedUser = await uploadProfileImage(userId, profileImage);
-    const userIndex = this.users.findIndex((user) => user.uuid === updatedUser.uuid);
 
-    if (userIndex !== -1) {
-      this.users[userIndex] = { ...this.users[userIndex], profileImage: updatedUser.profileImage };
+    if (updatedUser) {
+      this.updateUser(updatedUser.uuid, updatedUser);
     }
   };
 
-  deleteUser = (uuid: string) => {
+  removeUser = (uuid: string) => {
     this.users = this.users.filter((user) => user.uuid !== uuid);
   };
 }

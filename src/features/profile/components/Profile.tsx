@@ -80,13 +80,15 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
     reader.readAsDataURL(file);
   };
 
+  if (!user || !currentUser) return;
+
   return (
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
         <div className="flex gap-10 mt-4">
           <div className="flex flex-col items-center gap-4">
-            <UserAvatar size={165} userId={user?.uuid} />
-            {user?.uuid === currentUser?.uuid && (
+            <UserAvatar size={165} userId={user.uuid} profileImage={user.profileImage} />
+            {user.uuid === currentUser.uuid && (
               <Button
                 variant="outline"
                 className="text-userMedium w-full cursor-pointer"
@@ -114,8 +116,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex flex-col flex-1 space-y-4 w-96 mb-4">
               <div className="space-y-2">
                 <div className="text-2xl flex items-center gap-4">
-                  <Username userId={user?.uuid} />
-                  {!isEditing && user?.uuid === currentUser?.uuid && (
+                  <Username firstName={user.firstName} lastName={user.lastName} />
+                  {!isEditing && user.uuid === currentUser.uuid && (
                     <Button
                       className="h-7 py-0 gap-2 text-base text-muted-foreground"
                       size="sm"

@@ -1,6 +1,6 @@
 // src/Users.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -22,17 +22,22 @@ import { User } from '..';
 import Username from './Username';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
 
-const USERS_PER_PAGE = 10;
-
 enum UserMenuOptions {
   PROFILE = 'Profile',
   MESSAGE = 'Message',
 }
 
-const Users: React.FC = () => {
-  const { users, fetchUsers, isLoading } = useStore('userStore');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearchValue] = useState('');
+const Users = () => {
+  const {
+    fetchUsers,
+    isLoading,
+    displayedUsers,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    searchValue,
+    setSearchValue,
+  } = useStore('userStore');
   const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
 
@@ -43,17 +48,6 @@ const Users: React.FC = () => {
   const handleViewUserProfile = (userId: string) => {
     setActiveModal({ type: 'ProfileModal', payload: { userId } });
   };
-
-  const filteredUsers = users.filter((user) =>
-    user.firstName.toLowerCase().includes(searchValue.toLowerCase()),
-  );
-
-  const displayedUsers = filteredUsers.slice(
-    (currentPage - 1) * USERS_PER_PAGE,
-    currentPage * USERS_PER_PAGE,
-  );
-
-  const totalPages = Math.ceil(filteredUsers.length / USERS_PER_PAGE);
 
   const handleMessageUser = (uuid: string) => {
     navigate(`/app/${uuid}`);
@@ -83,7 +77,7 @@ const Users: React.FC = () => {
                 }}
               >
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="absolute top-0 right-4">
+                  <DropdownMenuTrigger className="absolute top-0 right-4" asChild>
                     <Button
                       className="mt-2 text-right text-2xl hover:bg-transparent p-1"
                       variant="ghost"
@@ -111,11 +105,11 @@ const Users: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <CardContent className="flex items-center justify-center">
-                  <UserAvatar size={120} userId={user.uuid} />
+                  <UserAvatar size={120} userId={user.uuid} profileImage={user.profileImage} />
                 </CardContent>
                 <CardFooter className="flex-col p-0">
                   <div className="flex items-center gap-2">
-                    <Username userId={user.uuid} />
+                    <Username firstName={user.firstName} lastName={user.lastName} />
                     <OnlineStatusIndicator userId={user.uuid} />
                   </div>
                 </CardFooter>
@@ -123,6 +117,7 @@ const Users: React.FC = () => {
             ))}
           </div>
         ) : null}
+
         {!isLoading && !displayedUsers.length ? (
           <div className="w-full flex flex-col items-center flex-1">
             <p className="text-xl font-bold mb-4 mt-16">No results</p>
@@ -135,7 +130,7 @@ const Users: React.FC = () => {
         <div className="flex justify-between items-center pt-2">
           <Button
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage((page) => page - 1)}
+            onClick={() => setCurrentPage(currentPage - 1)}
             className="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-primary-foreground hover:bg-accent"
           >
             Previous
@@ -145,7 +140,7 @@ const Users: React.FC = () => {
           </p>
           <Button
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((page) => page + 1)}
+            onClick={() => setCurrentPage(currentPage + 1)}
             className="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-primary-foreground hover:bg-accent"
           >
             Next
