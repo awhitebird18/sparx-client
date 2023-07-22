@@ -19,7 +19,6 @@ export class SocketStore {
 
   connectToSocketServer = (currentUser: User) => {
     this.socket = io(SOCKET_SERVER_URL, { query: { userId: currentUser.uuid } });
-    this.socket.on('connect', () => console.log('Connected to the server'));
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

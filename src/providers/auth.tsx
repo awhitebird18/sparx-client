@@ -103,8 +103,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const data = await verifyUser();
 
-    console.log(data.sections);
-
     setSections(data.sections);
     setSubscribedChannels(data.channels);
     setUsers(data.workspaceUsers);

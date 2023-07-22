@@ -31,6 +31,10 @@ export class MessageStore {
       setPage: action,
       setIsLoading: action,
       handleNewMessageSocket: action,
+      handleUpdateMessageSocket: action,
+      handleDeleteMessageSocket: action,
+      findAndUpdateMessage: action,
+      findAndDeleteMessage: action,
       groupedMessagesWithUser: computed,
     });
   }
@@ -39,6 +43,7 @@ export class MessageStore {
     const groupedMessages = this.messages.reduce(
       (groups: { [key: string]: Message[] }, message) => {
         const date = message?.createdAt.format('MM-DD-YYYY');
+
         if (!groups[date]) {
           groups[date] = [];
         }
@@ -54,7 +59,6 @@ export class MessageStore {
         messages,
       };
     });
-    // .reverse();
   }
 
   findById = (uuid: string) => {
@@ -78,6 +82,17 @@ export class MessageStore {
 
   handleNewMessageSocket = (message: Message) => {
     this.addMessage({ ...message, createdAt: dayjs(message.createdAt) });
+  };
+
+  handleUpdateMessageSocket = (message: Message) => {
+    this.updateMessage(message.uuid, {
+      content: message.content,
+      createdAt: dayjs(message.createdAt),
+    });
+  };
+
+  handleDeleteMessageSocket = (messageId: string) => {
+    this.deleteMessage(messageId);
   };
 
   createMessage = async (createMessage: CreateMesssage, parentMessage?: Message) => {
