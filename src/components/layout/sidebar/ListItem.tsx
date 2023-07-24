@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 interface ListitemProps {
   id: string;
   title: string;
-  icon?: JSX.Element;
+  icon?: string;
   primary?: boolean;
   isChannel?: boolean;
   disabled?: boolean;
@@ -67,7 +67,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger disabled={!isChannel}>
+      <ContextMenuTrigger disabled={!isChannel} asChild>
         <Button
           onClick={handleClick}
           variant="ghost"
@@ -78,7 +78,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
-            {icon ? icon : <ChannelIcon channelId={id} isSelected={isSelected} size={24} />}
+            <ChannelIcon imageUrl={icon} isSelected={isSelected} size={24} />
           </div>
 
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">

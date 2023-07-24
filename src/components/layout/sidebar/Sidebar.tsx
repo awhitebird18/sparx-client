@@ -1,5 +1,3 @@
-import { Tv, People, At, Files } from 'react-bootstrap-icons';
-
 import ListItem from './ListItem';
 import { useStore } from '@/stores/RootStore';
 
@@ -16,10 +14,10 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col w-full overflow-hidden">
       <CompanyDropdown />
-      <ListItem id="users" title="Users" icon={<People />} primary />
-      <ListItem id="channels" title="Channels" icon={<Tv />} primary />
-      <ListItem id="mentions" title="Mentions" icon={<At />} primary />
-      <ListItem id="drafts" title="Drafts" icon={<Files />} primary />
+      <ListItem id="users" title="Users" primary />
+      <ListItem id="channels" title="Channels" primary />
+      <ListItem id="mentions" title="Mentions" primary />
+      <ListItem id="drafts" title="Drafts" primary />
 
       <Divider />
 

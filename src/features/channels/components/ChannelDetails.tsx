@@ -1,8 +1,6 @@
 import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
-import { Channel } from '..';
 import About from './About';
 import Members from './Members';
 import Settings from './Settings';
@@ -12,22 +10,17 @@ import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
 import ChannelIcon from './ChannelIcon';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
-  const { findById } = useStore('channelStore');
-  const [channel, setChannel] = useState<Channel>();
+  const { getChannelById } = useStore('channelStore');
 
-  useEffect(() => {
-    const channelFound = findById(id);
+  const channel = getChannelById(id);
 
-    setChannel(channelFound);
-  }, [findById, id]);
-
-  if (!channel) return;
+  if (!channel) return null;
 
   return (
     <Modal
       title={
         <p className="text-2xl flex gap-3 items-center">
-          <ChannelIcon channelId={channel.uuid} size={25} isSelected /> {channel.name}
+          <ChannelIcon imageUrl={channel.icon} size={25} isSelected /> {channel.name}
         </p>
       }
     >

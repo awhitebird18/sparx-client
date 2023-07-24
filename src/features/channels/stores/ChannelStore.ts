@@ -30,6 +30,7 @@ export class ChannelStore {
       pageSize: observable,
       isLoading: observable,
       currentChannel: computed,
+      getChannelById: computed,
       findById: action,
       createChannel: action,
       updateSubscribedChannel: action,
@@ -55,6 +56,12 @@ export class ChannelStore {
   findById = (uuid: string) => {
     return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
   };
+
+  get getChannelById() {
+    return (id: string) => {
+      return this.subscribedChannels.find((channel) => channel.uuid === id);
+    };
+  }
 
   setChannels = (channels: Channel[]) => {
     this.channels = channels;
@@ -96,11 +103,9 @@ export class ChannelStore {
   };
 
   updateSubscribedChannel = async (channelId: string, updatedFields: UpdateChannel) => {
-    const channel = this.subscribedChannels.find((channel) => channel.uuid === channelId);
-
-    if (channel) {
-      Object.assign(channel, updatedFields);
-    }
+    this.subscribedChannels = this.subscribedChannels.map((channel) =>
+      channel.uuid === channelId ? { ...channel, ...updatedFields } : channel,
+    );
   };
 
   handleUpdateSubscribedChannelSocket = (channel: Channel) => {
@@ -133,10 +138,6 @@ export class ChannelStore {
   };
 
   leaveChannel = async (channelId: string) => {
-    console.log(
-      channelId,
-      this.subscribedChannels.filter((channel: Channel) => channel.uuid !== channelId),
-    );
     this.subscribedChannels = this.subscribedChannels.filter(
       (channel: Channel) => channel.uuid !== channelId,
     );
