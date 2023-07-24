@@ -1,13 +1,12 @@
 // LoginPage.tsx
 
 import { useState, FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/providers/auth';
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { userLogin } = useAuth();
@@ -16,8 +15,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await userLogin({ email, password });
-
-      navigate('/app');
     } catch (error) {
       console.error(error);
     }

@@ -52,6 +52,7 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
+
   const { setSubscribedChannels } = useStore('channelStore');
   const { setUsers } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
@@ -93,18 +94,17 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     const token = localStorage.getItem('auth');
     if (!token) {
-      setLoading(false);
-      return;
+      return setLoading(false);
     }
 
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
     const data = await verifyUser();
+    setCurrentUser(data.user);
 
     setSections(data.sections);
     setSubscribedChannels(data.channels);
     setUsers(data.workspaceUsers);
-    setCurrentUser(data.user);
 
     connectToSocketServer(data.user);
     setLoading(false);
@@ -116,7 +116,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       setCurrentUser(null);
     }
-  }, [verifyAndLoginUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value = {
     currentUser,
