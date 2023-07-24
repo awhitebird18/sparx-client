@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
-import { CaretDownFill } from 'react-bootstrap-icons';
+import { CaretDownFill, PlusSquareDotted } from 'react-bootstrap-icons';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
 import { Channel } from '@/features/channels';
 import { SectionTypes } from '@/features/sections/types/sectionEnums';
+import { useStore } from '@/stores/RootStore';
+import ChannelIcon from '@/features/channels/components/ChannelIcon';
+import { observer } from 'mobx-react-lite';
 
 interface SectionProps {
   id: string;
@@ -16,6 +19,7 @@ interface SectionProps {
 
 const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
   const [open, setOpen] = useState(true);
+  const { selectedId } = useStore('sidebarStore');
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="mb-2">
@@ -40,7 +44,13 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
                 id={channel.uuid}
                 title={channel.name}
                 isChannel
-                icon={channel.icon}
+                icon={
+                  <ChannelIcon
+                    imageUrl={channel.icon}
+                    isSelected={selectedId === channel.uuid}
+                    size={24}
+                  />
+                }
               />
             ))
           : ''}
@@ -48,7 +58,7 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
         {isSystem ? (
           <ListItem
             id={type === 'channel' ? 'channels' : 'users'}
-            icon="derp"
+            icon={<PlusSquareDotted size={18} />}
             title={type === SectionTypes.DIRECT ? 'View Users' : 'Explore Channels'}
             disabled
           />
@@ -60,4 +70,4 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
   );
 };
 
-export default Section;
+export default observer(Section);
