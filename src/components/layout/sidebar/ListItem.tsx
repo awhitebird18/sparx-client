@@ -11,7 +11,6 @@ import {
   ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
-import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { Section } from '@/features/sections';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -20,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 interface ListitemProps {
   id: string;
   title: string;
-  icon?: string;
+  icon?: JSX.Element;
   primary?: boolean;
   isChannel?: boolean;
   disabled?: boolean;
@@ -78,7 +77,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
-            <ChannelIcon imageUrl={icon} isSelected={isSelected} size={24} />
+            {icon}
           </div>
 
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">
