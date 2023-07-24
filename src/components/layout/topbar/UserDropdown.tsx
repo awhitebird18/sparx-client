@@ -26,6 +26,8 @@ const UserDropdown: React.FC = () => {
     setActiveModal({ type, payload });
   };
 
+  if (!currentUser) return;
+
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       {currentUser && (
@@ -33,12 +35,17 @@ const UserDropdown: React.FC = () => {
           <TooltipTrigger>
             <DropdownMenuTrigger className="flex items-center" asChild>
               <div>
-                <UserAvatar size={30} userId={currentUser?.uuid} showStatus />
+                <UserAvatar
+                  size={30}
+                  userId={currentUser.uuid}
+                  profileImage={currentUser.profileImage}
+                  showStatus
+                />
               </div>
             </DropdownMenuTrigger>
           </TooltipTrigger>
           <TooltipContent>
-            <Username userId={currentUser.uuid} />
+            <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
           </TooltipContent>
         </Tooltip>
       )}
@@ -56,10 +63,10 @@ const UserDropdown: React.FC = () => {
         }}
       >
         <div className="w-full p-2 flex gap-2 mb-1 overflow-hidden">
-          <UserAvatar size={40} userId={currentUser?.uuid} />
+          <UserAvatar size={40} userId={currentUser.uuid} profileImage={currentUser.profileImage} />
           <div>
             <div className="w-40">
-              <Username userId={currentUser?.uuid} />
+              <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
             </div>
             <div className="flex items-center gap-1">
               <div className="rounded-full bg-green-600 h-2.5 w-2.5"></div>

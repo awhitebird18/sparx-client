@@ -5,6 +5,7 @@ import { ModalName } from '@/components/modal/modalList';
 import { Message } from '..';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 import { useState, useRef } from 'react';
+import { useAuth } from '@/providers/auth';
 
 type OptionsPanelProps = {
   message: Message;
@@ -15,6 +16,7 @@ type OptionsPanelProps = {
 
 const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
+  const { currentUser } = useAuth();
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
@@ -77,9 +79,11 @@ const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPan
           <ChatDots />
         </Button>
       )}
-      <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleEditMessage}>
-        <Pencil />
-      </Button>
+      {message.userId === currentUser?.uuid && (
+        <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleEditMessage}>
+          <Pencil />
+        </Button>
+      )}
       <Button
         size="icon"
         variant="ghost"

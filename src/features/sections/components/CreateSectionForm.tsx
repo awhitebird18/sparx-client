@@ -14,13 +14,15 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
+import { updateSectionApi } from '../api/updateSection';
+import { createSectionApi } from '../api/createSection';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
 const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
-  const { createSection, updateSection } = useStore('sectionStore');
+  const { addSection, updateSection } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,11 +31,13 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (id) {
-      updateSection(id, { name: values.name });
+      const updatedSection = await updateSectionApi(id, values);
+      updateSection(id, updatedSection);
     } else {
-      createSection({ name: values.name });
+      const newSection = await createSectionApi(values);
+      addSection(newSection);
     }
     setActiveModal(null);
   }

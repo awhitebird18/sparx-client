@@ -6,6 +6,8 @@ import ModalController from '../modal/ModalController';
 import ResizableSidebar from './sidebar/ResizeableSidebar';
 import NotificationController from '../notifications/NotificationController';
 
+import SocketController from '@/sockets/SocketController';
+
 export const AppLayout = () => {
   return (
     <div className="h-screen flex overflow-hidden">
@@ -15,11 +17,11 @@ export const AppLayout = () => {
           <Topbar />
           <div className="flex-1 overflow-hidden">
             <Outlet />
-            <NotificationController />
           </div>
         </div>
       </Suspense>
-
+      <NotificationController />
+      <SocketController />
       <ModalController />
     </div>
   );

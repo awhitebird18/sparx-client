@@ -5,9 +5,10 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
-import { editorConfig } from './configs/editorConfig';
+import { UpdateContentPlugin } from './plugins/UpdateContentPlugin';
+import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 
-export default function MessageDisplay({ content, id }: { content: string; id: string }) {
+function MessageDisplay({ content, id }: { content: string; id: string }) {
   return (
     <LexicalComposer
       initialConfig={{ ...editorConfig, editable: false, editorState: content, namespace: id }}
@@ -20,6 +21,9 @@ export default function MessageDisplay({ content, id }: { content: string; id: s
       <CodeHighlightPlugin />
       <ListPlugin />
       <LinkPlugin />
+      <UpdateContentPlugin initialEditorState={content} />
     </LexicalComposer>
   );
 }
+
+export default MessageDisplay;

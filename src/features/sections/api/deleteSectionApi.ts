@@ -4,7 +4,7 @@ import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
 import { Section } from '..';
 
-export const deleteSection = async (sectionId: string): Promise<Section[]> => {
+export const deleteSectionApi = async (sectionId: string): Promise<Section[]> => {
   try {
     const res = await axios.delete(`/sections/${sectionId}`);
 

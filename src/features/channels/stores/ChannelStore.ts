@@ -8,9 +8,6 @@ import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
-import { joinChannel } from '../api/joinChannel';
-import { leaveChannel } from '../api/leaveChannel';
-import { updateUserChannel } from '../api/updateUserChannel';
 import { updateChannelSection } from '../api/updateChannelSection';
 
 dayjs.extend(utc);
@@ -33,11 +30,12 @@ export class ChannelStore {
       pageSize: observable,
       isLoading: observable,
       currentChannel: computed,
+      getChannelById: computed,
       findById: action,
       createChannel: action,
       updateSubscribedChannel: action,
       updateChannel: action,
-      deleteChannel: action,
+      removeChannel: action,
       incrementPage: action,
       setChannels: action,
       fetchSubscribedChannels: action,
@@ -59,8 +57,20 @@ export class ChannelStore {
     return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
   };
 
+  get getChannelById() {
+    return (id: string) => {
+      return this.subscribedChannels.find((channel) => channel.uuid === id);
+    };
+  }
+
   setChannels = (channels: Channel[]) => {
     this.channels = channels;
+  };
+
+  addChannel = (channel: Channel) => {
+    const channelFound = this.channels.find((channel: Channel) => channel.uuid === channel.uuid);
+    if (channelFound) return;
+    this.channels.push(channel);
   };
 
   setSubscribedChannels = (channels: Channel[]) => {
@@ -92,19 +102,18 @@ export class ChannelStore {
     this.subscribedChannels[index] = { ...this.subscribedChannels[index], ...res };
   };
 
-  updateSubscribedChannel = async (channelId: string, updateFields: UpdateChannel) => {
-    const updatedChannel = await updateUserChannel(channelId, updateFields);
-
-    const index = this.subscribedChannels.findIndex(
-      (channel: Channel) => channel.uuid === updatedChannel.uuid,
+  updateSubscribedChannel = async (channelId: string, updatedFields: UpdateChannel) => {
+    this.subscribedChannels = this.subscribedChannels.map((channel) =>
+      channel.uuid === channelId ? { ...channel, ...updatedFields } : channel,
     );
-    if (index === -1) return null;
+  };
 
-    this.subscribedChannels[index] = { ...this.subscribedChannels[index], ...updatedChannel };
+  handleUpdateSubscribedChannelSocket = (channel: Channel) => {
+    this.updateSubscribedChannel(channel.uuid, channel);
   };
 
   updateChannel = async (channelId: string, updatedFields: UpdateChannel) => {
-    const channel = this.subscribedChannels.find((channel) => channel.uuid === channelId);
+    const channel = this.channels.find((channel) => channel.uuid === channelId);
 
     if (channel) {
       Object.assign(channel, updatedFields);
@@ -115,57 +124,38 @@ export class ChannelStore {
     this.page = this.page + 1;
   };
 
-  deleteChannel = (uuid: string) => {
+  removeChannel = (uuid: string) => {
     this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
   };
 
-  joinChannel = async (channelId: string) => {
-    const channel = await joinChannel(channelId);
+  joinChannel = async (channel: Channel) => {
+    const channelFound = this.findById(channel.uuid);
+
+    if (channelFound) return;
 
     this.subscribedChannels = [...this.subscribedChannels, channel];
-
-    const index = this.channels.findIndex((channel: Channel) => channel.uuid === channelId);
-    if (index === -1) return null;
-
-    this.channels[index] = { ...this.channels[index], isSubscribed: true };
+    this.updateChannel(channel.uuid, { isSubscribed: true });
   };
 
   leaveChannel = async (channelId: string) => {
-    await leaveChannel(channelId);
-
     this.subscribedChannels = this.subscribedChannels.filter(
       (channel: Channel) => channel.uuid !== channelId,
     );
 
-    const index = this.channels.findIndex((channel: Channel) => channel.uuid === channelId);
-    if (index === -1) return null;
-
-    this.channels[index] = { ...this.channels[index], isSubscribed: false };
+    this.updateChannel(channelId, { isSubscribed: false });
   };
 
   fetchSubscribedChannels = async () => {
     this.setIsLoading(true);
-
     const channels = await getSubscribedChannels();
-
-    console.info('user-joined channels', channels);
-
     this.setSubscribedChannels(channels);
-
-    setTimeout(() => {
-      this.setIsLoading(false);
-    }, 500);
+    this.setIsLoading(false);
   };
 
   fetchWorkspaceChannels = async () => {
     this.setIsLoading(true);
-
     const channels = await getWorkspaceChannels();
-
     this.setChannels(channels);
-
-    setTimeout(() => {
-      this.setIsLoading(false);
-    }, 500);
+    this.setIsLoading(false);
   };
 }

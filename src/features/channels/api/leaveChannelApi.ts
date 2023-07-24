@@ -3,7 +3,7 @@ import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
 
-export const leaveChannel = async (channelId: string) => {
+export const leaveChannelApi = async (channelId: string) => {
   try {
     const { data } = await axios.delete(`/userchannels/leave/${channelId}`);
 

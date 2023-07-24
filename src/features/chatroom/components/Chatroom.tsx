@@ -24,6 +24,7 @@ const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
     useStore('messageStore');
   const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [thread, setThread] = useState<MessageDto | null>(null);

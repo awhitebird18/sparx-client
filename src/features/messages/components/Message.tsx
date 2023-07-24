@@ -28,10 +28,15 @@ const Message = ({
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
+  const { findUser } = useStore('userStore');
 
   const handleViewUserProfile = () => {
     setActiveModal({ type: 'ProfileModal', payload: { userId: message.userId } });
   };
+
+  const user = findUser(message.userId);
+
+  if (!user) return;
 
   return (
     <div
@@ -43,7 +48,12 @@ const Message = ({
         {showUser ? (
           <HoverCard>
             <HoverCardTrigger>
-              <UserAvatar size={38} userId={message.userId} showStatus />
+              <UserAvatar
+                size={38}
+                userId={message.userId}
+                profileImage={user.profileImage}
+                showStatus
+              />
             </HoverCardTrigger>
 
             <HoverCardContent align="start" side="top" className="p-4 flex gap-4">
@@ -60,7 +70,7 @@ const Message = ({
           {showUser ? (
             <div className="flex gap-2 items-center h-5">
               <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
-                <Username userId={message.userId} />
+                <Username firstName={user.firstName} lastName={user.lastName} />
               </h2>
               <p className="text-xs text-muted-foreground mb-1">
                 {dayjs(message.createdAt).format('h:mm a')}

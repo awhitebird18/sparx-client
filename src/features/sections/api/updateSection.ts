@@ -3,7 +3,7 @@ import { UpdateSection } from '..';
 import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
 
-export const updateSection = async (sectionId: string, updateSection: UpdateSection) => {
+export const updateSectionApi = async (sectionId: string, updateSection: UpdateSection) => {
   try {
     const { data } = await axios.patch(`/sections/${sectionId}`, updateSection);
 

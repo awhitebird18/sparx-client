@@ -2,12 +2,9 @@ import { makeObservable, observable, action } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
-import { Section, CreateSection, UpdateSection } from '@/features/sections';
-import { createSection } from '../api/createSection';
+import { Section, UpdateSection } from '@/features/sections';
 import { getSections } from '../api/getSections';
 import { addEventListener } from '@/events/eventHandler';
-import { updateSection } from '../api/updateSection';
-import { deleteSection } from '../api/deleteSection';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -20,12 +17,13 @@ export class SectionStore {
     makeObservable(this, {
       sections: observable,
       isLoading: observable,
-      createSection: action,
       updateSection: action,
       deleteSection: action,
       fetchsections: action,
       setSections: action,
       setIsLoading: action,
+      addSection: action,
+      handleUpdateSectionSocket: action,
     });
 
     addEventListener('channelUpdate', this.fetchsections);
@@ -39,24 +37,31 @@ export class SectionStore {
     this.isLoading = bool;
   };
 
-  createSection = async (newSection: CreateSection) => {
-    const Section = await createSection(newSection);
-    this.sections.push(Section);
+  findSection = (id: string) => {
+    return this.sections.find((section: Section) => section.uuid === id);
   };
 
-  updateSection = async (sectionId: string, updatedFields: UpdateSection) => {
-    const updatedSection = await updateSection(sectionId, updatedFields);
+  addSection = (section: Section) => {
+    const sectionFound = this.findSection(section.uuid);
 
-    const index = this.sections.findIndex((section) => section.uuid === sectionId);
+    if (sectionFound) return;
 
-    if (index !== -1) {
-      this.sections[index] = updatedSection;
+    this.sections.push(section);
+  };
+
+  updateSection = (sectionId: string, updatedFields: UpdateSection) => {
+    const section = this.findSection(sectionId);
+
+    if (section) {
+      Object.assign(section, updatedFields);
     }
   };
 
-  deleteSection = async (sectionId: string) => {
-    await deleteSection(sectionId);
+  handleUpdateSectionSocket = (updatedSection: Section) => {
+    this.updateSection(updatedSection.uuid, updatedSection);
+  };
 
+  deleteSection = async (sectionId: string) => {
     this.sections = this.sections.filter((Section: Section) => Section.uuid !== sectionId);
   };
 

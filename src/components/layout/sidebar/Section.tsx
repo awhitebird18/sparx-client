@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
-import { PlusSquare, CaretDownFill } from 'react-bootstrap-icons';
+import { CaretDownFill } from 'react-bootstrap-icons';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
 import { Channel } from '@/features/channels';
@@ -35,14 +35,20 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
       <CollapsibleContent>
         {channels?.length
           ? channels.map((channel: Channel) => (
-              <ListItem key={channel.uuid} id={channel.uuid} title={channel.name} isChannel />
+              <ListItem
+                key={channel.uuid}
+                id={channel.uuid}
+                title={channel.name}
+                isChannel
+                icon={channel.icon}
+              />
             ))
           : ''}
 
         {isSystem ? (
           <ListItem
             id={type === 'channel' ? 'channels' : 'users'}
-            icon={<PlusSquare />}
+            icon="derp"
             title={type === SectionTypes.DIRECT ? 'View Users' : 'Explore Channels'}
             disabled
           />

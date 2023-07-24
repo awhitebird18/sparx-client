@@ -53,7 +53,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
   const { setSubscribedChannels } = useStore('channelStore');
-  const { setUsers, connectToSocketServer, disconnectFromSocketServer } = useStore('userStore');
+  const { setUsers } = useStore('userStore');
+  const { connectToSocketServer } = useStore('socketStore');
 
   const [loading, setLoading] = useState(true);
 
@@ -65,9 +66,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('auth', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      // Fetch user data
-      const data = await axios.get('/auth/verify');
-      setCurrentUser(data.data);
+      verifyAndLoginUser();
     } catch (error) {
       console.error(error);
       throw error;
@@ -76,7 +75,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     window.localStorage.removeItem('auth');
-    disconnectFromSocketServer();
     setCurrentUser(null);
   };
 
@@ -84,7 +82,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setCurrentUser(null);
       const res = await register(registrationData);
-
       setCurrentUser(res);
     } catch (error) {
       console.error(error);
@@ -108,6 +105,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSubscribedChannels(data.channels);
     setUsers(data.workspaceUsers);
     setCurrentUser(data.user);
+
     connectToSocketServer(data.user);
     setLoading(false);
   }, [connectToSocketServer, setSections, setSubscribedChannels, setUsers]);
