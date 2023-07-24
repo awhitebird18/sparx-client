@@ -17,6 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
+import { joinChannelApi } from '../api/joinChannel';
+import { leaveChannelApi } from '../api/leaveChannelApi';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -58,13 +60,19 @@ const Channels: React.FC = () => {
 
   const totalPages = Math.ceil(filteredChannels.length / CHANNELS_PER_PAGE);
 
-  const handleChannelAction = (channelId: string, action: ChannelActions) => {
+  const handleChannelAction = async (channelId: string, action: ChannelActions) => {
     switch (action) {
       case ChannelActions.JOIN:
-        joinChannel(channelId);
+        {
+          const channel = await joinChannelApi(channelId);
+          joinChannel(channel);
+        }
         break;
       case ChannelActions.LEAVE:
-        leaveChannel(channelId);
+        {
+          await leaveChannelApi(channelId);
+          leaveChannel(channelId);
+        }
         break;
     }
   };

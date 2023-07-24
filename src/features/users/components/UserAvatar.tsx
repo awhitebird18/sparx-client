@@ -15,6 +15,8 @@ type UserAvatarProps = {
 const UserAvatar = ({ size = 40, showStatus, userId, profileImage }: UserAvatarProps) => {
   const { onlineUsers } = useStore('userStore');
 
+  console.log(profileImage);
+
   return (
     <Avatar
       className="relative overflow-visible"

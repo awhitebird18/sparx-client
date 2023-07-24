@@ -66,9 +66,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('auth', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      // Fetch user data
-      const data = await axios.get('/auth/verify');
-      setCurrentUser(data.data);
+      verifyAndLoginUser();
     } catch (error) {
       console.error(error);
       throw error;

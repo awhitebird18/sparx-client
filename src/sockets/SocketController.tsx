@@ -5,7 +5,14 @@ import { useEffect } from 'react';
 const SocketController = () => {
   const { setOnlineUsers } = useStore('userStore');
   const { connectSocket, disconnectSocket, emitSocket } = useStore('socketStore');
-  const { currentChannelId } = useStore('channelStore');
+  const {
+    currentChannelId,
+    addChannel,
+    removeChannel,
+    handleUpdateSubscribedChannelSocket,
+    joinChannel,
+    leaveChannel,
+  } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
     useStore('messageStore');
   const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
@@ -69,6 +76,32 @@ const SocketController = () => {
   useEffect(() => {
     return connectSocket(`sections/remove`, deleteSection);
   }, [connectSocket, deleteSection]);
+
+  /* Channel Sockets */
+  // New workspace channel
+  useEffect(() => {
+    return connectSocket(`channels`, addChannel);
+  }, [connectSocket, addChannel]);
+
+  // Update channel
+  useEffect(() => {
+    return connectSocket(`channels/update`, handleUpdateSubscribedChannelSocket);
+  }, [connectSocket, handleUpdateSubscribedChannelSocket]);
+
+  // Remove workspace channel
+  useEffect(() => {
+    return connectSocket(`channels/remove`, removeChannel);
+  }, [connectSocket, removeChannel]);
+
+  // User joins channel
+  useEffect(() => {
+    return connectSocket(`userchannels/join`, joinChannel);
+  }, [connectSocket, joinChannel]);
+
+  // User leaves channel
+  useEffect(() => {
+    return connectSocket(`userchannels/leave`, leaveChannel);
+  }, [connectSocket, leaveChannel]);
 
   return null;
 };
