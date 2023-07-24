@@ -1,5 +1,3 @@
-import ViewHistoryModal from '@/features/history/components/ViewHistoryModal';
-import { HistoryItem } from '@/features/history/components/types';
 import { Message } from '@/features/messages';
 import DeleteMessage from '@/features/messages/components/DeleteMessage';
 import PreferencesModal from '@/features/preferences/components/PreferencesModal';
@@ -21,7 +19,6 @@ const modalList = {
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
-  ViewHistory: (props: { history: HistoryItem[] }) => <ViewHistoryModal {...props} />,
 };
 
 export type ModalName = keyof typeof modalList;

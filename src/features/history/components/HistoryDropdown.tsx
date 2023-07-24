@@ -1,32 +1,47 @@
 import { useRef, useState } from 'react';
-import { ClockHistory } from 'react-bootstrap-icons';
+import { ClockHistory, Pencil } from 'react-bootstrap-icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
 import useHistoryState from '@/hooks/useHistoryState';
 import { useNavigate } from 'react-router-dom';
-import { HistoryItem } from './types';
+import { HistoryItem } from '../types';
+import { At, Person, Tv } from 'react-bootstrap-icons';
+import ChannelIcon from '@/features/channels/components/ChannelIcon';
+
+const getDefaultType = (id: string) => {
+  switch (id) {
+    case 'users':
+      return { title: 'Users', icon: <Person size={18} /> };
+    case 'channels':
+      return { title: 'Channels', icon: <Tv size={18} /> };
+
+    case 'mentions':
+      return { title: 'Mentions', icon: <At size={18} /> };
+
+    case 'drafts':
+      return { title: 'Drafts', icon: <Pencil size={18} /> };
+
+    default:
+      return undefined;
+  }
+};
 
 const HistoryDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
+  const { findById } = useStore('channelStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const history = useHistoryState();
   const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleOpenModal = ({ type, payload }: { type: ModalName; payload: any }) => {
-    setActiveModal({ type, payload });
-  };
 
   const handleClickItem = (value: string) => {
     navigate(value);
@@ -41,7 +56,7 @@ const HistoryDropdown = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-60"
+        className="w-80"
         align="start"
         alignOffset={10}
         sideOffset={0}
@@ -53,26 +68,39 @@ const HistoryDropdown = () => {
           }
         }}
       >
+        <DropdownMenuLabel className="text-muted-foreground">Recent</DropdownMenuLabel>
         <DropdownMenuGroup>
           {history
             ? history
                 .slice(-10)
                 .sort((a: HistoryItem, b: HistoryItem) => b.timestamp - a.timestamp)
-                .map((item: HistoryItem) => (
-                  <DropdownMenuItem onClick={() => handleClickItem(item.primaryView)}>
-                    {item.primaryView}
-                  </DropdownMenuItem>
-                ))
+                .map((item: HistoryItem) => {
+                  let itemData = getDefaultType(item.primaryView);
+
+                  if (!itemData) {
+                    const channel = findById(item.primaryView);
+
+                    if (!channel) return null;
+
+                    itemData = {
+                      title: channel.name,
+                      icon: <ChannelIcon imageUrl={channel.icon} size={20} />,
+                    };
+                  }
+
+                  if (!itemData) return;
+
+                  return (
+                    <DropdownMenuItem onClick={() => handleClickItem(item.primaryView)}>
+                      <div className="w-6 h-6 justify-center items-center flex mr-2">
+                        {itemData.icon}
+                      </div>
+                      {itemData.title}
+                    </DropdownMenuItem>
+                  );
+                })
             : null}
         </DropdownMenuGroup>
-
-        <DropdownMenuSeparator className="DropdownMenuSeparator" />
-
-        <DropdownMenuItem
-          onClick={() => handleOpenModal({ type: 'ViewHistory', payload: { history } })}
-        >
-          Show more
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
