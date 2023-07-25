@@ -7,7 +7,7 @@ import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
-import { At, File, Person, Tv } from 'react-bootstrap-icons';
+import { At, Pencil, Person, Tv } from 'react-bootstrap-icons';
 
 const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
       <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
       <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
       <ListItem id="mentions" title="Mentions" primary icon={<At size={18} />} />
-      <ListItem id="drafts" title="Drafts" primary icon={<File size={16} />} />
+      <ListItem id="drafts" title="Drafts" primary icon={<Pencil size={15} />} />
 
       <Divider />
 
@@ -37,6 +37,7 @@ const Sidebar = () => {
           name={section.name}
           channels={section.channels}
           isSystem={section.isSystem}
+          isOpen={section.isOpen}
         />
       ))}
     </div>

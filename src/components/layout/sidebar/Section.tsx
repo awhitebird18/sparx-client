@@ -8,6 +8,8 @@ import { SectionTypes } from '@/features/sections/types/sectionEnums';
 import { useStore } from '@/stores/RootStore';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { observer } from 'mobx-react-lite';
+import { Button } from '@/components/ui/Button';
+import { updateSectionApi } from '@/features/sections/api/updateSection';
 
 interface SectionProps {
   id: string;
@@ -15,11 +17,16 @@ interface SectionProps {
   name: string;
   channels: Channel[];
   isSystem?: boolean;
+  isOpen?: boolean;
 }
 
-const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
-  const [open, setOpen] = useState(true);
+const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) => {
+  const [open, setOpen] = useState(isOpen);
   const { selectedId } = useStore('sidebarStore');
+
+  const handleToggleSection = async () => {
+    await updateSectionApi(id, { isOpen: !open });
+  };
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="mb-2">
@@ -27,11 +34,17 @@ const Section = ({ id, type, name, channels, isSystem }: SectionProps) => {
         id={id}
         title={name}
         isSystem={isSystem}
+        isOpen={isOpen}
         icon={
-          <CollapsibleTrigger>
-            <div className={!open ? '-rotate-90' : ''}>
+          <CollapsibleTrigger asChild>
+            <Button
+              className={`${!open ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
+              onClick={handleToggleSection}
+              size="icon"
+              variant="ghost"
+            >
               <CaretDownFill />
-            </div>
+            </Button>
           </CollapsibleTrigger>
         }
       />
