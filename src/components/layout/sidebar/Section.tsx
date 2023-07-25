@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import { CaretDownFill, PlusSquareDotted } from 'react-bootstrap-icons';
 import ListItem from './ListItem';
@@ -21,15 +20,16 @@ interface SectionProps {
 }
 
 const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) => {
-  const [open, setOpen] = useState(isOpen);
   const { selectedId } = useStore('sidebarStore');
+  const { updateSection } = useStore('sectionStore');
 
-  const handleToggleSection = async () => {
-    await updateSectionApi(id, { isOpen: !open });
+  const handleToggleSection = async (bool: boolean) => {
+    await updateSectionApi(id, { isOpen: bool });
+    updateSection(id, { isOpen: bool });
   };
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className="mb-2">
+    <Collapsible open={isOpen} onOpenChange={handleToggleSection} className="mb-2">
       <ListHeader
         id={id}
         title={name}
@@ -38,8 +38,7 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
         icon={
           <CollapsibleTrigger asChild>
             <Button
-              className={`${!open ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
-              onClick={handleToggleSection}
+              className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
               size="icon"
               variant="ghost"
             >
