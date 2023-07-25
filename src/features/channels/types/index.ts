@@ -17,6 +17,7 @@ export interface Channel extends CreateChannel {
   sectionId: string;
   isSubscribed?: boolean;
   users: User[];
+  lastRead: Dayjs | string;
 }
 
 export type UpdateChannel = Partial<Channel>;

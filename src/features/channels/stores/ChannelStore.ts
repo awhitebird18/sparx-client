@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action, computed, reaction } from 'mobx';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
@@ -9,6 +9,7 @@ import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
 import { updateChannelSection } from '../api/updateChannelSection';
+import { updateUserChannel } from '../api/updateUserChannel';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -47,7 +48,28 @@ export class ChannelStore {
       joinChannel: action,
       leaveChannel: action,
     });
+
+    reaction(
+      () => this.currentChannelId,
+      (channelId, previousChannelId) => {
+        if (channelId !== previousChannelId) {
+          if (channelId) {
+            this.markChannelAsRead(channelId);
+          }
+
+          if (previousChannelId) {
+            this.markChannelAsRead(previousChannelId);
+          }
+        }
+      },
+    );
   }
+
+  markChannelAsRead = async (channelId: string) => {
+    const result = await updateUserChannel(channelId, { lastRead: dayjs().toISOString() });
+
+    this.updateSubscribedChannel(channelId, { lastRead: result.lastRead });
+  };
 
   get currentChannel(): Channel | undefined {
     return this.subscribedChannels.find((channel) => channel.uuid === this.currentChannelId);
