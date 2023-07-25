@@ -24,7 +24,6 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
   const { updateSection } = useStore('sectionStore');
 
   const handleToggleSection = async (bool: boolean) => {
-    console.log(bool);
     await updateSectionApi(id, { isOpen: bool });
     updateSection(id, { isOpen: bool });
   };
