@@ -18,11 +18,12 @@ interface ListHeaderProps {
   icon?: JSX.Element;
   title: string;
   isSystem?: boolean;
+  isOpen?: boolean;
 }
 
 const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [hasOpenDialog] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

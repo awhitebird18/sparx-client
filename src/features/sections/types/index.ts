@@ -11,6 +11,7 @@ export interface Section extends BaseEntity {
   type: SectionTypes;
   userId?: string;
   isSystem: boolean;
+  isOpen: boolean;
   channels: Channel[];
   emoji?: string;
   uuid: string;

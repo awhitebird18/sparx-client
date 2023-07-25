@@ -37,6 +37,7 @@ const Sidebar = () => {
           name={section.name}
           channels={section.channels}
           isSystem={section.isSystem}
+          isOpen={section.isOpen}
         />
       ))}
     </div>
