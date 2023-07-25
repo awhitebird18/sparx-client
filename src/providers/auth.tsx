@@ -100,8 +100,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
     const data = await verifyUser();
-    setCurrentUser(data.user);
 
+    setCurrentUser(data.user);
     setSections(data.sections);
     setSubscribedChannels(data.channels);
     setUsers(data.workspaceUsers);
