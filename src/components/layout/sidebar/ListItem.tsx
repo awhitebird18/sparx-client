@@ -17,6 +17,8 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { validate } from 'uuid';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from './itemTypes';
 
 interface ListitemProps {
   id: string;
@@ -39,6 +41,12 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   } = useStore('channelStore');
   const { selectedId, setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
+  const [, dragRef] = useDrag(() => ({
+    type: ItemTypes.ITEM,
+    item: { channelId: id },
+    collect: () => ({}),
+  }));
+
   const unreadCount = findChannelUnreads(id)?.unreadCount;
 
   const isSelected = selectedId === id && !disabled;
@@ -81,16 +89,19 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     <ContextMenu>
       <ContextMenuTrigger disabled={!isChannel} asChild>
         <Button
+          ref={dragRef}
           onClick={handleClick}
           variant="ghost"
-          className={`h-8 w-full hover:bg-card text-sm justify-between flex items-center px-4 cursor-pointer overflow-hidden rounded-none ${
+          className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
             isSelected
               ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
               : 'text-muted-foreground'
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
-          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center">
-            {icon}
+          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full">
+            <div className="w-6 h-6 min-w-fit flex items-center justify-center flex-shrink-0">
+              {icon}
+            </div>
 
             {title.charAt(0).toUpperCase()}
             {title.substring(1).toLocaleLowerCase()}

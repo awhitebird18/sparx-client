@@ -3,6 +3,8 @@ import 'react-resizable/css/styles.css';
 import { Resizable, ResizeHandle } from 'react-resizable';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 const ResizableSidebar = () => {
   const { sidebarWidth, setSidebarWidth } = useStore('sidebarStore');
@@ -32,7 +34,9 @@ const ResizableSidebar = () => {
         style={{ width: `${sidebarWidth}px`, position: 'relative' }}
         className="border-r border-border"
       >
-        <Sidebar />
+        <DndProvider backend={HTML5Backend}>
+          <Sidebar />
+        </DndProvider>
       </div>
     </Resizable>
   );

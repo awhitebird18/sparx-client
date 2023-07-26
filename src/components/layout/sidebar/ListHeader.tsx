@@ -1,14 +1,14 @@
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuPortal,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from '@/components/ui/ContextMenu';
 import { useStore } from '@/stores/RootStore';
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
@@ -19,11 +19,12 @@ interface ListHeaderProps {
   title: string;
   isSystem?: boolean;
   isOpen?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ref?: any;
 }
 
-const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
+const ListHeader = ({ id, icon, title, isSystem, ref }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [hasOpenDialog] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,20 +41,21 @@ const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
   };
 
   return (
-    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <div className="h-8 w-100 flex items-center gap-2 px-4 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
+    <ContextMenu>
+      <div className="h-8 p-0 px-2 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
-        <DropdownMenuTrigger asChild>
-          <div className="font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
+        <ContextMenuTrigger asChild>
+          <div
+            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm "
+            ref={ref}
+          >
             {title}
           </div>
-        </DropdownMenuTrigger>
+        </ContextMenuTrigger>
       </div>
 
-      <DropdownMenuContent
-        className="DropdownMenuContent w-60"
-        sideOffset={5}
-        align="start"
+      <ContextMenuContent
+        className="ContextMenuContent w-60"
         hidden={hasOpenDialog}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
@@ -63,49 +65,49 @@ const ListHeader = ({ id, icon, title, isSystem }: ListHeaderProps) => {
           }
         }}
       >
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Create</DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => handleClickItem({ type: 'CreateChannelModal' })}>
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>Create</ContextMenuSubTrigger>
+          <ContextMenuPortal>
+            <ContextMenuSubContent>
+              <ContextMenuItem onClick={() => handleClickItem({ type: 'CreateChannelModal' })}>
                 Create Channel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleClickItem({ type: 'CreateSectionModal' })}>
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleClickItem({ type: 'CreateSectionModal' })}>
                 Create Section
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Manage</DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent>
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
+        </ContextMenuSub>
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>Manage</ContextMenuSubTrigger>
+          <ContextMenuPortal>
+            <ContextMenuSubContent>
               {!isSystem && (
                 <>
-                  <DropdownMenuItem
+                  <ContextMenuItem
                     onClick={() =>
                       handleClickItem({ type: 'CreateSectionModal', payload: { id, name: title } })
                     }
                   >
                     {`Rename ${title}`}
-                  </DropdownMenuItem>
+                  </ContextMenuItem>
 
-                  <DropdownMenuItem
+                  <ContextMenuItem
                     className="text-rose-500"
                     onClick={() =>
                       handleClickItem({ type: 'DeleteSectionModal', payload: { id, name: title } })
                     }
-                  >{`Delete ${title}`}</DropdownMenuItem>
+                  >{`Delete ${title}`}</ContextMenuItem>
 
-                  <DropdownMenuSeparator />
+                  <ContextMenuSeparator />
                 </>
               )}
-              <DropdownMenuItem>Manage Sections</DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
-      </DropdownMenuContent>
-    </DropdownMenu>
+              <ContextMenuItem>Manage Sections</ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
+        </ContextMenuSub>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
 
