@@ -20,12 +20,12 @@ const ChannelIcon = ({ size = 40, showStatus, imageUrl, isSelected }: UserAvatar
       className={`h-full flex-1 w-full rounded-sm overflow-hidden dark:bg-transparent`}
       children={
         <Hash
-          className={` text-xl dark:bg-transparent ${
+          className={`p-0 text-xl dark:bg-transparent ${
             isSelected ? 'text-white bg-background' : 'text-muted-foreground'
           }`}
           style={{
-            height: `${size * 0.8}px`,
-            width: `${size * 0.8}px`,
+            height: `${size}px`,
+            width: `${size}px`,
           }}
         />
       }

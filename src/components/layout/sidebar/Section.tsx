@@ -9,6 +9,8 @@ import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { observer } from 'mobx-react-lite';
 import { Button } from '@/components/ui/Button';
 import { updateSectionApi } from '@/features/sections/api/updateSection';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from './itemTypes';
 
 interface SectionProps {
   id: string;
@@ -19,9 +21,23 @@ interface SectionProps {
   isOpen?: boolean;
 }
 
+interface Item {
+  channelId: string;
+}
+
 const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) => {
   const { selectedId } = useStore('sidebarStore');
   const { updateSection } = useStore('sectionStore');
+  const { updateChannelSection } = useStore('channelStore');
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: ItemTypes.ITEM,
+    drop: (item: Item) => {
+      updateChannelSection(item.channelId, id);
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
 
   const handleToggleSection = async (bool: boolean) => {
     await updateSectionApi(id, { isOpen: bool });
@@ -29,7 +45,12 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={handleToggleSection} className="mb-2">
+    <Collapsible
+      open={isOpen}
+      onOpenChange={handleToggleSection}
+      className={`mb-2 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''}`}
+      ref={drop}
+    >
       <ListHeader
         id={id}
         title={name}
@@ -60,7 +81,7 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
                   <ChannelIcon
                     imageUrl={channel.icon}
                     isSelected={selectedId === channel.uuid}
-                    size={24}
+                    size={19}
                   />
                 }
               />
