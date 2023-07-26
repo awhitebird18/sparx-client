@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/Button';
 import { updateSectionApi } from '@/features/sections/api/updateSection';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './itemTypes';
-import { toJS } from 'mobx';
 
 interface SectionProps {
   id: string;
@@ -49,8 +48,6 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
     await updateSectionApi(id, { isOpen: bool });
     updateSection(id, { isOpen: bool });
   };
-
-  console.log(toJS(channels));
 
   return (
     <Collapsible
