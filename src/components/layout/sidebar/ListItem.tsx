@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import {
   ContextMenu,
@@ -15,6 +16,7 @@ import { Section } from '@/features/sections';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
+import { validate } from 'uuid';
 
 interface ListitemProps {
   id: string;
@@ -28,9 +30,16 @@ interface ListitemProps {
 const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
-  const { updateChannelSection, leaveChannel } = useStore('channelStore');
+  const {
+    updateChannelSection,
+    leaveChannel,
+    findChannelUnreads,
+    clearChannelUnreads,
+    setCurrentChannelId,
+  } = useStore('channelStore');
   const { selectedId, setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
+  const unreadCount = findChannelUnreads(id)?.unreadCount;
 
   const isSelected = selectedId === id && !disabled;
 
@@ -60,8 +69,12 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
 
   const handleClick = () => {
     navigate(`/app/${id}`);
-
+    clearChannelUnreads(id);
     setSelectedId(id);
+
+    if (!validate(id)) {
+      setCurrentChannelId(undefined);
+    }
   };
 
   return (
@@ -70,20 +83,26 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
         <Button
           onClick={handleClick}
           variant="ghost"
-          className={`h-8 w-full hover:bg-card text-sm justify-start flex items-center gap-2 px-4 cursor-pointer overflow-hidden rounded-none ${
+          className={`h-8 w-full hover:bg-card text-sm justify-between flex items-center px-4 cursor-pointer overflow-hidden rounded-none ${
             isSelected
               ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
               : 'text-muted-foreground'
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
-          <div className="w-6 h-6 rounded-sm flex justify-center items-center flex-shrink-0">
+          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center">
             {icon}
-          </div>
 
-          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden">
             {title.charAt(0).toUpperCase()}
             {title.substring(1).toLocaleLowerCase()}
           </div>
+          {unreadCount ? (
+            <Badge
+              variant="outline"
+              className="text-sm p-0 w-7 h-5 justify-center items-center bg-userMedium border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
+            >
+              {unreadCount}
+            </Badge>
+          ) : null}
         </Button>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">

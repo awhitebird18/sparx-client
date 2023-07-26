@@ -1,12 +1,12 @@
 import { User } from '@/features/users';
 import { action, makeObservable } from 'mobx';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 
 const SOCKET_SERVER_URL = 'http://localhost:3000'; // replace with your server URL
 
 export class SocketStore {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  socket: any = null; // add this line
+  socket: Socket | any; // add this line
 
   constructor() {
     makeObservable(this, {
@@ -35,7 +35,9 @@ export class SocketStore {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emitSocket = (connectionString: string, callback: any) => {
-    this.socket.emit(connectionString, callback);
+  emitSocket = (connectionString: string, value: any) => {
+    if (!this.socket) return;
+
+    this.socket.emit(connectionString, value);
   };
 }

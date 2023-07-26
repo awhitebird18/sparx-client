@@ -53,7 +53,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
 
-  const { setSubscribedChannels } = useStore('channelStore');
+  const { setSubscribedChannels, setChannelUnreads } = useStore('channelStore');
   const { setUsers } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
 
@@ -101,6 +101,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const data = await verifyUser();
 
+    setChannelUnreads(data.channelUnreads);
     setCurrentUser(data.user);
     setSections(data.sections);
     setSubscribedChannels(data.channels);
@@ -108,7 +109,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     connectToSocketServer(data.user);
     setLoading(false);
-  }, [connectToSocketServer, setSections, setSubscribedChannels, setUsers]);
+  }, [connectToSocketServer, setChannelUnreads, setSections, setSubscribedChannels, setUsers]);
 
   useEffect(() => {
     try {

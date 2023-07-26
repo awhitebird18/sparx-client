@@ -8,8 +8,14 @@ export interface CreateChannel {
   icon?: string;
 }
 
+export interface ChannelUnread {
+  channelId: string;
+  unreadCount: number;
+}
+
 export interface Channel extends CreateChannel {
   uuid: string;
+  channelId: string;
   joinedAt?: Dayjs | null;
   createdAt: Dayjs;
   topic: string;
@@ -17,7 +23,7 @@ export interface Channel extends CreateChannel {
   sectionId: string;
   isSubscribed?: boolean;
   users: User[];
-  lastRead: Dayjs | string;
+  lastRead?: Dayjs | string;
 }
 
 export type UpdateChannel = Partial<Channel>;

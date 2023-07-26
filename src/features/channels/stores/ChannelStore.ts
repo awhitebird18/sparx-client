@@ -1,10 +1,10 @@
 import { makeObservable, observable, action, computed, reaction } from 'mobx';
 
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc'; // import utc plugin
-import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-import { Channel, CreateChannel, UpdateChannel } from '@/features/channels';
+import { Channel, ChannelUnread, CreateChannel, UpdateChannel } from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
@@ -21,12 +21,14 @@ export class ChannelStore {
   page = 1;
   pageSize = 10;
   isLoading = true;
+  channelUnreads: ChannelUnread[] = [];
 
   constructor() {
     makeObservable(this, {
       channels: observable,
       subscribedChannels: observable,
       currentChannelId: observable,
+      channelUnreads: observable,
       page: observable,
       pageSize: observable,
       isLoading: observable,
@@ -43,8 +45,10 @@ export class ChannelStore {
       fetchWorkspaceChannels: action,
       setCurrentChannelId: action,
       setSubscribedChannels: action,
+      findChannelUnreads: computed,
       setIsLoading: action,
       updateChannelSection: action,
+      addToChannelUnreads: action,
       joinChannel: action,
       leaveChannel: action,
     });
@@ -64,6 +68,36 @@ export class ChannelStore {
       },
     );
   }
+
+  setChannelUnreads = (channelUnreads: ChannelUnread[]) => {
+    if (channelUnreads) {
+      this.channelUnreads = channelUnreads;
+    }
+  };
+
+  get findChannelUnreads() {
+    return (channelId: string) => {
+      return this.channelUnreads.find(
+        (channelUnread: ChannelUnread) => channelUnread.channelId === channelId,
+      );
+    };
+  }
+
+  addToChannelUnreads = (channelId: string) => {
+    const channelUnread = this.findChannelUnreads(channelId);
+
+    if (channelUnread) {
+      channelUnread.unreadCount += 1;
+    } else {
+      this.channelUnreads.push({ channelId, unreadCount: 1 });
+    }
+  };
+
+  clearChannelUnreads = (channelId: string) => {
+    this.channelUnreads = this.channelUnreads.filter(
+      (channelUnread: ChannelUnread) => channelUnread.channelId !== channelId,
+    );
+  };
 
   markChannelAsRead = async (channelId: string) => {
     const result = await updateUserChannel(channelId, { lastRead: dayjs().toISOString() });
@@ -109,7 +143,7 @@ export class ChannelStore {
     this.subscribedChannels.push(channel);
   };
 
-  setCurrentChannelId = (channelId: string) => {
+  setCurrentChannelId = (channelId: string | undefined) => {
     this.currentChannelId = channelId;
   };
 

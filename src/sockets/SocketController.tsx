@@ -1,3 +1,4 @@
+import { Message } from '@/features/messages';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
@@ -12,6 +13,9 @@ const SocketController = () => {
     handleUpdateSubscribedChannelSocket,
     joinChannel,
     leaveChannel,
+    subscribedChannels,
+    findById,
+    addToChannelUnreads,
   } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
     useStore('messageStore');
@@ -46,10 +50,41 @@ const SocketController = () => {
   }, [connectSocket, handleRemoveserSocket]);
 
   /* Message Sockets */
+  // Subscribes to new channel messages
+  useEffect(() => {
+    subscribedChannels.forEach((channel) => {
+      emitSocket('subscribe', channel.uuid);
+    });
+
+    // Make sure to unsubscribe when the component unmounts
+    return () => {
+      subscribedChannels.forEach((channel) => {
+        emitSocket('unsubscribe', channel.uuid);
+      });
+    };
+  }, [emitSocket, subscribedChannels]);
+
   // New message
   useEffect(() => {
-    return connectSocket(`messages/${currentChannelId}`, handleNewMessageSocket);
-  }, [connectSocket, currentChannelId, disconnectSocket, handleNewMessageSocket]);
+    connectSocket('new message', (message: Message) => {
+      const channel = findById(message.channelId);
+
+      if (!channel) return;
+
+      if (channel.channelId === currentChannelId) {
+        handleNewMessageSocket(message);
+      } else {
+        addToChannelUnreads(channel.channelId);
+      }
+    });
+  }, [
+    addToChannelUnreads,
+    connectSocket,
+    currentChannelId,
+    disconnectSocket,
+    findById,
+    handleNewMessageSocket,
+  ]);
 
   // Update message
   useEffect(() => {

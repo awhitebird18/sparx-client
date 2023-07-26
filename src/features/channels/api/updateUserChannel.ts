@@ -8,12 +8,6 @@ export const updateUserChannel = async (channelId: string, updateFields: Partial
   try {
     const { data } = await axios.patch(`/userchannels/${channelId}`, updateFields);
 
-    stores.notificationStore.addNotification({
-      title: 'Channel updated',
-      type: NotificationType.SUCCESS,
-      show: true,
-    });
-
     return data;
   } catch (err) {
     stores.notificationStore.addNotification({
