@@ -13,11 +13,13 @@ const Divider = () => <div className="w-100 m-2 h-px border-border border-b" />;
 
 const Sidebar = () => {
   const { organizedChannels, setSelectedId } = useStore('sidebarStore');
+  const { setCurrentChannelId } = useStore('channelStore');
   const location = useLocation();
 
   useEffect(() => {
-    setSelectedId(location.pathname.replace('/app/', ''));
-  }, [location.pathname, setSelectedId]);
+    const primaryView = location.pathname.replace('/app/', '');
+    setSelectedId(primaryView);
+  }, [location.pathname, setCurrentChannelId, setSelectedId]);
 
   return (
     <div className="flex flex-col w-full overflow-hidden">

@@ -91,7 +91,10 @@ const HistoryDropdown = () => {
                   if (!itemData) return;
 
                   return (
-                    <DropdownMenuItem onClick={() => handleClickItem(item.primaryView)}>
+                    <DropdownMenuItem
+                      key={item.timestamp}
+                      onClick={() => handleClickItem(item.primaryView)}
+                    >
                       <div className="w-6 h-6 justify-center items-center flex mr-2">
                         {itemData.icon}
                       </div>
