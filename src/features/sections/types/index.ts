@@ -15,6 +15,7 @@ export interface Section extends BaseEntity {
   channels: Channel[];
   emoji?: string;
   uuid: string;
+  orderIndex: number;
 }
 
 export type UpdateSection = Partial<Section>;

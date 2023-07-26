@@ -59,24 +59,25 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
       className={`mb-2 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''}`}
       ref={drop}
     >
-      <ListHeader
-        id={id}
-        ref={dragRef}
-        title={name}
-        isSystem={isSystem}
-        isOpen={isOpen}
-        icon={
-          <CollapsibleTrigger asChild>
-            <Button
-              className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
-              size="icon"
-              variant="ghost"
-            >
-              <CaretDownFill />
-            </Button>
-          </CollapsibleTrigger>
-        }
-      />
+      <div ref={dragRef}>
+        <ListHeader
+          id={id}
+          title={name}
+          isSystem={isSystem}
+          isOpen={isOpen}
+          icon={
+            <CollapsibleTrigger asChild>
+              <Button
+                className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
+                size="icon"
+                variant="ghost"
+              >
+                <CaretDownFill />
+              </Button>
+            </CollapsibleTrigger>
+          }
+        />
+      </div>
 
       <CollapsibleContent>
         {channels?.length
