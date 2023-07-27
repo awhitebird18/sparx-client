@@ -1,3 +1,4 @@
+import { setFavicon } from '@/utils/setFavicon';
 import { makeObservable, observable, action, reaction, IReactionDisposer } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,32 +12,39 @@ type Notification = {
   title: string;
   description?: string;
   type: NotificationType;
-  show: boolean; // <-- add this
+  show: boolean;
 };
 
 export class NotificationStore {
   notifications: Notification[] = [];
   originalTitle = document.title;
-  newTitle = 'New Message!';
-  intervalId: number | null = null;
+  unreadsCount = 0;
   reactionDisposer: IReactionDisposer | null = null;
 
   constructor() {
     makeObservable(this, {
       notifications: observable,
-      newTitle: observable, // <-- make newTitle observable
+      unreadsCount: observable,
       addNotification: action,
       dismissNotification: action,
-      startFlashingTitle: action,
-      stopFlashingTitle: action,
-      setNewTitle: action, // <-- add action to set newTitle
+      setUnreadsCount: action,
+      setTitle: action,
     });
 
-    // setup the reaction
     this.reactionDisposer = reaction(
-      () => this.newTitle,
-      () => this.startFlashingTitle(),
+      () => this.unreadsCount,
+      (count) => {
+        if (count > 0) {
+          document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
+            this.unreadsCount > 1 && 's'
+          } - Chatapp`;
+        } else {
+          document.title = `${this.originalTitle} - Chatapp`;
+        }
+      },
     );
+
+    window.addEventListener('click', this.handleUserClick);
   }
 
   addNotification = (notification: Notification) => {
@@ -49,32 +57,23 @@ export class NotificationStore {
     );
   };
 
-  // method to set newTitle
-  setNewTitle = (title: string) => {
-    this.newTitle = title;
+  setTitle = (title: string) => {
+    this.originalTitle = `${title}`;
+    document.title = `${title} - Chatapp`;
   };
 
-  startFlashingTitle = () => {
-    if (this.intervalId) return;
-    this.intervalId = window.setInterval(() => this.changeTitle(), 1000);
+  // method to set unreadsCount
+  setUnreadsCount = (count: number) => {
+    this.unreadsCount = count;
   };
 
-  stopFlashingTitle = () => {
-    if (!this.intervalId) return;
-    window.clearInterval(this.intervalId);
-    this.intervalId = null;
-    document.title = this.originalTitle;
-  };
-
-  private changeTitle = () => {
-    if (document.title === this.originalTitle) {
-      document.title = this.newTitle;
-    } else {
-      document.title = this.originalTitle;
-    }
+  handleUserClick = () => {
+    this.setUnreadsCount(0);
+    setFavicon();
   };
 
   dispose = () => {
     this.reactionDisposer?.();
+    window.removeEventListener('click', this.handleUserClick);
   };
 }

@@ -1,5 +1,7 @@
 import { Message } from '@/features/messages';
+import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
+import { setFavicon } from '@/utils/setFavicon';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
@@ -16,12 +18,15 @@ const SocketController = () => {
     subscribedChannels,
     findById,
     addToChannelUnreads,
+    channelUnreadsCount,
   } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
     useStore('messageStore');
   const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
     useStore('userStore');
   const { addSection, handleUpdateSectionSocket, deleteSection } = useStore('sectionStore');
+  const { setUnreadsCount } = useStore('notificationStore');
+  const { currentUser } = useAuth();
 
   /* User Sockets */
   // Online users
@@ -67,6 +72,7 @@ const SocketController = () => {
   // New message
   useEffect(() => {
     connectSocket('new message', (message: Message) => {
+      if (message.userId === currentUser?.uuid) return;
       const channel = findById(message.channelId);
 
       if (!channel) return;
@@ -75,15 +81,19 @@ const SocketController = () => {
         handleNewMessageSocket(message);
       } else {
         addToChannelUnreads(channel.channelId);
+        setUnreadsCount(channelUnreadsCount + 1);
+        setFavicon('/favicon-unread.ico');
       }
     });
   }, [
     addToChannelUnreads,
+    channelUnreadsCount,
     connectSocket,
     currentChannelId,
-    disconnectSocket,
+    currentUser?.uuid,
     findById,
     handleNewMessageSocket,
+    setUnreadsCount,
   ]);
 
   // Update message
