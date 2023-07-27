@@ -101,7 +101,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger disabled={!isChannel} asChild>
+      <ContextMenuTrigger disabled={!isChannel}>
         <Button
           ref={dragRef}
           onClick={handleClick}
@@ -122,6 +122,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
           </div>
           {unreadCount ? (
             <Badge
+              itemType="div"
               variant="outline"
               className="text-sm p-0 w-7 h-5 justify-center items-center bg-userDark border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
             >
