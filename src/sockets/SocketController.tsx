@@ -25,7 +25,8 @@ const SocketController = () => {
   const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
     useStore('userStore');
   const { addSection, handleUpdateSectionSocket, deleteSection } = useStore('sectionStore');
-  const { setUnreadsCount } = useStore('notificationStore');
+  const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
+    useStore('notificationStore');
   const { currentUser } = useAuth();
 
   /* User Sockets */
@@ -83,6 +84,14 @@ const SocketController = () => {
         addToChannelUnreads(channel.channelId);
         setUnreadsCount(channelUnreadsCount + 1);
         setFavicon('/faviconUnread.ico');
+
+        if (!isWindowVisible) {
+          sendBrowserNotification({
+            title: `New message from ${channel.name}`,
+            body: message.content,
+            icon: `http://localhost:3000${channel.icon}`,
+          });
+        }
       }
     });
   }, [
@@ -93,6 +102,8 @@ const SocketController = () => {
     currentUser?.uuid,
     findById,
     handleNewMessageSocket,
+    isWindowVisible,
+    sendBrowserNotification,
     setUnreadsCount,
   ]);
 
