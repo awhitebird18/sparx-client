@@ -14,6 +14,7 @@ import { RegistrationData } from '@/features/auth';
 import { register } from '@/features/auth/api/register';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import AppSkeleton from '@/components/loaders/AppSkeleton';
 
 type User = {
   uuid: string;
@@ -91,24 +92,28 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const verifyAndLoginUser = useCallback(async () => {
-    setLoading(true);
-    const token = localStorage.getItem('auth');
-    if (!token) {
-      return setLoading(false);
+    try {
+      const token = localStorage.getItem('auth');
+      if (!token) {
+        return setLoading(false);
+      }
+
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+
+      const data = await verifyUser();
+
+      setChannelUnreads(data.channelUnreads);
+      setCurrentUser(data.user);
+      setSections(data.sections);
+      setSubscribedChannels(data.channels);
+      setUsers(data.workspaceUsers);
+      connectToSocketServer(data.user);
+
+      setLoading(false);
+    } catch (err) {
+      window.localStorage.removeItem('auth');
+      setLoading(false);
     }
-
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-
-    const data = await verifyUser();
-
-    setChannelUnreads(data.channelUnreads);
-    setCurrentUser(data.user);
-    setSections(data.sections);
-    setSubscribedChannels(data.channels);
-    setUsers(data.workspaceUsers);
-
-    connectToSocketServer(data.user);
-    setLoading(false);
   }, [connectToSocketServer, setChannelUnreads, setSections, setSubscribedChannels, setUsers]);
 
   useEffect(() => {
@@ -129,7 +134,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
   };
 
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  if (loading) return <AppSkeleton />;
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default observer(AuthProvider);
