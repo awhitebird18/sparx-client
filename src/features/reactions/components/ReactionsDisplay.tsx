@@ -36,7 +36,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
             <TooltipTrigger asChild>
               <Button
                 className={`h-fit rounded-2xl w-10 gap-0.5 ${
-                  reaction.users.includes(currentUser.uuid) && 'bg-userMedium hover:bg-userDark'
+                  reaction.users.includes(currentUser.uuid) && 'bg-userDark hover:bg-userDark'
                 }`}
                 style={{ padding: '0.15rem 0.2rem' }}
                 size="icon"

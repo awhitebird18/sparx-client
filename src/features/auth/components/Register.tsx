@@ -2,12 +2,11 @@
 
 import React, { useState, FormEvent } from 'react';
 import { useAuth } from '@/providers/auth';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/Button';
+import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/Input';
+import Logo from '@/components/logo/Logo';
 
 const RegisterPage: React.FC = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -27,19 +26,21 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <div className="p-8 shadow-lg rounded-2xl bg-card">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-userMedium.svg"
-            alt="Workflow"
-          />
+    <div className="min-h-screen flex flex-col justify-center items-center p-4">
+      <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
+          <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Register for an account</h2>
+          <div className="flex items-center gap-1 text-sm mt-2">
+            <p className="">Already have an account?</p>
+            <Link to="/auth/login" className="font-medium text-userLight">
+              Login here
+            </Link>
+          </div>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="w-96">
+          <div>
             <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium">
@@ -111,7 +112,7 @@ const RegisterPage: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className="mb-6">
                 <label htmlFor="confirmPassword" className="block text-sm font-medium">
                   Confirm Password
                 </label>
@@ -129,25 +130,13 @@ const RegisterPage: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <button
-                  type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userMedium"
-                >
-                  Register
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userDark hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
+              >
+                Register
+              </button>
             </form>
-          </div>
-          <div className="mt-6 flex justify-center">
-            <Button onClick={() => navigate(-1)} variant="ghost" className="hover:bg-transparent">
-              <p className="mt-2 text-center text-sm">
-                Already have an account?{' '}
-                <span className="font-medium text-userMedium hover:text-userMedium">
-                  Login here
-                </span>
-              </p>
-            </Button>
           </div>
         </div>
       </div>

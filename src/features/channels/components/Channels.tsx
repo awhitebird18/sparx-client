@@ -82,7 +82,7 @@ const Channels: React.FC = () => {
       <Header>
         <h3 className="text-lg leading-6 font-medium">Channels</h3>
         <Button
-          className="bg-userMedium hover:bg-userDark text-white h-8 px-2"
+          className="bg-userDark hover:bg-userDark text-white h-8 px-2"
           onClick={handleClickCreateChannel}
           size="sm"
         >

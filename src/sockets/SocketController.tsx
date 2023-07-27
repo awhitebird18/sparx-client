@@ -82,7 +82,7 @@ const SocketController = () => {
       } else {
         addToChannelUnreads(channel.channelId);
         setUnreadsCount(channelUnreadsCount + 1);
-        setFavicon('/favicon-unread.ico');
+        setFavicon('/faviconUnread.ico');
       }
     });
   }, [

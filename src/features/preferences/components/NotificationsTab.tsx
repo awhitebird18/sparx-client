@@ -50,7 +50,7 @@ const NotificationsTab = () => {
         className="space-y-4 flex flex-col h-100flex-1 h-full"
       >
         <p className="text-sm text-muted-foreground">
-          Change the appearance of ChatApp across all of your workspaces.
+          Change the appearance of Sparx across all of your workspaces.
         </p>
         <FormField
           control={form.control}

@@ -29,7 +29,7 @@ const UserAvatar = ({ size = 40, showStatus, userId, profileImage }: UserAvatarP
         className={`h-full flex-1 w-full rounded-sm border border-border overflow-hidden bg-card`}
         children={
           <PersonFill
-            className={`mt-2 text-userMedium`}
+            className={`mt-2 text-userDark`}
             style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
           />
         }

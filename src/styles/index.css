@@ -38,9 +38,10 @@
 
     --radius: 0.5rem;
 
+    --userLighter: var(--color-primary-400);
     --userLight: var(--color-primary-500);
     --userMedium: var(--color-primary-600);
-    --userDark: var(--color-primary-800);
+    --userDark: var(--color-primary-700);
   }
   .dark {
     --background: 230.2 40% 5.9%;
@@ -74,9 +75,10 @@
 
     --ring: 217.2 32.6% 17.5%;
 
+    --userLighter: var(--color-primary-400);
     --userLight: var(--color-primary-500);
     --userMedium: var(--color-primary-600);
-    --userDark: var(--color-primary-800);
+    --userDark: var(--color-primary-700);
   }
 }
 

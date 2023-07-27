@@ -118,7 +118,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
           {unreadCount ? (
             <Badge
               variant="outline"
-              className="text-sm p-0 w-7 h-5 justify-center items-center bg-userMedium border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
+              className="text-sm p-0 w-7 h-5 justify-center items-center bg-userDark border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
             >
               {unreadCount}
             </Badge>

@@ -37,9 +37,9 @@ export class NotificationStore {
         if (count > 0) {
           document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
             this.unreadsCount > 1 && 's'
-          } - Chatapp`;
+          } - Sparx`;
         } else {
-          document.title = `${this.originalTitle} - Chatapp`;
+          document.title = `${this.originalTitle} - Sparx`;
         }
       },
     );
@@ -59,7 +59,7 @@ export class NotificationStore {
 
   setTitle = (title: string) => {
     this.originalTitle = `${title}`;
-    document.title = `${title} - Chatapp`;
+    document.title = `${title} - Sparx`;
   };
 
   // method to set unreadsCount

@@ -21,21 +21,21 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <div className="p-8 shadow-lg rounded-2xl bg-card">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <Logo />
+    <div className="min-h-screen flex flex-col justify-center items-center p-4">
+      <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
+          <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Sign in to your account</h2>
-          <p className="mt-2 text-center text-sm ">
-            Or{' '}
-            <Link to="/auth/register" className="font-medium text-userMedium hover:text-userMedium">
-              register you free account
+          <div className="flex items-center gap-1 text-sm mt-2">
+            <p className="">or</p>
+            <Link to="/auth/register" className="font-medium text-userLight">
+              register your free account
             </Link>
-          </p>
+          </div>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="sm:rounded-lg w-96">
+          <div className="sm:rounded-lg">
             <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium">
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
                     id="remember_me"
                     name="remember_me"
                     type="checkbox"
-                    className="h-4 w-4 text-userMedium focus:ring-userMedium border-gray-300 rounded"
+                    className="h-4 w-4 text-userDark focus:ring-userDark border-gray-300 rounded"
                   />
                   <label htmlFor="remember_me" className="ml-2 block text-sm ">
                     Remember me
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
                 </div>
 
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-userMedium hover:text-userMedium">
+                  <a href="#" className="font-medium text-userLight">
                     Forgot your password?
                   </a>
                 </div>
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userMedium"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userLight hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
               >
                 Sign in
               </button>

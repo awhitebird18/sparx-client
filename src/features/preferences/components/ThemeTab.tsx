@@ -34,7 +34,7 @@ const ThemeTab = () => {
   return (
     <div className="flex flex-col h-100 flex-1 h-full">
       <p className="text-sm text-muted-foreground">
-        Change the appearance of ChatApp across all of your spaces.
+        Change the appearance of Sparx across all of your spaces.
       </p>
 
       <ScrollArea className="h-full pr-1 space-y-6">
