@@ -2,7 +2,8 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+// import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { AutoFocusPlugin } from './plugins/AutoFocusPlugin';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import TopToolbarPlugin from './plugins/TopToolbarPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
@@ -35,28 +36,33 @@ export default function MessageEditor({ message, setIsEditing }: EditorProps) {
 
   return (
     <LexicalComposer initialConfig={{ ...editorConfig, editorState: message.content }}>
-      <div className="editor-container border border-border rounded-md bg-background">
-        <TopToolbarPlugin />
-        <div className="editor-inner">
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="editor-input" />}
-            placeholder={<></>}
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <HistoryPlugin />
-          <AutoFocusPlugin />
-          <CodeHighlightPlugin />
-          <ClearEditorPlugin />
-          <ListPlugin />
-          <LinkPlugin />
-          <AutoLinkPlugin />
-          <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+      <div
+        id="focus-ring"
+        className="transition-colors editor-container border border-border rounded-md bg-card dark:bg-background"
+      >
+        <div id="editor-container" className="mx-1 my-3 p-2 rounded-lg">
+          <TopToolbarPlugin />
+          <div className="editor-inner">
+            <RichTextPlugin
+              contentEditable={<ContentEditable className="editor-input" />}
+              placeholder={<></>}
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <HistoryPlugin />
+            <AutoFocusPlugin />
+            <CodeHighlightPlugin />
+            <ClearEditorPlugin />
+            <ListPlugin />
+            <LinkPlugin />
+            <AutoLinkPlugin />
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+          </div>
+          <div className="absolute right-1.5 bottom-1.5 gap-2 flex">
+            <CancelButtonPlugin setIsEditing={setIsEditing} />
+            <SubmitButtonPlugin onSubmit={handleSubmit} label="Update" />
+          </div>
+          <BottomToolbarPLugin />
         </div>
-        <div className="absolute right-1.5 bottom-1.5 gap-2 flex">
-          <CancelButtonPlugin setIsEditing={setIsEditing} />
-          <SubmitButtonPlugin onSubmit={handleSubmit} label="Update" />
-        </div>
-        <BottomToolbarPLugin />
       </div>
     </LexicalComposer>
   );
