@@ -15,11 +15,13 @@ export class MessageStore {
   messages: Message[] = [];
   page = 1;
   isLoading = true;
+  hasMore = true;
 
   constructor() {
     makeObservable(this, {
       messages: observable,
       page: observable,
+      hasMore: observable,
       findById: action,
       addMessage: action,
       addMessages: action,
@@ -142,6 +144,10 @@ export class MessageStore {
 
   incrementPage = () => {
     this.page = this.page + 1;
+  };
+
+  setHasMore = (val: boolean) => {
+    this.hasMore = val;
   };
 
   updateMessage = (uuid: string, updatedMessage: CreateMesssage) => {

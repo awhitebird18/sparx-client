@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Badge } from '@/components/ui/Badge';
@@ -42,7 +42,7 @@ const ChatRoom: React.FC = () => {
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!channelId || channelId === currentChannelId) return;
 
     setPage(1);
@@ -74,37 +74,41 @@ const ChatRoom: React.FC = () => {
                 {isLoading ? (
                   <Spinner />
                 ) : (
-                  groupedMessagesWithUser.map(({ date, messages }: any) => (
-                    <div key={date} className="relative">
-                      <div className="w-full flex my-2 sticky top-2">
-                        <Badge
-                          variant="outline"
-                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
-                        >
-                          {formatDate(date)}
-                        </Badge>
-                        <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
+                  groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
+                    <>
+                      <div key={date} className="relative">
+                        <div className="w-full flex my-2 sticky top-2">
+                          <Badge
+                            variant="outline"
+                            className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
+                          >
+                            {formatDate(date)}
+                          </Badge>
+                          <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
+                        </div>
+
+                        {messages
+                          .filter((message: MessageDto) => !message.parentId)
+                          .map((message: any, index: number) => {
+                            const displayUser =
+                              index === 0 || messages[index - 1].userId !== message.userId;
+
+                            return (
+                              <Message
+                                key={message.uuid}
+                                message={message}
+                                showUser={displayUser}
+                                setThread={setThread}
+                              />
+                            );
+                          })}
                       </div>
-
-                      {messages
-                        .filter((message: MessageDto) => !message.parentId)
-                        .map((message: any, index: number) => {
-                          const displayUser =
-                            index === 0 || messages[index - 1].userId !== message.userId;
-
-                          return (
-                            <Message
-                              key={message.uuid}
-                              message={message}
-                              showUser={displayUser}
-                              setThread={setThread}
-                            />
-                          );
-                        })}
-                    </div>
+                      {index === groupedMessagesWithUser.length - 1 && (
+                        <ChannelIntroduction channelId={channelId} />
+                      )}
+                    </>
                   ))
                 )}
-                <ChannelIntroduction channelId={channelId} />
               </div>
               <Editor
                 placeholder={`Message ${currentChannel?.name}`}
