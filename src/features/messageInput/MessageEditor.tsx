@@ -2,7 +2,6 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-// import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { AutoFocusPlugin } from './plugins/AutoFocusPlugin';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import TopToolbarPlugin from './plugins/TopToolbarPlugin';
