@@ -1,4 +1,12 @@
-import { useState, useEffect, ReactNode, useCallback, createContext, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  createContext,
+  useContext,
+  useMemo,
+} from 'react';
 import { primaryColors } from '@/utils/primaryColors';
 import { useAuth } from './auth';
 
@@ -68,11 +76,9 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     document.body.classList.add(primaryColor);
   }, [primaryColor]);
 
-  return (
-    <ThemeContext.Provider
-      value={{ theme, toggleAppTheme, setAppTheme, primaryColor, setPrimaryColor }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
+  const value = useMemo(() => {
+    return { theme, toggleAppTheme, setAppTheme, primaryColor, setPrimaryColor };
+  }, [theme, toggleAppTheme, setAppTheme, primaryColor, setPrimaryColor]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

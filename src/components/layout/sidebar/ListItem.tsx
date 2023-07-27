@@ -41,7 +41,8 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     setCurrentChannelId,
     findById,
   } = useStore('channelStore');
-  const { selectedId, setSelectedId } = useStore('sidebarStore');
+  const { selectedId, setSelectedId, setSidebarWidth, isSidebarAbsolute } =
+    useStore('sidebarStore');
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
     type: ItemTypes.ITEM,
@@ -90,6 +91,10 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
       }
       setSelectedId(id);
       clearChannelUnreads(id);
+    }
+
+    if (isSidebarAbsolute) {
+      setSidebarWidth(0);
     }
     navigate(`/app/${id}`);
   };

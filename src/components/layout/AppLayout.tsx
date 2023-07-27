@@ -13,7 +13,7 @@ export const AppLayout = () => {
   const { currentUser } = useAuth();
 
   if (!currentUser) {
-    <Navigate to="/auth/login" />;
+    return <Navigate to="/auth/login" />;
   }
 
   return (
