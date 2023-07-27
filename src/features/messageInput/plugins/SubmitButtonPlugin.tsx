@@ -41,6 +41,7 @@ const SubmitButtonPlugin = ({ onSubmit, label }: props) => {
 
   return (
     <Button
+      id="submit-button"
       onClick={handleSubmit}
       variant="outline"
       size="sm"
