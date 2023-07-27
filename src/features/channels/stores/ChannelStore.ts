@@ -46,6 +46,7 @@ export class ChannelStore {
       setCurrentChannelId: action,
       setSubscribedChannels: action,
       findChannelUnreads: computed,
+      channelUnreadsCount: computed,
       setIsLoading: action,
       updateChannelSection: action,
       addToChannelUnreads: action,
@@ -74,6 +75,13 @@ export class ChannelStore {
       this.channelUnreads = channelUnreads;
     }
   };
+
+  get channelUnreadsCount() {
+    return this.channelUnreads.reduce(
+      (prev: number, curr: ChannelUnread) => prev + curr.unreadCount,
+      0,
+    );
+  }
 
   get findChannelUnreads() {
     return (channelId: string) => {

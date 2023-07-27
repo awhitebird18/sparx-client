@@ -31,6 +31,7 @@ interface ListitemProps {
 
 const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
   const { sections } = useStore('sectionStore');
+  const { setTitle } = useStore('notificationStore');
   const { setActiveModal } = useStore('modalStore');
   const {
     updateChannelSection,
@@ -38,6 +39,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     findChannelUnreads,
     clearChannelUnreads,
     setCurrentChannelId,
+    findById,
   } = useStore('channelStore');
   const { selectedId, setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
@@ -76,13 +78,20 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   };
 
   const handleClick = () => {
-    navigate(`/app/${id}`);
-    clearChannelUnreads(id);
-    setSelectedId(id);
+    const isChannel = validate(id);
 
-    if (!validate(id)) {
+    if (!isChannel) {
+      setTitle(`${id.charAt(0).toUpperCase()}${id.substring(1)}`);
       setCurrentChannelId(undefined);
+    } else {
+      const channel = findById(id);
+      if (channel) {
+        setTitle(channel.name);
+      }
+      setSelectedId(id);
+      clearChannelUnreads(id);
     }
+    navigate(`/app/${id}`);
   };
 
   return (

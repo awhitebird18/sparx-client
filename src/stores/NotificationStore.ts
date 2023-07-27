@@ -1,4 +1,5 @@
-import { makeObservable, observable, action } from 'mobx';
+import { setFavicon } from '@/utils/setFavicon';
+import { makeObservable, observable, action, reaction, IReactionDisposer } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum NotificationType {
@@ -11,18 +12,39 @@ type Notification = {
   title: string;
   description?: string;
   type: NotificationType;
-  show: boolean; // <-- add this
+  show: boolean;
 };
 
 export class NotificationStore {
   notifications: Notification[] = [];
+  originalTitle = document.title;
+  unreadsCount = 0;
+  reactionDisposer: IReactionDisposer | null = null;
 
   constructor() {
     makeObservable(this, {
       notifications: observable,
+      unreadsCount: observable,
       addNotification: action,
       dismissNotification: action,
+      setUnreadsCount: action,
+      setTitle: action,
     });
+
+    this.reactionDisposer = reaction(
+      () => this.unreadsCount,
+      (count) => {
+        if (count > 0) {
+          document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
+            this.unreadsCount > 1 && 's'
+          } - Chatapp`;
+        } else {
+          document.title = `${this.originalTitle} - Chatapp`;
+        }
+      },
+    );
+
+    window.addEventListener('click', this.handleUserClick);
   }
 
   addNotification = (notification: Notification) => {
@@ -33,5 +55,25 @@ export class NotificationStore {
     this.notifications = this.notifications.map((notification) =>
       notification.uuid === uuid ? { ...notification, show: false } : notification,
     );
+  };
+
+  setTitle = (title: string) => {
+    this.originalTitle = `${title}`;
+    document.title = `${title} - Chatapp`;
+  };
+
+  // method to set unreadsCount
+  setUnreadsCount = (count: number) => {
+    this.unreadsCount = count;
+  };
+
+  handleUserClick = () => {
+    this.setUnreadsCount(0);
+    setFavicon();
+  };
+
+  dispose = () => {
+    this.reactionDisposer?.();
+    window.removeEventListener('click', this.handleUserClick);
   };
 }
