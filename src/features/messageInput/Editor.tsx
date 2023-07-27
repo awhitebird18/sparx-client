@@ -2,7 +2,8 @@ import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalCompos
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+// import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import { AutoFocusPlugin } from './plugins/AutoFocusPlugin';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import TopToolbarPlugin from './plugins/TopToolbarPlugin';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
@@ -30,8 +31,11 @@ type EditorProps = {
 export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
   return (
     <LexicalComposer initialConfig={config}>
-      <div className="border dark:border-userDark  dark:shadow-userMedium shadow-sm mx-1 my-3 p-2 rounded-lg bg-popover/50">
-        <div className="editor-container rounded-md ">
+      <div
+        id="focus-ring"
+        className="transition-colors border border-border shadow-sm mx-1 my-3 p-2 rounded-lg bg-popover/50"
+      >
+        <div id="editor-container" className="editor-container rounded-md">
           <TopToolbarPlugin />
           <div className="editor-inner">
             <RichTextPlugin

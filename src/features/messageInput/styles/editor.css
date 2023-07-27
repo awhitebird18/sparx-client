@@ -28,6 +28,7 @@
   margin: 20px auto 20px auto;
   border-radius: 10px;
   color: #000;
+  border: 1px solid red;
   position: relative;
   line-height: 20px;
   font-weight: 400;
@@ -35,6 +36,7 @@
   border: 1px solid #fff;
   height: 100%;
   background: red;
+  background: blue;
 }
 
 .editor-inner {
@@ -46,7 +48,8 @@
   resize: none;
   position: relative;
   tab-size: 1;
-  outline: 0;
+  outline: 2;
+  outline-color: red;
   padding: 15px 10px;
   caret-color: #444;
   background: red !important;
