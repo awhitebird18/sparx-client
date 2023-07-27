@@ -10,7 +10,6 @@ import CompanyDropdown from '../topbar/CompanyDropdown';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { At, Pencil, Person, Tv } from 'react-bootstrap-icons';
-import { toJS } from 'mobx';
 
 const Divider = () => <div className="w-100 h-px border-border border-b" />;
 
@@ -23,8 +22,6 @@ const Sidebar = () => {
     const primaryView = location.pathname.replace('/app/', '');
     setSelectedId(primaryView);
   }, [location.pathname, setCurrentChannelId, setSelectedId]);
-
-  console.log(toJS(organizedChannels));
 
   return (
     <DndProvider backend={HTML5Backend}>
