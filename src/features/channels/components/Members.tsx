@@ -77,7 +77,7 @@ const Members = ({ users }: MembersProps) => {
               <p className="text-sm">
                 Not able to find who you are looking for?{' '}
                 <Button
-                  className="text-userMedium p-1"
+                  className="text-userDark p-1"
                   variant="link"
                   onClick={handleOpenAddUserToChannelModal}
                 >

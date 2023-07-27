@@ -58,6 +58,7 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        userLighter: 'var(--userLighter)',
         userLight: 'var(--userLight)',
         userMedium: 'var(--userMedium)',
         userDark: 'var(--userDark)',

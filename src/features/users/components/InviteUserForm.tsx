@@ -31,7 +31,7 @@ const InviteUserForm = () => {
     console.info(values);
   }
   return (
-    <Modal title="Invite users to Chat App">
+    <Modal title="Invite users to Sparx">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-96">
           <FormField

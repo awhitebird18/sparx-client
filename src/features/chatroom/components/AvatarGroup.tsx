@@ -52,7 +52,7 @@ const AvatarGroup = () => {
             <AvatarImage src={`${API_URL}${user.profileImage}`} />
             <AvatarFallback
               children={user.firstName.charAt(0).toUpperCase()}
-              className={`w-full h-full text-sm font-light rounded-sm bg-userMedium dark:bg-userMedium text-white`}
+              className={`w-full h-full text-sm font-light rounded-sm bg-userDark dark:bg-userDark text-white`}
             />
           </Avatar>
         ))

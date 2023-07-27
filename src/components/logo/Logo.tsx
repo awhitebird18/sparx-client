@@ -1,15 +1,11 @@
+import logo from '/logo.png';
+
 interface LogoProps {
   size?: number;
 }
 
 const Logo = ({ size = 12 }: LogoProps) => {
-  return (
-    <img
-      className={`w-${size} h-${size} mx-auto`}
-      src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-      alt="company-logo"
-    />
-  );
+  return <img className={`w-${size} h-${size} mx-auto`} src={logo} alt="company-logo" />;
 };
 
 export default Logo;
