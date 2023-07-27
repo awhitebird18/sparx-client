@@ -5,9 +5,12 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { useEffect } from 'react';
+import Backdrop from '@/components/ui/Backdrop';
 
 const ResizableSidebar = () => {
-  const { sidebarWidth, setSidebarWidth } = useStore('sidebarStore');
+  const { sidebarWidth, setSidebarWidth, handleResize, isSidebarAbsolute } =
+    useStore('sidebarStore');
 
   // The handle for resizing is on the right ('e')
   const resizeHandles: ResizeHandle[] = ['e'];
@@ -21,24 +24,44 @@ const ResizableSidebar = () => {
     }
   };
 
+  const closeSidebar = () => {
+    setSidebarWidth(0);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [handleResize]);
+
   return (
-    <Resizable
-      width={sidebarWidth}
-      height={Infinity} // Height is not resizable
-      onResize={onResize}
-      resizeHandles={resizeHandles}
-      minConstraints={[0, Infinity]} // Minimum width of 0
-      maxConstraints={[400, Infinity]} // Maximum width of 600
-    >
-      <div
-        style={{ width: `${sidebarWidth}px`, position: 'relative' }}
-        className="border-r border-border"
+    <>
+      {isSidebarAbsolute && sidebarWidth > 0 && <Backdrop onClick={closeSidebar} />}
+      <Resizable
+        width={sidebarWidth}
+        height={Infinity} // Height is not resizable
+        onResize={onResize}
+        resizeHandles={resizeHandles}
+        minConstraints={[0, Infinity]} // Minimum width of 0
+        maxConstraints={[400, Infinity]} // Maximum width of 600
       >
-        <DndProvider backend={HTML5Backend}>
-          <Sidebar />
-        </DndProvider>
-      </div>
-    </Resizable>
+        <div
+          style={{
+            width: `${sidebarWidth}px`,
+            position: 'relative',
+            ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
+          }}
+          className="border-r border-border bg-background z-50"
+        >
+          <DndProvider backend={HTML5Backend}>
+            <Sidebar />
+          </DndProvider>
+        </div>
+      </Resizable>
+    </>
   );
 };
 
