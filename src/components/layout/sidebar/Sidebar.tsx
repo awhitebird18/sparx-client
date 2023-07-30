@@ -44,6 +44,7 @@ const Sidebar = () => {
               channels={section.channels}
               isSystem={section.isSystem}
               isOpen={section.isOpen}
+              sortBy={section.sortBy}
             />
           ))}
         </div>

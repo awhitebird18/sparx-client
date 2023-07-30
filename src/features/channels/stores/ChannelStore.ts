@@ -212,7 +212,13 @@ export class ChannelStore {
   fetchSubscribedChannels = async () => {
     this.setIsLoading(true);
     const channels = await getSubscribedChannels();
-    this.setSubscribedChannels(channels);
+    this.setSubscribedChannels([
+      ...channels.map((channel: Channel) => ({
+        ...channel,
+        createdAt: dayjs(channel.createdAt),
+        updatedAt: dayjs(channel.updatedAt),
+      })),
+    ]);
     this.setIsLoading(false);
   };
 
