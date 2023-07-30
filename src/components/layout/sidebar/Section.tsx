@@ -52,8 +52,6 @@ const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: Section
     updateSection(id, { isOpen: bool });
   };
 
-  console.log(sortBy, channels);
-
   return (
     <Collapsible
       open={isOpen}
