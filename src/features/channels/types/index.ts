@@ -18,6 +18,7 @@ export interface Channel extends CreateChannel {
   channelId: string;
   joinedAt?: Dayjs | null;
   createdAt: Dayjs;
+  updatedAt?: Dayjs;
   topic: string;
   description: string;
   sectionId: string;
