@@ -2,6 +2,7 @@ import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuLabel,
   ContextMenuPortal,
   ContextMenuSeparator,
   ContextMenuSub,
@@ -12,6 +13,9 @@ import {
 import { useStore } from '@/stores/RootStore';
 import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
+import { SortBy } from './types';
+import { updateSectionApi } from '@/features/sections/api/updateSection';
+import { Check } from 'react-bootstrap-icons';
 
 interface ListHeaderProps {
   id: string;
@@ -21,10 +25,12 @@ interface ListHeaderProps {
   isOpen?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ref?: any;
+  sortBy?: SortBy;
 }
 
-const ListHeader = ({ id, icon, title, isSystem, ref }: ListHeaderProps) => {
+const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
+  const { updateSection } = useStore('sectionStore');
   const [hasOpenDialog] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +44,12 @@ const ListHeader = ({ id, icon, title, isSystem, ref }: ListHeaderProps) => {
     payload?: { id: string; name: string };
   }) => {
     setActiveModal({ type, payload });
+  };
+
+  const handleSetSectionSort = async (sortBy: SortBy) => {
+    const updatedSection = await updateSectionApi(id, { sortBy });
+
+    updateSection(id, { sortBy: updatedSection.sortBy });
   };
 
   return (
@@ -74,6 +86,22 @@ const ListHeader = ({ id, icon, title, isSystem, ref }: ListHeaderProps) => {
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleClickItem({ type: 'CreateSectionModal' })}>
                 Create Section
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
+        </ContextMenuSub>
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>Sort</ContextMenuSubTrigger>
+          <ContextMenuPortal>
+            <ContextMenuSubContent>
+              <ContextMenuLabel className="text-xs text-black ml-6">
+                Sort this section
+              </ContextMenuLabel>
+              <ContextMenuItem onClick={() => handleSetSectionSort(SortBy.ALPHA)}>
+                <div className="w-6">{sortBy === SortBy.ALPHA && <Check />}</div>Alphabetically
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => handleSetSectionSort(SortBy.RECENT)}>
+                <div className="w-6">{sortBy === SortBy.RECENT && <Check />}</div> Most Recent{' '}
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuPortal>

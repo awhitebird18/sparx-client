@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/Button';
 import { updateSectionApi } from '@/features/sections/api/updateSection';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './itemTypes';
+import { SortBy } from './types';
+import { sortChannels } from '@/utils/sortUtils';
 
 interface SectionProps {
   id: string;
@@ -19,13 +21,14 @@ interface SectionProps {
   channels: Channel[];
   isSystem?: boolean;
   isOpen?: boolean;
+  sortBy?: SortBy;
 }
 
 interface Item {
   channelId: string;
 }
 
-const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) => {
+const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: SectionProps) => {
   const { selectedId } = useStore('sidebarStore');
   const { updateSection } = useStore('sectionStore');
   const { updateChannelSection } = useStore('channelStore');
@@ -49,6 +52,8 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
     updateSection(id, { isOpen: bool });
   };
 
+  console.log(sortBy, channels);
+
   return (
     <Collapsible
       open={isOpen}
@@ -62,6 +67,7 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
           title={name}
           isSystem={isSystem}
           isOpen={isOpen}
+          sortBy={sortBy}
           icon={
             <CollapsibleTrigger asChild>
               <Button
@@ -78,23 +84,21 @@ const Section = ({ id, type, name, channels, isSystem, isOpen }: SectionProps) =
 
       <CollapsibleContent>
         {channels?.length
-          ? channels
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((channel: Channel) => (
-                <ListItem
-                  key={channel.uuid}
-                  id={channel.uuid}
-                  title={channel.name}
-                  isChannel
-                  icon={
-                    <ChannelIcon
-                      imageUrl={channel.icon}
-                      isSelected={selectedId === channel.uuid}
-                      size={19}
-                    />
-                  }
-                />
-              ))
+          ? sortChannels(channels, sortBy).map((channel: Channel) => (
+              <ListItem
+                key={channel.uuid}
+                id={channel.uuid}
+                title={channel.name}
+                isChannel
+                icon={
+                  <ChannelIcon
+                    imageUrl={channel.icon}
+                    isSelected={selectedId === channel.uuid}
+                    size={19}
+                  />
+                }
+              />
+            ))
           : ''}
 
         {isSystem ? (
