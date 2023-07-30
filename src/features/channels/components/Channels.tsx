@@ -19,6 +19,10 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { joinChannelApi } from '../api/joinChannel';
 import { leaveChannelApi } from '../api/leaveChannelApi';
+import { SortOptions } from '../types/channelEnums';
+import { sortWorkspaceChannels } from '@/utils/sortUtils';
+import { ChannelFilters } from '../types/channelEnums';
+import { filterByChannelType } from '@/utils/filterUtils';
 
 const CHANNELS_PER_PAGE = 10;
 
@@ -34,8 +38,10 @@ const Channels: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [typeDropdown, setTypeDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOptions>(SortOptions.ATOZ);
+  const [filterChannelType, setFilterChannelType] = useState<ChannelFilters | null>(null);
 
   useEffect(() => {
     fetchWorkspaceChannels();
@@ -77,6 +83,14 @@ const Channels: React.FC = () => {
     }
   };
 
+  const handleSetSort = (sortValue: SortOptions) => {
+    setSortBy(sortValue);
+  };
+
+  const handleSetChannelType = (channelType: ChannelFilters | null) => {
+    setFilterChannelType(channelType);
+  };
+
   return (
     <Content>
       <Header>
@@ -95,27 +109,52 @@ const Channels: React.FC = () => {
           <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="gap-2" size="sm">
-                Sort: Alphabetically <ChevronDown className="text-xs" />
+                Sort: {sortBy} <ChevronDown className="text-xs" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-              <DropdownMenuItem>Alphabetical</DropdownMenuItem>
-              <DropdownMenuItem>Most members</DropdownMenuItem>
-              <DropdownMenuItem>Least members</DropdownMenuItem>
-              <DropdownMenuItem>Newest channel</DropdownMenuItem>
-              <DropdownMenuItem>Oldest channel</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ATOZ)}>
+                A to Z
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ZTOA)}>
+                Z to A
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.MOSTMEMBERS)}>
+                Most members
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.LEASTMEMBERS)}>
+                Least members
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.NEWEST)}>
+                Newest channel
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.OLDEST)}>
+                Oldest channel
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+          <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2" size="sm">
-                Channel Type <ChevronDown className="text-xs" />
+              <Button
+                variant={filterChannelType ? 'default' : 'outline'}
+                className={`gap-2 py-0 ${
+                  filterChannelType && 'bg-userLight hover:bg-userLight text-white'
+                }`}
+                size="sm"
+              >
+                {filterChannelType || 'Channel Type'} <ChevronDown className="text-xs" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-              <DropdownMenuItem>Alphabetical</DropdownMenuItem>
-              <DropdownMenuItem>Most members</DropdownMenuItem>
-              <DropdownMenuItem>Least members</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
+                Any Channel Type
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelFilters.PUBLIC)}>
+                Public Channels
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelFilters.PRIVATE)}>
+                Private Channels
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -127,7 +166,10 @@ const Channels: React.FC = () => {
           ) : null}
 
           {!isLoading && displayedChannels.length
-            ? displayedChannels.map((channel) => (
+            ? sortWorkspaceChannels(
+                filterByChannelType(displayedChannels, filterChannelType),
+                sortBy,
+              ).map((channel) => (
                 <li
                   key={channel.uuid}
                   className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"

@@ -225,7 +225,14 @@ export class ChannelStore {
   fetchWorkspaceChannels = async () => {
     this.setIsLoading(true);
     const channels = await getWorkspaceChannels();
-    this.setChannels(channels);
+
+    this.setChannels([
+      ...channels.map((channel: Channel) => ({
+        ...channel,
+        createdAt: dayjs(channel.createdAt),
+        updatedAt: dayjs(channel.updatedAt),
+      })),
+    ]);
     this.setIsLoading(false);
   };
 }
