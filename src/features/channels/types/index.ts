@@ -26,6 +26,7 @@ export interface Channel extends CreateChannel {
   users: User[];
   lastRead?: Dayjs | string;
   isPrivate: boolean;
+  userCount: number;
 }
 
 export type UpdateChannel = Partial<Channel>;

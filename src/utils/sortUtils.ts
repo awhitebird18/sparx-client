@@ -16,24 +16,24 @@ export const sortChannels = (channels: Channel[], sortBy?: SortBy) => {
 
 export const sortWorkspaceChannels = (channels: Channel[], sortBy: SortOptions) => {
   if (sortBy === SortOptions.ATOZ) {
-    return channels.sort((a, b) => a.name.localeCompare(b.name));
+    return channels.slice().sort((a, b) => a.name.localeCompare(b.name));
   }
   if (sortBy === SortOptions.ZTOA) {
-    return channels.sort((a, b) => b.name.localeCompare(a.name));
+    return channels.slice().sort((a, b) => b.name.localeCompare(a.name));
   }
 
   if (sortBy === SortOptions.NEWEST) {
-    return channels.sort((a, b) => (b.createdAt.isBefore(a.createdAt) ? 1 : -1));
+    return channels.slice().sort((a, b) => (b.createdAt.isBefore(a.createdAt) ? 1 : -1));
   }
   if (sortBy === SortOptions.OLDEST) {
-    return channels.sort((a, b) => (b.createdAt.isAfter(a.createdAt) ? 1 : -1));
+    return channels.slice().sort((a, b) => (b.createdAt.isAfter(a.createdAt) ? 1 : -1));
   }
   if (sortBy === SortOptions.LEASTMEMBERS) {
-    console.info('Need to implement');
+    return channels.slice().sort((a, b) => (a.userCount < b.userCount ? -1 : 1));
   }
   if (sortBy === SortOptions.MOSTMEMBERS) {
-    console.info('Need to implement');
+    return channels.slice().sort((a, b) => (a.userCount < b.userCount ? 1 : -1));
   }
 
-  return channels.sort((a, b) => a.name.localeCompare(b.name));
+  return channels.slice().sort((a, b) => a.name.localeCompare(b.name));
 };

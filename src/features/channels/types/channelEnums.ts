@@ -12,7 +12,17 @@ export enum SortOptions {
   LEASTMEMBERS = 'Least Members',
 }
 
-export enum ChannelFilters {
+export enum ChannelPrivateEnum {
   PUBLIC = 'Public Channels',
   PRIVATE = 'Private Channels',
+}
+
+export enum SubscribeStatusEnum {
+  SUBSCSRIBED = 'Subscribed',
+  UNSUBSCRIBED = 'Unsubscribed',
+}
+
+export enum ChannelActions {
+  JOIN = 'Join',
+  LEAVE = 'Leave',
 }

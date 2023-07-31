@@ -3,9 +3,14 @@ import { axios } from '@/lib/axios';
 import { Channel } from '..';
 import { AxiosError } from 'axios';
 
-export const getWorkspaceChannels = async (): Promise<Channel[]> => {
+export const getWorkspaceChannels = async (page: number, pageSize?: number): Promise<Channel[]> => {
   try {
-    const res = await axios.get('/channels');
+    const res = await axios.get('/channels', {
+      params: {
+        page,
+        pageSize,
+      },
+    });
 
     return res.data;
   } catch (err: unknown) {

@@ -1,14 +1,40 @@
-import { ChannelFilters } from '@/features/channels/types/channelEnums';
+import { ChannelPrivateEnum, SubscribeStatusEnum } from '@/features/channels/types/channelEnums';
 import { Channel } from '@/features/channels';
 
-export const filterByChannelType = (channels: Channel[], filterBy: ChannelFilters | null) => {
-  if (filterBy === ChannelFilters.PRIVATE) {
-    return channels.filter((channel: Channel) => channel.isPrivate);
+type FilterOptions = {
+  filterChannelType: ChannelPrivateEnum | null;
+  filterSubscribed: SubscribeStatusEnum | null;
+  filterBySearchValue: string;
+};
+
+export const filterWorkspaceChannels = (channels: Channel[], filterOptions: FilterOptions) => {
+  const { filterChannelType, filterSubscribed, filterBySearchValue } = filterOptions;
+  let filteredChannels = channels;
+
+  if (filterChannelType) {
+    filteredChannels = filteredChannels.filter((channel: Channel) => {
+      if (filterChannelType === ChannelPrivateEnum.PRIVATE) {
+        return channel.isPrivate;
+      }
+      if (filterChannelType === ChannelPrivateEnum.PUBLIC) {
+        return !channel.isPrivate;
+      }
+
+      return true;
+    });
   }
 
-  if (filterBy === ChannelFilters.PUBLIC) {
-    return channels.filter((channel: Channel) => !channel.isPrivate);
+  if (filterSubscribed) {
+    filteredChannels = filteredChannels.filter(
+      (channel) => channel.isSubscribed === (filterSubscribed === SubscribeStatusEnum.SUBSCSRIBED),
+    );
   }
 
-  return channels;
+  if (filterBySearchValue) {
+    filteredChannels = filteredChannels.filter((channel: Channel) =>
+      channel.name.toLowerCase().includes(filterBySearchValue.toLowerCase()),
+    );
+  }
+
+  return filteredChannels;
 };
