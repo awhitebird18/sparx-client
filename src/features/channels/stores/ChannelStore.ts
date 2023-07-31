@@ -10,6 +10,9 @@ import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
 import { updateChannelSection } from '../api/updateChannelSection';
 import { updateUserChannel } from '../api/updateUserChannel';
+import { filterWorkspaceChannels } from '@/utils/filterUtils';
+import { sortWorkspaceChannels } from '@/utils/sortUtils';
+import { ChannelPrivateEnum, SortOptions, SubscribeStatusEnum } from '../types/channelEnums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -22,6 +25,11 @@ export class ChannelStore {
   pageSize = 10;
   isLoading = true;
   channelUnreads: ChannelUnread[] = [];
+  hasMore = true;
+  filterSubscribed: SubscribeStatusEnum | null = null;
+  filterBySearchValue = '';
+  filterChannelType: ChannelPrivateEnum | null = null;
+  sortBy: SortOptions = SortOptions.ATOZ;
 
   constructor() {
     makeObservable(this, {
@@ -29,8 +37,13 @@ export class ChannelStore {
       subscribedChannels: observable,
       currentChannelId: observable,
       channelUnreads: observable,
+      sortBy: observable,
       page: observable,
       pageSize: observable,
+      hasMore: observable,
+      filterSubscribed: observable,
+      filterBySearchValue: observable,
+      filterChannelType: observable,
       isLoading: observable,
       currentChannel: computed,
       getChannelById: computed,
@@ -48,10 +61,15 @@ export class ChannelStore {
       findChannelUnreads: computed,
       channelUnreadsCount: computed,
       setIsLoading: action,
+      setSortBy: action,
       updateChannelSection: action,
       addToChannelUnreads: action,
+      setFilterChannelType: action,
+      setFilterSubscribed: action,
+      setFilterBySearchValue: action,
       joinChannel: action,
       leaveChannel: action,
+      filteredAndSortedChannels: computed,
     });
 
     reaction(
@@ -70,6 +88,22 @@ export class ChannelStore {
     );
   }
 
+  setSortBy = (sortBy: SortOptions) => {
+    this.sortBy = sortBy;
+  };
+
+  setFilterChannelType = (channelType: ChannelPrivateEnum | null) => {
+    this.filterChannelType = channelType;
+  };
+
+  setFilterSubscribed = (subscribedType: SubscribeStatusEnum | null) => {
+    this.filterSubscribed = subscribedType;
+  };
+
+  setFilterBySearchValue = (value: string) => {
+    this.filterBySearchValue = value;
+  };
+
   setChannelUnreads = (channelUnreads: ChannelUnread[]) => {
     if (channelUnreads) {
       this.channelUnreads = channelUnreads;
@@ -81,6 +115,19 @@ export class ChannelStore {
       (prev: number, curr: ChannelUnread) => prev + curr.unreadCount,
       0,
     );
+  }
+
+  get filteredAndSortedChannels() {
+    const mappedChannels = this.channels.map((channel: Channel) => ({
+      ...channel,
+      isSubscribed: Boolean(this.findById(channel.uuid)),
+    }));
+    const filteredChannels = filterWorkspaceChannels(mappedChannels, {
+      filterSubscribed: this.filterSubscribed,
+      filterBySearchValue: this.filterBySearchValue,
+      filterChannelType: this.filterChannelType,
+    });
+    return sortWorkspaceChannels(filteredChannels, this.sortBy);
   }
 
   get findChannelUnreads() {
@@ -137,6 +184,10 @@ export class ChannelStore {
     this.channels.push(channel);
   };
 
+  addChannels = (channels: Channel[]) => {
+    this.channels.push(...channels);
+  };
+
   setSubscribedChannels = (channels: Channel[]) => {
     this.subscribedChannels = channels;
   };
@@ -154,6 +205,10 @@ export class ChannelStore {
   setCurrentChannelId = (channelId: string | undefined) => {
     this.currentChannelId = channelId;
   };
+
+  setHasMore(bool: boolean) {
+    this.hasMore = bool;
+  }
 
   updateChannelSection = async (channelId: string, sectionId: string) => {
     const res = await updateChannelSection(channelId, sectionId);
@@ -192,13 +247,29 @@ export class ChannelStore {
     this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
   };
 
+  updateWorkspaceChannel = (channelId: string, updatedChannelFields: UpdateChannel) => {
+    const channel = this.channels.find((channel: Channel) => channel.uuid === channelId);
+
+    if (!channel) return;
+
+    Object.assign(channel, updatedChannelFields);
+  };
+
   joinChannel = async (channel: Channel) => {
     const channelFound = this.findById(channel.uuid);
 
     if (channelFound) return;
 
     this.subscribedChannels = [...this.subscribedChannels, channel];
+
     this.updateChannel(channel.uuid, { isSubscribed: true });
+
+    const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channel.uuid);
+    if (!workspaceChannel) return;
+
+    this.updateWorkspaceChannel(workspaceChannel.uuid, {
+      userCount: workspaceChannel.userCount + 1,
+    });
   };
 
   leaveChannel = async (channelId: string) => {
@@ -207,6 +278,13 @@ export class ChannelStore {
     );
 
     this.updateChannel(channelId, { isSubscribed: false });
+
+    const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channelId);
+    if (!workspaceChannel) return;
+
+    this.updateWorkspaceChannel(workspaceChannel.uuid, {
+      userCount: workspaceChannel.userCount - 1,
+    });
   };
 
   fetchSubscribedChannels = async () => {
@@ -222,10 +300,24 @@ export class ChannelStore {
     this.setIsLoading(false);
   };
 
-  fetchWorkspaceChannels = async () => {
+  fetchWorkspaceChannels = async (page: number, pageSize?: number) => {
     this.setIsLoading(true);
-    const channels = await getWorkspaceChannels();
-    this.setChannels(channels);
+    const channels = await getWorkspaceChannels(page, pageSize);
+
+    if (channels.length < 15) {
+      this.setHasMore(false);
+    } else {
+      this.incrementPage();
+    }
+
+    this.addChannels([
+      ...channels.map((channel: Channel) => ({
+        ...channel,
+        createdAt: dayjs(channel.createdAt),
+        updatedAt: dayjs(channel.updatedAt),
+      })),
+    ]);
+
     this.setIsLoading(false);
   };
 }
