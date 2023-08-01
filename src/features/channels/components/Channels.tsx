@@ -39,6 +39,9 @@ const Channels: React.FC = () => {
     setFilterBySearchValue,
     setFilterChannelType,
     setFilterSubscribed,
+    addSubscribedChannel,
+    findById,
+    findfindWorkspaceChannelByIdById,
   } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
@@ -70,6 +73,14 @@ const Channels: React.FC = () => {
   }, [fetchWorkspaceChannels, hasMore, loader, page]);
 
   const handleViewChannel = (id: string) => {
+    const subscribedChannel = findById(id);
+    if (!subscribedChannel) {
+      const workspaceChannel = findfindWorkspaceChannelByIdById(id);
+
+      if (!workspaceChannel) return;
+      addSubscribedChannel({ ...workspaceChannel, isSubscribed: false });
+    }
+
     navigate(`/app/${id}`);
   };
 

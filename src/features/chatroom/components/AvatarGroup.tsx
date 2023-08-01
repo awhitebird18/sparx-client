@@ -10,7 +10,9 @@ const AvatarGroup = () => {
   const { setActiveModal } = useStore('modalStore');
   const { users } = useStore('userStore');
 
-  const userCount = Math.min(3, users.length);
+  if (!(currentChannel || users)) return;
+
+  const userCount = Math.min(3, users?.length);
 
   const avatarSize = 20;
 
@@ -31,7 +33,7 @@ const AvatarGroup = () => {
       onClick={handleOpenChannelDetails}
     >
       <p className="w-[20px] h-full flex justify-center items-center text-sm text-muted-foreground">
-        {currentChannel?.users.length}
+        {currentChannel?.users?.length}
       </p>
       <Avatar
         className={`absolute w-7 h-7 rounded-md border-2 border-background`}
