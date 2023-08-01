@@ -58,6 +58,7 @@ export class ChannelStore {
       fetchWorkspaceChannels: action,
       setCurrentChannelId: action,
       setSubscribedChannels: action,
+      addSubscribedChannel: action,
       findChannelUnreads: computed,
       channelUnreadsCount: computed,
       setIsLoading: action,
@@ -168,6 +169,10 @@ export class ChannelStore {
     return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
   };
 
+  findfindWorkspaceChannelByIdById = (uuid: string) => {
+    return this.channels.find((channel: Channel) => channel.uuid === uuid);
+  };
+
   get getChannelById() {
     return (id: string) => {
       return this.subscribedChannels.find((channel) => channel.uuid === id);
@@ -196,10 +201,14 @@ export class ChannelStore {
     this.isLoading = bool;
   };
 
+  addSubscribedChannel = (channel: Channel) => {
+    this.subscribedChannels.push(channel);
+  };
+
   createChannel = async (newChannel: CreateChannel) => {
     const channel = await createChannel(newChannel);
 
-    this.subscribedChannels.push(channel);
+    this.addSubscribedChannel(channel);
   };
 
   setCurrentChannelId = (channelId: string | undefined) => {

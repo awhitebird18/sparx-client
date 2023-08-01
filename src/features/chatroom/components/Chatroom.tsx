@@ -19,6 +19,7 @@ import { useAuth } from '@/providers/auth';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+import UserInputNotSubscribed from './UserInputNotSubscribed';
 
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
@@ -110,11 +111,15 @@ const ChatRoom: React.FC = () => {
                   ))
                 )}
               </div>
-              <Editor
-                placeholder={`Message ${currentChannel?.name}`}
-                config={editorConfig}
-                onSubmit={handleSubmit}
-              />
+              {currentChannel?.isSubscribed ? (
+                <Editor
+                  placeholder={`Message ${currentChannel?.name}`}
+                  config={editorConfig}
+                  onSubmit={handleSubmit}
+                />
+              ) : (
+                <UserInputNotSubscribed />
+              )}
             </div>
           </div>
         </div>
