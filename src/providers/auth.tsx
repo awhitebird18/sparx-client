@@ -53,6 +53,7 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
+  const { setInitialPreferences } = useStore('userPreferencesStore');
 
   const { setSubscribedChannels, setChannelUnreads } = useStore('channelStore');
   const { setUsers } = useStore('userStore');
@@ -103,6 +104,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await verifyUser();
 
       setChannelUnreads(data.channelUnreads);
+      setInitialPreferences(data.userPreferences);
       setCurrentUser(data.user);
       setSections(data.sections);
       setSubscribedChannels(data.channels);
@@ -114,7 +116,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       window.localStorage.removeItem('auth');
       setLoading(false);
     }
-  }, [connectToSocketServer, setChannelUnreads, setSections, setSubscribedChannels, setUsers]);
+  }, [
+    connectToSocketServer,
+    setInitialPreferences,
+    setChannelUnreads,
+    setSections,
+    setSubscribedChannels,
+    setUsers,
+  ]);
 
   useEffect(() => {
     try {

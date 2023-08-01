@@ -16,7 +16,7 @@ function Modal({ title, children }: ModalProps) {
 
   return (
     <Dialog open={Boolean(activeModal)} onOpenChange={handleClose}>
-      <DialogContent className="max-w-fit w-fit">
+      <DialogContent className="w-fit max-w-fit">
         {title && (
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

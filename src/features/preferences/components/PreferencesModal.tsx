@@ -32,11 +32,8 @@ const PreferencesModal: React.FC = () => {
 
   return (
     <Modal title="Preferences">
-      <div
-        className="flex transform transition-all sm:w-full"
-        style={{ width: '50vw', height: '55vh' }}
-      >
-        <nav className="space-y-1 border-r border-border pr-4 w-44">
+      <div className="flex transform transition-all w-max">
+        <nav className="space-y-1 border-r border-border pr-4 w-48">
           <Button
             variant="ghost"
             onClick={() => setActiveTab(PreferenceTabs.THEMING)}
@@ -72,7 +69,7 @@ const PreferencesModal: React.FC = () => {
           </Button>
         </nav>
 
-        <div className="flex-1 px-4 h-96">{renderTabContent()}</div>
+        <div className="flex-1 px-4 h-96 w-96 overflow-auto">{renderTabContent()}</div>
       </div>
     </Modal>
   );

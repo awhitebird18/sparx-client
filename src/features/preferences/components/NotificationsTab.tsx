@@ -1,91 +1,116 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/Form';
-
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
+import { Label } from '@/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectGroup,
+  SelectTrigger,
+} from '@/components/ui/Select';
+import { useState } from 'react';
+import { timeOptions } from '@/utils/timeUtils';
+import { useStore } from '@/stores/RootStore';
+import { NotificationType } from '../enums/NotificationType';
+import { updateUserPreferencesApi } from '../api/updateUserPreferences';
 
-enum ThemeType {
-  LIGHT = 'light',
-  DARK = 'dark',
+enum NotificationSchedule {
+  DAILY = 'daily',
+  WEEKDAYS = 'weekdays',
 }
-
-enum PrimaryColorType {
-  BLUE = 'blue',
-  RED = 'red',
-  GREEN = 'green',
-}
-
-const formSchema = z.object({
-  theme: z.nativeEnum(ThemeType),
-  primaryColor: z.nativeEnum(PrimaryColorType),
-});
 
 const NotificationsTab = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      theme: ThemeType.DARK,
-      primaryColor: PrimaryColorType.BLUE,
-    },
-  });
+  const { userPreferences, setNotificationType } = useStore('userPreferencesStore');
+  const [notificationSchedule, setNotificationSchedule] = useState<NotificationSchedule>(
+    NotificationSchedule.DAILY,
+  );
+  const [notificationStart, setNotificationStart] = useState<string>('32400');
+  const [notificationEnd, setNotificationEnd] = useState<string>('79200');
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.info(values);
-  }
+  const handleNotificationSchedule = (value: NotificationSchedule) => {
+    setNotificationSchedule(value);
+  };
+
+  const handleNotificationStartTime = (time: string) => {
+    setNotificationStart(time);
+  };
+
+  const handleNotificationEndTime = (time: string) => {
+    setNotificationEnd(time);
+  };
+
+  const handleSetNotificationType = async (value: NotificationType) => {
+    await updateUserPreferencesApi({ notificationType: value });
+    setNotificationType(value);
+  };
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 flex flex-col h-100flex-1 h-full"
-      >
-        <p className="text-sm text-muted-foreground">
+    <div>
+      <div>
+        <p className="text-sm text-muted-foreground mb-6">
           Change the appearance of Sparx across all of your workspaces.
         </p>
-        <FormField
-          control={form.control}
-          name="theme"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Notify me about...</FormLabel>
-              <FormControl>
-                <RadioGroup defaultValue={field.value} className="flex flex-col space-y-1">
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="all" />
-                    </FormControl>
-                    <FormLabel className="font-normal">All new messages</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="mentions" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Direct messages and mentions</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="none" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Nothing</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+
+        <RadioGroup
+          defaultValue={userPreferences.notificationType}
+          className="flex flex-col space-y-3 mb-10"
+          onValueChange={handleSetNotificationType}
+        >
+          <div className="flex space-x-2">
+            <RadioGroupItem value="all" />
+            <Label className="font-normal">All new messages</Label>
+          </div>
+          <div className="flex space-x-2">
+            <RadioGroupItem value="mentions" />
+            <Label className="font-normal">Direct messages and mentions</Label>
+          </div>
+          <div className="flex space-x-2">
+            <RadioGroupItem value="none" />
+            <Label className="font-normal">Nothing</Label>
+          </div>
+        </RadioGroup>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground mb-2">Notification Schedule</p>
+        <div className="flex gap-2">
+          <Select onValueChange={handleNotificationSchedule} defaultValue={notificationSchedule}>
+            <SelectTrigger className="h-14">
+              <SelectValue placeholder="Every day" />
+            </SelectTrigger>
+            <SelectContent className="max-h-48">
+              <SelectGroup>
+                <SelectItem value="daily">Every day</SelectItem>
+                <SelectItem value="weekdays">Weekdays</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Select onValueChange={handleNotificationStartTime} defaultValue={notificationStart}>
+            <SelectTrigger className="h-14">
+              <SelectValue placeholder="Start Time" />
+            </SelectTrigger>
+            <SelectContent className="max-h-48">
+              <SelectGroup>
+                {timeOptions.map((time: string, index: number) => (
+                  <SelectItem value={String(index * 1800)}>{time}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Select onValueChange={handleNotificationEndTime} defaultValue={notificationEnd}>
+            <SelectTrigger className="h-14">
+              <SelectValue placeholder="End Time" />
+            </SelectTrigger>
+            <SelectContent className="max-h-48">
+              <SelectGroup>
+                {timeOptions.map((time: string, index: number) => (
+                  <SelectItem value={String(index * 1800)}>{time}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
   );
 };
 

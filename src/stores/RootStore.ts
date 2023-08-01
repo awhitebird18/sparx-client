@@ -9,6 +9,7 @@ import { SocketStore } from './SocketStore';
 import { SidebarStore } from './SidebarStore';
 import { createContext } from 'react';
 import { useContext } from 'react';
+import { UserPreferencesStore } from '@/features/preferences/stores/UserPreferencesStore';
 
 interface RootStore {
   messageStore: MessageStore;
@@ -20,6 +21,7 @@ interface RootStore {
   sectionStore: SectionStore;
   socketStore: SocketStore;
   sidebarStore: SidebarStore;
+  userPreferencesStore: UserPreferencesStore;
 }
 
 class RootStoreImpl implements RootStore {
@@ -31,6 +33,7 @@ class RootStoreImpl implements RootStore {
   notificationStore = new NotificationStore();
   modalStore = new ModalStore();
   sectionStore = new SectionStore();
+  userPreferencesStore = new UserPreferencesStore();
   sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
 }
 
