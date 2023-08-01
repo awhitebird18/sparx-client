@@ -102,9 +102,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const data = await verifyUser();
 
-      console.log(data.channels);
-      console.log(data.sections);
-
       setChannelUnreads(data.channelUnreads);
       setCurrentUser(data.user);
       setSections(data.sections);

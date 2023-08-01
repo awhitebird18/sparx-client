@@ -61,6 +61,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     sectionId: string;
   }) => {
     if (!channelId) return;
+
     updateChannelSection(channelId, sectionId);
   };
 
