@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -62,6 +61,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     sectionId: string;
   }) => {
     if (!channelId) return;
+
     updateChannelSection(channelId, sectionId);
   };
 
@@ -102,11 +102,10 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   return (
     <ContextMenu>
       <ContextMenuTrigger disabled={!isChannel}>
-        <Button
+        <div
           ref={dragRef}
           onClick={handleClick}
-          variant="ghost"
-          className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
             isSelected
               ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
               : 'text-muted-foreground'
@@ -129,7 +128,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
               {unreadCount}
             </Badge>
           ) : null}
-        </Button>
+        </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         <ContextMenuItem inset onClick={handleOpenChannelDetails}>
