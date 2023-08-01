@@ -23,6 +23,7 @@ const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
     });
 
     updateMessage(message.uuid, { reactions: updatedMessage.reactions });
+    onClickAway();
   };
 
   return (
