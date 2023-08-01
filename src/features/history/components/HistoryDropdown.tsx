@@ -84,7 +84,13 @@ const HistoryDropdown = () => {
 
                     itemData = {
                       title: channel.name,
-                      icon: <ChannelIcon imageUrl={channel.icon} size={20} />,
+                      icon: (
+                        <ChannelIcon
+                          imageUrl={channel.icon}
+                          size={20}
+                          isPrivate={channel.isPrivate}
+                        />
+                      ),
                     };
                   }
 

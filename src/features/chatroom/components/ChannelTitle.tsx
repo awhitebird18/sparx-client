@@ -24,7 +24,12 @@ const ChannelTitle = () => {
       onClick={handleOpenChannelDetails}
     >
       {currentChannel ? (
-        <ChannelIcon imageUrl={currentChannel.icon} size={28} isSelected />
+        <ChannelIcon
+          imageUrl={currentChannel.icon}
+          size={28}
+          isSelected
+          isPrivate={currentChannel.isPrivate}
+        />
       ) : (
         <Skeleton className="h-7 w-7 rounded-sm" />
       )}
