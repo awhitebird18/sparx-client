@@ -82,7 +82,7 @@ const ThemeTab = () => {
             <SelectContent className="max-h-48">
               <SelectGroup>
                 {primaryColors.map((color: string) => (
-                  <SelectItem value={color}>
+                  <SelectItem key={color} value={color}>
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 bg-${color}-500 rounded-lg`} />
                       {`${color.charAt(0).toUpperCase()}${color.substring(1).toLowerCase()}`}
