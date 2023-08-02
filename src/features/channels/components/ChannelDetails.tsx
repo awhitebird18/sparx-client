@@ -52,7 +52,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
             <About channel={channel} />
           </TabsContent>
           <TabsContent value="members" className="h-full">
-            <Members users={channel.users} />
+            <Members users={channel.users} channel={channel} />
           </TabsContent>
           <TabsContent value="settings" className="h-full">
             <Settings channel={channel} />

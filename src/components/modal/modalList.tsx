@@ -1,4 +1,5 @@
 import { Channel } from '@/features/channels';
+import AddUserModal from '@/features/channels/components/AddUserModal';
 import ConfirmChannelChangeModal from '@/features/channels/components/ConfirmChannelChangeModal';
 import { Message } from '@/features/messages';
 import DeleteMessage from '@/features/messages/components/DeleteMessage';
@@ -20,6 +21,7 @@ const modalList = {
   DeleteMessageModal: (props: { message: Message }) => <DeleteMessage {...props} />,
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
+  AddUserModal: (props: { channel: Channel }) => <AddUserModal {...props} />,
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
   ConfirmChannelTypeChange: (props: { channel: Channel }) => (
     <ConfirmChannelChangeModal {...props} />
