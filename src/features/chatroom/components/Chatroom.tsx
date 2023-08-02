@@ -26,7 +26,7 @@ const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
     useStore('messageStore');
   const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
-  const { emitSocket } = useStore('socketStore');
+  const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -47,10 +47,8 @@ const ChatRoom: React.FC = () => {
 
   const handleInputChange = useCallback(() => {
     emitSocket('typing', {
-      user: {
-        uuid: currentUser?.uuid,
-        name: currentUser?.firstName,
-      },
+      userId: currentUser?.uuid,
+      username: currentUser?.firstName,
       channelId: currentChannelId,
     });
   }, [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket]);
@@ -68,6 +66,15 @@ const ChatRoom: React.FC = () => {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [groupedMessagesWithUser]);
+
+  useEffect(() => {
+    if (!currentChannelId) return;
+    joinRoom(currentChannelId);
+
+    return () => {
+      leaveRoom(currentChannelId);
+    };
+  }, [currentChannelId, joinRoom, leaveRoom]);
 
   return (
     <Content>

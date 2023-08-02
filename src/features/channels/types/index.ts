@@ -30,4 +30,10 @@ export interface Channel extends CreateChannel {
   userCount: number;
 }
 
+export type UserTyping = {
+  userId: string;
+  username: string;
+  timerId?: NodeJS.Timeout;
+};
+
 export type UpdateChannel = Partial<Channel>;

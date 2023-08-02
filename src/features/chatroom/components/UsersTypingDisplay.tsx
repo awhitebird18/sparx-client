@@ -1,3 +1,4 @@
+import { UserTyping } from '@/features/channels';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
@@ -7,9 +8,8 @@ const UsersTypingDisplay = () => {
   if (!usersTyping?.length) return null;
   return (
     <div className="text-muted-foreground px-2 text-xs absolute bottom-2.5 left-2">{`${usersTyping
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((user: any) => user.name)
-      .join(', ')} are typing...`}</div>
+      .map((userTyping: UserTyping) => userTyping.username)
+      .join(', ')} ${usersTyping.length > 1 ? 'are' : 'is'} typing...`}</div>
   );
 };
 

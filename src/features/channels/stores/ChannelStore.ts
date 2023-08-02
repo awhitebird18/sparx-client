@@ -4,7 +4,13 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-import { Channel, ChannelUnread, CreateChannel, UpdateChannel } from '@/features/channels';
+import {
+  Channel,
+  ChannelUnread,
+  CreateChannel,
+  UpdateChannel,
+  UserTyping,
+} from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
 import { getWorkspaceChannels } from '../api/getWorkspaceChannels';
@@ -30,7 +36,7 @@ export class ChannelStore {
   filterBySearchValue = '';
   filterChannelType: ChannelPrivateEnum | null = null;
   sortBy: SortOptions = SortOptions.ATOZ;
-  usersTyping: string[] = [];
+  usersTyping: UserTyping[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -93,24 +99,36 @@ export class ChannelStore {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  addUserTyping = (user: any) => {
-    const userFound = this.usersTyping.find(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (userTyping: any) => userTyping.user.uuid === user.user.uuid,
+  addUserTyping = (data: UserTyping) => {
+    let userTypingIndex = this.usersTyping.findIndex(
+      (userTyping: UserTyping) => userTyping.userId === data.userId,
     );
 
-    if (userFound) return;
+    if (userTypingIndex > -1 && this.usersTyping[userTypingIndex]?.timerId) {
+      // If the user is already typing, clear the existing timer
+      clearTimeout(this.usersTyping[userTypingIndex].timerId);
+    } else {
+      // If it's a new user, add them to the list
+      this.usersTyping.push(data);
+      // Update the index to point to the newly added user
+      userTypingIndex = this.usersTyping.length - 1;
+    }
 
-    this.usersTyping.push(user.user);
+    // Set a new timer to remove the user after 5 seconds of inactivity
+    this.usersTyping[userTypingIndex].timerId = setTimeout(() => {
+      this.removeUserTyping(data.userId);
+    }, 3000);
   };
 
   removeUserTyping = (userId: string) => {
-    const userFound = this.usersTyping.includes(userId);
+    const userTypingIndex = this.usersTyping.findIndex(
+      (userTyping: UserTyping) => userTyping.userId === userId,
+    );
 
-    if (!userFound) return;
-
-    this.usersTyping.filter((userEl: string) => userEl !== userId);
+    if (userTypingIndex > -1) {
+      // If the user is found, remove them from the list
+      this.usersTyping.splice(userTypingIndex, 1);
+    }
   };
 
   setSortBy = (sortBy: SortOptions) => {
