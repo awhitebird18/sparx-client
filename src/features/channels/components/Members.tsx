@@ -9,8 +9,14 @@ import Username from '@/features/users/components/Username';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
-import { PersonAdd } from 'react-bootstrap-icons';
+import { PersonAdd, ThreeDotsVertical } from 'react-bootstrap-icons';
 import { Channel } from '..';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
 
 type MembersProps = { users: User[]; channel: Channel };
 
@@ -31,6 +37,10 @@ const Members = ({ users, channel }: MembersProps) => {
     setActiveModal({ type: 'AddUserModal', payload: { channel } });
   };
 
+  const handleOpenRemoveUserFromChannelModal = (user: User) => {
+    setActiveModal({ type: 'RemoveUserModal', payload: { channel, user } });
+  };
+
   return (
     <div className="space-y-2 py-1.5 flex-1 flex flex-col h-[550px]">
       <SearchInput value={search} setValue={setSearch} />
@@ -39,7 +49,7 @@ const Members = ({ users, channel }: MembersProps) => {
         {filteredUsers.length ? (
           <>
             <div
-              className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer opacity-60 hover:opacity-100"
+              className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer opacity-60 hover:opacity-100 pr-4 mr-4"
               onClick={handleOpenAddUserToChannelModal}
             >
               <Avatar className="w-11 h-11 rounded-sm">
@@ -60,12 +70,28 @@ const Members = ({ users, channel }: MembersProps) => {
               return (
                 <div
                   key={user.uuid}
-                  className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer"
+                  className="flex items-center gap-4 hover:bg-secondary/50 p-2 rounded-md cursor-pointer pr-4 mr-4"
                   onClick={() => handleOpenUserProfile(userFound.uuid)}
                 >
                   <UserAvatar userId={userFound.uuid} profileImage={userFound.profileImage} />
                   <Username firstName={userFound.firstName} lastName={userFound.lastName} />
                   <OnlineStatusIndicator userId={userFound.uuid} />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="ml-auto">
+                      <ThreeDotsVertical size={20} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-60">
+                      <DropdownMenuItem className="px-4">
+                        {`Message ${user.firstName} ${user.lastName}`}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="px-4 text-rose-500"
+                        onClick={() => handleOpenRemoveUserFromChannelModal(user)}
+                      >
+                        Remove from channel
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               );
             })}
