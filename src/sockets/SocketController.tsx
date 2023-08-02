@@ -1,3 +1,4 @@
+import { UserTyping } from '@/features/channels';
 import { Message } from '@/features/messages';
 import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
@@ -18,6 +19,7 @@ const SocketController = () => {
     subscribedChannels,
     findById,
     addToChannelUnreads,
+    addUserTyping,
     channelUnreadsCount,
   } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
@@ -143,6 +145,15 @@ const SocketController = () => {
   useEffect(() => {
     return connectSocket(`channels/update`, handleUpdateSubscribedChannelSocket);
   }, [connectSocket, handleUpdateSubscribedChannelSocket]);
+
+  // User typing
+  useEffect(() => {
+    connectSocket('typing', (data: UserTyping) => {
+      if (data.userId === currentUser?.uuid) return;
+
+      addUserTyping(data);
+    });
+  }, [addUserTyping, connectSocket, currentUser]);
 
   // Remove workspace channel
   useEffect(() => {
