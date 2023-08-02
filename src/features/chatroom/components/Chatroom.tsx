@@ -25,7 +25,8 @@ import UsersTypingDisplay from './UsersTypingDisplay';
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
     useStore('messageStore');
-  const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
+  const { setCurrentChannelId, currentChannelId, currentChannel, clearUsersTyping } =
+    useStore('channelStore');
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -73,8 +74,9 @@ const ChatRoom: React.FC = () => {
 
     return () => {
       leaveRoom(currentChannelId);
+      clearUsersTyping();
     };
-  }, [currentChannelId, joinRoom, leaveRoom]);
+  }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom]);
 
   return (
     <Content>

@@ -58,6 +58,7 @@ export class ChannelStore {
       findById: action,
       addUserTyping: action,
       removeUserTyping: action,
+      clearUsersTyping: action,
       createChannel: action,
       updateSubscribedChannel: action,
       updateChannel: action,
@@ -98,6 +99,10 @@ export class ChannelStore {
       },
     );
   }
+
+  clearUsersTyping = () => {
+    this.usersTyping = [];
+  };
 
   addUserTyping = (data: UserTyping) => {
     let userTypingIndex = this.usersTyping.findIndex(
