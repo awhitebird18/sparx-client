@@ -1,11 +1,13 @@
 import { Channel } from '@/features/channels';
 import AddUserModal from '@/features/channels/components/AddUserModal';
 import ConfirmChannelChangeModal from '@/features/channels/components/ConfirmChannelChangeModal';
+import RemoveUserModal from '@/features/channels/components/RemoveUserModal';
 import { Message } from '@/features/messages';
 import DeleteMessage from '@/features/messages/components/DeleteMessage';
 import PreferencesModal from '@/features/preferences/components/PreferencesModal';
 import ProfileModal from '@/features/profile/components/Profile';
 import DeleteSection from '@/features/sections/components/DeleteSection';
+import { User } from '@/features/users';
 import { lazy } from 'react';
 
 const CreateChanneModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
@@ -22,6 +24,7 @@ const modalList = {
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
   AddUserModal: (props: { channel: Channel }) => <AddUserModal {...props} />,
+  RemoveUserModal: (props: { user: User; channel: Channel }) => <RemoveUserModal {...props} />,
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
   ConfirmChannelTypeChange: (props: { channel: Channel }) => (
     <ConfirmChannelChangeModal {...props} />

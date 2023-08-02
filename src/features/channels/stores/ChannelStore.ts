@@ -282,6 +282,8 @@ export class ChannelStore {
   };
 
   leaveChannel = async (channelId: string) => {
+    // TODO: When a user is removed from a channel, this is run
+    //from the socket and removing the current user as well
     this.subscribedChannels = this.subscribedChannels.filter(
       (channel: Channel) => channel.uuid !== channelId,
     );
