@@ -20,7 +20,8 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     <Modal
       title={
         <p className="text-2xl flex gap-3 items-center">
-          <ChannelIcon imageUrl={channel.icon} size={25} isSelected /> {channel.name}
+          <ChannelIcon imageUrl={channel.icon} size={25} isSelected isPrivate={channel.isPrivate} />{' '}
+          {channel.name}
         </p>
       }
     >
@@ -54,7 +55,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
             <Members users={channel.users} />
           </TabsContent>
           <TabsContent value="settings" className="h-full">
-            <Settings />
+            <Settings channel={channel} />
           </TabsContent>
         </Tabs>
       </>

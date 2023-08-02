@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
-import { Hash } from 'react-bootstrap-icons';
+import { Hash, Lock } from 'react-bootstrap-icons';
 import { API_URL } from '@/config';
 
 type UserAvatarProps = {
@@ -7,9 +7,16 @@ type UserAvatarProps = {
   showStatus?: boolean;
   imageUrl?: string;
   isSelected?: boolean | undefined;
+  isPrivate?: boolean | undefined;
 };
 
-const ChannelIcon = ({ size = 40, showStatus, imageUrl, isSelected }: UserAvatarProps) => (
+const ChannelIcon = ({
+  size = 40,
+  showStatus,
+  imageUrl,
+  isSelected,
+  isPrivate,
+}: UserAvatarProps) => (
   <Avatar className="relative overflow-visible" style={{ height: `${size}px`, width: `${size}px` }}>
     <AvatarImage
       src={`${API_URL}${imageUrl}`}
@@ -19,13 +26,23 @@ const ChannelIcon = ({ size = 40, showStatus, imageUrl, isSelected }: UserAvatar
     <AvatarFallback
       className={`h-full flex-1 w-full rounded-sm overflow-hidden bg-transparent dark:bg-transparent`}
       children={
-        <Hash
-          className={`p-0 text-xl ${isSelected ? 'text-white' : 'text-muted-foreground'}`}
-          style={{
-            height: `${size}px`,
-            width: `${size}px`,
-          }}
-        />
+        isPrivate ? (
+          <Lock
+            className={`p-0 text-xl ${isSelected ? 'text-white' : 'text-muted-foreground'}`}
+            style={{
+              height: `${size}px`,
+              width: `${size}px`,
+            }}
+          />
+        ) : (
+          <Hash
+            className={`p-0 text-xl ${isSelected ? 'text-white' : 'text-muted-foreground'}`}
+            style={{
+              height: `${size}px`,
+              width: `${size}px`,
+            }}
+          />
+        )
       }
     />
 

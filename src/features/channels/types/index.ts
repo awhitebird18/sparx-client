@@ -6,6 +6,7 @@ export interface CreateChannel {
   name: string;
   type: ChannelTypes;
   icon?: string;
+  isPrivate: boolean;
 }
 
 export interface ChannelUnread {

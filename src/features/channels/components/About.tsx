@@ -82,7 +82,7 @@ const About = ({ channel }: { channel: Channel }) => {
           fileInput.current.click();
         }}
       >
-        <ChannelIcon size={60} imageUrl={channel.icon} />
+        <ChannelIcon size={60} imageUrl={channel.icon} isPrivate={channel.isPrivate} />
 
         <p className="mt-0.5 text-primary">Change channel image</p>
 

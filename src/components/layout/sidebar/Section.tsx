@@ -91,6 +91,7 @@ const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: Section
                 icon={
                   <ChannelIcon
                     imageUrl={channel.icon}
+                    isPrivate={channel.isPrivate}
                     isSelected={selectedId === channel.uuid}
                     size={19}
                   />

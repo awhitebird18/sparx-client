@@ -7,7 +7,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
-
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -16,9 +15,11 @@ import { Button } from '@/components/ui/Button';
 import { ChannelTypes } from '../types/channelEnums';
 import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
+import { Checkbox } from '@/components/ui/Checkbox';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
+  isPrivate: z.boolean().default(false),
 });
 
 const CreateChanneForm = () => {
@@ -28,11 +29,12 @@ const CreateChanneForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      isPrivate: false,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createChannel({ name: values.name, type: ChannelTypes.CHANNEL });
+    createChannel({ name: values.name, type: ChannelTypes.CHANNEL, isPrivate: values.isPrivate });
     handleCloseModal();
   }
 
@@ -43,7 +45,7 @@ const CreateChanneForm = () => {
   return (
     <Modal title="Create Channel">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2 flex flex-col w-96">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2 flex flex-col w-96 space-y-8">
           <FormField
             control={form.control}
             name="name"
@@ -55,6 +57,32 @@ const CreateChanneForm = () => {
                 </FormControl>
                 <FormDescription>This is your publicly displayed channel name</FormDescription>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="isPrivate"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => {
+                        if (typeof checked === 'boolean') {
+                          field.onChange(checked);
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormLabel htmlFor="make-private" className="text-primary">
+                    Set Channel Private
+                  </FormLabel>
+                </div>
+                <FormDescription>
+                  Private channels can only be viewed or joined by invitation
+                </FormDescription>
               </FormItem>
             )}
           />
