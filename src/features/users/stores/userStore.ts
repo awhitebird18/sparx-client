@@ -24,6 +24,7 @@ export class UserStore {
       fetchUsers: action,
       setOnlineUsers: action,
       findUser: action,
+      findBot: action,
       handleUpdateUserSocket: action,
       handleNewUserSocket: action,
       setCurrentPage: action,
@@ -88,7 +89,11 @@ export class UserStore {
   };
 
   findUser = (userId: string) => {
-    return this.displayedUsers.find((user: User) => user.uuid === userId);
+    return this.users.find((user: User) => user.uuid === userId);
+  };
+
+  findBot = () => {
+    return this.users.find((user: User) => user.isBot);
   };
 
   setIsLoading = (bool: boolean) => {

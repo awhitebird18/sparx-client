@@ -11,4 +11,5 @@ export type User = {
   theme: string;
   uuid: string;
   status: UserStatus;
+  isBot?: boolean;
 };

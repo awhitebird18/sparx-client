@@ -7,6 +7,7 @@ import { getMessages } from '../api/getMessages';
 import { createMessageApi } from '../api/createMessage';
 import { editMessageApi } from '../api/editMessageApi';
 import { deleteMessageApi } from '../api/deleteMessageApi';
+import { v4 as uuid } from 'uuid';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,6 +30,7 @@ export class MessageStore {
       deleteMessage: action,
       fetchMessages: action,
       incrementPage: action,
+      formatAutomatedMessage: action,
       setMessages: action,
       setPage: action,
       setIsLoading: action,
@@ -119,6 +121,25 @@ export class MessageStore {
         this.deleteMessage(createMessage.uuid);
       }
     }
+  };
+
+  formatAutomatedMessage = ({
+    userId,
+    channelId,
+    content,
+  }: {
+    userId: string;
+    channelId: string;
+    content: string;
+  }) => {
+    return {
+      content: `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"${content}","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`,
+      userId,
+      channelId,
+      createdAt: dayjs(),
+      timezone: 'toronto',
+      uuid: uuid(),
+    };
   };
 
   editMessageContent = async (id: string, content: string) => {

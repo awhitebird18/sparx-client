@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { validate } from 'uuid';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './itemTypes';
+import { useAuth } from '@/providers/auth';
 
 interface ListitemProps {
   id: string;
@@ -29,8 +30,10 @@ interface ListitemProps {
 }
 
 const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
+  const { currentUser } = useAuth();
   const { sections } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
+  const { createMessage, formatAutomatedMessage } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
   const {
     updateChannelSection,
@@ -66,8 +69,17 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   };
 
   const handleLeaveChannel = () => {
-    if (!id) return;
+    if (!id || !currentUser) return;
     leaveChannel(id);
+
+    const formattedMessage = formatAutomatedMessage({
+      userId: currentUser.uuid,
+      channelId: id,
+      content: `has left the channel.`,
+    });
+
+    createMessage(formattedMessage);
+    navigate(`/app`);
   };
 
   const handleOpenChannelDetails = () => {
