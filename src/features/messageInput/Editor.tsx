@@ -16,6 +16,7 @@ import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
 import { Send } from 'react-bootstrap-icons';
+import { OnChangePlugin } from './plugins/OnChangePlugin';
 
 function Placeholder({ value }: { value?: string }) {
   return <div className="editor-placeholder text-muted-foreground">{value}</div>;
@@ -25,9 +26,10 @@ type EditorProps = {
   placeholder?: string;
   config: InitialConfigType;
   onSubmit: (val: string) => void;
+  onChange?: (val: string) => void;
 };
 
-export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
+export default function Editor({ placeholder, config, onSubmit, onChange }: EditorProps) {
   return (
     <LexicalComposer initialConfig={config}>
       <div
@@ -48,6 +50,7 @@ export default function Editor({ placeholder, config, onSubmit }: EditorProps) {
             <ClearEditorPlugin />
             <ListPlugin />
             <LinkPlugin />
+            {onChange && <OnChangePlugin onChange={onChange} />}
             <AutoLinkPlugin />
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </div>

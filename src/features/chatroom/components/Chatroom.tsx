@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Badge } from '@/components/ui/Badge';
@@ -20,11 +20,13 @@ import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import UserInputNotSubscribed from './UserInputNotSubscribed';
+import UsersTypingDisplay from './UsersTypingDisplay';
 
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
     useStore('messageStore');
   const { setCurrentChannelId, currentChannelId, currentChannel } = useStore('channelStore');
+  const { emitSocket } = useStore('socketStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -42,6 +44,16 @@ const ChatRoom: React.FC = () => {
       timezone: 'toronto',
     });
   };
+
+  const handleInputChange = useCallback(() => {
+    emitSocket('typing', {
+      user: {
+        uuid: currentUser?.uuid,
+        name: currentUser?.firstName,
+      },
+      channelId: currentChannelId,
+    });
+  }, [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket]);
 
   useLayoutEffect(() => {
     if (!channelId || channelId === currentChannelId) return;
@@ -65,7 +77,7 @@ const ChatRoom: React.FC = () => {
             <ChannelTitle />
             <AvatarGroup />
           </Header>
-          <div className="flex flex-1 bg-card dark:bg-background rounded-xl shadow-lg p-3 overflow-hidden m-3">
+          <div className=" relative flex flex-1 bg-card dark:bg-background rounded-xl shadow-lg p-2 pb-5 overflow-hidden m-3">
             <div className="flex flex-col flex-1 overflow-hidden w-full">
               <div
                 className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
@@ -116,10 +128,12 @@ const ChatRoom: React.FC = () => {
                   placeholder={`Message ${currentChannel?.name}`}
                   config={editorConfig}
                   onSubmit={handleSubmit}
+                  onChange={handleInputChange}
                 />
               ) : (
                 <UserInputNotSubscribed />
               )}
+              <UsersTypingDisplay />
             </div>
           </div>
         </div>

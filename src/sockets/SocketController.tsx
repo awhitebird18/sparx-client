@@ -18,6 +18,7 @@ const SocketController = () => {
     subscribedChannels,
     findById,
     addToChannelUnreads,
+    addUserTyping,
     channelUnreadsCount,
   } = useStore('channelStore');
   const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
@@ -143,6 +144,11 @@ const SocketController = () => {
   useEffect(() => {
     return connectSocket(`channels/update`, handleUpdateSubscribedChannelSocket);
   }, [connectSocket, handleUpdateSubscribedChannelSocket]);
+
+  // User typing
+  useEffect(() => {
+    return connectSocket('typing', addUserTyping);
+  }, [addUserTyping, connectSocket]);
 
   // Remove workspace channel
   useEffect(() => {

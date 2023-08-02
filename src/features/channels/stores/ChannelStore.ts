@@ -30,6 +30,7 @@ export class ChannelStore {
   filterBySearchValue = '';
   filterChannelType: ChannelPrivateEnum | null = null;
   sortBy: SortOptions = SortOptions.ATOZ;
+  usersTyping: string[] = [];
 
   constructor() {
     makeObservable(this, {
@@ -37,6 +38,7 @@ export class ChannelStore {
       subscribedChannels: observable,
       currentChannelId: observable,
       channelUnreads: observable,
+      usersTyping: observable,
       sortBy: observable,
       page: observable,
       pageSize: observable,
@@ -48,6 +50,8 @@ export class ChannelStore {
       currentChannel: computed,
       getChannelById: computed,
       findById: action,
+      addUserTyping: action,
+      removeUserTyping: action,
       createChannel: action,
       updateSubscribedChannel: action,
       updateChannel: action,
@@ -88,6 +92,26 @@ export class ChannelStore {
       },
     );
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addUserTyping = (user: any) => {
+    const userFound = this.usersTyping.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (userTyping: any) => userTyping.user.uuid === user.user.uuid,
+    );
+
+    if (userFound) return;
+
+    this.usersTyping.push(user.user);
+  };
+
+  removeUserTyping = (userId: string) => {
+    const userFound = this.usersTyping.includes(userId);
+
+    if (!userFound) return;
+
+    this.usersTyping.filter((userEl: string) => userEl !== userId);
+  };
 
   setSortBy = (sortBy: SortOptions) => {
     this.sortBy = sortBy;

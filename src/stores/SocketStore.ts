@@ -40,4 +40,14 @@ export class SocketStore {
 
     this.socket.emit(connectionString, value);
   };
+
+  joinRoom = (channelId: string) => {
+    if (!this.socket) return;
+    this.socket.emit('joinRoom', channelId);
+  };
+
+  leaveRoom = (channelId: string) => {
+    if (!this.socket) return;
+    this.socket.emit('leaveRoom', channelId);
+  };
 }
