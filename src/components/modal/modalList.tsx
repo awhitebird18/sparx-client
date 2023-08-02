@@ -1,3 +1,5 @@
+import { Channel } from '@/features/channels';
+import ConfirmChannelChangeModal from '@/features/channels/components/ConfirmChannelChangeModal';
 import { Message } from '@/features/messages';
 import DeleteMessage from '@/features/messages/components/DeleteMessage';
 import PreferencesModal from '@/features/preferences/components/PreferencesModal';
@@ -19,6 +21,9 @@ const modalList = {
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
+  ConfirmChannelTypeChange: (props: { channel: Channel }) => (
+    <ConfirmChannelChangeModal {...props} />
+  ),
 };
 
 export type ModalName = keyof typeof modalList;
