@@ -19,6 +19,8 @@ import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
 import { updateChannelApi } from '../api/updateChannel';
 import ChannelIcon from './ChannelIcon';
+import { useAuth } from '@/providers/auth';
+import { useNavigate } from 'react-router-dom';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -28,8 +30,11 @@ enum FieldEnum {
 const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 
 const About = ({ channel }: { channel: Channel }) => {
+  const { currentUser } = useAuth();
   const [editField, setEditField] = useState<FieldEnum | null>(null);
   const { leaveChannel, updateChannel } = useStore('channelStore');
+  const { formatAutomatedMessage, createMessage } = useStore('messageStore');
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
 
@@ -38,7 +43,17 @@ const About = ({ channel }: { channel: Channel }) => {
   };
 
   const handleLeaveChannel = async () => {
+    if (!currentUser) return;
     await leaveChannel(channel.uuid);
+
+    const formattedMessage = formatAutomatedMessage({
+      userId: currentUser.uuid,
+      channelId: channel.uuid,
+      content: `has left the channel.`,
+    });
+
+    createMessage(formattedMessage);
+    navigate(`/app`);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

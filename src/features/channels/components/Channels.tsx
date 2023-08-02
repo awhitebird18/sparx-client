@@ -21,6 +21,7 @@ import { leaveChannelApi } from '../api/leaveChannelApi';
 import { SortOptions } from '../types/channelEnums';
 import { ChannelPrivateEnum, SubscribeStatusEnum, ChannelActions } from '../types/channelEnums';
 import { Channel } from '..';
+import { useAuth } from '@/providers/auth';
 
 const pageSize = 15;
 
@@ -43,8 +44,10 @@ const Channels: React.FC = () => {
     findById,
     findfindWorkspaceChannelByIdById,
   } = useStore('channelStore');
+  const { formatAutomatedMessage, createMessage } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [typeDropdown, setTypeDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [subscribedDropdownOpen, setSubscribedDropdownOpen] = useState(false);
@@ -89,15 +92,32 @@ const Channels: React.FC = () => {
   };
 
   const handleJoinLeaveChannel = async (channelId: string, action: ChannelActions) => {
+    if (!currentUser) return;
     switch (action) {
       case ChannelActions.JOIN:
         {
           await joinChannelApi(channelId);
+
+          const formattedMessage = formatAutomatedMessage({
+            userId: currentUser.uuid,
+            channelId: channelId,
+            content: `has joined the channel.`,
+          });
+
+          createMessage(formattedMessage);
         }
         break;
       case ChannelActions.LEAVE:
         {
           await leaveChannelApi(channelId);
+
+          const formattedMessage = formatAutomatedMessage({
+            userId: currentUser.uuid,
+            channelId: channelId,
+            content: `has left the channel.`,
+          });
+
+          createMessage(formattedMessage);
         }
         break;
     }

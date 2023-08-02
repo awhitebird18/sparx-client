@@ -15,13 +15,16 @@ import {
 } from '@/components/ui/Command';
 import { inviteUserApi } from '../api/inviteUser';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import { useAuth } from '@/providers/auth';
 
 type AddUserModalProps = {
   channel: Channel;
 };
 
 const AddUserModal = ({ channel }: AddUserModalProps) => {
-  const { users } = useStore('userStore');
+  const { users, findBot } = useStore('userStore');
+  const { currentUser } = useAuth();
+  const { createMessage, formatAutomatedMessage } = useStore('messageStore');
   const { updateSubscribedChannel } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const [searchValue, setSearchValue] = useState('');
@@ -46,6 +49,21 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
     const updatedChannel = await inviteUserApi(channel.uuid, userIds);
     updateSubscribedChannel(updatedChannel.uuid, { users: updatedChannel.users });
     setActiveModal(null);
+
+    const bot = findBot();
+    if (!bot || !currentUser) return;
+
+    const formattedMessage = formatAutomatedMessage({
+      userId: bot.uuid,
+      channelId: channel.uuid,
+      content: `${inviteList
+        .map((user: User) => `${user.firstName} ${user.lastName}`)
+        .join(', ')} ${inviteList.length > 1 ? 'have' : 'has'} been invited to the channel by ${
+        currentUser.firstName
+      } ${currentUser.lastName}.`,
+    });
+
+    createMessage(formattedMessage);
   };
 
   const unsubscribedUsers = users.filter(
