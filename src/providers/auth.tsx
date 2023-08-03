@@ -15,16 +15,17 @@ import { register } from '@/features/auth/api/register';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
+import { User } from '@/features/users';
 
-type User = {
-  uuid: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  profileImage?: string;
-  theme: string;
-  primaryColor: string;
-};
+// type User = {
+//   uuid: string;
+//   email: string;
+//   firstName: string;
+//   lastName: string;
+//   profileImage?: string;
+//   theme: string;
+//   primaryColor: string;
+// };
 
 interface AuthContextData {
   currentUser: User | null;

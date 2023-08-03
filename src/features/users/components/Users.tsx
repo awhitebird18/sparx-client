@@ -21,6 +21,10 @@ import UserAvatar from './UserAvatar';
 import { User } from '..';
 import Username from './Username';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
+import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
+import { v4 as uuid } from 'uuid';
+import { useAuth } from '@/providers/auth';
+import { ChannelTypes } from '@/features/channels/types/channelEnums';
 
 enum UserMenuOptions {
   PROFILE = 'Profile',
@@ -40,6 +44,10 @@ const Users = () => {
   } = useStore('userStore');
   const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
+  const { addSubscribedChannel } = useStore('channelStore');
+  const { directChannelSectionId } = useStore('sectionStore');
+  const { currentUser } = useAuth();
+  const { setSelectedId } = useStore('sidebarStore');
 
   useEffect(() => {
     fetchUsers();
@@ -49,8 +57,35 @@ const Users = () => {
     setActiveModal({ type: 'ProfileModal', payload: { userId } });
   };
 
-  const handleMessageUser = (uuid: string) => {
-    navigate(`/app/${uuid}`);
+  const handleMessageUser = async (user: User) => {
+    if (!currentUser) return;
+    const directChannel = await getDirectChannel(user.uuid);
+    console.log(directChannel);
+
+    if (directChannel) {
+      return navigate(`/app/${directChannel.uuid}`);
+    }
+
+    const sectionId = directChannelSectionId;
+    const channelId = uuid();
+
+    if (!sectionId) return;
+
+    const tempChannel = {
+      uuid: uuid(),
+      channelId: channelId,
+      name: `${user.firstName} ${user.lastName}`,
+      sectionId: sectionId,
+      users: [currentUser, user],
+      type: ChannelTypes.DIRECT,
+      isTemp: true,
+      isSubscribed: true,
+    };
+    console.log(tempChannel);
+
+    addSubscribedChannel(tempChannel);
+    setSelectedId(tempChannel.uuid);
+    return navigate(`/app/${channelId}`);
   };
 
   return (
@@ -73,7 +108,7 @@ const Users = () => {
                 key={user.uuid}
                 className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
                 onClick={() => {
-                  handleMessageUser(user.uuid);
+                  handleMessageUser(user);
                 }}
               >
                 <DropdownMenu>
@@ -97,7 +132,7 @@ const Users = () => {
                     <DropdownMenuItem
                       onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
-                        handleMessageUser(user.uuid);
+                        handleMessageUser(user);
                       }}
                     >
                       {UserMenuOptions.MESSAGE}

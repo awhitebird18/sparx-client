@@ -5,11 +5,11 @@ export type User = {
   email: string;
   firstName: string;
   lastName: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   primaryColor: string;
-  profileImage: string;
+  profileImage?: string;
   theme: string;
   uuid: string;
-  status: UserStatus;
+  status?: UserStatus;
   isBot?: boolean;
 };

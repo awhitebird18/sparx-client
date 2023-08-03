@@ -1,10 +1,11 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // import utc plugin
 import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
 import { Section, UpdateSection } from '@/features/sections';
 import { getSections } from '../api/getSections';
 import { addEventListener } from '@/events/eventHandler';
+import { SectionTypes } from '../types/sectionEnums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,9 +25,14 @@ export class SectionStore {
       setIsLoading: action,
       addSection: action,
       handleUpdateSectionSocket: action,
+      directChannelSectionId: computed,
     });
 
     addEventListener('channelUpdate', this.fetchsections);
+  }
+
+  get directChannelSectionId() {
+    return this.sections.find((section: Section) => section.type === SectionTypes.DIRECT)?.uuid;
   }
 
   setSections = (sections: Section[]) => {

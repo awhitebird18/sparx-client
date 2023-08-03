@@ -37,8 +37,7 @@ const ChannelTitle = () => {
       {currentChannel ? (
         <div className="flex items-center gap-3">
           <p className="h-7 text-xl flex items-center whitespace-nowrap overflow-hidden text-ellipsis w-min">
-            {currentChannel.name.charAt(0).toUpperCase()}
-            {currentChannel.name.substring(1).toLowerCase()}
+            {currentChannel.name}
             <ChevronDown className="mt-1 text-sm ml-2" />
           </p>
         </div>

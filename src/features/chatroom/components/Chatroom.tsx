@@ -27,6 +27,7 @@ const ChatRoom: React.FC = () => {
     useStore('messageStore');
   const { setCurrentChannelId, currentChannelId, currentChannel, clearUsersTyping } =
     useStore('channelStore');
+
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
