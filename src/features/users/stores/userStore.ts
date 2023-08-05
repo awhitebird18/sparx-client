@@ -16,6 +16,7 @@ export class UserStore {
       users: observable,
       onlineUsers: observable,
       isLoading: observable,
+      searchValue: observable,
       addUser: action,
       updateUser: action,
       removeUser: action,

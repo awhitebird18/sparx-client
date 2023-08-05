@@ -85,14 +85,14 @@ const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: Section
           ? sortChannels(channels, sortBy).map((channel: Channel) => (
               <ListItem
                 key={channel.uuid}
-                id={channel.uuid}
+                id={channel.channelId}
                 title={channel.name}
                 isChannel
                 icon={
                   <ChannelIcon
                     imageUrl={channel.icon}
                     isPrivate={channel.isPrivate}
-                    isSelected={selectedId === channel.uuid}
+                    isSelected={selectedId === channel.channelId}
                     size={19}
                   />
                 }

@@ -128,8 +128,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
               {icon}
             </div>
 
-            {title.charAt(0).toUpperCase()}
-            {title.substring(1).toLocaleLowerCase()}
+            {title}
           </div>
           {unreadCount ? (
             <Badge

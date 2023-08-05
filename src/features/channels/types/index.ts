@@ -6,7 +6,7 @@ export interface CreateChannel {
   name: string;
   type: ChannelTypes;
   icon?: string;
-  isPrivate: boolean;
+  isPrivate?: boolean;
 }
 
 export interface ChannelUnread {
@@ -18,16 +18,17 @@ export interface Channel extends CreateChannel {
   uuid: string;
   channelId: string;
   joinedAt?: Dayjs | null;
-  createdAt: Dayjs;
+  createdAt?: Dayjs;
   updatedAt?: Dayjs;
-  topic: string;
-  description: string;
+  topic?: string;
+  description?: string;
   sectionId: string;
   isSubscribed?: boolean;
   users: User[];
   lastRead?: Dayjs | string;
-  isPrivate: boolean;
-  userCount: number;
+  userCount?: number;
+  isTemp?: boolean;
+  type: ChannelTypes;
 }
 
 export type UserTyping = {

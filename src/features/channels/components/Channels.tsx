@@ -277,17 +277,13 @@ const Channels: React.FC = () => {
                     </span>
                   ) : null}
 
-                  {channel.isSubscribed && channel.userCount > 0 ? (
-                    <Dot className="text-lg" />
-                  ) : null}
-                  {channel.userCount > 0 ? (
+                  {channel.isSubscribed && channel.userCount ? <Dot className="text-lg" /> : null}
+                  {channel.userCount ? (
                     <span className="flex items-center gap-1">
                       {channel.userCount} member{channel.userCount === 1 ? '' : 's'}
                     </span>
                   ) : null}
-                  {channel.userCount > 0 && channel.description ? (
-                    <Dot className="text-lg" />
-                  ) : null}
+                  {channel.userCount && channel.description ? <Dot className="text-lg" /> : null}
                   {channel.description && (
                     <span className="flex items-center gap-1">{channel.description}</span>
                   )}

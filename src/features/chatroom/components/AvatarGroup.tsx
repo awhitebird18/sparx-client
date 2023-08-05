@@ -12,11 +12,11 @@ const AvatarGroup = () => {
 
   if (!(currentChannel || users)) return;
 
-  const userCount = Math.min(3, users?.length);
+  const userCount = Math.min(3, currentChannel?.users?.length || 1);
 
   const avatarSize = 20;
 
-  const componentWidth = `${(userCount - 1) * avatarSize + 46.5}px`;
+  const componentWidth = `${userCount * avatarSize + 26.5}px`;
 
   const handleOpenChannelDetails = () => {
     if (!currentChannel) return;
@@ -32,20 +32,20 @@ const AvatarGroup = () => {
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >
-      <p className="w-[20px] h-full flex justify-center items-center text-sm text-muted-foreground">
-        {currentChannel?.users?.length}
-      </p>
+      {/* <p className="w-[20px] h-full flex justify-center items-center text-sm text-muted-foreground">
+        {userCount}
+      </p> */}
       <Avatar
         className={`absolute w-7 h-7 rounded-md border-2 border-background`}
-        style={{ left: `${users.length * avatarSize}px` }}
+        style={{ left: `${userCount * avatarSize}px` }}
       >
         <AvatarFallback
-          children={users.length}
+          children={userCount}
           className={`w-full h-full text-sm font-medium rounded-sm bg-ring text-white`}
         />
       </Avatar>
       {currentChannel?.users ? (
-        users.slice(0, userCount).map((user: User, index: number) => (
+        currentChannel?.users.slice(0, userCount).map((user: User, index: number) => (
           <Avatar
             key={user.uuid}
             className={`absolute w-7 h-7 rounded-md border-2 border-background`}

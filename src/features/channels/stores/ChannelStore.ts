@@ -18,7 +18,12 @@ import { updateChannelSection } from '../api/updateChannelSection';
 import { updateUserChannel } from '../api/updateUserChannel';
 import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
-import { ChannelPrivateEnum, SortOptions, SubscribeStatusEnum } from '../types/channelEnums';
+import {
+  ChannelPrivateEnum,
+  ChannelTypes,
+  SortOptions,
+  SubscribeStatusEnum,
+} from '../types/channelEnums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -85,16 +90,22 @@ export class ChannelStore {
     });
 
     reaction(
-      () => this.currentChannelId,
-      (channelId, previousChannelId) => {
-        if (channelId !== previousChannelId) {
-          if (channelId) {
-            this.markChannelAsRead(channelId);
-          }
+      () => this.currentChannel,
+      (channel, previousChannel) => {
+        if (channel?.uuid === previousChannel?.uuid) return;
 
-          if (previousChannelId) {
-            this.markChannelAsRead(previousChannelId);
-          }
+        if (channel?.type === ChannelTypes.DIRECT || previousChannel?.type === ChannelTypes.DIRECT)
+          return;
+        if (channel && !channel.isTemp) {
+          this.markChannelAsRead(channel.uuid);
+        }
+
+        if (!previousChannel) return;
+
+        if (previousChannel.isTemp) {
+          this.removeSubscribedChannel(previousChannel.uuid);
+        } else {
+          this.markChannelAsRead(previousChannel.uuid);
         }
       },
     );
@@ -209,7 +220,7 @@ export class ChannelStore {
   };
 
   get currentChannel(): Channel | undefined {
-    return this.subscribedChannels.find((channel) => channel.uuid === this.currentChannelId);
+    return this.subscribedChannels.find((channel) => channel.channelId === this.currentChannelId);
   }
 
   findById = (uuid: string) => {
@@ -231,7 +242,9 @@ export class ChannelStore {
   };
 
   addChannel = (channel: Channel) => {
-    const channelFound = this.channels.find((channel: Channel) => channel.uuid === channel.uuid);
+    const channelFound = this.channels.find(
+      (channelEl: Channel) => channelEl.uuid === channel.uuid,
+    );
     if (channelFound) return;
     this.channels.push(channel);
   };
@@ -303,6 +316,12 @@ export class ChannelStore {
     this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
   };
 
+  removeSubscribedChannel = (uuid: string) => {
+    this.subscribedChannels = this.subscribedChannels.filter(
+      (channel: Channel) => channel.uuid !== uuid,
+    );
+  };
+
   updateWorkspaceChannel = (channelId: string, updatedChannelFields: UpdateChannel) => {
     const channel = this.channels.find((channel: Channel) => channel.uuid === channelId);
 
@@ -321,7 +340,7 @@ export class ChannelStore {
     this.updateChannel(channel.uuid, { isSubscribed: true });
 
     const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channel.uuid);
-    if (!workspaceChannel) return;
+    if (!workspaceChannel || !workspaceChannel.userCount) return;
 
     this.updateWorkspaceChannel(workspaceChannel.uuid, {
       userCount: workspaceChannel.userCount + 1,
@@ -338,7 +357,7 @@ export class ChannelStore {
     this.updateChannel(channelId, { isSubscribed: false });
 
     const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channelId);
-    if (!workspaceChannel) return;
+    if (!workspaceChannel || !workspaceChannel.userCount) return;
 
     this.updateWorkspaceChannel(workspaceChannel.uuid, {
       userCount: workspaceChannel.userCount - 1,
