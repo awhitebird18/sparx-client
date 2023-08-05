@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 // Uses the user uuid of the other user
 export const getDirectChannel = async (userUuid: string): Promise<Channel> => {
   try {
-    const res = await axios.get('/direct-channels', {
+    const res = await axios.get('/channels/direct', {
       params: {
         userUuid,
       },

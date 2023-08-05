@@ -60,7 +60,6 @@ const Users = () => {
   const handleMessageUser = async (user: User) => {
     if (!currentUser) return;
     const directChannel = await getDirectChannel(user.uuid);
-    console.log(directChannel);
 
     if (directChannel) {
       return navigate(`/app/${directChannel.uuid}`);
@@ -81,7 +80,6 @@ const Users = () => {
       isTemp: true,
       isSubscribed: true,
     };
-    console.log(tempChannel);
 
     addSubscribedChannel(tempChannel);
     setSelectedId(tempChannel.uuid);
@@ -97,59 +95,61 @@ const Users = () => {
         <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
 
         {isLoading ? (
-          <div className="mt-10 flex-1">
+          <div className="absolute right-auto top-20 w-full">
             <Spinner />
           </div>
         ) : null}
-        {displayedUsers.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal grid-flow-row-dense items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
-            {displayedUsers.map((user: User) => (
-              <Card
-                key={user.uuid}
-                className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
-                onClick={() => {
-                  handleMessageUser(user);
-                }}
-              >
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="absolute top-0 right-4" asChild>
-                    <Button
-                      className="mt-2 text-right text-2xl hover:bg-transparent p-1"
-                      variant="ghost"
-                    >
-                      ⋮
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" side="bottom">
-                    <DropdownMenuItem
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleViewUserProfile(user.uuid);
-                      }}
-                    >
-                      {UserMenuOptions.PROFILE}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleMessageUser(user);
-                      }}
-                    >
-                      {UserMenuOptions.MESSAGE}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <CardContent className="flex items-center justify-center">
-                  <UserAvatar size={120} userId={user.uuid} profileImage={user.profileImage} />
-                </CardContent>
-                <CardFooter className="flex-col p-0">
-                  <div className="flex items-center gap-2">
-                    <Username firstName={user.firstName} lastName={user.lastName} />
-                    <OnlineStatusIndicator userId={user.uuid} />
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+        {!isLoading && displayedUsers.length ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
+            {displayedUsers
+              .filter((user: User) => user.uuid !== currentUser?.uuid)
+              .map((user: User) => (
+                <Card
+                  key={user.uuid}
+                  className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
+                  onClick={() => {
+                    handleMessageUser(user);
+                  }}
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="absolute top-0 right-4" asChild>
+                      <Button
+                        className="mt-2 text-right text-2xl hover:bg-transparent p-1"
+                        variant="ghost"
+                      >
+                        ⋮
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" side="bottom">
+                      <DropdownMenuItem
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          handleViewUserProfile(user.uuid);
+                        }}
+                      >
+                        {UserMenuOptions.PROFILE}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          handleMessageUser(user);
+                        }}
+                      >
+                        {UserMenuOptions.MESSAGE}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <CardContent className="flex items-center justify-center">
+                    <UserAvatar size={120} userId={user.uuid} profileImage={user.profileImage} />
+                  </CardContent>
+                  <CardFooter className="flex-col p-0">
+                    <div className="flex items-center gap-2">
+                      <Username firstName={user.firstName} lastName={user.lastName} />
+                      <OnlineStatusIndicator userId={user.uuid} />
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
           </div>
         ) : null}
 

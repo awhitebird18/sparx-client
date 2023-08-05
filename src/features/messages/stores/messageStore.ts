@@ -105,6 +105,7 @@ export class MessageStore {
         ...createMessage,
         ...(parentMessage && { parentId: parentMessage.uuid }),
       });
+
       newMessage.createdAt = dayjs(newMessage.createdAt);
 
       if (parentMessage) {

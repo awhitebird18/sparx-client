@@ -18,7 +18,12 @@ import { updateChannelSection } from '../api/updateChannelSection';
 import { updateUserChannel } from '../api/updateUserChannel';
 import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
-import { ChannelPrivateEnum, SortOptions, SubscribeStatusEnum } from '../types/channelEnums';
+import {
+  ChannelPrivateEnum,
+  ChannelTypes,
+  SortOptions,
+  SubscribeStatusEnum,
+} from '../types/channelEnums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -87,6 +92,10 @@ export class ChannelStore {
     reaction(
       () => this.currentChannel,
       (channel, previousChannel) => {
+        if (channel?.uuid === previousChannel?.uuid) return;
+
+        if (channel?.type === ChannelTypes.DIRECT || previousChannel?.type === ChannelTypes.DIRECT)
+          return;
         if (channel && !channel.isTemp) {
           this.markChannelAsRead(channel.uuid);
         }
@@ -233,7 +242,9 @@ export class ChannelStore {
   };
 
   addChannel = (channel: Channel) => {
-    const channelFound = this.channels.find((channel: Channel) => channel.uuid === channel.uuid);
+    const channelFound = this.channels.find(
+      (channelEl: Channel) => channelEl.uuid === channel.uuid,
+    );
     if (channelFound) return;
     this.channels.push(channel);
   };
@@ -251,7 +262,6 @@ export class ChannelStore {
   };
 
   addSubscribedChannel = (channel: Channel) => {
-    console.log(channel);
     this.subscribedChannels.push(channel);
   };
 

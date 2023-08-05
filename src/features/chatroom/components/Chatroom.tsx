@@ -21,6 +21,8 @@ import dayjs from 'dayjs';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import UserInputNotSubscribed from './UserInputNotSubscribed';
 import UsersTypingDisplay from './UsersTypingDisplay';
+import { createDirectChannel } from '@/features/channels/api/createDirectChannel';
+import { User } from '@/features/users';
 
 const ChatRoom: React.FC = () => {
   const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
@@ -37,6 +39,10 @@ const ChatRoom: React.FC = () => {
   const { currentUser } = useAuth();
 
   const handleSubmit = async (messageContent: string) => {
+    if (!currentChannel) return;
+    if (currentChannel.isTemp) {
+      await createDirectChannel(currentChannel.users.map((user: User) => user.uuid));
+    }
     await createMessage({
       content: messageContent,
       channelId: currentChannelId,
@@ -44,6 +50,7 @@ const ChatRoom: React.FC = () => {
       uuid: uuid(),
       createdAt: dayjs(),
       timezone: 'toronto',
+      type: currentChannel.type,
     });
   };
 

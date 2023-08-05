@@ -28,6 +28,7 @@ export interface Channel extends CreateChannel {
   lastRead?: Dayjs | string;
   userCount?: number;
   isTemp?: boolean;
+  type: ChannelTypes;
 }
 
 export type UserTyping = {
