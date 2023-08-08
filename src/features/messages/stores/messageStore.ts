@@ -223,6 +223,7 @@ export class MessageStore {
       createdAt: dayjs(message.createdAt),
     }));
 
+    this.setHasMore(false);
     this.setMessages(formattedMessages);
     this.incrementPage();
     this.setIsLoading(false);
