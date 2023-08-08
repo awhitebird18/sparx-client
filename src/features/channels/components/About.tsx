@@ -21,6 +21,7 @@ import { updateChannelApi } from '../api/updateChannel';
 import ChannelIcon from './ChannelIcon';
 import { useAuth } from '@/providers/auth';
 import { useNavigate } from 'react-router-dom';
+import { ChannelTypes } from '../types/channelEnums';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -37,6 +38,7 @@ const About = ({ channel }: { channel: Channel }) => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
+  const isDirectChannel = channel.type === ChannelTypes.DIRECT;
 
   const handleOpenForm = (field: FieldEnum) => {
     setEditField(field);
@@ -90,42 +92,48 @@ const About = ({ channel }: { channel: Channel }) => {
         </Button>
       ))}
 
-      <Button
-        variant="outline"
-        className="text-userDark w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
-        onClick={() => {
-          fileInput.current.click();
-        }}
-      >
-        <ChannelIcon size={60} imageUrl={channel.icon} isPrivate={channel.isPrivate} />
+      {!isDirectChannel && (
+        <Button
+          variant="outline"
+          className="text-userDark w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
+          onClick={() => {
+            fileInput.current.click();
+          }}
+        >
+          <ChannelIcon size={60} imageUrl={channel.icon} isPrivate={channel.isPrivate} />
 
-        <p className="mt-0.5 text-primary">Change channel image</p>
+          <p className="mt-0.5 text-primary">Change channel image</p>
 
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          ref={fileInput}
-          onChange={handleSelectImage}
-        />
-      </Button>
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            ref={fileInput}
+            onChange={handleSelectImage}
+          />
+        </Button>
+      )}
 
-      <Button
-        className="flex-col justify-start items-start h-20 border border-border space-y-1"
-        variant="ghost"
-        onClick={() => console.info('copy managed')}
-      >
-        <p className="text-md font-semibold">Managed by:</p>
-        <p className="text-muted-foreground">Channel Owner</p>
-      </Button>
+      {!isDirectChannel && (
+        <Button
+          className="flex-col justify-start items-start h-20 border border-border space-y-1"
+          variant="ghost"
+          onClick={() => console.info('copy managed')}
+        >
+          <p className="text-md font-semibold">Managed by:</p>
+          <p className="text-muted-foreground">Channel Owner</p>
+        </Button>
+      )}
 
-      <Button
-        className="justify-start items-start h-12 text-rose-500 border border-border space-y-1"
-        variant="ghost"
-        onClick={handleLeaveChannel}
-      >
-        Leave Channel
-      </Button>
+      {!isDirectChannel && (
+        <Button
+          className="justify-start items-start h-12 text-rose-500 border border-border space-y-1"
+          variant="ghost"
+          onClick={handleLeaveChannel}
+        >
+          Leave Channel
+        </Button>
+      )}
 
       <div className="flex-grow" />
 
@@ -138,7 +146,7 @@ const About = ({ channel }: { channel: Channel }) => {
       </Button>
 
       {editField && (
-        <EditField type={editField} content={channel[editField]} channelId={channel.uuid} />
+        <EditField type={editField} content={channel[editField] || ''} channelId={channel.uuid} />
       )}
     </div>
   );

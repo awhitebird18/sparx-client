@@ -25,7 +25,7 @@ import { createDirectChannel } from '@/features/channels/api/createDirectChannel
 import { User } from '@/features/users';
 
 const ChatRoom: React.FC = () => {
-  const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage } =
+  const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage, hasMore } =
     useStore('messageStore');
   const { setCurrentChannelId, currentChannelId, currentChannel, clearUsersTyping } =
     useStore('channelStore');
@@ -104,40 +104,41 @@ const ChatRoom: React.FC = () => {
                 {isLoading ? (
                   <Spinner />
                 ) : (
-                  groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
-                    <>
-                      <div key={date} className="relative">
-                        <div className="w-full flex my-2 sticky top-2">
-                          <Badge
-                            variant="outline"
-                            className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
-                          >
-                            {formatDate(date)}
-                          </Badge>
-                          <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
+                  <>
+                    {groupedMessagesWithUser.map(({ date, messages }: any) => (
+                      <>
+                        <div key={date} className="relative">
+                          <div className="w-full flex my-2 sticky top-2">
+                            <Badge
+                              variant="outline"
+                              className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
+                            >
+                              {formatDate(date)}
+                            </Badge>
+                            <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
+                          </div>
+
+                          {messages
+                            .filter((message: MessageDto) => !message.parentId)
+                            .map((message: any, index: number) => {
+                              const displayUser =
+                                index === 0 || messages[index - 1].userId !== message.userId;
+
+                              return (
+                                <Message
+                                  key={message.uuid}
+                                  message={message}
+                                  showUser={displayUser}
+                                  setThread={setThread}
+                                />
+                              );
+                            })}
                         </div>
+                      </>
+                    ))}
 
-                        {messages
-                          .filter((message: MessageDto) => !message.parentId)
-                          .map((message: any, index: number) => {
-                            const displayUser =
-                              index === 0 || messages[index - 1].userId !== message.userId;
-
-                            return (
-                              <Message
-                                key={message.uuid}
-                                message={message}
-                                showUser={displayUser}
-                                setThread={setThread}
-                              />
-                            );
-                          })}
-                      </div>
-                      {index === groupedMessagesWithUser.length - 1 && (
-                        <ChannelIntroduction channelId={channelId} />
-                      )}
-                    </>
-                  ))
+                    {!hasMore && <ChannelIntroduction channelId={channelId} />}
+                  </>
                 )}
               </div>
               {currentChannel?.isSubscribed ? (

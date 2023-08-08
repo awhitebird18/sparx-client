@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
 import ChannelIcon from './ChannelIcon';
+import { ChannelTypes } from '../types/channelEnums';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { getChannelById } = useStore('channelStore');
@@ -45,8 +46,12 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
         >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="about">About</TabsTrigger>
-            <TabsTrigger value="members">Members</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+            {channel.type !== ChannelTypes.DIRECT && (
+              <TabsTrigger value="members">Members</TabsTrigger>
+            )}
+            {channel.type !== ChannelTypes.DIRECT && (
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="about" className="h-full">
             <About channel={channel} />
