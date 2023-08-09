@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import { LoginCredentials } from '@/features/auth';
 import { login } from '@/features/auth/api/login';
-import { axios } from '@/lib/axios';
 import { verifyUser } from '@/features/auth/api/verifyUser';
 import { RegistrationData } from '@/features/auth';
 import { register } from '@/features/auth/api/register';
@@ -16,16 +15,6 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 import { User } from '@/features/users';
-
-// type User = {
-//   uuid: string;
-//   email: string;
-//   firstName: string;
-//   lastName: string;
-//   profileImage?: string;
-//   theme: string;
-//   primaryColor: string;
-// };
 
 interface AuthContextData {
   currentUser: User | null;
@@ -65,10 +54,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogin = async (loginCredentials: LoginCredentials) => {
     try {
       const res = await login(loginCredentials);
-      const { access_token: token } = res;
+      const { access_token: token, refresh_token: refreshToken } = res;
 
       localStorage.setItem('auth', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      localStorage.setItem('refresh', refreshToken);
 
       verifyAndLoginUser();
     } catch (error) {
@@ -79,6 +68,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     window.localStorage.removeItem('auth');
+    window.localStorage.removeItem('refresh');
     setCurrentUser(null);
   };
 
@@ -95,13 +85,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
-      const token = localStorage.getItem('auth');
-      if (!token) {
-        return setLoading(false);
-      }
-
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-
       const data = await verifyUser();
 
       setChannelUnreads(data.channelUnreads);
@@ -115,6 +98,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     } catch (err) {
       window.localStorage.removeItem('auth');
+      window.localStorage.removeItem('refresh');
+    } finally {
       setLoading(false);
     }
   }, [
