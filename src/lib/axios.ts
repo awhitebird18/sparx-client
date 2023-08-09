@@ -85,6 +85,7 @@ axios.interceptors.response.use(
   },
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const subscribers: any[] = [];
 function onRrefreshed(token: string) {
   subscribers.map((callback) => callback(token));
