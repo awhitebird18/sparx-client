@@ -2,20 +2,23 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
-import { RegistrationData } from '..';
 
-export const register = async (registrationData: RegistrationData) => {
+export const logout = async () => {
   try {
-    const { data } = await axios.post('/auth/register', registrationData);
+    const { data } = await axios.post('/auth/logout');
 
     stores.notificationStore.addNotification({
-      title: 'Registration successful. Welcome!',
+      title: 'Logged out successfully!',
       type: NotificationType.SUCCESS,
       show: true,
     });
 
     return data;
   } catch (err) {
-    return console.error(err);
+    stores.notificationStore.addNotification({
+      title: 'Something went wrong!',
+      type: NotificationType.ERROR,
+      show: true,
+    });
   }
 };

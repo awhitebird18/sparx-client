@@ -1,101 +1,70 @@
-import Axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosRequestHeaders,
-  AxiosResponse,
-} from 'axios';
+import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { API_URL } from '@/config';
-import { stores } from '@/stores/RootStore';
-import { NotificationType } from '@/stores/NotificationStore';
-
-interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
-  headers: AxiosRequestHeaders;
-}
 
 export const axios: AxiosInstance = Axios.create({
   baseURL: API_URL,
+  withCredentials: true,
 });
 
 let isRefreshing = false;
-
-axios.interceptors.request.use(
-  (config: AdaptAxiosRequestConfig) => {
-    const token = localStorage.getItem('auth');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
 
 axios.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error) => {
     const originalRequest = error.config;
-    const refreshToken = localStorage.getItem('refresh');
 
-    // Check if this request is for refresh token itself
-    if (originalRequest.url === '/auth/refresh') {
+    // If request is for refresh token itself or error is not 401, just reject
+    if (
+      originalRequest.url === '/auth/refresh' ||
+      error.response.status !== 401 ||
+      originalRequest._retry
+    ) {
       return Promise.reject(error);
     }
 
-    if (error.response.status === 401 && refreshToken && !originalRequest._retry) {
-      if (isRefreshing) {
-        // if isRefreshing is true, then we'll wait until token is refreshed
-        // and retry the failed request
-        return new Promise((resolve, reject) => {
-          subscribeTokenRefresh((newToken: string) => {
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            resolve(axios(originalRequest));
-          }, reject);
-        });
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        // Fetch new token using refresh token
-        const response = await axios.post('/auth/refresh', { refresh: refreshToken });
-        const newToken = response.data.access_token;
-        localStorage.setItem('auth', newToken);
-
-        isRefreshing = false;
-        onRrefreshed(newToken);
-
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axios(originalRequest);
-      } catch (err) {
-        console.error('Error refreshing token', err);
-        isRefreshing = false;
-        return Promise.reject(err); // Reject with the refresh error instead
-      }
+    if (isRefreshing) {
+      // if isRefreshing is true, then we'll wait until token is refreshed
+      // and retry the failed request
+      return new Promise((resolve, reject) => {
+        subscribeTokenRefresh((_) => {
+          resolve(axios(originalRequest));
+        }, reject);
+      });
     }
 
-    const message = error.response?.data?.message || error.message;
-    stores.notificationStore.addNotification({
-      type: NotificationType.ERROR,
-      title: 'Api Error',
-      show: true,
-      description: message,
-    });
+    originalRequest._retry = true;
+    isRefreshing = true;
 
-    return Promise.reject(error);
+    try {
+      // Request to refresh the token. The back-end should update the httpOnly cookie in the response.
+      await axios.post('/auth/refresh');
+      isRefreshing = false;
+      onRrefreshed(); // Just notify, no new token to pass since it's in httpOnly cookie
+
+      return axios(originalRequest);
+    } catch (err: any) {
+      isRefreshing = false;
+
+      // Check if the error is due to a 401 response from the /auth/refresh endpoint
+      if (err.response.status === 401 && err.config.url === '/auth/refresh') {
+        // You can handle it gracefully here, maybe by redirecting the user to a login page, or showing an appropriate message.
+        // For this example, we simply return a failed promise with a custom message:
+        return Promise.reject('Token refresh attempt failed with 401.');
+      }
+
+      return Promise.reject(err); // Reject with the refresh error instead
+    }
   },
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const subscribers: any[] = [];
-function onRrefreshed(token: string) {
+const subscribers: Array<(value?: string) => void> = [];
+function onRrefreshed(token?: string) {
   subscribers.map((callback) => callback(token));
 }
 
-// callback will be called when the token refresh is done
-// and the failed requests are retried
 function subscribeTokenRefresh(
-  callback: (value: string) => void,
-  errorCallback: (value: string) => void,
+  callback: (value?: string) => void,
+  errorCallback: (value?: string) => void,
 ) {
   subscribers.push(callback);
   subscribers.push(errorCallback);

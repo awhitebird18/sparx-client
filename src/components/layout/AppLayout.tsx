@@ -4,7 +4,6 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Topbar from '@/components/layout/topbar/Topbar';
 import ModalController from '../modal/ModalController';
 import ResizableSidebar from './sidebar/ResizeableSidebar';
-import NotificationController from '../notifications/NotificationController';
 
 import SocketController from '@/sockets/SocketController';
 import { useAuth } from '@/providers/auth';
@@ -27,7 +26,6 @@ export const AppLayout = () => {
           </div>
         </div>
       </Suspense>
-      <NotificationController />
       <SocketController />
       <ModalController />
     </div>

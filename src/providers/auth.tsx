@@ -15,13 +15,14 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 import { User } from '@/features/users';
+import { logout } from '@/features/auth/api/logout';
 
 interface AuthContextData {
   currentUser: User | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setCurrentUser: React.Dispatch<React.SetStateAction<any>>;
   userLogin: (loginCredentials: LoginCredentials) => Promise<void>;
-  logout: () => void;
+  userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<void>;
   loading: boolean;
 }
@@ -53,33 +54,29 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const userLogin = async (loginCredentials: LoginCredentials) => {
     try {
-      const res = await login(loginCredentials);
-      const { access_token: token, refresh_token: refreshToken } = res;
-
-      localStorage.setItem('auth', token);
-      localStorage.setItem('refresh', refreshToken);
+      await login(loginCredentials);
 
       verifyAndLoginUser();
     } catch (error) {
       console.error(error);
-      throw error;
     }
   };
 
-  const logout = () => {
-    window.localStorage.removeItem('auth');
-    window.localStorage.removeItem('refresh');
-    setCurrentUser(null);
+  const userLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCurrentUser(null);
+    }
   };
 
   const registerUser = async (registrationData: RegistrationData) => {
     try {
-      setCurrentUser(null);
-      const res = await register(registrationData);
-      setCurrentUser(res);
+      await register(registrationData);
     } catch (error) {
       console.error(error);
-      throw error;
     }
   };
 
@@ -96,9 +93,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       connectToSocketServer(data.user);
 
       setLoading(false);
-    } catch (err) {
-      window.localStorage.removeItem('auth');
-      window.localStorage.removeItem('refresh');
     } finally {
       setLoading(false);
     }
@@ -124,7 +118,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     currentUser,
     setCurrentUser,
     userLogin,
-    logout,
+    userLogout,
     registerUser,
     loading,
   };
