@@ -20,7 +20,7 @@ const UserDropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
-  const { currentUser, logout } = useAuth();
+  const { currentUser, userLogout } = useAuth();
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
     setActiveModal({ type, payload });
@@ -99,7 +99,7 @@ const UserDropdown: React.FC = () => {
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
-        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={userLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

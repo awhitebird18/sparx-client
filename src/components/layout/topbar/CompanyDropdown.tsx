@@ -20,7 +20,7 @@ const CompanyDropdown = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
-  const { logout } = useAuth();
+  const { userLogout } = useAuth();
 
   const handleOpenModal = ({ type }: { type: ModalName }) => {
     setActiveModal({ type, payload: {} });
@@ -77,7 +77,7 @@ const CompanyDropdown = () => {
             Feedback
           </DropdownMenuItem>
           <DropdownMenuSeparator className="DropdownMenuSeparator" />
-          <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={userLogout}>Logout</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

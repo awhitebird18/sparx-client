@@ -1,5 +1,3 @@
-// src/RegisterPage.tsx
-
 import React, { useState, FormEvent } from 'react';
 import { useAuth } from '@/providers/auth';
 import { Link } from 'react-router-dom';
@@ -14,14 +12,21 @@ const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const { registerUser } = useAuth();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) return;
+
+    setIsLoading(true);
+
     try {
       await registerUser({ email, firstName, lastName, password });
     } catch (error) {
-      console.error(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -132,9 +137,10 @@ const RegisterPage: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userDark hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
+                disabled={isLoading}
+                className="relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userDark hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
               >
-                Register
+                {isLoading ? 'Registering...' : 'Register'}
               </button>
             </form>
           </div>
