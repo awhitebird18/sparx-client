@@ -26,7 +26,7 @@ axios.interceptors.response.use(
       // if isRefreshing is true, then we'll wait until token is refreshed
       // and retry the failed request
       return new Promise((resolve, reject) => {
-        subscribeTokenRefresh((_) => {
+        subscribeTokenRefresh(() => {
           resolve(axios(originalRequest));
         }, reject);
       });
@@ -42,6 +42,7 @@ axios.interceptors.response.use(
       onRrefreshed(); // Just notify, no new token to pass since it's in httpOnly cookie
 
       return axios(originalRequest);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       isRefreshing = false;
 
