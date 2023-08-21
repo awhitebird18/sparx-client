@@ -30,6 +30,27 @@ export interface Channel extends CreateChannel {
   isTemp?: boolean;
   type: ChannelTypes;
 }
+export interface WorkspaceChannel {
+  channel: {
+    name: string;
+    uuid: string;
+    channelId: string;
+    joinedAt?: Dayjs | null;
+    createdAt?: Dayjs;
+    updatedAt?: Dayjs;
+    topic?: string;
+    description?: string;
+    sectionId: string;
+    isSubscribed?: boolean;
+    users: User[];
+    lastRead?: Dayjs | string;
+    userCount?: number;
+    isTemp?: boolean;
+    type: ChannelTypes;
+    isPrivate?: boolean;
+  };
+  userCount: number;
+}
 
 export type UserTyping = {
   userId: string;

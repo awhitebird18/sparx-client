@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const leaveChannelApi = async (channelId: string) => {
   try {
-    const { data } = await axios.delete(`/userchannels/leave/${channelId}`);
+    const { data } = await axios.delete(`/channel-subscriptions/leave/${channelId}`);
 
     stores.notificationStore.addNotification({
       title: 'Left channel',

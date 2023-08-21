@@ -16,6 +16,7 @@ import { observer } from 'mobx-react-lite';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 import { User } from '@/features/users';
 import { logout } from '@/features/auth/api/logout';
+import { getUserChannels } from '@/features/channels/api/getUserChannels';
 
 interface AuthContextData {
   currentUser: User | null;
@@ -83,6 +84,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const verifyAndLoginUser = useCallback(async () => {
     try {
       const data = await verifyUser();
+
+      const res = await getUserChannels();
+
+      console.log(res);
+
+      return;
 
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);

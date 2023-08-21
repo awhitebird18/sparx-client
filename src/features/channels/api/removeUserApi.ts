@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const removeUserApi = async (channelId: string, userId: string) => {
   try {
-    const { data } = await axios.delete(`/userchannels/remove/${channelId}/${userId}`);
+    const { data } = await axios.delete(`/channel-subscriptions/remove/${channelId}/${userId}`);
 
     stores.notificationStore.addNotification({
       title: 'User remove from channel',

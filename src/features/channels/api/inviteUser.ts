@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const inviteUserApi = async (channelId: string, userIds: string[]) => {
   try {
-    const { data } = await axios.post(`/userchannels/invite/${channelId}`, userIds);
+    const { data } = await axios.post(`/channel-subscriptions/invite/${channelId}`, userIds);
 
     stores.notificationStore.addNotification({
       title: 'Users invited',

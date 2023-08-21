@@ -162,12 +162,12 @@ const SocketController = () => {
 
   // User joins channel
   useEffect(() => {
-    return connectSocket(`userchannels/join`, joinChannel);
+    return connectSocket(`channel-subscriptions/join`, joinChannel);
   }, [connectSocket, joinChannel]);
 
   // User leaves channel
   useEffect(() => {
-    return connectSocket(`userchannels/leave`, leaveChannel);
+    return connectSocket(`channel-subscriptions/leave`, leaveChannel);
   }, [connectSocket, leaveChannel]);
 
   return null;

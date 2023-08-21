@@ -42,7 +42,7 @@ const Channels: React.FC = () => {
     setFilterSubscribed,
     addSubscribedChannel,
     findById,
-    findfindWorkspaceChannelByIdById,
+    findWorkspaceChannelById,
   } = useStore('channelStore');
   const { formatAutomatedMessage, createMessage } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
@@ -78,10 +78,10 @@ const Channels: React.FC = () => {
   const handleViewChannel = (id: string) => {
     const subscribedChannel = findById(id);
     if (!subscribedChannel) {
-      const workspaceChannel = findfindWorkspaceChannelByIdById(id);
+      const workspaceChannel = findWorkspaceChannelById(id);
 
       if (!workspaceChannel) return;
-      addSubscribedChannel({ ...workspaceChannel, isSubscribed: false });
+      addSubscribedChannel({ ...workspaceChannel.channel, isSubscribed: false });
     }
 
     navigate(`/app/${id}`);
@@ -262,59 +262,63 @@ const Channels: React.FC = () => {
           </DropdownMenu>
         </div>
         <ul className="mt-3 flex-1 overflow-auto">
-          {filteredAndSortedChannels.map((channel: Channel) => (
-            <li
-              key={channel.uuid}
-              className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
-              onClick={() => handleViewChannel(channel.uuid)}
-            >
-              <div>
-                <p className="font-semibold">{channel.name}</p>
-                <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
-                  {channel.isSubscribed ? (
-                    <span className="text-emerald-500 flex items-center gap-1">
-                      <Check className="text-lg mt-1" /> <span>Joined</span>
-                    </span>
-                  ) : null}
+          {filteredAndSortedChannels.map((channelData: { channel: Channel; userCount: number }) => {
+            const { channel, userCount } = channelData;
 
-                  {channel.isSubscribed && channel.userCount ? <Dot className="text-lg" /> : null}
-                  {channel.userCount ? (
-                    <span className="flex items-center gap-1">
-                      {channel.userCount} member{channel.userCount === 1 ? '' : 's'}
-                    </span>
-                  ) : null}
-                  {channel.userCount && channel.description ? <Dot className="text-lg" /> : null}
-                  {channel.description && (
-                    <span className="flex items-center gap-1">{channel.description}</span>
+            return (
+              <li
+                key={channel.uuid}
+                className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
+                onClick={() => handleViewChannel(channel.uuid)}
+              >
+                <div>
+                  <p className="font-semibold">{channel.name}</p>
+                  <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
+                    {channel.isSubscribed ? (
+                      <span className="text-emerald-500 flex items-center gap-1">
+                        <Check className="text-lg mt-1" /> <span>Joined</span>
+                      </span>
+                    ) : null}
+
+                    {channel.isSubscribed && userCount ? <Dot className="text-lg" /> : null}
+                    {userCount ? (
+                      <span className="flex items-center gap-1">
+                        {userCount} member{userCount === 1 ? '' : 's'}
+                      </span>
+                    ) : null}
+                    {userCount && channel.description ? <Dot className="text-lg" /> : null}
+                    {channel.description && (
+                      <span className="flex items-center gap-1">{channel.description}</span>
+                    )}
+                  </p>
+                </div>
+                <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+                  {channel.isSubscribed ? (
+                    <Button
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
+                      }}
+                      className="py-1 px-2 font-semibold rounded text-white bg-popover dark:bg-secondary hover:bg-secondary w-20"
+                    >
+                      {ChannelActions.LEAVE}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
+                      }}
+                      className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
+                    >
+                      {ChannelActions.JOIN}
+                    </Button>
                   )}
-                </p>
-              </div>
-              <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
-                {channel.isSubscribed ? (
-                  <Button
-                    variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
-                    }}
-                    className="py-1 px-2 font-semibold rounded text-white bg-popover dark:bg-secondary hover:bg-secondary w-20"
-                  >
-                    {ChannelActions.LEAVE}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
-                    }}
-                    className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
-                  >
-                    {ChannelActions.JOIN}
-                  </Button>
-                )}
-              </div>
-            </li>
-          ))}
+                </div>
+              </li>
+            );
+          })}
           {isLoading && (
             <div className="flex justify-center">
               <Spinner />

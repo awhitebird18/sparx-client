@@ -1,5 +1,5 @@
 import { ChannelPrivateEnum, SubscribeStatusEnum } from '@/features/channels/types/channelEnums';
-import { Channel } from '@/features/channels';
+import { WorkspaceChannel } from '@/features/channels';
 
 type FilterOptions = {
   filterChannelType: ChannelPrivateEnum | null;
@@ -7,17 +7,20 @@ type FilterOptions = {
   filterBySearchValue: string;
 };
 
-export const filterWorkspaceChannels = (channels: Channel[], filterOptions: FilterOptions) => {
+export const filterWorkspaceChannels = (
+  workspaceData: WorkspaceChannel[],
+  filterOptions: FilterOptions,
+) => {
   const { filterChannelType, filterSubscribed, filterBySearchValue } = filterOptions;
-  let filteredChannels = channels;
+  let filteredChannels = workspaceData;
 
   if (filterChannelType) {
-    filteredChannels = filteredChannels.filter((channel: Channel) => {
+    filteredChannels = filteredChannels.filter((workspaceChannel: WorkspaceChannel) => {
       if (filterChannelType === ChannelPrivateEnum.PRIVATE) {
-        return channel.isPrivate;
+        return workspaceChannel.channel.isPrivate;
       }
       if (filterChannelType === ChannelPrivateEnum.PUBLIC) {
-        return !channel.isPrivate;
+        return !workspaceChannel.channel.isPrivate;
       }
 
       return true;
@@ -26,13 +29,15 @@ export const filterWorkspaceChannels = (channels: Channel[], filterOptions: Filt
 
   if (filterSubscribed) {
     filteredChannels = filteredChannels.filter(
-      (channel) => channel.isSubscribed === (filterSubscribed === SubscribeStatusEnum.SUBSCSRIBED),
+      (workspaceChannel: WorkspaceChannel) =>
+        workspaceChannel.channel.isSubscribed ===
+        (filterSubscribed === SubscribeStatusEnum.SUBSCSRIBED),
     );
   }
 
   if (filterBySearchValue) {
-    filteredChannels = filteredChannels.filter((channel: Channel) =>
-      channel.name.toLowerCase().includes(filterBySearchValue.toLowerCase()),
+    filteredChannels = filteredChannels.filter((workspaceChannel: WorkspaceChannel) =>
+      workspaceChannel.channel.name.toLowerCase().includes(filterBySearchValue.toLowerCase()),
     );
   }
 

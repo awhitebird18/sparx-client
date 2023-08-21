@@ -10,6 +10,7 @@ import {
   CreateChannel,
   UpdateChannel,
   UserTyping,
+  WorkspaceChannel,
 } from '@/features/channels';
 import { createChannel } from '../api/createChannel';
 import { getSubscribedChannels } from '../api/getSubscribedChannels';
@@ -29,7 +30,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export class ChannelStore {
-  channels: Channel[] = [];
+  channels: WorkspaceChannel[] = [];
   subscribedChannels: Channel[] = [];
   currentChannelId: string | undefined;
   page = 1;
@@ -75,6 +76,7 @@ export class ChannelStore {
       setCurrentChannelId: action,
       setSubscribedChannels: action,
       addSubscribedChannel: action,
+      findWorkspaceChannelById: action,
       findChannelUnreads: computed,
       channelUnreadsCount: computed,
       setIsLoading: action,
@@ -177,9 +179,12 @@ export class ChannelStore {
   }
 
   get filteredAndSortedChannels() {
-    const mappedChannels = this.channels.map((channel: Channel) => ({
-      ...channel,
-      isSubscribed: Boolean(this.findById(channel.uuid)),
+    const mappedChannels = this.channels.map((channelData: WorkspaceChannel) => ({
+      channel: {
+        ...channelData.channel,
+        isSubscribed: Boolean(this.findById(channelData.channel.uuid)),
+      },
+      userCount: channelData.userCount,
     }));
     const filteredChannels = filterWorkspaceChannels(mappedChannels, {
       filterSubscribed: this.filterSubscribed,
@@ -227,8 +232,8 @@ export class ChannelStore {
     return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
   };
 
-  findfindWorkspaceChannelByIdById = (uuid: string) => {
-    return this.channels.find((channel: Channel) => channel.uuid === uuid);
+  findWorkspaceChannelById = (uuid: string) => {
+    return this.channels.find((channelData: WorkspaceChannel) => channelData.channel.uuid === uuid);
   };
 
   get getChannelById() {
@@ -237,19 +242,19 @@ export class ChannelStore {
     };
   }
 
-  setChannels = (channels: Channel[]) => {
+  setChannels = (channels: WorkspaceChannel[]) => {
     this.channels = channels;
   };
 
-  addChannel = (channel: Channel) => {
+  addChannel = (channelData: WorkspaceChannel) => {
     const channelFound = this.channels.find(
-      (channelEl: Channel) => channelEl.uuid === channel.uuid,
+      (channelDataEl: WorkspaceChannel) => channelDataEl.channel.uuid === channelData.channel.uuid,
     );
-    if (channelFound) return;
-    this.channels.push(channel);
+    if (!channelFound) return;
+    this.channels.push(channelFound);
   };
 
-  addChannels = (channels: Channel[]) => {
+  addChannels = (channels: WorkspaceChannel[]) => {
     this.channels.push(...channels);
   };
 
@@ -301,7 +306,9 @@ export class ChannelStore {
   };
 
   updateChannel = async (channelId: string, updatedFields: UpdateChannel) => {
-    const channel = this.channels.find((channel) => channel.uuid === channelId);
+    const channel = this.channels.find(
+      (workspaceChannel) => workspaceChannel.channel.uuid === channelId,
+    );
 
     if (channel) {
       Object.assign(channel, updatedFields);
@@ -313,7 +320,9 @@ export class ChannelStore {
   };
 
   removeChannel = (uuid: string) => {
-    this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
+    this.channels = this.channels.filter(
+      (workspaceChannel: WorkspaceChannel) => workspaceChannel.channel.uuid !== uuid,
+    );
   };
 
   removeSubscribedChannel = (uuid: string) => {
@@ -323,7 +332,9 @@ export class ChannelStore {
   };
 
   updateWorkspaceChannel = (channelId: string, updatedChannelFields: UpdateChannel) => {
-    const channel = this.channels.find((channel: Channel) => channel.uuid === channelId);
+    const channel = this.channels.find(
+      (workspaceChannel: WorkspaceChannel) => workspaceChannel.channel.uuid === channelId,
+    );
 
     if (!channel) return;
 
@@ -339,10 +350,12 @@ export class ChannelStore {
 
     this.updateChannel(channel.uuid, { isSubscribed: true });
 
-    const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channel.uuid);
+    const workspaceChannel = this.channels.find(
+      (workspaceChannelEl: WorkspaceChannel) => workspaceChannelEl.channel.uuid === channel.uuid,
+    );
     if (!workspaceChannel || !workspaceChannel.userCount) return;
 
-    this.updateWorkspaceChannel(workspaceChannel.uuid, {
+    this.updateWorkspaceChannel(workspaceChannel.channel.uuid, {
       userCount: workspaceChannel.userCount + 1,
     });
   };
@@ -356,10 +369,12 @@ export class ChannelStore {
 
     this.updateChannel(channelId, { isSubscribed: false });
 
-    const workspaceChannel = this.channels.find((el: Channel) => el.uuid === channelId);
+    const workspaceChannel = this.channels.find(
+      (workspaceChannel: WorkspaceChannel) => workspaceChannel.channel.uuid === channelId,
+    );
     if (!workspaceChannel || !workspaceChannel.userCount) return;
 
-    this.updateWorkspaceChannel(workspaceChannel.uuid, {
+    this.updateWorkspaceChannel(workspaceChannel.channel.uuid, {
       userCount: workspaceChannel.userCount - 1,
     });
   };
@@ -388,10 +403,13 @@ export class ChannelStore {
     }
 
     this.addChannels([
-      ...channels.map((channel: Channel) => ({
-        ...channel,
-        createdAt: dayjs(channel.createdAt),
-        updatedAt: dayjs(channel.updatedAt),
+      ...channels.map((workspaceChannel: WorkspaceChannel) => ({
+        channel: {
+          ...workspaceChannel.channel,
+          createdAt: dayjs(workspaceChannel.channel.createdAt),
+          updatedAt: dayjs(workspaceChannel.channel.updatedAt),
+        },
+        userCount: workspaceChannel.userCount,
       })),
     ]);
 

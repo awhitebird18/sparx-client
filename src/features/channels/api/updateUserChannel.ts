@@ -6,7 +6,7 @@ import { Channel } from '..';
 
 export const updateUserChannel = async (channelId: string, updateFields: Partial<Channel>) => {
   try {
-    const { data } = await axios.patch(`/userchannels/${channelId}`, updateFields);
+    const { data } = await axios.patch(`/channel-subscriptions/${channelId}`, updateFields);
 
     return data;
   } catch (err) {
