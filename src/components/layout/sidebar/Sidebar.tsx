@@ -37,7 +37,7 @@ const Sidebar = () => {
         <Divider />
         <div className="m-2">
           {sections.map((section: SectionType) => (
-            <Section section={section} />
+            <Section key={section.uuid} section={section} />
           ))}
         </div>
       </div>

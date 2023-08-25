@@ -94,33 +94,33 @@ const WorkspaceChannels: React.FC = () => {
     setActiveModal({ type: 'CreateChannelModal', payload: null });
   };
 
-  const handleJoinLeaveChannel = async (channelId: string, action: ChannelActions) => {
+  const handleJoinLeaveChannel = async (channelUuid: string, action: ChannelActions) => {
     if (!currentUser) return;
     switch (action) {
       case ChannelActions.JOIN:
         {
-          await joinChannelApi(channelId);
+          await joinChannelApi(channelUuid);
 
           const formattedMessage = formatAutomatedMessage({
             userId: currentUser.uuid,
-            channelId: channelId,
+            channelId: channelUuid,
             content: `has joined the channel.`,
           });
 
-          createMessageApi(formattedMessage);
+          await createMessageApi(formattedMessage);
         }
         break;
       case ChannelActions.LEAVE:
         {
-          await leaveChannelApi(channelId);
+          await leaveChannelApi(channelUuid);
 
           const formattedMessage = formatAutomatedMessage({
             userId: currentUser.uuid,
-            channelId: channelId,
+            channelId: channelUuid,
             content: `has left the channel.`,
           });
 
-          createMessageApi(formattedMessage);
+          await createMessageApi(formattedMessage);
         }
         break;
     }

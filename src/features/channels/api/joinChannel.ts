@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const joinChannel = async (channelId: string) => {
   try {
-    const { data } = await axios.post(`/channel-subscriptions/join/${channelId}`);
+    const { data } = await axios.post(`/channel-management/join/${channelId}`);
 
     stores.notificationStore.addNotification({
       title: 'Channel joined',

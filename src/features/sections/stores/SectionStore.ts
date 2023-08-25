@@ -74,6 +74,20 @@ export class SectionStore {
     this.addSection(section);
   };
 
+  findSectionByChannelType = (channelType: SectionTypes) => {
+    return this.sections.find((el: Section) => el.type === channelType);
+  };
+
+  addChannelUuidToSection = (channelUuid: string, channelType: SectionTypes) => {
+    const section = this.findSectionByChannelType(channelType);
+
+    if (!section || section?.channelIds?.find((el: string) => el === channelUuid)) return;
+
+    section.channelIds.push(channelUuid);
+
+    this.updateSection(section);
+  };
+
   updateSectionApi = async (sectionUuid: string, updateSection: UpdateSection) => {
     const section = await sectionsApi.updateSection(sectionUuid, updateSection);
 

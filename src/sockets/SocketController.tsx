@@ -20,13 +20,13 @@ const SocketController = () => {
     subscribedChannels,
     findChannelByUuid,
   } = useStore('channelStore');
-  const { addWorkspaceChannel, updateWorkspaceChannel, removeWorkspaceChannel } =
-    useStore('workspaceChannelStore');
+  const { updateWorkspaceChannel, removeWorkspaceChannel } = useStore('workspaceChannelStore');
   const { addUserTyping } = useStore('userTypingStore');
   const { incrementChannelUnreads, channelUnreadsCount } = useStore('channelUnreadStore');
   const { addMessage, removeMessage, updateMessage } = useStore('messageStore');
   const { updateUser, addUser, removeUser } = useStore('userStore');
-  const { addSection, updateSection, removeSection } = useStore('sectionStore');
+  const { addSection, updateSection, removeSection, addChannelUuidToSection } =
+    useStore('sectionStore');
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
     useStore('notificationStore');
 
@@ -136,10 +136,14 @@ const SocketController = () => {
   }, [connectSocket, removeSection]);
 
   /* Channel Sockets */
-  // New workspace channel
+  // Join channel
   useEffect(() => {
-    return connectSocket(`channels`, addWorkspaceChannel);
-  }, [connectSocket, addWorkspaceChannel]);
+    return connectSocket('join-channel', (data) => {
+      const { channel } = data.payload;
+      addSubscribedChannel(channel);
+      addChannelUuidToSection(channel.uuid, channel.type);
+    });
+  }, [connectSocket, addSubscribedChannel, addChannelUuidToSection]);
 
   // Update channel
   useEffect(() => {

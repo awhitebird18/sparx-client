@@ -92,10 +92,11 @@ export class ChannelStore {
   createChannelApi = async (createChannel: CreateChannel) => {
     const channel = await channelApi.createChannel(createChannel);
     this.addSubscribedChannel(channel);
+    return channel;
   };
 
-  joinChannelApi = async (channelId: string) => {
-    const channel = await channelApi.joinChannel(channelId);
+  joinChannelApi = async (channelUuid: string) => {
+    const channel = await channelApi.joinChannel(channelUuid);
     this.addSubscribedChannel(channel);
   };
 

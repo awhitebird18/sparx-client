@@ -19,7 +19,6 @@ export const sortChannels = (channels: Channel[], sortBy?: SortBy) => {
 };
 
 export const sortWorkspaceChannels = (workspaceChannels: Channel[], sortBy: SortOptions) => {
-  console.log(workspaceChannels);
   if (sortBy === SortOptions.ATOZ) {
     return workspaceChannels.slice().sort((a, b) => a.name.localeCompare(b.name));
   }

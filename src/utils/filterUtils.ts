@@ -14,7 +14,6 @@ export const filterWorkspaceChannels = (
 ) => {
   const { filterChannelVisibility, filterSubscribed, filterBySearchValue } = filterOptions;
   let filteredChannels = workspaceChannels;
-  console.log(workspaceChannels);
 
   if (filterChannelVisibility) {
     filteredChannels = filteredChannels.filter((channel: Channel) => {
@@ -43,8 +42,6 @@ export const filterWorkspaceChannels = (
       channel.name.toLowerCase().includes(filterBySearchValue.toLowerCase()),
     );
   }
-
-  console.log(filteredChannels);
 
   return filteredChannels;
 };

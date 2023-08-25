@@ -19,6 +19,7 @@ import Modal from '@/components/modal/Modal';
 import { Checkbox } from '@/components/ui/Checkbox';
 
 import { ChannelType } from '../enums';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -28,6 +29,7 @@ const formSchema = z.object({
 const CreateChanneForm = () => {
   const { createChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,10 +38,15 @@ const CreateChanneForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const channel = { name: values.name, type: ChannelType.CHANNEL, isPrivate: values.isPrivate };
-    createChannelApi(channel);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const channelData = {
+      name: values.name,
+      type: ChannelType.CHANNEL,
+      isPrivate: values.isPrivate,
+    };
+    const channel = await createChannelApi(channelData);
     handleCloseModal();
+    navigate(`/app/${channel.uuid}`);
   }
 
   const handleCloseModal = () => {
