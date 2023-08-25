@@ -1,7 +1,9 @@
-import { Button } from '@/components/ui/Button';
-import { useStore } from '@/stores/RootStore';
 import { Lock } from 'react-bootstrap-icons';
-import { Channel } from '..';
+
+import { useStore } from '@/stores/RootStore';
+import { Button } from '@/components/ui/Button';
+
+import { Channel } from '../types';
 
 const Settings = ({ channel }: { channel: Channel }) => {
   const { setActiveModal } = useStore('modalStore');

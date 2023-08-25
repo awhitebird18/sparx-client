@@ -1,5 +1,6 @@
-import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+
+import { useStore } from '@/stores/RootStore';
 
 const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
   const { onlineUsers } = useStore('userStore');

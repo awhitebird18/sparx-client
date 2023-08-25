@@ -1,10 +1,12 @@
 import { axios } from '@/lib/axios';
 import { AxiosError } from 'axios';
-import { User } from '..';
+
 import { stores } from '@/stores/RootStore';
 import { NotificationType } from '@/stores/NotificationStore';
 
-export const updateUserApi = async (userId: string, updateUser: Partial<User>): Promise<User> => {
+import { User } from '../types';
+
+export const updateUser = async (userId: string, updateUser: Partial<User>): Promise<User> => {
   try {
     const res = await axios.patch(`/users/${userId}`, updateUser);
 

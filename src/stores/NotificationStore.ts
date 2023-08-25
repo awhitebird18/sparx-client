@@ -1,6 +1,7 @@
-import { setFavicon } from '@/utils/setFavicon';
 import { makeObservable, observable, action, reaction, IReactionDisposer } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
+
+import { setFavicon } from '@/utils/setFavicon';
 import notificationSound from '@/assets/audio/coin.mp3';
 
 export enum NotificationType {

@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/Button';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_HIGH } from 'lexical';
 import { useCallback, useEffect } from 'react';
-import { KEY_ENTER_COMMAND } from 'lexical';
+import { CLEAR_EDITOR_COMMAND, COMMAND_PRIORITY_HIGH, KEY_ENTER_COMMAND, $getRoot } from 'lexical';
 import { mergeRegister } from '@lexical/utils';
-import { $getRoot } from 'lexical';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { Button } from '@/components/ui/Button';
 
 type props = { onSubmit: (val: string) => void; label: React.ReactNode };
 

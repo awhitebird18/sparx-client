@@ -2,11 +2,11 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
-import { LoginCredentials } from '..';
+import { LoginData } from '../types';
 
-export const login = async (loginCredentials: LoginCredentials) => {
+export const login = async (loginData: LoginData) => {
   try {
-    const { data } = await axios.post('/auth/login', loginCredentials);
+    const { data } = await axios.post('/auth/login', loginData);
 
     stores.notificationStore.addNotification({
       title: 'Welcome back!',

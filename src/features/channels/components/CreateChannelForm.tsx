@@ -10,12 +10,15 @@ import {
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+
+import { useStore } from '@/stores/RootStore';
+
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { ChannelTypes } from '../types/channelEnums';
-import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
 import { Checkbox } from '@/components/ui/Checkbox';
+
+import { ChannelType } from '../enums';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -23,7 +26,7 @@ const formSchema = z.object({
 });
 
 const CreateChanneForm = () => {
-  const { createChannel } = useStore('channelStore');
+  const { createChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,7 +37,8 @@ const CreateChanneForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createChannel({ name: values.name, type: ChannelTypes.CHANNEL, isPrivate: values.isPrivate });
+    const channel = { name: values.name, type: ChannelType.CHANNEL, isPrivate: values.isPrivate };
+    createChannelApi(channel);
     handleCloseModal();
   }
 

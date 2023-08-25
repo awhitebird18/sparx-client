@@ -1,8 +1,8 @@
-// LoginPage.tsx
-
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+
 import { useAuth } from '@/providers/auth';
+
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
 

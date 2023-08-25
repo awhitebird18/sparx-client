@@ -1,16 +1,15 @@
+import { useState } from 'react';
+import { PersonAdd, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/stores/RootStore';
+
+import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import UserAvatar from '@/features/users/components/UserAvatar';
+import Username from '@/features/users/components/Username';
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import SearchInput from '@/components/ui/SearchInput';
-import { User } from '@/features/users';
-import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
-import UserAvatar from '@/features/users/components/UserAvatar';
-import Username from '@/features/users/components/Username';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
-import { PersonAdd, ThreeDotsVertical } from 'react-bootstrap-icons';
-import { Channel } from '..';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,11 +17,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 
+import { Channel } from '../types';
+import { User } from '@/features/users/types/user';
+
 type MembersProps = { users: User[]; channel: Channel };
 
 const Members = ({ users, channel }: MembersProps) => {
   const [search, setSearch] = useState<string | undefined>('');
-  const { findUser } = useStore('userStore');
+  const { findUserByUuid } = useStore('userStore');
   const { setActiveModal } = useStore('modalStore');
 
   const filteredUsers = search
@@ -64,7 +66,7 @@ const Members = ({ users, channel }: MembersProps) => {
               <p className="text-xs mt-1">In this channel</p>
             ) : null}
             {filteredUsers.map((user: User) => {
-              const userFound = findUser(user.uuid);
+              const userFound = findUserByUuid(user.uuid);
               if (!userFound) return null;
 
               return (

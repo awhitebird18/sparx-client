@@ -1,4 +1,10 @@
-import { Label } from '@/components/ui/Label';
+import { useState } from 'react';
+
+import { useStore } from '@/stores/RootStore';
+import preferencesApi from '../api';
+import { timeOptions } from '@/utils/timeUtils';
+import { NotificationType } from '../enums/NotificationType';
+
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import {
   Select,
@@ -8,11 +14,7 @@ import {
   SelectGroup,
   SelectTrigger,
 } from '@/components/ui/Select';
-import { useState } from 'react';
-import { timeOptions } from '@/utils/timeUtils';
-import { useStore } from '@/stores/RootStore';
-import { NotificationType } from '../enums/NotificationType';
-import { updateUserPreferencesApi } from '../api/updateUserPreferences';
+import { Label } from '@/components/ui/Label';
 
 enum NotificationSchedule {
   DAILY = 'daily',
@@ -40,7 +42,7 @@ const NotificationsTab = () => {
   };
 
   const handleSetNotificationType = async (value: NotificationType) => {
-    await updateUserPreferencesApi({ notificationType: value });
+    await preferencesApi.updateUserPreferences({ notificationType: value });
     setNotificationType(value);
   };
 

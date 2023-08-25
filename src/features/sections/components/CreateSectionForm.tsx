@@ -1,3 +1,9 @@
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { useStore } from '@/stores/RootStore';
+
 import {
   Form,
   FormControl,
@@ -7,22 +13,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
-import { updateSectionApi } from '../api/updateSection';
-import { createSectionApi } from '../api/createSection';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
 const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
-  const { addSection, updateSection } = useStore('sectionStore');
+  const { updateSectionApi, createSectionApi } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,11 +33,9 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (id) {
-      const updatedSection = await updateSectionApi(id, values);
-      updateSection(id, updatedSection);
+      await updateSectionApi(id, values);
     } else {
-      const newSection = await createSectionApi(values);
-      addSection(newSection);
+      await createSectionApi(values);
     }
     setActiveModal(null);
   }

@@ -1,9 +1,8 @@
-// src/Preferences.tsx
-
-import { Button } from '@/components/ui/Button';
 import React, { useState } from 'react';
+
 import ThemeTab from './ThemeTab';
 import NotificationsTab from './NotificationsTab';
+import { Button } from '@/components/ui/Button';
 import Modal from '@/components/modal/Modal';
 
 const AccountTab: React.FC = () => <div>Account content...</div>;

@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Form,
   FormControl,
@@ -10,18 +12,18 @@ import { PencilFill, Files } from 'react-bootstrap-icons';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import { Channel } from '..';
 import { Textarea } from '@/components/ui/Textarea';
-import { useRef, useState } from 'react';
 import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
-import { updateChannelApi } from '../api/updateChannel';
+
 import ChannelIcon from './ChannelIcon';
 import { useAuth } from '@/providers/auth';
-import { useNavigate } from 'react-router-dom';
-import { ChannelTypes } from '../types/channelEnums';
+
+import { Channel } from '../types';
+import { ChannelType } from '../enums';
 
 enum FieldEnum {
   TOPIC = 'topic',
@@ -33,12 +35,12 @@ const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 const About = ({ channel }: { channel: Channel }) => {
   const { currentUser } = useAuth();
   const [editField, setEditField] = useState<FieldEnum | null>(null);
-  const { leaveChannel, updateChannel } = useStore('channelStore');
-  const { formatAutomatedMessage, createMessage } = useStore('messageStore');
+  const { leaveChannelApi, updateChannelApi } = useStore('channelStore');
+  const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
-  const isDirectChannel = channel.type === ChannelTypes.DIRECT;
+  const isDirectChannel = channel.type === ChannelType.DIRECT;
 
   const handleOpenForm = (field: FieldEnum) => {
     setEditField(field);
@@ -46,7 +48,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
   const handleLeaveChannel = async () => {
     if (!currentUser) return;
-    await leaveChannel(channel.uuid);
+    await leaveChannelApi(channel.uuid);
 
     const formattedMessage = formatAutomatedMessage({
       userId: currentUser.uuid,
@@ -54,7 +56,7 @@ const About = ({ channel }: { channel: Channel }) => {
       content: `has left the channel.`,
     });
 
-    createMessage(formattedMessage);
+    createMessageApi(formattedMessage);
     navigate(`/app`);
   };
 
@@ -65,9 +67,8 @@ const About = ({ channel }: { channel: Channel }) => {
 
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
-      const updatedChannel = await updateChannelApi(channel.uuid, { icon: imageBase64 });
 
-      updateChannel(updatedChannel.uuid, { icon: updatedChannel.icon });
+      updateChannelApi(channel.uuid, { icon: imageBase64 });
     };
 
     reader.readAsDataURL(file);
@@ -159,7 +160,7 @@ const EditField = observer(
     const formSchema = z.object({
       [type]: z.string().max(200),
     });
-    const { updateChannel } = useStore('channelStore');
+    const { updateChannelApi } = useStore('channelStore');
     const { setActiveModal } = useStore('modalStore');
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -169,8 +170,8 @@ const EditField = observer(
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-      const updatedChannel = await updateChannelApi(channelId, values);
-      updateChannel(channelId, { [type]: updatedChannel[type] });
+      await updateChannelApi(channelId, values);
+
       setActiveModal(null);
     }
 

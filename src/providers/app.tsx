@@ -1,4 +1,3 @@
-import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -9,6 +8,8 @@ import '@/styles/app.css';
 import '@/styles/chatroom.css';
 import '@/styles/index.css';
 import 'react-resizable/css/styles.css';
+
+import { TooltipProvider } from '@/components/ui/Tooltip';
 
 init({ data });
 

@@ -1,21 +1,22 @@
-import { Button } from '@/components/ui/Button';
-import { Channel } from '@/features/channels';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-
+import { observer } from 'mobx-react-lite';
 import { MegaphoneFill, Person, Plus } from 'react-bootstrap-icons';
+import { useStore } from '@/stores/RootStore';
+
+import { Button } from '@/components/ui/Button';
+
+import { Channel } from '@/features/channels/types';
 
 type ChannelIntroductionProps = { channelId: string | undefined };
 
 const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
   const [channel, setChannel] = useState<Channel | undefined>(undefined);
-  const { findById } = useStore('channelStore');
+  const { findChannelByUuid } = useStore('channelStore');
 
   useEffect(() => {
     if (!channelId) return;
-    setChannel(findById(channelId) || undefined);
-  }, [channelId, findById]);
+    setChannel(findChannelByUuid(channelId) || undefined);
+  }, [channelId, findChannelByUuid]);
 
   if (!channel) return;
   return (

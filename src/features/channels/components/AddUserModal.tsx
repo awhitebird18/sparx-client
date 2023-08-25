@@ -1,11 +1,13 @@
-import Modal from '@/components/modal/Modal';
-import { Channel } from '..';
 import { useState } from 'react';
-import { User } from '@/features/users';
+import { ChevronBarExpand, X } from 'react-bootstrap-icons';
+
 import { useStore } from '@/stores/RootStore';
+import { useAuth } from '@/providers/auth';
+
+import Modal from '@/components/modal/Modal';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
 import { Button } from '@/components/ui/Button';
-import { ChevronBarExpand, X } from 'react-bootstrap-icons';
+import UserAvatar from '@/features/users/components/UserAvatar';
 import {
   Command,
   CommandEmpty,
@@ -13,9 +15,9 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/Command';
-import { inviteUserApi } from '../api/inviteUser';
-import UserAvatar from '@/features/users/components/UserAvatar';
-import { useAuth } from '@/providers/auth';
+
+import { Channel } from '@/features/channels/types';
+import { User } from '@/features/users/types/user';
 
 type AddUserModalProps = {
   channel: Channel;
@@ -24,8 +26,8 @@ type AddUserModalProps = {
 const AddUserModal = ({ channel }: AddUserModalProps) => {
   const { users, findBot } = useStore('userStore');
   const { currentUser } = useAuth();
-  const { createMessage, formatAutomatedMessage } = useStore('messageStore');
-  const { updateSubscribedChannel } = useStore('channelStore');
+  const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
+  const { inviteUsersToChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
@@ -45,9 +47,9 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
 
   const handleInviteUsers = async () => {
     if (!inviteList.length) return;
-    const userIds = inviteList.map((user: User) => user.uuid);
-    const updatedChannel = await inviteUserApi(channel.uuid, userIds);
-    updateSubscribedChannel(updatedChannel.uuid, { users: updatedChannel.users });
+
+    await inviteUsersToChannelApi(channel.uuid, inviteList);
+
     setActiveModal(null);
 
     const bot = findBot();
@@ -63,12 +65,12 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
       } ${currentUser.lastName}.`,
     });
 
-    createMessage(formattedMessage);
+    createMessageApi(formattedMessage);
   };
 
   const unsubscribedUsers = users.filter(
     (user: User) =>
-      !channel.users.find((channelUser: User) => channelUser.uuid === user.uuid) &&
+      ![].find((channelUser: User) => channelUser.uuid === user.uuid) &&
       !inviteList.find((invitedUser: User) => invitedUser.uuid === user.uuid),
   );
 

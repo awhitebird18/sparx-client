@@ -1,8 +1,7 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
-import { RegistrationData } from '..';
+import { RegistrationData } from '../types';
 
 export const register = async (registrationData: RegistrationData) => {
   try {

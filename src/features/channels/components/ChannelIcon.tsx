@@ -1,6 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Hash, Lock } from 'react-bootstrap-icons';
 import { API_URL } from '@/config';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 
 type UserAvatarProps = {
   size?: number;

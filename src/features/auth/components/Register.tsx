@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/providers/auth';
 import { Link } from 'react-router-dom';
-import { Input } from '@/components/ui/Input';
-import Logo from '@/components/logo/Logo';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useAuth } from '@/providers/auth';
+
+import { Input } from '@/components/ui/Input';
+import Logo from '@/components/logo/Logo';
 
 type FormData = {
   email: string;
@@ -56,7 +58,6 @@ const RegisterPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(errors);
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
 

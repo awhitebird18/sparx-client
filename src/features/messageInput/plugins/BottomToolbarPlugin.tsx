@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/Button';
 import { useRef } from 'react';
 import { At, EmojiSmile, Plus, Type } from 'react-bootstrap-icons';
+
+import { Button } from '@/components/ui/Button';
 
 const BottomToolbarPLugin = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

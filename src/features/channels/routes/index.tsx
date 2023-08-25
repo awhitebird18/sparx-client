@@ -1,11 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import Channels from "../components/Channels";
+import WorkspaceChannels from '@/features/workspaceChannels/components/WorkspaceChannels';
 
 const ChannelRoutes = () => {
   return (
     <Routes>
-      <Route path="" element={<Channels />} />
+      <Route path="" element={<WorkspaceChannels />} />
       <Route path="*" element={<Navigate to="." />} />
     </Routes>
   );

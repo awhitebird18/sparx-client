@@ -1,40 +1,48 @@
-import { MessageStore } from '@/features/messages/stores/messageStore';
-import { UserStore } from '@/features/users/stores/userStore';
-import { SpacesStore } from '@/features/spaces/stores/spacesStore';
-import { ChannelStore } from '@/features/channels/stores/ChannelStore';
-import { NotificationStore } from './NotificationStore';
-import { ModalStore } from './ModalStore';
-import { SectionStore } from '@/features/sections/stores/SectionStore';
-import { SocketStore } from './SocketStore';
-import { SidebarStore } from './SidebarStore';
 import { createContext } from 'react';
 import { useContext } from 'react';
+
+import { MessageStore } from '@/features/messages/stores/messageStore';
+import { UserStore } from '@/features/users/stores/userStore';
 import { UserPreferencesStore } from '@/features/preferences/stores/UserPreferencesStore';
+import { ChannelStore } from '@/features/channels/stores/ChannelStore';
+import { SectionStore } from '@/features/sections/stores/SectionStore';
+import { WorkspaceChannelStore } from '@/features/workspaceChannels/stores/WorkspaceChannelStore';
+import { UserTypingStore } from '@/features/userTyping/stores/UserTypingStore';
+import { ChannelUnreadStore } from '@/features/channels/stores/ChannelUnreadStore';
+
+import { NotificationStore } from '@/stores/NotificationStore';
+import { ModalStore } from '@/stores/ModalStore';
+import { SocketStore } from '@/stores/SocketStore';
+import { SidebarStore } from '@/stores/SidebarStore';
 
 interface RootStore {
-  messageStore: MessageStore;
   userStore: UserStore;
-  spacesStore: SpacesStore;
+  userPreferencesStore: UserPreferencesStore;
+  userTypingStore: UserTypingStore;
   channelStore: ChannelStore;
+  channelUnreadStore: ChannelUnreadStore;
+  workspaceChannelStore: WorkspaceChannelStore;
+  messageStore: MessageStore;
+  sectionStore: SectionStore;
+  sidebarStore: SidebarStore;
   notificationStore: NotificationStore;
   modalStore: ModalStore;
-  sectionStore: SectionStore;
   socketStore: SocketStore;
-  sidebarStore: SidebarStore;
-  userPreferencesStore: UserPreferencesStore;
 }
 
 class RootStoreImpl implements RootStore {
-  socketStore = new SocketStore();
-  messageStore = new MessageStore();
   userStore = new UserStore();
-  spacesStore = new SpacesStore();
+  userPreferencesStore = new UserPreferencesStore();
+  userTypingStore = new UserTypingStore();
   channelStore = new ChannelStore();
+  channelUnreadStore = new ChannelUnreadStore();
+  workspaceChannelStore = new WorkspaceChannelStore();
+  messageStore = new MessageStore();
+  sectionStore = new SectionStore();
+  sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
+  socketStore = new SocketStore();
   notificationStore = new NotificationStore();
   modalStore = new ModalStore();
-  sectionStore = new SectionStore();
-  userPreferencesStore = new UserPreferencesStore();
-  sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
 }
 
 export const stores = new RootStoreImpl();

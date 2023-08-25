@@ -8,7 +8,9 @@ import {
   useMemo,
 } from 'react';
 import { primaryColors } from '@/utils/primaryColors';
-import { useAuth } from './auth';
+
+import { useStore } from '@/stores/RootStore';
+import { Theme } from '@/features/preferences/enums';
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -33,12 +35,12 @@ export const useTheme = (): ThemeContextData => {
 };
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const { currentUser } = useAuth();
-  const [theme, setTheme] = useState<string>(currentUser?.theme || 'light');
-  const [primaryColor, setPrimaryColor] = useState<string>(currentUser?.primaryColor || 'red');
+  const { userPreferences } = useStore('userPreferencesStore');
+  const [theme, setTheme] = useState<string>(userPreferences.theme);
+  const [primaryColor, setPrimaryColor] = useState<string>(userPreferences.primaryColor);
 
   const toggleAppTheme = useCallback(() => {
-    const toggleTheme = theme === 'light' ? 'dark' : 'light';
+    const toggleTheme = theme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
     setTheme(toggleTheme);
     window.localStorage.setItem('theme', toggleTheme);
   }, [theme]);
@@ -60,11 +62,11 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
 
   useEffect(() => {
     if (theme === 'dark') {
-      document.body.classList.add('dark');
-      document.body.classList.remove('light');
+      document.body.classList.add(Theme.DARK);
+      document.body.classList.remove(Theme.LIGHT);
     } else {
-      document.body.classList.add('light');
-      document.body.classList.remove('dark');
+      document.body.classList.add(Theme.LIGHT);
+      document.body.classList.remove(Theme.DARK);
     }
   }, [theme]);
 

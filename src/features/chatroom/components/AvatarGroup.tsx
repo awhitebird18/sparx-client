@@ -1,18 +1,22 @@
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/stores/RootStore';
+import { API_URL } from '@/config';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { API_URL } from '@/config';
-import { User } from '@/features/users';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
+
+import { User } from '@/features/users/types/user';
 
 const AvatarGroup = () => {
   const { currentChannel } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const { users } = useStore('userStore');
+  const channelUsers: User[] = [];
 
   if (!(currentChannel || users)) return;
 
-  const userCount = Math.min(3, currentChannel?.users?.length || 1);
+  // const userCount = Math.min(3, currentChannel?.users?.length || 1);
+  const userCount = 3;
 
   const avatarSize = 20;
 
@@ -44,8 +48,8 @@ const AvatarGroup = () => {
           className={`w-full h-full text-sm font-medium rounded-sm bg-ring text-white`}
         />
       </Avatar>
-      {currentChannel?.users ? (
-        currentChannel?.users.slice(0, userCount).map((user: User, index: number) => (
+      {channelUsers.length ? (
+        channelUsers.slice(0, userCount).map((user: User, index: number) => (
           <Avatar
             key={user.uuid}
             className={`absolute w-7 h-7 rounded-md border-2 border-background`}

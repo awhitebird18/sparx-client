@@ -1,11 +1,12 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc'; // import utc plugin
-import timezone from 'dayjs/plugin/timezone'; // import timezone plugin
-import { Section, UpdateSection } from '@/features/sections';
-import { getSections } from '../api/getSections';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 import { addEventListener } from '@/events/eventHandler';
-import { SectionTypes } from '../types/sectionEnums';
+import { CreateSection, Section, UpdateSection } from '@/features/sections/types';
+import sectionsApi from '../api';
+import { SectionTypes } from '../enums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -19,62 +20,76 @@ export class SectionStore {
       sections: observable,
       isLoading: observable,
       updateSection: action,
-      deleteSection: action,
-      fetchsections: action,
+      removeSection: action,
       setSections: action,
       setIsLoading: action,
       addSection: action,
-      handleUpdateSectionSocket: action,
+      createSectionApi: action,
+      updateSectionApi: action,
+      removeSectionApi: action,
+      fetchsectionsApi: action,
       directChannelSectionId: computed,
     });
 
-    addEventListener('channelUpdate', this.fetchsections);
+    addEventListener('channelUpdate', this.fetchsectionsApi);
   }
 
   get directChannelSectionId() {
     return this.sections.find((section: Section) => section.type === SectionTypes.DIRECT)?.uuid;
   }
 
-  setSections = (sections: Section[]) => {
-    this.sections = sections;
-  };
-
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
 
-  findSection = (id: string) => {
-    return this.sections.find((section: Section) => section.uuid === id);
+  setSections = (sections: Section[]) => {
+    this.sections = sections;
+  };
+
+  findSectionByUuid = (uuid: string) => {
+    return this.sections.find((section: Section) => section.uuid === uuid);
   };
 
   addSection = (section: Section) => {
-    const sectionFound = this.findSection(section.uuid);
-
+    const sectionFound = this.findSectionByUuid(section.uuid);
     if (sectionFound) return;
 
     this.sections.push(section);
   };
 
-  updateSection = (sectionId: string, updatedFields: UpdateSection) => {
-    const section = this.findSection(sectionId);
+  updateSection = (section: Section) => {
+    const index = this.sections.findIndex((el: Section) => el.uuid === section.uuid);
+    if (index === -1) return;
 
-    if (section) {
-      Object.assign(section, updatedFields);
-    }
+    this.sections.splice(index, 1, section);
   };
 
-  handleUpdateSectionSocket = (updatedSection: Section) => {
-    this.updateSection(updatedSection.uuid, updatedSection);
-  };
-
-  deleteSection = async (sectionId: string) => {
+  removeSection = async (sectionId: string) => {
     this.sections = this.sections.filter((Section: Section) => Section.uuid !== sectionId);
   };
 
-  fetchsections = async () => {
+  createSectionApi = async (createSection: CreateSection) => {
+    const section = await sectionsApi.createSection(createSection);
+
+    this.addSection(section);
+  };
+
+  updateSectionApi = async (sectionUuid: string, updateSection: UpdateSection) => {
+    const section = await sectionsApi.updateSection(sectionUuid, updateSection);
+
+    this.updateSection(section);
+  };
+
+  removeSectionApi = async (sectionUuid: string) => {
+    await sectionsApi.removeSection(sectionUuid);
+
+    this.removeSection(sectionUuid);
+  };
+
+  fetchsectionsApi = async () => {
     this.setIsLoading(true);
 
-    const userSections = await getSections();
+    const userSections = await sectionsApi.getSections();
 
     this.setSections(userSections);
 

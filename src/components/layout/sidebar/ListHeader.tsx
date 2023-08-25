@@ -1,3 +1,9 @@
+import { useRef, useState } from 'react';
+import { Check } from 'react-bootstrap-icons';
+
+import { useStore } from '@/stores/RootStore';
+import { SortBy } from './enums';
+
 import {
   ContextMenu,
   ContextMenuContent,
@@ -10,12 +16,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@/components/ui/ContextMenu';
-import { useStore } from '@/stores/RootStore';
-import { useRef, useState } from 'react';
 import { ModalName } from '@/components/modal/modalList';
-import { SortBy } from './types';
-import { updateSectionApi } from '@/features/sections/api/updateSection';
-import { Check } from 'react-bootstrap-icons';
 
 interface ListHeaderProps {
   id: string;
@@ -30,7 +31,7 @@ interface ListHeaderProps {
 
 const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
-  const { updateSection } = useStore('sectionStore');
+  const { updateSectionApi } = useStore('sectionStore');
   const [hasOpenDialog] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,9 +48,7 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps)
   };
 
   const handleSetSectionSort = async (sortBy: SortBy) => {
-    const updatedSection = await updateSectionApi(id, { sortBy });
-
-    updateSection(id, { sortBy: updatedSection.sortBy });
+    await updateSectionApi(id, { sortBy });
   };
 
   return (

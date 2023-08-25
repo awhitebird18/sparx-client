@@ -1,7 +1,9 @@
 import { makeObservable, observable, action, computed } from 'mobx';
-import { User } from '@/features/users';
-import { getUsers } from '../api/getUsers';
-import { uploadProfileImage } from '../api/uploadProfileImage';
+
+import usersApi from '../api';
+import userProfileApi from '@/features/profile/api';
+
+import { UpdateUser, User } from '../types';
 
 export class UserStore {
   users: User[] = [];
@@ -12,40 +14,42 @@ export class UserStore {
   searchValue = '';
 
   constructor() {
-    makeObservable(this, {
-      users: observable,
-      onlineUsers: observable,
-      isLoading: observable,
-      searchValue: observable,
-      addUser: action,
-      updateUser: action,
-      removeUser: action,
-      setUsers: action,
-      setIsLoading: action,
-      fetchUsers: action,
-      setOnlineUsers: action,
-      findUser: action,
-      findBot: action,
-      handleUpdateUserSocket: action,
-      handleNewUserSocket: action,
-      setCurrentPage: action,
-      handleRemoveserSocket: action,
-      setSearchValue: action,
-      uploadProfileImage: action,
-      displayedUsers: computed,
-      filteredUsers: computed,
-      totalPages: computed,
-    });
-  }
-
-  get totalPages() {
-    return Math.ceil(this.filteredUsers.length / this.usersPerPage);
+    makeObservable(
+      this,
+      {
+        users: observable,
+        onlineUsers: observable,
+        isLoading: observable,
+        searchValue: observable,
+        displayedUsers: computed,
+        filteredUsers: computed,
+        setCurrentPage: action,
+        setSearchValue: action,
+        setIsLoading: action,
+        setUsers: action,
+        setOnlineUsers: action,
+        totalPages: computed,
+        findUserByUuid: action,
+        findBot: action,
+        addUser: action,
+        updateUser: action,
+        removeUser: action,
+        updateUserApi: action,
+        uploadProfileImageApi: action,
+        fetchUsersApi: action,
+      },
+      { autoBind: true },
+    );
   }
 
   get filteredUsers() {
     return this.users.filter((user: User) =>
       user.firstName.toLowerCase().includes(this.searchValue.toLowerCase()),
     );
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredUsers.length / this.usersPerPage);
   }
 
   get displayedUsers() {
@@ -55,41 +59,7 @@ export class UserStore {
     );
   }
 
-  setCurrentPage = (page: number) => {
-    this.currentPage = page;
-  };
-
-  setSearchValue = (value: string) => {
-    this.searchValue = value;
-  };
-
-  handleUpdateUserSocket = (user: User) => {
-    this.updateUser(user.uuid, user);
-  };
-
-  handleNewUserSocket = (user: User) => {
-    this.addUser(user);
-  };
-
-  handleRemoveserSocket = (userId: string) => {
-    this.removeUser(userId);
-  };
-
-  setOnlineUsers = (users: Map<string, Date>) => {
-    this.onlineUsers = new Map(users);
-  };
-
-  addUser = (user: User) => {
-    if (this.findUser(user.uuid)) return;
-
-    this.users.push(user);
-  };
-
-  setUsers = (users: User[]) => {
-    this.users = users;
-  };
-
-  findUser = (userId: string) => {
+  findUserByUuid = (userId: string) => {
     return this.users.find((user: User) => user.uuid === userId);
   };
 
@@ -101,32 +71,58 @@ export class UserStore {
     this.isLoading = bool;
   };
 
-  fetchUsers = async () => {
-    this.setIsLoading(true);
-    const users = await getUsers();
-
-    this.setUsers(users);
-
-    this.setIsLoading(false);
+  setCurrentPage = (page: number) => {
+    this.currentPage = page;
   };
 
-  updateUser = (uuid: string, updatedFields: Partial<User>) => {
-    const user = this.users.find((user) => user.uuid === uuid);
-
-    if (user) {
-      Object.assign(user, updatedFields);
-    }
+  setSearchValue = (value: string) => {
+    this.searchValue = value;
   };
 
-  uploadProfileImage = async (userId: string, profileImage: string) => {
-    const updatedUser = await uploadProfileImage(userId, profileImage);
+  setOnlineUsers = (users: Map<string, Date>) => {
+    this.onlineUsers = new Map(users);
+  };
 
-    if (updatedUser) {
-      this.updateUser(updatedUser.uuid, updatedUser);
-    }
+  addUser = (user: User) => {
+    if (this.findUserByUuid(user.uuid)) return;
+
+    this.users.push(user);
+  };
+
+  setUsers = (users: User[]) => {
+    this.users = users;
+  };
+
+  updateUser = (updateUser: User) => {
+    const index = this.users.findIndex((el: User) => el.uuid === updateUser.uuid);
+    if (index === -1) return;
+
+    this.users.splice(index, 1, updateUser);
   };
 
   removeUser = (uuid: string) => {
     this.users = this.users.filter((user) => user.uuid !== uuid);
+  };
+
+  updateUserApi = async (uuid: string, updatedUser: UpdateUser) => {
+    const user = await usersApi.updateUser(uuid, updatedUser);
+
+    this.updateUser(user);
+  };
+
+  uploadProfileImageApi = async (userId: string, profileImage: string) => {
+    const user = await userProfileApi.uploadProfileImage(userId, profileImage);
+
+    this.updateUser(user);
+  };
+
+  fetchUsersApi = async () => {
+    this.setIsLoading(true);
+
+    const users = await usersApi.getUsers();
+
+    this.setUsers(users);
+
+    this.setIsLoading(false);
   };
 }

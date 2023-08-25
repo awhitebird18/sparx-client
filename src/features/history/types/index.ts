@@ -1,1 +1,1 @@
-export type HistoryItem = { timestamp: number; primaryView: string };
+export * from './historyItem';

@@ -1,10 +1,11 @@
 import { axios } from '@/lib/axios';
-import { NotificationType } from '@/stores/NotificationStore';
 
+import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
+
 import { UserPreferences } from '../types';
 
-export const updateUserPreferencesApi = async (updateFields: Partial<UserPreferences>) => {
+export const updateUserPreferences = async (updateFields: Partial<UserPreferences>) => {
   try {
     const { data } = await axios.patch(`/user-preferences`, updateFields);
 

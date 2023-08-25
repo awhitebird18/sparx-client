@@ -3,7 +3,7 @@ import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
 
-export const joinChannelApi = async (channelId: string) => {
+export const joinChannel = async (channelId: string) => {
   try {
     const { data } = await axios.post(`/channel-subscriptions/join/${channelId}`);
 

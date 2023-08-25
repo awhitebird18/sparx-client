@@ -1,10 +1,11 @@
 import { axios } from '@/lib/axios';
-import { NotificationType } from '@/stores/NotificationStore';
 
+import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
+
 import { CreateSection } from '..';
 
-export const createSectionApi = async (createSection: CreateSection) => {
+export const createSection = async (createSection: CreateSection) => {
   try {
     const { data } = await axios.post('/sections', createSection);
 

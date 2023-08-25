@@ -1,56 +1,66 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@/stores/RootStore';
-import { Badge } from '@/components/ui/Badge';
+import { v4 as uuid } from 'uuid';
 import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
+import { formatDate } from '../utils/datefns';
+import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+
+import { useStore } from '@/stores/RootStore';
+import { useAuth } from '@/providers/auth';
+
+import { Badge } from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
 import Header from '@/components/layout/containers/Header';
 import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
 import Content from '@/components/layout/containers/Content';
-import { formatDate } from '../utils/datefns';
 import ChannelIntroduction from './ChannelIntroduction';
 import Thread from './Thread';
-import { Message as MessageDto } from '@/features/messages';
 import Editor from '@/features/messageInput/Editor';
-import { useAuth } from '@/providers/auth';
-import { v4 as uuid } from 'uuid';
-import dayjs from 'dayjs';
-import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import UserInputNotSubscribed from './UserInputNotSubscribed';
-import UsersTypingDisplay from './UsersTypingDisplay';
-import { createDirectChannel } from '@/features/channels/api/createDirectChannel';
-import { User } from '@/features/users';
+import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
+
+import { Message as MessageType } from '@/features/messages/types';
+
+// import channelApi from '@/features/channels/api';
+
+// import { User } from '@/features/users/types';
 
 const ChatRoom: React.FC = () => {
-  const { isLoading, groupedMessagesWithUser, fetchMessages, setPage, createMessage, hasMore } =
-    useStore('messageStore');
-  const { setCurrentChannelId, currentChannelId, currentChannel, clearUsersTyping } =
-    useStore('channelStore');
-
+  const {
+    isLoading,
+    groupedMessagesWithUser,
+    fetchMessagesApi,
+    setPage,
+    createMessageApi,
+    hasMore,
+  } = useStore('messageStore');
+  const { setCurrentChannelUuid, currentChannelId, currentChannel } = useStore('channelStore');
+  const { clearUsersTyping } = useStore('userTypingStore');
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const [thread, setThread] = useState<MessageDto | null>(null);
+  const [thread, setThread] = useState<MessageType | null>(null);
   const { channelId } = useParams();
   const { currentUser } = useAuth();
 
   const handleSubmit = async (messageContent: string) => {
-    if (!currentChannel) return;
-    if (currentChannel.isTemp) {
-      await createDirectChannel(currentChannel.users.map((user: User) => user.uuid));
-    }
-    await createMessage({
+    if (!currentChannel || !currentUser) return;
+
+    // if (isTemp) {
+    //   await channelApi.createDirectChannel(currentChannel.users.map((user: User) => user.uuid));
+    // }
+
+    await createMessageApi({
       content: messageContent,
-      channelId: currentChannelId,
-      userId: currentUser?.uuid,
+      channelId: currentChannel.uuid,
+      userId: currentUser.uuid,
       uuid: uuid(),
       createdAt: dayjs(),
-      timezone: 'toronto',
-      type: currentChannel.type,
     });
   };
 
@@ -66,9 +76,9 @@ const ChatRoom: React.FC = () => {
     if (!channelId || channelId === currentChannelId) return;
 
     setPage(1);
-    setCurrentChannelId(channelId);
-    fetchMessages(channelId);
-  }, [fetchMessages, channelId, setPage, setCurrentChannelId, currentChannelId]);
+    setCurrentChannelUuid(channelId);
+    fetchMessagesApi(channelId);
+  }, [fetchMessagesApi, channelId, setPage, setCurrentChannelUuid, currentChannelId]);
 
   useEffect(() => {
     if (bottomRef.current) {
@@ -119,7 +129,7 @@ const ChatRoom: React.FC = () => {
                           </div>
 
                           {messages
-                            .filter((message: MessageDto) => !message.parentId)
+                            .filter((message: MessageType) => !message.parentId)
                             .map((message: any, index: number) => {
                               const displayUser =
                                 index === 0 || messages[index - 1].userId !== message.userId;
@@ -141,7 +151,7 @@ const ChatRoom: React.FC = () => {
                   </>
                 )}
               </div>
-              {currentChannel?.isSubscribed ? (
+              {currentChannel?.uuid ? (
                 <Editor
                   placeholder={`Message ${currentChannel?.name}`}
                   config={editorConfig}

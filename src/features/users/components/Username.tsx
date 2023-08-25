@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import { Tooltip, TooltipContent } from '@/components/ui/Tooltip';
-import { TooltipTrigger } from '@radix-ui/react-tooltip';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 
 type UsernameProps = { firstName: string; lastName: string };
 const Username = ({ firstName, lastName }: UsernameProps) => {

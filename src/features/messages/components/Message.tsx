@@ -1,17 +1,18 @@
-import { Message } from '..';
+import { useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import dayjs from 'dayjs';
+import { ChatDots, ChevronRight, EmojiLaughing } from 'react-bootstrap-icons';
+
+import { useStore } from '@/stores/RootStore';
+
 import MessageDisplay from '@/features/messageInput/MessageDisplay';
 import OptionsPanel from './OptionsPanel';
-import { useRef, useState } from 'react';
 import MessageEditor from '@/features/messageInput/MessageEditor';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import ReactionsDisplay from '@/features/reactions/components/ReactionsDisplay';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/HoverCard';
-import { ChatDots, ChevronRight, EmojiLaughing } from 'react-bootstrap-icons';
 import { Button } from '@/components/ui/Button';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
-import dayjs from 'dayjs';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -21,6 +22,8 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/ContextMenu';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
+
+import { Message } from '../types';
 
 const Message = ({
   message,
@@ -37,7 +40,7 @@ const Message = ({
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
-  const { findUser } = useStore('userStore');
+  const { findUserByUuid } = useStore('userStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
@@ -48,7 +51,7 @@ const Message = ({
     setActiveModal({ type: 'ProfileModal', payload: { userId: message.userId } });
   };
 
-  const user = findUser(message.userId);
+  const user = findUserByUuid(message.userId);
 
   if (!user) return;
 

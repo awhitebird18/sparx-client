@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
-
 import { AxiosError } from 'axios';
-import { User } from '..';
+
+import { User } from '../types';
 
 export const getUsers = async (): Promise<User[]> => {
   try {

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
+import { Button } from '@/components/ui/Button';
 
 const NoChannelsFallback = () => {
   const { setActiveModal } = useStore('modalStore');

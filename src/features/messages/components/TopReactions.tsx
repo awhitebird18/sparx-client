@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/Button';
 import { EmojiHeartEyes, EmojiLaughing, EmojiNeutral } from 'react-bootstrap-icons';
+import { Button } from '@/components/ui/Button';
 
 const TopReactions = () => {
   return (

@@ -1,24 +1,26 @@
-import Header from '@/components/layout/containers/Header';
-import { Message as MessageDto } from '@/features/messages';
-import Message from '@/features/messages/components/Message';
 import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
+import { observer } from 'mobx-react-lite';
+import { v4 as uuid } from 'uuid';
 import { X } from 'react-bootstrap-icons';
 import { Resizable, ResizeHandle } from 'react-resizable';
-import Editor from '@/features/messageInput/Editor';
-import { useAuth } from '@/providers/auth';
-import { useStore } from '@/stores/RootStore';
-import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
-import { observer } from 'mobx-react-lite';
 
-type ThreadProps = { message: MessageDto; setMessage: (message: MessageDto | null) => void };
+import { useAuth } from '@/providers/auth';
+import { useStore } from '@/stores/RootStore';
+
+import Header from '@/components/layout/containers/Header';
+import { Button } from '@/components/ui/Button';
+import Message from '@/features/messages/components/Message';
+import Editor from '@/features/messageInput/Editor';
+import { Message as MessageType } from '@/features/messages/types';
+
+type ThreadProps = { message: MessageType; setMessage: (message: MessageType | null) => void };
 
 const Thread = ({ message, setMessage }: ThreadProps) => {
   const [containerWidth, setContainerWidth] = useState(600);
-  const { createMessage } = useStore('messageStore');
-  const { findUser } = useStore('userStore');
+  const { createMessageApi } = useStore('messageStore');
+  const { findUserByUuid } = useStore('userStore');
   const { currentChannelId } = useStore('channelStore');
   const { currentUser } = useAuth();
 
@@ -37,20 +39,20 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
   const resizeHandles: ResizeHandle[] = ['w'];
 
   const handleSubmit = async (messageContent: string) => {
-    await createMessage(
+    if (!currentUser) return;
+    await createMessageApi(
       {
         content: messageContent,
-        channelId: currentChannelId,
+        channelId: currentChannelId as string,
         userId: currentUser?.uuid,
         uuid: uuid(),
         createdAt: dayjs(),
-        timezone: 'toronto',
       },
       message,
     );
   };
 
-  const user = findUser(message.userId);
+  const user = findUserByUuid(message.userId);
 
   return (
     <Resizable
@@ -83,8 +85,10 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
           <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2">
             {childMessages
               ?.slice()
-              .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1))
-              .map((message: MessageDto, index: number) => {
+              .sort((a: MessageType, b: MessageType) =>
+                dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1,
+              )
+              .map((message: MessageType, index: number) => {
                 const displayUser =
                   index === 0 || childMessages[index - 1].userId !== message.userId;
 

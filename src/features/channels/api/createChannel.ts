@@ -2,11 +2,11 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
-import { CreateChannel } from '..';
+import { CreateChannel } from '../types/createChannel';
 
 export const createChannel = async (createChannel: CreateChannel) => {
   try {
-    const { data } = await axios.post('/channels', createChannel);
+    const { data } = await axios.post('/channel-management', createChannel);
 
     stores.notificationStore.addNotification({
       title: 'Channel created',

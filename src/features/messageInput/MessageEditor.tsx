@@ -1,3 +1,5 @@
+import { useStore } from '@/stores/RootStore';
+
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -9,16 +11,16 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
-import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
-import { Message } from '../messages';
-import { useStore } from '@/stores/RootStore';
-import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import CancelButtonPlugin from './plugins/CancelButtonPlugin';
+
+import { editorConfig } from '@/features/messageInput/configs/editorConfig';
+import { Message } from '@/features/messages/types';
 
 type EditorProps = {
   message: Message;
@@ -26,10 +28,10 @@ type EditorProps = {
 };
 
 export default function MessageEditor({ message, setIsEditing }: EditorProps) {
-  const { editMessageContent } = useStore('messageStore');
+  const { updateMessageApi } = useStore('messageStore');
 
   const handleSubmit = async (messageContent: string) => {
-    await editMessageContent(message.uuid, messageContent);
+    await updateMessageApi(message.uuid, { content: messageContent });
     setIsEditing(false);
   };
 
