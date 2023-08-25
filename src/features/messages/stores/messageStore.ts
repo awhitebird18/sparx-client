@@ -1,13 +1,14 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import { CreateMesssage, Message } from '@/features/messages';
-import { getMessages } from '../api/getMessages';
-import { createMessageApi } from '../api/createMessage';
-import { editMessageApi } from '../api/editMessageApi';
-import { deleteMessageApi } from '../api/deleteMessageApi';
 import { v4 as uuid } from 'uuid';
+import timezone from 'dayjs/plugin/timezone';
+
+import messageApi from '@/features/messages/api';
+import reactionsApi from '@/features/reactions/api';
+
+import { CreateMesssage, Message, UpdateMessage } from '@/features/messages/types';
+import { CreateReaction } from '@/features/reactions/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,22 +24,18 @@ export class MessageStore {
       messages: observable,
       page: observable,
       hasMore: observable,
-      findById: action,
+      findMessageByUuid: action,
       addMessage: action,
       addMessages: action,
       updateMessage: action,
-      deleteMessage: action,
-      fetchMessages: action,
+      removeMessageApi: action,
+      fetchMessagesApi: action,
+      addReactionApi: action,
       incrementPage: action,
       formatAutomatedMessage: action,
       setMessages: action,
       setPage: action,
       setIsLoading: action,
-      handleNewMessageSocket: action,
-      handleUpdateMessageSocket: action,
-      handleDeleteMessageSocket: action,
-      findAndUpdateMessage: action,
-      findAndDeleteMessage: action,
       groupedMessagesWithUser: computed,
     });
   }
@@ -46,7 +43,7 @@ export class MessageStore {
   get groupedMessagesWithUser() {
     const groupedMessages = this.messages.reduce(
       (groups: { [key: string]: Message[] }, message) => {
-        const date = message?.createdAt.format('MM-DD-YYYY');
+        const date = message.createdAt.format('MM-DD-YYYY');
 
         if (!groups[date]) {
           groups[date] = [];
@@ -65,63 +62,20 @@ export class MessageStore {
     });
   }
 
-  findById = (uuid: string) => {
-    return this.messages.find((message: Message) => message.uuid === uuid);
-  };
-
-  setMessages = (messages: Message[]) => {
-    this.messages = messages;
+  incrementPage = () => {
+    this.page = this.page + 1;
   };
 
   setPage = (page: number) => {
     this.page = page;
   };
 
-  addMessage = (message: Message) => {
-    const messageFound = this.findById(message.uuid);
-    if (messageFound) return;
-
-    this.messages.unshift(message);
+  setHasMore = (val: boolean) => {
+    this.hasMore = val;
   };
 
-  handleNewMessageSocket = (message: Message) => {
-    this.addMessage({ ...message, createdAt: dayjs(message.createdAt) });
-  };
-
-  handleUpdateMessageSocket = (message: Message) => {
-    this.updateMessage(message.uuid, {
-      content: message.content,
-      createdAt: dayjs(message.createdAt),
-    });
-  };
-
-  handleDeleteMessageSocket = (messageId: string) => {
-    this.deleteMessage(messageId);
-  };
-
-  createMessage = async (createMessage: CreateMesssage, parentMessage?: Message) => {
-    try {
-      const newMessage = await createMessageApi({
-        ...createMessage,
-        ...(parentMessage && { parentId: parentMessage.uuid }),
-      });
-
-      newMessage.createdAt = dayjs(newMessage.createdAt);
-
-      if (parentMessage) {
-        const childMessages = parentMessage.childMessages || [];
-
-        this.updateMessage(parentMessage.uuid, {
-          childMessages: [...childMessages, newMessage],
-        });
-      } else {
-        this.addMessage(newMessage);
-      }
-    } catch (err) {
-      if (createMessage.uuid) {
-        this.deleteMessage(createMessage.uuid);
-      }
-    }
+  setIsLoading = (bool: boolean) => {
+    this.isLoading = bool;
   };
 
   formatAutomatedMessage = ({
@@ -143,80 +97,79 @@ export class MessageStore {
     };
   };
 
-  editMessageContent = async (id: string, content: string) => {
-    try {
-      const updatedMessage = await editMessageApi(id, { content });
-
-      this.updateMessage(updatedMessage.uuid, {
-        ...updatedMessage,
-        createdAt: dayjs(updatedMessage.createdAt),
-      });
-    } catch (err) {
-      console.error(err);
-    }
+  setMessages = (messages: Message[]) => {
+    this.messages = messages;
   };
 
-  setIsLoading = (bool: boolean) => {
-    this.isLoading = bool;
+  findMessageByUuid = (uuid: string) => {
+    return this.messages.find((message: Message) => message.uuid === uuid);
+  };
+
+  addMessage = (message: Message) => {
+    const messageFound = this.findMessageByUuid(message.uuid);
+    if (messageFound) return;
+
+    this.messages.unshift(message);
   };
 
   addMessages = (newMessages: Message[]) => {
     this.setMessages([...this.messages, ...newMessages]);
   };
 
-  incrementPage = () => {
-    this.page = this.page + 1;
+  updateMessage = (updatedMessage: Message) => {
+    const index = this.messages.findIndex((message) => message.uuid === updatedMessage.uuid);
+
+    if (index === -1) return;
+
+    this.messages.splice(index, 1, updatedMessage);
   };
 
-  setHasMore = (val: boolean) => {
-    this.hasMore = val;
+  removeMessage = (uuid: string) => {
+    this.messages = this.messages.filter((message: Message) => message.uuid !== uuid);
   };
 
-  updateMessage = (uuid: string, updatedMessage: CreateMesssage) => {
-    this.findAndUpdateMessage(this.messages, uuid, updatedMessage);
+  updateMessageApi = async (uuid: string, updatMessage: UpdateMessage) => {
+    try {
+      const updatedMessage = await messageApi.updateMessage(uuid, updatMessage);
+
+      this.updateMessage(updatedMessage);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  findAndUpdateMessage = (messages: Message[], uuid: string, updatedMessage: CreateMesssage) => {
-    for (const message of messages) {
-      if (message.uuid === uuid) {
-        Object.assign(message, updatedMessage);
-        return true; // Stop searching when we found and updated the message
-      } else if (
-        message.childMessages &&
-        this.findAndUpdateMessage(message.childMessages, uuid, updatedMessage)
-      ) {
-        return true; // Stop searching further when we found and updated the message in childMessages
+  removeMessageApi = async (uuid: string) => {
+    this.removeMessage(uuid);
+    await messageApi.removeMessage(uuid);
+  };
+
+  addReactionApi = async (createReaction: CreateReaction) => {
+    const updatedMessage = await reactionsApi.addReaction(createReaction);
+
+    this.updateMessage(updatedMessage);
+  };
+
+  createMessageApi = async (createMessage: CreateMesssage, parentMessage?: Message) => {
+    try {
+      this.addMessage(createMessage as Message);
+
+      const newMessage = await messageApi.createMessage({
+        ...createMessage,
+        ...(parentMessage && { parentId: parentMessage.uuid }),
+      });
+      newMessage.createdAt = dayjs(newMessage.createdAt);
+
+      this.updateMessage(newMessage);
+    } catch (err) {
+      if (createMessage.uuid) {
+        this.removeMessage(createMessage.uuid);
       }
     }
-    return false; // Return false when we didn't find the message in the current list
   };
 
-  deleteMessage = async (uuid: string) => {
-    this.findAndDeleteMessage(this.messages, uuid);
-    await deleteMessageApi(uuid);
-  };
-
-  findAndDeleteMessage = (messages: Message[] | undefined, uuid: string) => {
-    if (!messages) return;
-
-    for (let i = 0; i < messages.length; i++) {
-      if (messages[i].uuid === uuid) {
-        // Remove the message from array
-        messages.splice(i, 1);
-        return true; // Stop searching when we found and deleted the message
-      } else if (
-        messages[i].childMessages &&
-        this.findAndDeleteMessage(messages[i].childMessages, uuid)
-      ) {
-        return true; // Stop searching further when we found and deleted the message in childMessages
-      }
-    }
-    return false; // Return false when we didn't find the message in the current list
-  };
-
-  fetchMessages = async (channelId: string) => {
+  fetchMessagesApi = async (channelId: string) => {
     this.setIsLoading(true);
-    const messages = await getMessages(this.page, channelId);
+    const messages = await messageApi.getMessages(this.page, channelId);
 
     const formattedMessages = messages.map((message: Message) => ({
       ...message,

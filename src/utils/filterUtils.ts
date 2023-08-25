@@ -1,22 +1,26 @@
-import { ChannelPrivateEnum, SubscribeStatusEnum } from '@/features/channels/types/channelEnums';
-import { Channel } from '@/features/channels';
+import { ChannelVisibility } from '@/features/channels/enums/channelVisibility';
+import { SubscribeStatus } from '@/features/channels/enums/subscribedStatus';
+import { Channel } from '@/features/channels/types';
 
 type FilterOptions = {
-  filterChannelType: ChannelPrivateEnum | null;
-  filterSubscribed: SubscribeStatusEnum | null;
+  filterChannelVisibility: ChannelVisibility | null;
+  filterSubscribed: SubscribeStatus | null;
   filterBySearchValue: string;
 };
 
-export const filterWorkspaceChannels = (channels: Channel[], filterOptions: FilterOptions) => {
-  const { filterChannelType, filterSubscribed, filterBySearchValue } = filterOptions;
-  let filteredChannels = channels;
+export const filterWorkspaceChannels = (
+  workspaceChannels: Channel[],
+  filterOptions: FilterOptions,
+) => {
+  const { filterChannelVisibility, filterSubscribed, filterBySearchValue } = filterOptions;
+  let filteredChannels = workspaceChannels;
 
-  if (filterChannelType) {
+  if (filterChannelVisibility) {
     filteredChannels = filteredChannels.filter((channel: Channel) => {
-      if (filterChannelType === ChannelPrivateEnum.PRIVATE) {
+      if (filterChannelVisibility === ChannelVisibility.PRIVATE) {
         return channel.isPrivate;
       }
-      if (filterChannelType === ChannelPrivateEnum.PUBLIC) {
+      if (filterChannelVisibility === ChannelVisibility.PUBLIC) {
         return !channel.isPrivate;
       }
 
@@ -25,9 +29,12 @@ export const filterWorkspaceChannels = (channels: Channel[], filterOptions: Filt
   }
 
   if (filterSubscribed) {
-    filteredChannels = filteredChannels.filter(
-      (channel) => channel.isSubscribed === (filterSubscribed === SubscribeStatusEnum.SUBSCSRIBED),
-    );
+    // filteredChannels = filteredChannels.filter(
+    //   (workspaceChannel: WorkspaceChannel) =>
+    //     // Todo: channel does not have isSubscribed property
+    //     workspaceChannel.channel.isSubscribed ===
+    //     (filterSubscribed === SubscribeStatus.SUBSCSRIBED),
+    // );
   }
 
   if (filterBySearchValue) {

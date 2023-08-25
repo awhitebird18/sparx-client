@@ -1,11 +1,14 @@
-import { Button } from '@/components/ui/Button';
-import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
-import { useStore } from '@/stores/RootStore';
-import { ModalName } from '@/components/modal/modalList';
-import { Message } from '..';
-import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 import { useState, useRef } from 'react';
+import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
+
+import { useStore } from '@/stores/RootStore';
 import { useAuth } from '@/providers/auth';
+
+import { Button } from '@/components/ui/Button';
+import { ModalName } from '@/components/modal/modalList';
+import EmojiPicker from '@/features/reactions/components/EmojiPicker';
+
+import { Message } from '../types';
 
 type OptionsPanelProps = {
   message: Message;

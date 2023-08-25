@@ -1,16 +1,17 @@
-import { Button } from '@/components/ui/Button';
-import { Channel } from '..';
-import { updateChannelApi } from '../api/updateChannel';
 import { useStore } from '@/stores/RootStore';
+
 import Modal from '@/components/modal/Modal';
+import { Button } from '@/components/ui/Button';
+
+import { Channel } from '../types';
 
 const ConfirmChannelChangeModal = ({ channel }: { channel: Channel }) => {
-  const { updateChannel } = useStore('channelStore');
+  const { updateChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
 
   const handleUpdateChannel = async () => {
     await updateChannelApi(channel.uuid, { isPrivate: true });
-    updateChannel(channel.uuid, { isPrivate: true });
+
     setActiveModal(null);
   };
 

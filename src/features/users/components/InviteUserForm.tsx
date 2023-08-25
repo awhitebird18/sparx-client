@@ -1,3 +1,11 @@
+import { Link } from 'react-bootstrap-icons';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import Modal from '@/components/modal/Modal';
 import {
   Form,
   FormControl,
@@ -6,14 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
-import { Link } from 'react-bootstrap-icons';
-
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),

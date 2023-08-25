@@ -1,4 +1,5 @@
 import { makeObservable, observable, computed, action } from 'mobx';
+
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
 
@@ -77,12 +78,14 @@ export class SidebarStore {
 
   get organizedChannels() {
     const placeholder = this.sectionStore.sections
-      .map((section) => ({
-        ...section,
-        channels: this.channelStore.subscribedChannels.filter(
-          (channel) => channel.sectionId === section.uuid,
-        ),
-      }))
+      // .map((section) => ({
+      //   ...section,
+      //   // channels: this.channelStore.subscribedChannels.filter(
+      //   //   // Todo: channel does not have sectionId
+      //   //   (channel) => channel.sectionId === section.uuid,
+      //   // ),
+      // }))
+      .slice()
       .sort((a, b) => {
         if (a.isSystem !== b.isSystem) {
           // First sort by isSystem (true values come first)

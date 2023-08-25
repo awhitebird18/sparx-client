@@ -1,55 +1,49 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import { CaretDownFill, Plus } from 'react-bootstrap-icons';
+import { observer } from 'mobx-react-lite';
+import { useDrag, useDrop } from 'react-dnd';
+
+import { useStore } from '@/stores/RootStore';
+import { SidebarItem } from './enums/itemTypes';
+
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
-import { Channel } from '@/features/channels';
-import { SectionTypes } from '@/features/sections/types/sectionEnums';
-import { useStore } from '@/stores/RootStore';
+import { SectionTypes } from '@/features/sections/enums/sectionsType';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
-import { observer } from 'mobx-react-lite';
 import { Button } from '@/components/ui/Button';
-import { updateSectionApi } from '@/features/sections/api/updateSection';
-import { useDrag, useDrop } from 'react-dnd';
-import { ItemTypes } from './itemTypes';
-import { SortBy } from './types';
-import { sortChannels } from '@/utils/sortUtils';
+import { Section } from '@/features/sections/types';
 
 interface SectionProps {
-  id: string;
-  type: SectionTypes;
-  name: string;
-  channels: Channel[];
-  isSystem?: boolean;
-  isOpen?: boolean;
-  sortBy?: SortBy;
+  section: Section;
 }
 
 interface Item {
   channelId: string;
 }
 
-const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: SectionProps) => {
+const Section = ({ section }: SectionProps) => {
+  const { uuid, type, name, channelIds, isSystem, isOpen, sortBy } = section;
   const { selectedId } = useStore('sidebarStore');
-  const { updateSection } = useStore('sectionStore');
-  const { updateChannelSection } = useStore('channelStore');
+  const { updateSectionApi } = useStore('sectionStore');
+  const { findChannelByUuid } = useStore('channelStore');
   const [{ isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.ITEM,
+    accept: SidebarItem.ITEM,
     drop: (item: Item) => {
-      updateChannelSection(item.channelId, id);
+      console.info(item);
+      // updateChannelSection(item.channelId, id);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
   const [, dragRef] = useDrag(() => ({
-    type: ItemTypes.SECTION,
-    item: { sectionId: id },
+    type: SidebarItem.SECTION,
+    item: { sectionId: uuid },
     collect: () => ({}),
   }));
 
   const handleToggleSection = async (bool: boolean) => {
-    await updateSectionApi(id, { isOpen: bool });
-    updateSection(id, { isOpen: bool });
+    await updateSectionApi(uuid, { isOpen: bool });
   };
 
   return (
@@ -61,7 +55,7 @@ const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: Section
     >
       <div ref={dragRef}>
         <ListHeader
-          id={id}
+          id={uuid}
           title={name}
           isSystem={isSystem}
           isOpen={isOpen}
@@ -81,24 +75,29 @@ const Section = ({ id, type, name, channels, isSystem, isOpen, sortBy }: Section
       </div>
 
       <CollapsibleContent>
-        {channels?.length
-          ? sortChannels(channels, sortBy).map((channel: Channel) => (
-              <ListItem
-                key={channel.uuid}
-                id={channel.channelId}
-                title={channel.name}
-                isChannel
-                icon={
-                  <ChannelIcon
-                    imageUrl={channel.icon}
-                    isPrivate={channel.isPrivate}
-                    isSelected={selectedId === channel.channelId}
-                    size={19}
-                  />
-                }
-              />
-            ))
-          : ''}
+        {channelIds?.length
+          ? channelIds.map((channelUuid: string) => {
+              const channel = findChannelByUuid(channelUuid);
+              if (!channel) return null;
+
+              return (
+                <ListItem
+                  key={channelUuid}
+                  id={channelUuid}
+                  title={channel.name}
+                  isChannel
+                  icon={
+                    <ChannelIcon
+                      imageUrl={channel.icon}
+                      isPrivate={channel.isPrivate}
+                      isSelected={selectedId === channelUuid}
+                      size={19}
+                    />
+                  }
+                />
+              );
+            })
+          : null}
 
         {isSystem ? (
           <ListItem

@@ -1,9 +1,10 @@
+import { observer } from 'mobx-react-lite';
+import { ChevronDown } from 'react-bootstrap-icons';
+
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
-import { ChevronDown } from 'react-bootstrap-icons';
 
 const ChannelTitle = () => {
   const { currentChannel } = useStore('channelStore');

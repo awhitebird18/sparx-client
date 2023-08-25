@@ -1,3 +1,13 @@
+import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+import { validate } from 'uuid';
+import { useDrag } from 'react-dnd';
+
+import { SidebarItem } from './enums/itemTypes';
+import { Section } from '@/features/sections/types';
+import { useAuth } from '@/providers/auth';
+import { useStore } from '@/stores/RootStore';
+
 import { Badge } from '@/components/ui/Badge';
 import {
   ContextMenu,
@@ -11,14 +21,6 @@ import {
   ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
-import { Section } from '@/features/sections';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
-import { validate } from 'uuid';
-import { useDrag } from 'react-dnd';
-import { ItemTypes } from './itemTypes';
-import { useAuth } from '@/providers/auth';
 
 interface ListitemProps {
   id: string;
@@ -33,21 +35,15 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   const { currentUser } = useAuth();
   const { sections } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
-  const { createMessage, formatAutomatedMessage } = useStore('messageStore');
+  const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
-  const {
-    updateChannelSection,
-    leaveChannel,
-    findChannelUnreads,
-    clearChannelUnreads,
-    setCurrentChannelId,
-    findById,
-  } = useStore('channelStore');
+  const { leaveChannelApi, setCurrentChannelUuid, findChannelByUuid } = useStore('channelStore');
+  const { findChannelUnreads, clearChannelUnreads } = useStore('channelUnreadStore');
   const { selectedId, setSelectedId, setSidebarWidth, isSidebarAbsolute } =
     useStore('sidebarStore');
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
-    type: ItemTypes.ITEM,
+    type: SidebarItem.ITEM,
     item: { channelId: id },
     collect: () => ({}),
   }));
@@ -65,12 +61,15 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
   }) => {
     if (!channelId) return;
 
-    updateChannelSection(channelId, sectionId);
+    // Todo: need to update channel section logic
+    console.info(sectionId);
+
+    // updateChannelSection(channelId, sectionId);
   };
 
-  const handleLeaveChannel = () => {
+  const handleLeaveChannel = async () => {
     if (!id || !currentUser) return;
-    leaveChannel(id);
+    await leaveChannelApi(id);
 
     const formattedMessage = formatAutomatedMessage({
       userId: currentUser.uuid,
@@ -78,7 +77,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
       content: `has left the channel.`,
     });
 
-    createMessage(formattedMessage);
+    await createMessageApi(formattedMessage);
     navigate(`/app`);
   };
 
@@ -95,9 +94,9 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
 
     if (!isChannel) {
       setTitle(`${id.charAt(0).toUpperCase()}${id.substring(1)}`);
-      setCurrentChannelId(undefined);
+      setCurrentChannelUuid(undefined);
     } else {
-      const channel = findById(id);
+      const channel = findChannelByUuid(id);
       if (channel) {
         setTitle(channel.name);
       }

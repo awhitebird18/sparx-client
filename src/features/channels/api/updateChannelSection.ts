@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const updateChannelSection = async (channelId: string, sectionId: string) => {
   try {
-    const { data } = await axios.patch(`/userchannels/move/${channelId}`, { sectionId });
+    const { data } = await axios.patch(`/channel-subscriptions/move/${channelId}`, { sectionId });
 
     stores.notificationStore.addNotification({
       title: 'Section updated',

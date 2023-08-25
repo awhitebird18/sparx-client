@@ -1,5 +1,11 @@
 import { useRef, useState } from 'react';
 import { ClockHistory, Pencil } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+import { At, Person, Tv } from 'react-bootstrap-icons';
+
+import { useStore } from '@/stores/RootStore';
+import useHistoryState from '@/hooks/useHistoryState';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +14,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { useStore } from '@/stores/RootStore';
-import useHistoryState from '@/hooks/useHistoryState';
-import { useNavigate } from 'react-router-dom';
 import { HistoryItem } from '../types';
-import { At, Person, Tv } from 'react-bootstrap-icons';
+
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 
 const getDefaultType = (id: string) => {
@@ -35,7 +38,7 @@ const getDefaultType = (id: string) => {
 
 const HistoryDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
-  const { findById } = useStore('channelStore');
+  const { findChannelByUuid } = useStore('channelStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const history = useHistoryState();
   const navigate = useNavigate();
@@ -78,7 +81,7 @@ const HistoryDropdown = () => {
                   let itemData = getDefaultType(item.primaryView);
 
                   if (!itemData) {
-                    const channel = findById(item.primaryView);
+                    const channel = findChannelByUuid(item.primaryView);
 
                     if (!channel) return null;
 

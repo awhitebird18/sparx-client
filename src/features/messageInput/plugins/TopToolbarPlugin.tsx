@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
@@ -16,7 +17,6 @@ import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { $isAtNodeEnd } from '@lexical/selection';
 import { $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import { $isListNode, ListNode } from '@lexical/list';
-import { createPortal } from 'react-dom';
 import { $isHeadingNode } from '@lexical/rich-text';
 import { $isCodeNode, getDefaultCodeLanguage, getCodeLanguages } from '@lexical/code';
 import {
@@ -26,6 +26,7 @@ import {
   TypeStrikethrough,
   TypeUnderline,
 } from 'react-bootstrap-icons';
+
 import { Button } from '@/components/ui/Button';
 
 const LowPriority = 1;

@@ -1,7 +1,8 @@
-import { Button } from '@/components/ui/Button';
-import SearchInput from '@/components/ui/SearchInput';
 import { useState } from 'react';
 import { Clock } from 'react-bootstrap-icons';
+
+import { Button } from '@/components/ui/Button';
+import SearchInput from '@/components/ui/SearchInput';
 
 const Search = () => {
   const [searchValue, setSearchValue] = useState('');

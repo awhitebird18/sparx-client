@@ -1,15 +1,14 @@
-import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import Modal from '@/components/modal/Modal';
-import { deleteSectionApi } from '../api/deleteSectionApi';
 
-const DeleteSection = ({ id, name }: { id: string; name: string }) => {
-  const { deleteSection } = useStore('sectionStore');
+import { Button } from '@/components/ui/Button';
+import Modal from '@/components/modal/Modal';
+
+const DeleteSection = ({ uuid, name }: { uuid: string; name: string }) => {
+  const { removeSectionApi } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
 
   async function handleDelete() {
-    await deleteSectionApi(id);
-    deleteSection(id);
+    removeSectionApi(uuid);
 
     setActiveModal(null);
   }

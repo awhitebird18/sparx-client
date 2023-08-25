@@ -2,9 +2,9 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
-import { Channel } from '..';
+import { Channel } from '../types/channel';
 
-export const updateChannelApi = async (channelId: string, updateFields: Partial<Channel>) => {
+export const updateChannel = async (channelId: string, updateFields: Partial<Channel>) => {
   try {
     const { data } = await axios.patch(`/channels/${channelId}`, updateFields);
 

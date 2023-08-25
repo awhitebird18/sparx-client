@@ -1,3 +1,9 @@
+import { Moon, Sun } from 'react-bootstrap-icons';
+
+import { useTheme } from '@/providers/theme';
+import { primaryColors } from '@/utils/primaryColors';
+import { Theme } from '../enums/Theme';
+
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
@@ -8,14 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-import { useTheme } from '@/providers/theme';
-import { primaryColors } from '@/utils/primaryColors';
-import { Moon, Sun } from 'react-bootstrap-icons';
-
-enum ThemeType {
-  LIGHT = 'light',
-  DARK = 'dark',
-}
 
 const ThemeTab = () => {
   const { theme, setAppTheme, primaryColor, setPrimaryColor } = useTheme();
@@ -47,7 +45,7 @@ const ThemeTab = () => {
           >
             <div className="flex items-center border border-border rounded-lg overflow-hidden">
               <div className="gap-2 px-4 mt-1 border-r border-border">
-                <RadioGroupItem value={ThemeType.LIGHT} id="light" />
+                <RadioGroupItem value={Theme.LIGHT} id="light" />
               </div>
               <div
                 className={`${
@@ -60,7 +58,7 @@ const ThemeTab = () => {
             </div>
             <div className="flex items-center border border-border rounded-lg overflow-hidden">
               <div className="px-4 mt-1 border-r border-border">
-                <RadioGroupItem value={ThemeType.DARK} id="dark" />
+                <RadioGroupItem value={Theme.DARK} id="dark" />
               </div>
               <div
                 className={`${

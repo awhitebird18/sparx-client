@@ -1,9 +1,10 @@
-import Modal from '@/components/modal/Modal';
-import { Channel } from '..';
-import { User } from '@/features/users';
-import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import { removeUserApi } from '../api/removeUserApi';
+
+import Modal from '@/components/modal/Modal';
+import { Button } from '@/components/ui/Button';
+
+import { Channel } from '@/features/channels/types';
+import { User } from '@/features/users/types/user';
 
 type RemoveUserModalProps = {
   channel: Channel;
@@ -12,16 +13,15 @@ type RemoveUserModalProps = {
 
 const RemoveUserModal = ({ channel, user }: RemoveUserModalProps) => {
   const { setActiveModal } = useStore('modalStore');
-  const { updateSubscribedChannel } = useStore('channelStore');
+  const { removeUserFromChannelApi } = useStore('channelStore');
 
   const handleCancel = () => {
     setActiveModal(null);
   };
 
   const handleConfirmRemoveUser = async () => {
-    const updatedChannel = await removeUserApi(channel.uuid, user.uuid);
+    await removeUserFromChannelApi(channel.uuid, user.uuid);
 
-    await updateSubscribedChannel(updatedChannel.uuid, { users: updatedChannel.users });
     setActiveModal(null);
   };
 

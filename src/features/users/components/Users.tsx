@@ -1,6 +1,14 @@
-// src/Users.tsx
-
 import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
+
+import { useStore } from '@/stores/RootStore';
+import { useAuth } from '@/providers/auth';
+
+import { User } from '../types';
+
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -9,22 +17,16 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { useStore } from '@/stores/RootStore';
-import { useNavigate } from 'react-router-dom';
-import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';
 import Header from '@/components/layout/containers/Header';
 import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
 import Body from '@/components/layout/containers/Body';
-import UserAvatar from './UserAvatar';
-import { User } from '..';
-import Username from './Username';
-import OnlineStatusIndicator from './OnlineStatusIndicator';
+import UserAvatar from '@/features/users/components/UserAvatar';
+import Username from '@/features/users/components/Username';
+import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
-import { v4 as uuid } from 'uuid';
-import { useAuth } from '@/providers/auth';
-import { ChannelTypes } from '@/features/channels/types/channelEnums';
+import { ChannelType } from '@/features/channels/enums';
 
 enum UserMenuOptions {
   PROFILE = 'Profile',
@@ -33,7 +35,7 @@ enum UserMenuOptions {
 
 const Users = () => {
   const {
-    fetchUsers,
+    fetchUsersApi,
     isLoading,
     displayedUsers,
     currentPage,
@@ -50,8 +52,8 @@ const Users = () => {
   const { setSelectedId } = useStore('sidebarStore');
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchUsersApi();
+  }, [fetchUsersApi]);
 
   const handleViewUserProfile = (userId: string) => {
     setActiveModal({ type: 'ProfileModal', payload: { userId } });
@@ -75,10 +77,10 @@ const Users = () => {
       channelId: channelId,
       name: `${user.firstName} ${user.lastName}`,
       sectionId: sectionId,
-      users: [currentUser, user],
-      type: ChannelTypes.DIRECT,
+      type: ChannelType.DIRECT,
       isTemp: true,
       isSubscribed: true,
+      createdAt: dayjs(),
     };
 
     addSubscribedChannel(tempChannel);

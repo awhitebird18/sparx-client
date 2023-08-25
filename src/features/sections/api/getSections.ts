@@ -1,5 +1,6 @@
 import { axios } from '@/lib/axios';
-import { Section } from '..';
+
+import { Section } from '../types';
 
 export const getSections = async (): Promise<Section[]> => {
   try {

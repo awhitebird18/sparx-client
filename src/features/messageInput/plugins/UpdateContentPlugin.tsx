@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { CLEAR_HISTORY_COMMAND } from 'lexical';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 export function UpdateContentPlugin({ initialEditorState }: { initialEditorState: string }) {
   const [editor] = useLexicalComposerContext();

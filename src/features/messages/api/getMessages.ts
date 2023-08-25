@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
-
 import { AxiosError } from 'axios';
-import { Message } from '..';
+
+import { Message } from '@/features/messages/types';
 
 export const getMessages = async (page: number, channelId: string): Promise<Message[]> => {
   try {
@@ -11,7 +11,6 @@ export const getMessages = async (page: number, channelId: string): Promise<Mess
   } catch (err: unknown) {
     const axiosError = err as AxiosError;
 
-    // re-throw the error to be caught and handled elsewhere
     throw new Error(axiosError.message || 'Error fetching messages');
   }
 };

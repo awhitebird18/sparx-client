@@ -1,9 +1,9 @@
 import { axios } from '@/lib/axios';
-
 import { AxiosError } from 'axios';
-import { CreateMesssage, Message } from '..';
 
-export const createMessageApi = async (message: CreateMesssage): Promise<Message> => {
+import { CreateMesssage, Message } from '../types';
+
+export const createMessage = async (message: CreateMesssage): Promise<Message> => {
   try {
     const res = await axios.post('/messages', message);
 
@@ -11,7 +11,6 @@ export const createMessageApi = async (message: CreateMesssage): Promise<Message
   } catch (err: unknown) {
     const axiosError = err as AxiosError;
 
-    // re-throw the error to be caught and handled elsewhere
     throw new Error(axiosError.message || 'Error fetching messages');
   }
 };

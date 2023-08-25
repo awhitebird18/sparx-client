@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { BLUR_COMMAND, COMMAND_PRIORITY_LOW, FOCUS_COMMAND } from 'lexical';
-import { useEffect } from 'react';
 
 type Props = {
   defaultSelection?: 'rootStart' | 'rootEnd';

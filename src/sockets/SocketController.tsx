@@ -1,35 +1,34 @@
-import { UserTyping } from '@/features/channels';
-import { Message } from '@/features/messages';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+
 import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
 import { setFavicon } from '@/utils/setFavicon';
-import { observer } from 'mobx-react-lite';
-import { useEffect } from 'react';
+
+import { Message } from '@/features/messages/types';
+import { UserTyping } from '@/features/userTyping/types';
 
 const SocketController = () => {
+  const { currentUser } = useAuth();
   const { setOnlineUsers } = useStore('userStore');
   const { connectSocket, disconnectSocket, emitSocket } = useStore('socketStore');
   const {
     currentChannelId,
-    addChannel,
-    removeChannel,
-    handleUpdateSubscribedChannelSocket,
-    joinChannel,
-    leaveChannel,
+    addSubscribedChannel,
+    updateSubscribedChannel,
+    removeSubscribedChannel,
     subscribedChannels,
-    findById,
-    addToChannelUnreads,
-    addUserTyping,
-    channelUnreadsCount,
+    findChannelByUuid,
   } = useStore('channelStore');
-  const { handleNewMessageSocket, handleDeleteMessageSocket, handleUpdateMessageSocket } =
-    useStore('messageStore');
-  const { handleUpdateUserSocket, handleNewUserSocket, handleRemoveserSocket } =
-    useStore('userStore');
-  const { addSection, handleUpdateSectionSocket, deleteSection } = useStore('sectionStore');
+  const { updateWorkspaceChannel, removeWorkspaceChannel } = useStore('workspaceChannelStore');
+  const { addUserTyping } = useStore('userTypingStore');
+  const { incrementChannelUnreads, channelUnreadsCount } = useStore('channelUnreadStore');
+  const { addMessage, removeMessage, updateMessage } = useStore('messageStore');
+  const { updateUser, addUser, removeUser } = useStore('userStore');
+  const { addSection, updateSection, removeSection, addChannelUuidToSection } =
+    useStore('sectionStore');
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
     useStore('notificationStore');
-  const { currentUser } = useAuth();
 
   /* User Sockets */
   // Online users
@@ -44,18 +43,18 @@ const SocketController = () => {
 
   // New user
   useEffect(() => {
-    return connectSocket('users/update', handleNewUserSocket);
-  }, [connectSocket, handleNewUserSocket]);
+    return connectSocket('users/update', addUser);
+  }, [connectSocket, addUser]);
 
   // Update user
   useEffect(() => {
-    return connectSocket('users/update', handleUpdateUserSocket);
-  }, [connectSocket, handleUpdateUserSocket]);
+    return connectSocket('users/update', updateUser);
+  }, [connectSocket, updateUser]);
 
   // Remove user
   useEffect(() => {
-    return connectSocket('users/remove', handleRemoveserSocket);
-  }, [connectSocket, handleRemoveserSocket]);
+    return connectSocket('users/remove', removeUser);
+  }, [connectSocket, removeUser]);
 
   /* Message Sockets */
   // Subscribes to new channel messages
@@ -74,16 +73,17 @@ const SocketController = () => {
 
   // New message
   useEffect(() => {
+    if (!currentUser) return;
     connectSocket('new message', (message: Message) => {
       if (message.userId === currentUser?.uuid) return;
-      const channel = findById(message.channelId);
+      const channel = findChannelByUuid(message.channelId);
 
       if (!channel) return;
 
-      if (channel.channelId === currentChannelId) {
-        handleNewMessageSocket(message);
+      if (channel.uuid === currentChannelId) {
+        addMessage(message);
       } else {
-        addToChannelUnreads(channel.channelId);
+        incrementChannelUnreads(channel.uuid);
         setUnreadsCount(channelUnreadsCount + 1);
         setFavicon('/faviconUnread.ico');
 
@@ -97,13 +97,13 @@ const SocketController = () => {
       }
     });
   }, [
-    addToChannelUnreads,
+    incrementChannelUnreads,
     channelUnreadsCount,
     connectSocket,
     currentChannelId,
-    currentUser?.uuid,
-    findById,
-    handleNewMessageSocket,
+    currentUser,
+    findChannelByUuid,
+    addMessage,
     isWindowVisible,
     sendBrowserNotification,
     setUnreadsCount,
@@ -111,13 +111,13 @@ const SocketController = () => {
 
   // Update message
   useEffect(() => {
-    return connectSocket(`messages/${currentChannelId}/update`, handleUpdateMessageSocket);
-  }, [connectSocket, currentChannelId, handleUpdateMessageSocket]);
+    return connectSocket(`messages/${currentChannelId}/update`, updateMessage);
+  }, [connectSocket, currentChannelId, updateMessage]);
 
   // Remove message
   useEffect(() => {
-    return connectSocket(`messages/${currentChannelId}/remove`, handleDeleteMessageSocket);
-  }, [connectSocket, currentChannelId, handleDeleteMessageSocket, handleNewMessageSocket]);
+    return connectSocket(`messages/${currentChannelId}/remove`, removeMessage);
+  }, [connectSocket, currentChannelId, removeMessage]);
 
   /* Section Sockets */
   // New section
@@ -127,24 +127,31 @@ const SocketController = () => {
 
   // Update section
   useEffect(() => {
-    return connectSocket(`sections/update`, handleUpdateSectionSocket);
-  }, [connectSocket, handleUpdateSectionSocket]);
+    return connectSocket(`sections/update`, updateSection);
+  }, [connectSocket, updateSection]);
 
   // Remove section
   useEffect(() => {
-    return connectSocket(`sections/remove`, deleteSection);
-  }, [connectSocket, deleteSection]);
+    return connectSocket(`sections/remove`, removeSection);
+  }, [connectSocket, removeSection]);
 
   /* Channel Sockets */
-  // New workspace channel
+  // Join channel
   useEffect(() => {
-    return connectSocket(`channels`, addChannel);
-  }, [connectSocket, addChannel]);
+    return connectSocket('join-channel', (data) => {
+      const { channel } = data.payload;
+      addSubscribedChannel(channel);
+      addChannelUuidToSection(channel.uuid, channel.type);
+    });
+  }, [connectSocket, addSubscribedChannel, addChannelUuidToSection]);
 
   // Update channel
   useEffect(() => {
-    return connectSocket(`channels/update`, handleUpdateSubscribedChannelSocket);
-  }, [connectSocket, handleUpdateSubscribedChannelSocket]);
+    return connectSocket(`channels/update`, (data) => {
+      updateWorkspaceChannel(data);
+      updateSubscribedChannel(data);
+    });
+  }, [connectSocket, updateWorkspaceChannel, updateSubscribedChannel]);
 
   // User typing
   useEffect(() => {
@@ -157,18 +164,18 @@ const SocketController = () => {
 
   // Remove workspace channel
   useEffect(() => {
-    return connectSocket(`channels/remove`, removeChannel);
-  }, [connectSocket, removeChannel]);
+    return connectSocket(`channels/remove`, removeWorkspaceChannel);
+  }, [connectSocket, removeWorkspaceChannel]);
 
   // User joins channel
   useEffect(() => {
-    return connectSocket(`userchannels/join`, joinChannel);
-  }, [connectSocket, joinChannel]);
+    return connectSocket(`channel-subscriptions/join`, addSubscribedChannel);
+  }, [connectSocket, addSubscribedChannel]);
 
   // User leaves channel
   useEffect(() => {
-    return connectSocket(`userchannels/leave`, leaveChannel);
-  }, [connectSocket, leaveChannel]);
+    return connectSocket(`channel-subscriptions/leave`, removeSubscribedChannel);
+  }, [connectSocket, removeSubscribedChannel]);
 
   return null;
 };

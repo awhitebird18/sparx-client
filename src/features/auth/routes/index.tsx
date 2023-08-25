@@ -1,8 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import { useAuth } from '@/providers/auth';
+
 import Login from '../components/Login';
 import Register from '../components/Register';
-import { useAuth } from '@/providers/auth';
 import VerificationSuccess from '../components/VerificationSuccess';
 
 export const AuthRoutes = () => {

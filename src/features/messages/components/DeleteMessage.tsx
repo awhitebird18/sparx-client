@@ -1,18 +1,19 @@
+import { useStore } from '@/stores/RootStore';
+
 import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
-
 import Message from './Message';
-import { useStore } from '@/stores/RootStore';
-import { Message as MessageDto } from '..';
 
-type DeletemessageProps = { message: MessageDto };
+import { Message as MessageType } from '../types';
+
+type DeletemessageProps = { message: MessageType };
 
 const DeleteMessage = ({ message }: DeletemessageProps) => {
-  const { deleteMessage } = useStore('messageStore');
+  const { removeMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
 
   const handleDeleteMessage = () => {
-    deleteMessage(message.uuid);
+    removeMessageApi(message.uuid);
     handleCloseModal();
   };
 

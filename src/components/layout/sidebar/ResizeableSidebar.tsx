@@ -1,11 +1,13 @@
-import Sidebar from './Sidebar';
-import 'react-resizable/css/styles.css';
-import { Resizable, ResizeHandle } from 'react-resizable';
-import { useStore } from '@/stores/RootStore';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { useEffect } from 'react';
+import { Resizable, ResizeHandle } from 'react-resizable';
+
+import 'react-resizable/css/styles.css';
+
+import Sidebar from './Sidebar';
+import { useStore } from '@/stores/RootStore';
 import Backdrop from '@/components/ui/Backdrop';
 
 const ResizableSidebar = () => {

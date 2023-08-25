@@ -1,8 +1,6 @@
 import { makeObservable, observable } from 'mobx';
 
-import { NotificationType } from '../enums/NotificationType';
-import { PrimaryColors } from '../enums/PrimaryColor';
-import { Theme } from '../enums/Theme';
+import { NotificationType, PrimaryColors, Theme } from '../enums';
 import { UserPreferences } from '../types';
 
 export class UserPreferencesStore {

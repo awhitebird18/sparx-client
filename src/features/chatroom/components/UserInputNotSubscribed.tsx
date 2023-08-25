@@ -1,12 +1,13 @@
-import { Button } from '@/components/ui/Button';
-import { joinChannelApi } from '@/features/channels/api/joinChannel';
-import ChannelIcon from '@/features/channels/components/ChannelIcon';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+
+import { useStore } from '@/stores/RootStore';
+
+import { Button } from '@/components/ui/Button';
+import ChannelIcon from '@/features/channels/components/ChannelIcon';
 
 const UserInputNotSubscribed = () => {
-  const { currentChannel } = useStore('channelStore');
+  const { currentChannel, joinChannelApi } = useStore('channelStore');
   const navigate = useNavigate();
 
   const handleNavigateToChannelsPage = () => {
@@ -15,6 +16,7 @@ const UserInputNotSubscribed = () => {
 
   const handleJoinChannel = async () => {
     if (!currentChannel) return;
+
     await joinChannelApi(currentChannel.uuid);
   };
 

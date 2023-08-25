@@ -1,32 +1,29 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { Message } from '@/features/messages';
-import { Reaction } from '@/features/reactions';
-import { addMessageReactionApi } from '../api/addReaction';
+import { observer } from 'mobx-react-lite';
+import { Message } from '@/features/messages/types';
+import { Reaction } from '@/features/reactions/types';
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/providers/auth';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
-import Username from '@/features/users/components/Username';
-import { observer } from 'mobx-react-lite';
+// import Username from '@/features/users/components/Username';
 
 type ReactionsDisplayProps = { message: Message };
 
 const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
-  const { updateMessage } = useStore('messageStore');
+  const { addReactionApi } = useStore('messageStore');
   const { currentUser } = useAuth();
 
-  const handleClickReaction = async (emojiId) => {
-    const updatedMessage = await addMessageReactionApi({
+  const handleClickReaction = async (emojiId: string) => {
+    await addReactionApi({
       emojiId,
       userId: message.userId,
       messageId: message.uuid,
     });
-
-    updateMessage(message.uuid, { reactions: updatedMessage.reactions });
   };
 
-  if (!message?.reactions?.length) return null;
+  if (!message?.reactions?.length || !currentUser) return null;
 
   return (
     <div className="flex gap-1 max-w-xl flex-wrap">
@@ -35,9 +32,9 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
           <Tooltip key={reaction.uuid}>
             <TooltipTrigger asChild>
               <Button
-                className={`h-fit rounded-2xl w-10 gap-0.5 ${
-                  reaction.users.includes(currentUser.uuid) && 'bg-userDark hover:bg-userDark'
-                }`}
+                // className={`h-fit rounded-2xl w-10 gap-0.5
+                // ${reaction.users.includes(currentUser.uuid) && 'bg-userDark hover:bg-userDark'}
+                // `}
                 style={{ padding: '0.15rem 0.2rem' }}
                 size="icon"
                 variant="outline"
@@ -58,9 +55,9 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
                 </div>
 
                 <div className="text-center">
-                  {reaction.users.map((userId: string) => (
+                  {/* {reaction.users.map((userId: string) => (
                     <Username key={userId} userId={userId} />
-                  ))}
+                  ))} */}
                   reacted
                 </div>
               </div>

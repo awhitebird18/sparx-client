@@ -1,19 +1,22 @@
-import { useStore } from '@/stores/RootStore';
-import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
+import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
+
+import { useStore } from '@/stores/RootStore';
+
+import { ChannelType } from '../enums/channelType';
+
+import Modal from '@/components/modal/Modal';
 import About from './About';
 import Members from './Members';
 import Settings from './Settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
-import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
 import ChannelIcon from './ChannelIcon';
-import { ChannelTypes } from '../types/channelEnums';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
-  const { getChannelById } = useStore('channelStore');
+  const { getChannelByUuid } = useStore('channelStore');
 
-  const channel = getChannelById(id);
+  const channel = getChannelByUuid(id);
 
   if (!channel) return null;
 
@@ -46,18 +49,18 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
         >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="about">About</TabsTrigger>
-            {channel.type !== ChannelTypes.DIRECT && (
-              <TabsTrigger value="members">Members</TabsTrigger>
-            )}
-            {channel.type !== ChannelTypes.DIRECT && (
-              <TabsTrigger value="settings">Settings</TabsTrigger>
+            {channel.type !== ChannelType.DIRECT && (
+              <>
+                <TabsTrigger value="members">Members</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+              </>
             )}
           </TabsList>
           <TabsContent value="about" className="h-full">
             <About channel={channel} />
           </TabsContent>
           <TabsContent value="members" className="h-full">
-            <Members users={channel.users} channel={channel} />
+            <Members users={[]} channel={channel} />
           </TabsContent>
           <TabsContent value="settings" className="h-full">
             <Settings channel={channel} />

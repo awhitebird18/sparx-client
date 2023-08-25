@@ -1,9 +1,12 @@
 import { axios } from '@/lib/axios';
-
-import { Channel } from '..';
 import { AxiosError } from 'axios';
 
-export const getWorkspaceChannels = async (page: number, pageSize?: number): Promise<Channel[]> => {
+import { Channel } from '@/features/channels/types';
+
+export const getWorkspaceChannels = async (
+  page: number,
+  pageSize?: number,
+): Promise<{ channel: Channel; userCount: number }[]> => {
   try {
     const res = await axios.get('/channels', {
       params: {

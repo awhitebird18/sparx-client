@@ -1,3 +1,12 @@
+import { useEffect, useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Pencil } from 'react-bootstrap-icons';
+
+import { useAuth } from '@/providers/auth';
+
 import {
   Form,
   FormControl,
@@ -7,23 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
-
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { useAuth } from '@/providers/auth';
 import Modal from '@/components/modal/Modal';
-import { User } from '@/features/users';
-import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/stores/RootStore';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { Pencil } from 'react-bootstrap-icons';
-import { observer } from 'mobx-react-lite';
-import { uploadProfileImage } from '@/features/users/api/uploadProfileImage';
-import { updateUserApi } from '@/features/users/api/updateUser';
 import Username from '@/features/users/components/Username';
+
+import { User } from '@/features/users/types/user';
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(30),
@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 type ProfileModalProps = { userId: string };
 const ProfileModal = ({ userId }: ProfileModalProps) => {
-  const { findUser, updateUser } = useStore('userStore');
+  const { findUserByUuid, updateUserApi, uploadProfileImageApi } = useStore('userStore');
   const [user, setUser] = useState<User>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
@@ -47,12 +47,11 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   });
 
   useEffect(() => {
-    setUser(findUser(userId));
-  }, [currentUser, findUser, userId]);
+    setUser(findUserByUuid(userId));
+  }, [currentUser, findUserByUuid, userId]);
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
-    const updatedUser = await updateUserApi(userId, values);
-    updateUser(userId, { firstName: updatedUser.firstName, lastName: updatedUser.lastName });
+    await updateUserApi(userId, values);
   }
 
   const handleEditForm = () => {
@@ -68,13 +67,14 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectImage = (e: any) => {
+    if (!currentUser) return;
     const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
-      const updatedUser = await uploadProfileImage(currentUser?.uuid as string, imageBase64);
-      updateUser(updatedUser.uuid, { profileImage: updatedUser.profileImage });
+
+      await uploadProfileImageApi(currentUser?.uuid, imageBase64);
     };
 
     reader.readAsDataURL(file);

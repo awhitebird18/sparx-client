@@ -10,12 +10,16 @@ import {
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+
+import { useStore } from '@/stores/RootStore';
+
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { ChannelTypes } from '../types/channelEnums';
-import { useStore } from '@/stores/RootStore';
 import Modal from '@/components/modal/Modal';
 import { Checkbox } from '@/components/ui/Checkbox';
+
+import { ChannelType } from '../enums';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -23,8 +27,9 @@ const formSchema = z.object({
 });
 
 const CreateChanneForm = () => {
-  const { createChannel } = useStore('channelStore');
+  const { createChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,9 +38,15 @@ const CreateChanneForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    createChannel({ name: values.name, type: ChannelTypes.CHANNEL, isPrivate: values.isPrivate });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const channelData = {
+      name: values.name,
+      type: ChannelType.CHANNEL,
+      isPrivate: values.isPrivate,
+    };
+    const channel = await createChannelApi(channelData);
     handleCloseModal();
+    navigate(`/app/${channel.uuid}`);
   }
 
   const handleCloseModal = () => {

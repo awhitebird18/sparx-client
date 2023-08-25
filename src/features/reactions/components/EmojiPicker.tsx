@@ -1,9 +1,9 @@
-import { useTheme } from '@/providers/theme';
 import Picker from '@emoji-mart/react';
-import { addMessageReactionApi } from '../api/addReaction';
-import { Message } from '@/features/messages';
-import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+
+import { useStore } from '@/stores/RootStore';
+import { useTheme } from '@/providers/theme';
+import { Message } from '@/features/messages/types';
 
 type EmojiPickerProps = {
   message: Message;
@@ -12,17 +12,15 @@ type EmojiPickerProps = {
 };
 
 const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
-  const { updateMessage } = useStore('messageStore');
+  const { addReactionApi } = useStore('messageStore');
   const { theme } = useTheme();
 
   const handleAddReaction = async (emojiId: string) => {
-    const updatedMessage = await addMessageReactionApi({
+    await addReactionApi({
       emojiId,
       userId: message.userId,
       messageId: message.uuid,
     });
-
-    updateMessage(message.uuid, { reactions: updatedMessage.reactions });
     onClickAway();
   };
 
