@@ -146,8 +146,6 @@ export class WorkspaceChannelStore {
 
     const { channels, channelUserCounts } = data;
 
-    console.log('data', data);
-
     if (channels.length < 15) {
       this.setHasMore(false);
     } else {

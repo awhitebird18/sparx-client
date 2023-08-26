@@ -39,8 +39,6 @@ export const sortWorkspaceChannels = (
     },
   );
 
-  console.log(workspaceChannelsWithUserCount);
-
   if (sortBy === SortOptions.ATOZ) {
     return workspaceChannelsWithUserCount.slice().sort((a, b) => a.name.localeCompare(b.name));
   }
