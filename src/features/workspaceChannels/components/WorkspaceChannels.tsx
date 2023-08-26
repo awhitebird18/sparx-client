@@ -27,7 +27,6 @@ import {
   ChannelActions,
 } from '@/features/channels/enums';
 import { Channel } from '@/features/channels/types';
-import { toJS } from 'mobx';
 
 const pageSize = 15;
 
