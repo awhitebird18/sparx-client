@@ -50,6 +50,7 @@ export class WorkspaceChannelStore {
       fetchWorkspaceChannelsApi: action,
       findWorkspaceChannelByUuid: action,
       findChannelUserCountByChannelUuid: action,
+      updateChannelUserCount: action,
     });
   }
 
@@ -120,8 +121,26 @@ export class WorkspaceChannelStore {
     this.workspaceChannels = this.workspaceChannels.filter((el: Channel) => el.uuid !== uuid);
   };
 
+  findChannelUserCount = (channelUuid: string) => {
+    return this.channelUserCounts.find((el: ChannelUserCount) => el.channelUuid === channelUuid);
+  };
+
   addChannelUserCounts = (channelUserCounts: ChannelUserCount[]) => {
     this.channelUserCounts.push(...channelUserCounts);
+  };
+
+  addChannelUserCount = (channelUserCounts: ChannelUserCount) => {
+    this.channelUserCounts.push(channelUserCounts);
+  };
+
+  updateChannelUserCount = (channelUserCount: ChannelUserCount) => {
+    const channelUserCountFound = this.findChannelUserCount(channelUserCount.channelUuid);
+
+    if (!channelUserCountFound) {
+      return this.addChannelUserCount(channelUserCount);
+    }
+
+    Object.assign(channelUserCountFound, channelUserCount);
   };
 
   findChannelUserCountByChannelUuid = (channelUuid: string): number => {
@@ -136,14 +155,9 @@ export class WorkspaceChannelStore {
 
   fetchWorkspaceChannelsApi = async (page: number, pageSize?: number) => {
     this.setIsLoading(true);
-    const res = await channelApi.getWorkspaceChannels(page, pageSize);
-    const channels = [];
-    const userCounts = [];
+    const data = await channelApi.getWorkspaceChannels(page, pageSize);
 
-    for (let i = 0; i < res.length; i++) {
-      channels.push(res[i].channel);
-      userCounts.push({ channelUuid: res[i].channel.uuid, userCount: res[i].userCount });
-    }
+    const { channels, channelUserCounts } = data;
 
     if (channels.length < 15) {
       this.setHasMore(false);
@@ -152,7 +166,7 @@ export class WorkspaceChannelStore {
     }
 
     this.addWorkspaceChannels(channels);
-    this.addChannelUserCounts(userCounts);
+    this.addChannelUserCounts(channelUserCounts);
 
     this.setIsLoading(false);
   };
