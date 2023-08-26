@@ -28,6 +28,8 @@ export class SectionStore {
       updateSectionApi: action,
       removeSectionApi: action,
       fetchsectionsApi: action,
+      addChannelUuidToSection: action,
+      removeChannelUuidFromSection: action,
       directChannelSectionId: computed,
     });
 
@@ -84,6 +86,16 @@ export class SectionStore {
     if (!section || section?.channelIds?.find((el: string) => el === channelUuid)) return;
 
     section.channelIds.push(channelUuid);
+
+    this.updateSection(section);
+  };
+
+  removeChannelUuidFromSection = (channelUuid: string, channelType: SectionTypes) => {
+    const section = this.findSectionByChannelType(channelType);
+
+    if (!section) return;
+
+    section.channelIds = section.channelIds.filter((el: string) => el !== channelUuid);
 
     this.updateSection(section);
   };

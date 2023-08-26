@@ -27,6 +27,7 @@ import {
   ChannelActions,
 } from '@/features/channels/enums';
 import { Channel } from '@/features/channels/types';
+import { toJS } from 'mobx';
 
 const pageSize = 15;
 
@@ -48,8 +49,13 @@ const WorkspaceChannels: React.FC = () => {
     workspaceChannels,
     findChannelUserCountByChannelUuid,
   } = useStore('workspaceChannelStore');
-  const { findChannelByUuid, addSubscribedChannel, joinChannelApi, leaveChannelApi } =
-    useStore('channelStore');
+  const {
+    findChannelByUuid,
+    addSubscribedChannel,
+    joinChannelApi,
+    leaveChannelApi,
+    subscribedChannels,
+  } = useStore('channelStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
@@ -266,7 +272,9 @@ const WorkspaceChannels: React.FC = () => {
         </div>
         <ul className="mt-3 flex-1 overflow-auto">
           {workspaceChannels.map((channel: Channel) => {
-            const isSubscribed = !!findChannelByUuid(channel.uuid);
+            const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
+
+            const isSubscribed = !!channelFound;
             const userCount = findChannelUserCountByChannelUuid(channel.uuid);
 
             return (
