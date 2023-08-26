@@ -56,6 +56,7 @@ const WorkspaceChannels: React.FC = () => {
     joinChannelApi,
     leaveChannelApi,
     subscribedChannels,
+    setTempChannelId,
   } = useStore('channelStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
@@ -92,6 +93,7 @@ const WorkspaceChannels: React.FC = () => {
     const subscribedChannel = findChannelByUuid(channel.uuid);
     if (!subscribedChannel) {
       addSubscribedChannel(channel);
+      setTempChannelId(channel.uuid);
     }
 
     navigate(`/app/${channel.uuid}`);

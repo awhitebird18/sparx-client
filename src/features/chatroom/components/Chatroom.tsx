@@ -92,9 +92,10 @@ const ChatRoom: React.FC = () => {
 
     return () => {
       leaveRoom(currentChannelId);
+      setCurrentChannelUuid(undefined);
       clearUsersTyping();
     };
-  }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom]);
+  }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom, setCurrentChannelUuid]);
 
   return (
     <Content>

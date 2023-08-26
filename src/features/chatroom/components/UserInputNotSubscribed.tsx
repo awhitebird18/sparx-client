@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 
 const UserInputNotSubscribed = () => {
-  const { currentChannel, joinChannelApi } = useStore('channelStore');
+  const { currentChannel, currentChannelId, joinChannelApi } = useStore('channelStore');
   const navigate = useNavigate();
 
   const handleNavigateToChannelsPage = () => {
@@ -15,9 +15,9 @@ const UserInputNotSubscribed = () => {
   };
 
   const handleJoinChannel = async () => {
-    if (!currentChannel) return;
+    if (!currentChannelId) return;
 
-    await joinChannelApi(currentChannel.uuid);
+    await joinChannelApi(currentChannelId);
   };
 
   return (
