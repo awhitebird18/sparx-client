@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 
 import { Channel } from '@/features/channels/types';
 import { ChannelUserCount } from '@/features/workspaceChannels/types/channelUserCount';
+import { convertToDayJs } from '@/utils/convertToDayjs';
 
 export const getWorkspaceChannels = async (
   page: number,
@@ -16,7 +17,10 @@ export const getWorkspaceChannels = async (
       },
     });
 
-    return res.data;
+    return {
+      channels: convertToDayJs(res.data.channels),
+      channelUserCounts: res.data.channelUserCounts,
+    };
   } catch (err: unknown) {
     const axiosError = err as AxiosError;
 

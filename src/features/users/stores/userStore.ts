@@ -7,6 +7,7 @@ import { UpdateUser, User } from '../types';
 
 export class UserStore {
   users: User[] = [];
+  currentUser: User | null = null;
   isLoading = true;
   onlineUsers: Map<string, Date> = new Map();
   currentPage = 1;
@@ -37,14 +38,17 @@ export class UserStore {
         updateUserApi: action,
         uploadProfileImageApi: action,
         fetchUsersApi: action,
+        setLoggedInUser: action,
       },
       { autoBind: true },
     );
   }
 
   get filteredUsers() {
-    return this.users.filter((user: User) =>
-      user.firstName.toLowerCase().includes(this.searchValue.toLowerCase()),
+    return this.users.filter(
+      (user: User) =>
+        user.firstName.toLowerCase().includes(this.searchValue.toLowerCase()) &&
+        user.uuid !== this?.currentUser?.uuid,
     );
   }
 
@@ -91,6 +95,10 @@ export class UserStore {
 
   setUsers = (users: User[]) => {
     this.users = users;
+  };
+
+  setLoggedInUser = (user: User) => {
+    this.currentUser = user;
   };
 
   updateUser = (updateUser: User) => {

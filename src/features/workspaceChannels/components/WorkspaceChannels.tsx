@@ -27,6 +27,8 @@ import {
   ChannelActions,
 } from '@/features/channels/enums';
 import { Channel } from '@/features/channels/types';
+import { filterWorkspaceChannels } from '@/utils/filterUtils';
+import { sortWorkspaceChannels } from '@/utils/sortUtils';
 
 const pageSize = 15;
 
@@ -37,7 +39,6 @@ const WorkspaceChannels: React.FC = () => {
     hasMore,
     page,
     sortBy,
-    filteredAndSortedChannels,
     filterChannelVisibility,
     filterBySearchValue,
     filterSubscribed,
@@ -47,6 +48,7 @@ const WorkspaceChannels: React.FC = () => {
     setFilterSubscribed,
     workspaceChannels,
     findChannelUserCountByChannelUuid,
+    channelUserCounts,
   } = useStore('workspaceChannelStore');
   const {
     findChannelByUuid,
@@ -149,6 +151,18 @@ const WorkspaceChannels: React.FC = () => {
     setFilterBySearchValue('');
   };
 
+  const filteredWorkspaceChannels = filterWorkspaceChannels(workspaceChannels, subscribedChannels, {
+    filterSubscribed: filterSubscribed,
+    filterBySearchValue: filterBySearchValue,
+    filterChannelVisibility: filterChannelVisibility,
+  });
+
+  const sortedWorkspaceChannels = sortWorkspaceChannels(
+    filteredWorkspaceChannels,
+    channelUserCounts,
+    sortBy,
+  );
+
   return (
     <Content>
       <Header>
@@ -238,7 +252,7 @@ const WorkspaceChannels: React.FC = () => {
         </div>
         <div className="flex gap-2 mt-2 justify-between border-b border-border items-center py-1 pl-2">
           <span className="text-sm text-muted-foreground items-center">
-            {filteredAndSortedChannels.length} Results
+            {sortedWorkspaceChannels.length} Results
           </span>
           {/* Channel Sort */}
           <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
@@ -270,7 +284,7 @@ const WorkspaceChannels: React.FC = () => {
           </DropdownMenu>
         </div>
         <ul className="mt-3 flex-1 overflow-auto">
-          {workspaceChannels.map((channel: Channel) => {
+          {sortedWorkspaceChannels.map((channel: Channel) => {
             const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
 
             const isSubscribed = !!channelFound;
@@ -336,7 +350,7 @@ const WorkspaceChannels: React.FC = () => {
             </div>
           )}
 
-          {!isLoading && !filteredAndSortedChannels.length ? <NoChannelsFallback /> : null}
+          {!isLoading && !sortedWorkspaceChannels.length ? <NoChannelsFallback /> : null}
           <div ref={setLoader} />
         </ul>
       </Body>

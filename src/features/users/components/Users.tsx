@@ -27,6 +27,7 @@ import Username from '@/features/users/components/Username';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
 import { ChannelType } from '@/features/channels/enums';
+import NoUsersFallback from './NoUsersFallback';
 
 enum UserMenuOptions {
   PROFILE = 'Profile',
@@ -101,6 +102,7 @@ const Users = () => {
             <Spinner />
           </div>
         ) : null}
+
         {!isLoading && displayedUsers.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
             {displayedUsers
@@ -155,12 +157,7 @@ const Users = () => {
           </div>
         ) : null}
 
-        {!isLoading && !displayedUsers.length ? (
-          <div className="w-full flex flex-col items-center flex-1">
-            <p className="text-xl font-bold mb-4 mt-16">No results</p>
-            <p className="text-sm mb-10">You may want to try adjusting your filters. </p>
-          </div>
-        ) : null}
+        {!isLoading && !displayedUsers.length ? <NoUsersFallback /> : null}
 
         <div className="flex-1" />
 
