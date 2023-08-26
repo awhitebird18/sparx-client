@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action, computed, reaction } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -13,7 +13,7 @@ dayjs.extend(timezone);
 
 export class ChannelStore {
   subscribedChannels: Channel[] = [];
-  tempChannelId?: string;
+  tempChannelId: string | undefined = undefined;
   currentChannelId: string | undefined;
   isLoading = true;
 
@@ -22,6 +22,7 @@ export class ChannelStore {
       subscribedChannels: observable,
       currentChannelId: observable,
       isLoading: observable,
+      tempChannelId: observable,
       currentChannel: computed,
       getChannelByUuid: computed,
       findChannelByUuid: action,
@@ -35,9 +36,22 @@ export class ChannelStore {
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
       leaveChannelApi: action,
+      setTempChannelId: action,
     });
+
+    reaction(
+      () => this.currentChannelId,
+      () => {
+        if (this.tempChannelId) {
+          this.removeSubscribedChannel(this.tempChannelId);
+          this.setTempChannelId(undefined);
+        }
+      },
+    );
   }
 
+  // Todo: computed value happens when the chatroom is entered. However, does not
+  // occur when the join channel button is clicked.
   get currentChannel(): Channel | undefined {
     return this.subscribedChannels.find((channel) => channel.uuid === this.currentChannelId);
   }
@@ -82,6 +96,10 @@ export class ChannelStore {
 
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
+  };
+
+  setTempChannelId = (channelId: string | undefined) => {
+    this.tempChannelId = channelId;
   };
 
   inviteUsersToChannelApi = async (channelUuid: string, users: User[]) => {
