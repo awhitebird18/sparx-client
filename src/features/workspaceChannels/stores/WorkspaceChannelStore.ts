@@ -1,10 +1,7 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
-import { filterWorkspaceChannels } from '@/utils/filterUtils';
-import { sortWorkspaceChannels } from '@/utils/sortUtils';
 
 import channelApi from '@/features/channels/api';
 
@@ -37,7 +34,6 @@ export class WorkspaceChannelStore {
       filterBySearchValue: observable,
       filterChannelVisibility: observable,
       isLoading: observable,
-      filteredAndSortedChannels: computed,
       setIsLoading: action,
       incrementPage: action,
       setSortBy: action,
@@ -52,15 +48,6 @@ export class WorkspaceChannelStore {
       findChannelUserCountByChannelUuid: action,
       updateChannelUserCount: action,
     });
-  }
-
-  get filteredAndSortedChannels() {
-    const filteredWorkspaceChannels = filterWorkspaceChannels(this.workspaceChannels, {
-      filterSubscribed: this.filterSubscribed,
-      filterBySearchValue: this.filterBySearchValue,
-      filterChannelVisibility: this.filterChannelVisibility,
-    });
-    return sortWorkspaceChannels(filteredWorkspaceChannels, this.sortBy);
   }
 
   incrementPage = () => {

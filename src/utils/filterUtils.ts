@@ -10,6 +10,7 @@ type FilterOptions = {
 
 export const filterWorkspaceChannels = (
   workspaceChannels: Channel[],
+  subscribedChannels: Channel[],
   filterOptions: FilterOptions,
 ) => {
   const { filterChannelVisibility, filterSubscribed, filterBySearchValue } = filterOptions;
@@ -28,13 +29,17 @@ export const filterWorkspaceChannels = (
     });
   }
 
-  if (filterSubscribed) {
-    // filteredChannels = filteredChannels.filter(
-    //   (workspaceChannel: WorkspaceChannel) =>
-    //     // Todo: channel does not have isSubscribed property
-    //     workspaceChannel.channel.isSubscribed ===
-    //     (filterSubscribed === SubscribeStatus.SUBSCSRIBED),
-    // );
+  if (filterSubscribed === SubscribeStatus.SUBSCSRIBED) {
+    filteredChannels = filteredChannels.filter(
+      (workspaceChannel: Channel) =>
+        !!subscribedChannels.find((el: Channel) => el.uuid === workspaceChannel.uuid),
+    );
+  }
+  if (filterSubscribed === SubscribeStatus.UNSUBSCRIBED) {
+    filteredChannels = filteredChannels.filter(
+      (workspaceChannel: Channel) =>
+        !subscribedChannels.find((el: Channel) => el.uuid === workspaceChannel.uuid),
+    );
   }
 
   if (filterBySearchValue) {
