@@ -80,8 +80,8 @@ export class SectionStore {
     return this.sections.find((el: Section) => el.type === channelType);
   };
 
-  addChannelUuidToSection = (channelUuid: string, channelType: SectionTypes) => {
-    const section = this.findSectionByChannelType(channelType);
+  addChannelUuidToSection = (channelUuid: string, sectionUuid: string) => {
+    const section = this.findSectionByUuid(sectionUuid);
 
     if (!section || section?.channelIds?.find((el: string) => el === channelUuid)) return;
 
@@ -90,20 +90,30 @@ export class SectionStore {
     this.updateSection(section);
   };
 
-  removeChannelUuidFromSection = (channelUuid: string, channelType: SectionTypes) => {
-    const section = this.findSectionByChannelType(channelType);
+  removeChannelUuidFromSection = (channelUuid: string) => {
+    for (let i = 0; i < this.sections.length; i++) {
+      const channelExists = this.sections[i].channelIds.find((el: string) => el === channelUuid);
 
-    if (!section) return;
-
-    section.channelIds = section.channelIds.filter((el: string) => el !== channelUuid);
-
-    this.updateSection(section);
+      if (channelExists) {
+        this.sections[i].channelIds = this.sections[i].channelIds.filter(
+          (el: string) => el !== channelUuid,
+        );
+      }
+    }
   };
 
   updateSectionApi = async (sectionUuid: string, updateSection: UpdateSection) => {
     const section = await sectionsApi.updateSection(sectionUuid, updateSection);
 
     this.updateSection(section);
+  };
+
+  updateChannelSectionApi = async (sectionUuid: string, channelUuid: string) => {
+    await sectionsApi.updateChannelSection(channelUuid, sectionUuid);
+
+    this.removeChannelUuidFromSection(channelUuid);
+
+    this.addChannelUuidToSection(channelUuid, sectionUuid);
   };
 
   removeSectionApi = async (sectionUuid: string) => {
