@@ -101,8 +101,8 @@ export class ChannelStore {
     await channelApi.inviteUsersToChannel(channelUuid, userIds);
   };
 
-  createChannelApi = async (createChannel: CreateChannel) => {
-    const channel = await channelApi.createChannel(createChannel);
+  createChannelApi = async (createChannel: CreateChannel, sectionId: string) => {
+    const channel = await channelApi.createChannel(createChannel, sectionId);
     this.addSubscribedChannel(channel);
     return channel;
   };

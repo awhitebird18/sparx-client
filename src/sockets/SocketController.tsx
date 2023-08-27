@@ -157,9 +157,10 @@ const SocketController = () => {
   // Join channel
   useEffect(() => {
     return connectSocket('join-channel', (data) => {
-      const { channel } = data.payload;
+      const { channel, sectionId } = data.payload;
+
       addSubscribedChannel(channel);
-      addChannelUuidToSection(channel.uuid, channel.type);
+      addChannelUuidToSection(channel.uuid, sectionId);
     });
   }, [connectSocket, addSubscribedChannel, addChannelUuidToSection]);
 

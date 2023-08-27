@@ -42,7 +42,7 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps)
     payload,
   }: {
     type: ModalName;
-    payload?: { id: string; name: string };
+    payload?: { id: string; name?: string };
   }) => {
     setActiveModal({ type, payload });
   };
@@ -80,7 +80,9 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps)
           <ContextMenuSubTrigger>Create</ContextMenuSubTrigger>
           <ContextMenuPortal>
             <ContextMenuSubContent>
-              <ContextMenuItem onClick={() => handleClickItem({ type: 'CreateChannelModal' })}>
+              <ContextMenuItem
+                onClick={() => handleClickItem({ type: 'CreateChannelModal', payload: { id } })}
+              >
                 Create Channel
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleClickItem({ type: 'CreateSectionModal' })}>

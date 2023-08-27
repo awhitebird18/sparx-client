@@ -20,13 +20,14 @@ import { Checkbox } from '@/components/ui/Checkbox';
 
 import { ChannelType } from '../enums';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
   isPrivate: z.boolean().default(false),
 });
 
-const CreateChanneForm = () => {
+const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
   const { createChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const CreateChanneForm = () => {
       type: ChannelType.CHANNEL,
       isPrivate: values.isPrivate,
     };
-    const channel = await createChannelApi(channelData);
+    const channel = await createChannelApi(channelData, sectionId);
     handleCloseModal();
     navigate(`/app/${channel.uuid}`);
   }
@@ -112,4 +113,4 @@ const CreateChanneForm = () => {
   );
 };
 
-export default CreateChanneForm;
+export default observer(CreateChannelForm);
