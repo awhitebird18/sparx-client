@@ -8,7 +8,6 @@ import { formatDate } from '../utils/datefns';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 
 import { useStore } from '@/stores/RootStore';
-import { useAuth } from '@/providers/auth';
 
 import { Badge } from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
@@ -46,7 +45,7 @@ const ChatRoom: React.FC = () => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [thread, setThread] = useState<MessageType | null>(null);
   const { channelId } = useParams();
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
 
   const handleSubmit = async (messageContent: string) => {
     if (!currentChannel || !currentUser) return;
@@ -92,7 +91,6 @@ const ChatRoom: React.FC = () => {
 
     return () => {
       leaveRoom(currentChannelId);
-      setCurrentChannelUuid(undefined);
       clearUsersTyping();
     };
   }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom, setCurrentChannelUuid]);

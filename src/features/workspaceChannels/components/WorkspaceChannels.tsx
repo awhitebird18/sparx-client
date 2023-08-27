@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { Check, ChevronDown, Dot } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
-import { useAuth } from '@/providers/auth';
 
 import { Button } from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
@@ -61,7 +60,7 @@ const WorkspaceChannels: React.FC = () => {
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
   const [typeDropdown, setTypeDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [subscribedDropdownOpen, setSubscribedDropdownOpen] = useState(false);

@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 
 import { useStore } from '@/stores/RootStore';
-import { useAuth } from '@/providers/auth';
 
 import { User } from '../types';
 
@@ -35,26 +34,13 @@ enum UserMenuOptions {
 }
 
 const Users = () => {
-  const {
-    fetchUsersApi,
-    isLoading,
-    displayedUsers,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    searchValue,
-    setSearchValue,
-  } = useStore('userStore');
+  const { isLoading, displayedUsers, searchValue, setSearchValue } = useStore('userStore');
   const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
   const { addSubscribedChannel } = useStore('channelStore');
   const { directChannelSectionId } = useStore('sectionStore');
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
   const { setSelectedId } = useStore('sidebarStore');
-
-  useEffect(() => {
-    fetchUsersApi();
-  }, [fetchUsersApi]);
 
   const handleViewUserProfile = (userId: string) => {
     setActiveModal({ type: 'ProfileModal', payload: { userId } });
@@ -157,29 +143,7 @@ const Users = () => {
           </div>
         ) : null}
 
-        {!isLoading && !displayedUsers.length ? <NoUsersFallback /> : null}
-
-        <div className="flex-1" />
-
-        <div className="flex justify-between items-center pt-2">
-          <Button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-            className="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-primary-foreground hover:bg-accent"
-          >
-            Previous
-          </Button>
-          <p>
-            Page {currentPage} of {totalPages}
-          </p>
-          <Button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-            className="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-primary-foreground hover:bg-accent"
-          >
-            Next
-          </Button>
-        </div>
+        {!displayedUsers.length ? <NoUsersFallback /> : null}
       </Body>
     </Content>
   );

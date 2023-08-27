@@ -53,7 +53,11 @@ export class ChannelStore {
   // Todo: computed value happens when the chatroom is entered. However, does not
   // occur when the join channel button is clicked.
   get currentChannel(): Channel | undefined {
-    return this.subscribedChannels.find((channel) => channel.uuid === this.currentChannelId);
+    const channel = this.subscribedChannels.find(
+      (channel) => channel.uuid === this.currentChannelId,
+    );
+
+    return channel;
   }
 
   get getChannelByUuid() {

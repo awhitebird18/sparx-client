@@ -13,6 +13,7 @@ export class UserStore {
   currentPage = 1;
   usersPerPage = 10;
   searchValue = '';
+  hasMore = true;
 
   constructor() {
     makeObservable(
