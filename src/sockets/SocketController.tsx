@@ -130,12 +130,22 @@ const SocketController = () => {
   /* Section Sockets */
   // New section
   useEffect(() => {
-    return connectSocket(`sections`, addSection);
+    return connectSocket(`sections`, (data) => {
+      const { section } = data.payload;
+
+      addSection(section);
+    });
   }, [connectSocket, addSection]);
 
   // Update section
   useEffect(() => {
-    return connectSocket(`sections/update`, updateSection);
+    return connectSocket(`sections/update`, (data) => {
+      const { section } = data.payload;
+
+      delete section.channelIds;
+
+      updateSection(section);
+    });
   }, [connectSocket, updateSection]);
 
   // Remove section
@@ -147,9 +157,10 @@ const SocketController = () => {
   // Join channel
   useEffect(() => {
     return connectSocket('join-channel', (data) => {
-      const { channel } = data.payload;
+      const { channel, sectionId } = data.payload;
+
       addSubscribedChannel(channel);
-      addChannelUuidToSection(channel.uuid, channel.type);
+      addChannelUuidToSection(channel.uuid, sectionId);
     });
   }, [connectSocket, addSubscribedChannel, addChannelUuidToSection]);
 

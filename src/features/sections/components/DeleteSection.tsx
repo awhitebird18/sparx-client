@@ -3,12 +3,12 @@ import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/modal/Modal';
 
-const DeleteSection = ({ uuid, name }: { uuid: string; name: string }) => {
+const DeleteSection = ({ id, name }: { id: string; name: string }) => {
   const { removeSectionApi } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
 
   async function handleDelete() {
-    removeSectionApi(uuid);
+    await removeSectionApi(id);
 
     setActiveModal(null);
   }

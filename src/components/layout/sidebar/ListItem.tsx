@@ -28,15 +28,17 @@ interface ListitemProps {
   primary?: boolean;
   isChannel?: boolean;
   disabled?: boolean;
+  isTemp?: boolean;
 }
 
-const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
+const ListItem = ({ id, title, primary, isTemp, isChannel, disabled, icon }: ListitemProps) => {
   const { currentUser } = useStore('userStore');
-  const { sections } = useStore('sectionStore');
+  const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
   const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
-  const { leaveChannelApi, setCurrentChannelUuid, findChannelByUuid } = useStore('channelStore');
+  const { leaveChannelApi, setCurrentChannelUuid, findChannelByUuid, filterTempChannels } =
+    useStore('channelStore');
   const { findChannelUnreads, clearChannelUnreads } = useStore('channelUnreadStore');
   const { selectedId, setSelectedId, setSidebarWidth, isSidebarAbsolute } =
     useStore('sidebarStore');
@@ -47,23 +49,20 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     collect: () => ({}),
   }));
 
+  const conditionalDragRef = isTemp ? null : dragRef;
+
   const unreadCount = findChannelUnreads(id)?.unreadCount;
 
   const isSelected = selectedId === id && !disabled;
 
-  const handleMoveChannel = ({
+  const handleMoveChannel = async ({
     channelId,
     sectionId,
   }: {
-    channelId?: string;
+    channelId: string;
     sectionId: string;
   }) => {
-    if (!channelId) return;
-
-    // Todo: need to update channel section logic
-    console.info(sectionId);
-
-    // updateChannelSection(channelId, sectionId);
+    await updateChannelSectionApi(sectionId, channelId);
   };
 
   const handleLeaveChannel = async () => {
@@ -102,6 +101,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
       setSelectedId(id);
       clearChannelUnreads(id);
     }
+    filterTempChannels();
 
     if (isSidebarAbsolute) {
       setSidebarWidth(0);
@@ -113,7 +113,7 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
     <ContextMenu>
       <ContextMenuTrigger disabled={!isChannel}>
         <div
-          ref={dragRef}
+          ref={conditionalDragRef}
           onClick={handleClick}
           className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
             isSelected
@@ -156,16 +156,18 @@ const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemPro
         <ContextMenuSeparator />
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Move channel</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
+          <ContextMenuSubContent className="w-48 ">
             <ContextMenuLabel className="text-xs text-muted-foreground">Move to..</ContextMenuLabel>
-            {sections.map((section: Section) => (
-              <ContextMenuItem
-                key={section.uuid}
-                onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
-              >
-                {section.name}
-              </ContextMenuItem>
-            ))}
+            <div className="max-h-48 overflow-auto">
+              {sections.map((section: Section) => (
+                <ContextMenuItem
+                  key={section.uuid}
+                  onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
+                >
+                  {section.name}
+                </ContextMenuItem>
+              ))}
+            </div>
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSeparator />

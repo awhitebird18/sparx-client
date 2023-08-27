@@ -9,12 +9,6 @@ export const updateSection = async (sectionId: string, updateSection: UpdateSect
   try {
     const { data } = await axios.patch(`/sections/${sectionId}`, updateSection);
 
-    stores.notificationStore.addNotification({
-      title: 'Section updated',
-      type: NotificationType.SUCCESS,
-      show: true,
-    });
-
     return data;
   } catch (err) {
     return stores.notificationStore.addNotification({

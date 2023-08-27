@@ -86,6 +86,7 @@ const Section = ({ section }: SectionProps) => {
                   id={channelUuid}
                   title={channel.name}
                   isChannel
+                  isTemp={channel.isTemp}
                   icon={
                     <ChannelIcon
                       imageUrl={channel.icon}

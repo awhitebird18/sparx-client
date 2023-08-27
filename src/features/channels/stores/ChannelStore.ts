@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed, reaction } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -13,7 +13,6 @@ dayjs.extend(timezone);
 
 export class ChannelStore {
   subscribedChannels: Channel[] = [];
-  tempChannelId: string | undefined = undefined;
   currentChannelId: string | undefined;
   isLoading = true;
 
@@ -22,7 +21,6 @@ export class ChannelStore {
       subscribedChannels: observable,
       currentChannelId: observable,
       isLoading: observable,
-      tempChannelId: observable,
       currentChannel: computed,
       getChannelByUuid: computed,
       findChannelByUuid: action,
@@ -36,18 +34,7 @@ export class ChannelStore {
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
       leaveChannelApi: action,
-      setTempChannelId: action,
     });
-
-    reaction(
-      () => this.currentChannelId,
-      () => {
-        if (this.tempChannelId) {
-          this.removeSubscribedChannel(this.tempChannelId);
-          this.setTempChannelId(undefined);
-        }
-      },
-    );
   }
 
   // Todo: computed value happens when the chatroom is entered. However, does not
@@ -65,9 +52,16 @@ export class ChannelStore {
       return this.subscribedChannels.find((channel) => channel.uuid === uuid);
     };
   }
+  filterTempChannels = () => {
+    this.subscribedChannels = this.subscribedChannels.filter((el: Channel) => !el.isTemp);
+  };
 
   findChannelByUuid = (uuid: string) => {
     return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
+  };
+
+  findTempChannel = () => {
+    return this.subscribedChannels.find((el: Channel) => el.isTemp);
   };
 
   setSubscribedChannels = (channels: Channel[]) => {
@@ -102,17 +96,13 @@ export class ChannelStore {
     this.isLoading = bool;
   };
 
-  setTempChannelId = (channelId: string | undefined) => {
-    this.tempChannelId = channelId;
-  };
-
   inviteUsersToChannelApi = async (channelUuid: string, users: User[]) => {
     const userIds = users.map((user: User) => user.uuid);
     await channelApi.inviteUsersToChannel(channelUuid, userIds);
   };
 
-  createChannelApi = async (createChannel: CreateChannel) => {
-    const channel = await channelApi.createChannel(createChannel);
+  createChannelApi = async (createChannel: CreateChannel, sectionId: string) => {
+    const channel = await channelApi.createChannel(createChannel, sectionId);
     this.addSubscribedChannel(channel);
     return channel;
   };

@@ -26,16 +26,16 @@ const Sidebar = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex flex-col w-full overflow-hidden">
+      <div className="flex flex-col w-full overflow-hidden h-full">
         <CompanyDropdown />
-        <div className="m-2">
+        <div className="p-1.5">
           <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
           <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
           <ListItem id="mentions" title="Mentions" primary icon={<At size={18} />} />
           <ListItem id="drafts" title="Drafts" primary icon={<Pencil size={15} />} />
         </div>
         <Divider />
-        <div className="m-2">
+        <div className="p-1.5 overflow-auto flex flex-col">
           {sections.map((section: SectionType) => (
             <Section key={section.uuid} section={section} />
           ))}
