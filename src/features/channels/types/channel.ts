@@ -8,4 +8,5 @@ export interface Channel extends Base {
   icon?: string;
   isPrivate?: boolean;
   type: ChannelType;
+  isTemp?: boolean;
 }

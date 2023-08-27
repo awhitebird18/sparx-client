@@ -7,12 +7,6 @@ export const updateChannelSection = async (channelId: string, sectionId: string)
   try {
     const { data } = await axios.patch(`/channel-subscriptions/move/${channelId}`, { sectionId });
 
-    stores.notificationStore.addNotification({
-      title: 'Section updated',
-      type: NotificationType.SUCCESS,
-      show: true,
-    });
-
     return data;
   } catch (err) {
     stores.notificationStore.addNotification({

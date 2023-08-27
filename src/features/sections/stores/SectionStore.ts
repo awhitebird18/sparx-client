@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-import { addEventListener } from '@/events/eventHandler';
+// import { addEventListener } from '@/events/eventHandler';
 import { CreateSection, Section, UpdateSection } from '@/features/sections/types';
 import sectionsApi from '../api';
 import { SectionTypes } from '../enums';
@@ -33,7 +33,7 @@ export class SectionStore {
       directChannelSectionId: computed,
     });
 
-    addEventListener('channelUpdate', this.fetchsectionsApi);
+    // addEventListener('channelUpdate', this.fetchsectionsApi);
   }
 
   get directChannelSectionId() {
@@ -60,10 +60,11 @@ export class SectionStore {
   };
 
   updateSection = (section: Section) => {
-    const index = this.sections.findIndex((el: Section) => el.uuid === section.uuid);
-    if (index === -1) return;
+    const sectionFound = this.findSectionByUuid(section.uuid);
 
-    this.sections.splice(index, 1, section);
+    if (!sectionFound) return;
+
+    Object.assign(sectionFound, section);
   };
 
   removeSection = async (sectionId: string) => {

@@ -150,15 +150,15 @@ const ChatRoom: React.FC = () => {
                   </>
                 )}
               </div>
-              {currentChannel?.uuid ? (
+              {currentChannel?.isTemp ? (
+                <UserInputNotSubscribed />
+              ) : (
                 <Editor
                   placeholder={`Message ${currentChannel?.name}`}
                   config={editorConfig}
                   onSubmit={handleSubmit}
                   onChange={handleInputChange}
                 />
-              ) : (
-                <UserInputNotSubscribed />
               )}
               <UsersTypingDisplay />
             </div>
