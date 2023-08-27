@@ -5,8 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Pencil } from 'react-bootstrap-icons';
 
-import { useAuth } from '@/providers/auth';
-
 import {
   Form,
   FormControl,
@@ -32,12 +30,13 @@ const formSchema = z.object({
 
 type ProfileModalProps = { userId: string };
 const ProfileModal = ({ userId }: ProfileModalProps) => {
-  const { findUserByUuid, updateUserApi, uploadProfileImageApi } = useStore('userStore');
+  const { findUserByUuid, updateUserApi, uploadProfileImageApi, currentUser } =
+    useStore('userStore');
   const [user, setUser] = useState<User>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { currentUser } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,7 +50,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   }, [currentUser, findUserByUuid, userId]);
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
-    await updateUserApi(userId, values);
+    await updateUserApi(values);
   }
 
   const handleEditForm = () => {
@@ -67,14 +66,13 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectImage = (e: any) => {
-    if (!currentUser) return;
     const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
 
-      await uploadProfileImageApi(currentUser?.uuid, imageBase64);
+      await uploadProfileImageApi(imageBase64);
     };
 
     reader.readAsDataURL(file);

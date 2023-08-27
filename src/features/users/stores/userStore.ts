@@ -7,7 +7,7 @@ import { UpdateUser, User } from '../types';
 
 export class UserStore {
   users: User[] = [];
-  currentUser: User | null = null;
+  currentUser: User | undefined = undefined;
   isLoading = true;
   onlineUsers: Map<string, Date> = new Map();
   currentPage = 1;
@@ -22,6 +22,7 @@ export class UserStore {
         onlineUsers: observable,
         isLoading: observable,
         searchValue: observable,
+        currentUser: observable,
         displayedUsers: computed,
         filteredUsers: computed,
         setCurrentPage: action,
@@ -38,7 +39,6 @@ export class UserStore {
         updateUserApi: action,
         uploadProfileImageApi: action,
         fetchUsersApi: action,
-        setLoggedInUser: action,
       },
       { autoBind: true },
     );
@@ -83,6 +83,10 @@ export class UserStore {
     this.searchValue = value;
   };
 
+  setCurrentUser = (user: User | undefined) => {
+    this.currentUser = user;
+  };
+
   setOnlineUsers = (users: Map<string, Date>) => {
     this.onlineUsers = new Map(users);
   };
@@ -97,31 +101,32 @@ export class UserStore {
     this.users = users;
   };
 
-  setLoggedInUser = (user: User) => {
-    this.currentUser = user;
+  updateUser = (updateUser: User) => {
+    const user = this.users.find((el: User) => el.uuid === updateUser.uuid);
+    if (!user) return;
+
+    Object.assign(user, updateUser);
   };
 
-  updateUser = (updateUser: User) => {
-    const index = this.users.findIndex((el: User) => el.uuid === updateUser.uuid);
-    if (index === -1) return;
-
-    this.users.splice(index, 1, updateUser);
+  updateCurrentUser = (user: User) => {
+    if (!this.currentUser) return;
+    Object.assign(this.currentUser, user);
   };
 
   removeUser = (uuid: string) => {
     this.users = this.users.filter((user) => user.uuid !== uuid);
   };
 
-  updateUserApi = async (uuid: string, updatedUser: UpdateUser) => {
-    const user = await usersApi.updateUser(uuid, updatedUser);
+  updateUserApi = async (updatedUser: UpdateUser) => {
+    const user = await usersApi.updateUser(updatedUser);
 
-    this.updateUser(user);
+    this.updateCurrentUser(user);
   };
 
-  uploadProfileImageApi = async (userId: string, profileImage: string) => {
-    const user = await userProfileApi.uploadProfileImage(userId, profileImage);
+  uploadProfileImageApi = async (profileImage: string) => {
+    const user = await userProfileApi.uploadProfileImage(profileImage);
 
-    this.updateUser(user);
+    this.updateCurrentUser(user);
   };
 
   fetchUsersApi = async () => {

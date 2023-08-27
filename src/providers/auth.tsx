@@ -12,13 +12,10 @@ import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
 
 import { LoginData, RegistrationData } from '@/features/auth/types';
-import { User } from '@/features/users/types';
 
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 
 interface AuthContextData {
-  currentUser: User | null;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
   userLogin: (loginCredentials: LoginData) => Promise<void>;
   userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<void>;
@@ -40,13 +37,11 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { setLoggedInUser } = useStore('userStore');
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { setSections } = useStore('sectionStore');
   const { setInitialPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
-  const { setUsers } = useStore('userStore');
+  const { setUsers, setCurrentUser } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
 
   const [loading, setLoading] = useState(true);
@@ -67,7 +62,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       console.error(err);
     } finally {
-      setCurrentUser(null);
+      setCurrentUser(undefined);
     }
   };
 
@@ -84,7 +79,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await authApi.verify();
 
       setCurrentUser(data.currentUser);
-      setLoggedInUser(data.currentUser);
 
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);
@@ -98,7 +92,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   }, [
-    setLoggedInUser,
+    setCurrentUser,
     setChannelUnreads,
     setInitialPreferences,
     setSections,
@@ -111,14 +105,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       verifyAndLoginUser();
     } catch (err) {
-      setCurrentUser(null);
+      setCurrentUser(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value = {
-    currentUser,
-    setCurrentUser,
     userLogin,
     userLogout,
     registerUser,

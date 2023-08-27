@@ -3,7 +3,8 @@ import { Navigate, useRoutes } from 'react-router-dom';
 
 import { publicRoutes } from '@/routes/public';
 import { protectedRoutes } from '@/routes/protected';
-import { useAuth } from '@/providers/auth';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
 const navigateToPath = () => {
   const savedHistory = localStorage.getItem('navigationHistory');
@@ -15,8 +16,8 @@ const navigateToPath = () => {
   return '/app';
 };
 
-export const AppRoutes = () => {
-  const { currentUser } = useAuth();
+const AppRoutes = () => {
+  const { currentUser } = useStore('userStore');
   const commonRoutes = [
     {
       path: '*',
@@ -32,3 +33,5 @@ export const AppRoutes = () => {
 
   return <>{element}</>;
 };
+
+export default observer(AppRoutes);

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
 import { setFavicon } from '@/utils/setFavicon';
 
@@ -10,8 +9,7 @@ import { UserTyping } from '@/features/userTyping/types';
 import { SectionTypes } from '@/features/sections/enums';
 
 const SocketController = () => {
-  const { currentUser } = useAuth();
-  const { setOnlineUsers } = useStore('userStore');
+  const { setOnlineUsers, currentUser } = useStore('userStore');
   const { connectSocket, disconnectSocket, emitSocket } = useStore('socketStore');
   const {
     currentChannelId,
@@ -50,12 +48,16 @@ const SocketController = () => {
 
   // New user
   useEffect(() => {
-    return connectSocket('users/update', addUser);
+    return connectSocket('users/new', addUser);
   }, [connectSocket, addUser]);
 
   // Update user
   useEffect(() => {
-    return connectSocket('users/update', updateUser);
+    return connectSocket('users/update', (data) => {
+      const { user } = data.payload;
+
+      updateUser(user);
+    });
   }, [connectSocket, updateUser]);
 
   // Remove user

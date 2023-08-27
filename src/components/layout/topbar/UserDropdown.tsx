@@ -20,35 +20,35 @@ const UserDropdown: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
-  const { currentUser, userLogout } = useAuth();
+  const { userLogout } = useAuth();
+  const { currentUser } = useStore('userStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
     setActiveModal({ type, payload });
   };
 
+  // Todo: need to refactor this
   if (!currentUser) return;
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      {currentUser && (
-        <Tooltip>
-          <TooltipTrigger>
-            <DropdownMenuTrigger className="flex items-center" asChild>
-              <div>
-                <UserAvatar
-                  size={30}
-                  userId={currentUser.uuid}
-                  profileImage={currentUser.profileImage}
-                  showStatus
-                />
-              </div>
-            </DropdownMenuTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
-          </TooltipContent>
-        </Tooltip>
-      )}
+      <Tooltip>
+        <TooltipTrigger>
+          <DropdownMenuTrigger className="flex items-center" asChild>
+            <div>
+              <UserAvatar
+                size={30}
+                userId={currentUser.uuid}
+                profileImage={currentUser.profileImage}
+                showStatus
+              />
+            </div>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
+        </TooltipContent>
+      </Tooltip>
 
       <DropdownMenuContent
         align="end"

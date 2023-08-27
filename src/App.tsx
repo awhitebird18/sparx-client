@@ -1,4 +1,4 @@
-import { AppRoutes } from '@/routes';
+import AppRoutes from '@/routes';
 import { AppProvider } from '@/providers/app';
 import { StoreProvider } from '@/providers/store';
 import { ThemeProvider } from '@/providers/theme';
