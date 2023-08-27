@@ -5,7 +5,6 @@ import { useDrag } from 'react-dnd';
 
 import { SidebarItem } from './enums/itemTypes';
 import { Section } from '@/features/sections/types';
-import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
 
 import { Badge } from '@/components/ui/Badge';
@@ -32,7 +31,7 @@ interface ListitemProps {
 }
 
 const ListItem = ({ id, title, primary, isChannel, disabled, icon }: ListitemProps) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
   const { sections } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
   const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');

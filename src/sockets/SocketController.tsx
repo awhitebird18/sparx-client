@@ -6,7 +6,6 @@ import { setFavicon } from '@/utils/setFavicon';
 
 import { Message } from '@/features/messages/types';
 import { UserTyping } from '@/features/userTyping/types';
-import { SectionTypes } from '@/features/sections/enums';
 
 const SocketController = () => {
   const { setOnlineUsers, currentUser } = useStore('userStore');
@@ -160,9 +159,19 @@ const SocketController = () => {
       const { channelId } = data.payload;
 
       removeSubscribedChannel(channelId);
-      removeChannelUuidFromSection(channelId, SectionTypes.CHANNEL);
+      removeChannelUuidFromSection(channelId);
     });
   }, [connectSocket, removeSubscribedChannel, removeChannelUuidFromSection]);
+
+  // Update channel section
+  useEffect(() => {
+    return connectSocket('update-channel-section', (data) => {
+      const { channelId, sectionId } = data.payload;
+
+      removeChannelUuidFromSection(channelId);
+      addChannelUuidToSection(channelId, sectionId);
+    });
+  }, [addChannelUuidToSection, connectSocket, removeChannelUuidFromSection]);
 
   // Update channel
   useEffect(() => {

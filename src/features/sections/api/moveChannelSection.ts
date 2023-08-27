@@ -3,11 +3,12 @@ import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
 
-import { CreateSection } from '../types';
-
-export const createSection = async (createSection: CreateSection) => {
+export const moveChannelSection = async (sectionUuid: string, channelUuid: string) => {
   try {
-    const { data } = await axios.post('/sections', createSection);
+    const { data } = await axios.patch('/sections/move-channel', {
+      sectionId: sectionUuid,
+      channelId: channelUuid,
+    });
 
     stores.notificationStore.addNotification({
       title: 'Section created',

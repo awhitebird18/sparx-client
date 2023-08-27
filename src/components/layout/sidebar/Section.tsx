@@ -24,13 +24,13 @@ interface Item {
 const Section = ({ section }: SectionProps) => {
   const { uuid, type, name, channelIds, isSystem, isOpen, sortBy } = section;
   const { selectedId } = useStore('sidebarStore');
-  const { updateSectionApi } = useStore('sectionStore');
+  const { updateSectionApi, updateChannelSectionApi } = useStore('sectionStore');
   const { findChannelByUuid } = useStore('channelStore');
   const [{ isOver }, drop] = useDrop(() => ({
     accept: SidebarItem.ITEM,
-    drop: (item: Item) => {
+    drop: async (item: Item) => {
       console.info(item);
-      // updateChannelSection(item.channelId, id);
+      await updateChannelSectionApi(uuid, item.channelId);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
