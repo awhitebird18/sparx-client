@@ -6,9 +6,9 @@ import { NotificationType } from '@/stores/NotificationStore';
 
 import { User } from '@/features/users/types';
 
-export const uploadProfileImage = async (userId: string, profileImage: string): Promise<User> => {
+export const uploadProfileImage = async (profileImage: string): Promise<User> => {
   try {
-    const res = await axios.patch(`/users/${userId}/image-upload`, { profileImage });
+    const res = await axios.patch(`/users/self/image-upload`, { profileImage });
 
     stores.notificationStore.addNotification({
       title: 'Profile image updated',

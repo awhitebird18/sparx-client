@@ -4,11 +4,11 @@ import { AxiosError } from 'axios';
 import { stores } from '@/stores/RootStore';
 import { NotificationType } from '@/stores/NotificationStore';
 
-import { User } from '../types';
+import { UpdateUser, User } from '../types';
 
-export const updateUser = async (userId: string, updateUser: Partial<User>): Promise<User> => {
+export const updateUser = async (updateUser: UpdateUser): Promise<User> => {
   try {
-    const res = await axios.patch(`/users/${userId}`, updateUser);
+    const res = await axios.patch(`/users/self`, updateUser);
 
     stores.notificationStore.addNotification({
       title: 'Profile updated',

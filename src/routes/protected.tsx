@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 import { Navigate } from 'react-router-dom';
 
-import { AppLayout } from '@/components/layout/AppLayout';
+import AppLayout from '@/components/layout/AppLayout';
 import VerificationSuccess from '@/features/auth/components/VerificationSuccess';
 
 const UserRoutes = lazy(() => import('@/features/users/routes'));

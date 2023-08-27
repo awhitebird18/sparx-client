@@ -1,13 +1,13 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { useAuth } from '@/providers/auth';
-
 import Login from '../components/Login';
 import Register from '../components/Register';
 import VerificationSuccess from '../components/VerificationSuccess';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
-export const AuthRoutes = () => {
-  const { currentUser } = useAuth();
+const AuthRoutes = () => {
+  const { currentUser } = useStore('userStore');
 
   if (currentUser) {
     return <Navigate to="/app" />;
@@ -22,3 +22,5 @@ export const AuthRoutes = () => {
     </Routes>
   );
 };
+
+export default observer(AuthRoutes);

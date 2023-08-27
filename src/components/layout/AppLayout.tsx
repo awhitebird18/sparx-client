@@ -6,10 +6,11 @@ import ModalController from '../modal/ModalController';
 import ResizableSidebar from './sidebar/ResizeableSidebar';
 
 import SocketController from '@/sockets/SocketController';
-import { useAuth } from '@/providers/auth';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
-export const AppLayout = () => {
-  const { currentUser } = useAuth();
+const AppLayout = () => {
+  const { currentUser } = useStore('userStore');
 
   if (!currentUser) {
     return <Navigate to="/auth/login" />;
@@ -31,3 +32,5 @@ export const AppLayout = () => {
     </div>
   );
 };
+
+export default observer(AppLayout);
