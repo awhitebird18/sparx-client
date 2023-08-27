@@ -57,8 +57,6 @@ export class ChannelStore {
       (channel) => channel.uuid === this.currentChannelId,
     );
 
-    console.log('store', this.currentChannelId);
-
     return channel;
   }
 

@@ -75,8 +75,6 @@ const Users = () => {
     return navigate(`/app/${channelId}`);
   };
 
-  console.log(displayedUsers);
-
   return (
     <Content>
       <Header>

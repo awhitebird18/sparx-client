@@ -95,8 +95,6 @@ const ChatRoom: React.FC = () => {
     };
   }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom, setCurrentChannelUuid]);
 
-  console.log(currentChannel);
-
   return (
     <Content>
       <div className="flex overflow-hidden flex-1">
