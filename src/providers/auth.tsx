@@ -79,7 +79,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await authApi.verify();
 
       setCurrentUser(data.currentUser);
-
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);
       setSections(data.sections);
