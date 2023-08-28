@@ -5,7 +5,6 @@ import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 
 import { useStore } from '@/stores/RootStore';
-
 import { User } from '../types';
 
 import {
@@ -89,7 +88,7 @@ const Users = () => {
           </div>
         ) : null}
 
-        {!isLoading && displayedUsers.length ? (
+        {displayedUsers.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
             {displayedUsers
               .filter((user: User) => user.uuid !== currentUser?.uuid)
@@ -143,7 +142,7 @@ const Users = () => {
           </div>
         ) : null}
 
-        {!displayedUsers.length ? <NoUsersFallback /> : null}
+        {displayedUsers.length === 0 ? <NoUsersFallback /> : null}
       </Body>
     </Content>
   );

@@ -62,10 +62,9 @@ export class UserStore {
   }
 
   get displayedUsers() {
-    return this.filteredUsers.slice(
-      (this.currentPage - 1) * this.usersPerPage,
-      this.currentPage * this.usersPerPage,
-    );
+    return this.filteredUsers
+      .filter((user: User) => user.uuid !== this.currentUser?.uuid)
+      .slice((this.currentPage - 1) * this.usersPerPage, this.currentPage * this.usersPerPage);
   }
 
   findUserByUuid = (userId: string) => {
