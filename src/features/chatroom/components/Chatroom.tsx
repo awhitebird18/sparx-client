@@ -24,8 +24,8 @@ import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
 
 import { Message as MessageType } from '@/features/messages/types';
 
+// import { ChannelType } from '@/features/channels/enums';
 // import channelApi from '@/features/channels/api';
-
 // import { User } from '@/features/users/types';
 
 const ChatRoom: React.FC = () => {
@@ -37,20 +37,21 @@ const ChatRoom: React.FC = () => {
     createMessageApi,
     hasMore,
   } = useStore('messageStore');
-  const { setCurrentChannelUuid, currentChannelId, currentChannel } = useStore('channelStore');
+  const { setCurrentChannelUuid, currentChannelId, currentChannel, fetchChannelUserIdsApi } =
+    useStore('channelStore');
   const { clearUsersTyping } = useStore('userTypingStore');
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
+  const { currentUser } = useStore('userStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [thread, setThread] = useState<MessageType | null>(null);
   const { channelId } = useParams();
-  const { currentUser } = useStore('userStore');
 
   const handleSubmit = async (messageContent: string) => {
     if (!currentChannel || !currentUser) return;
 
-    // if (isTemp) {
+    // if (currentChannel.isTemp && currentChannel.type === ChannelType.DIRECT) {
     //   await channelApi.createDirectChannel(currentChannel.users.map((user: User) => user.uuid));
     // }
 
@@ -88,12 +89,13 @@ const ChatRoom: React.FC = () => {
   useEffect(() => {
     if (!currentChannelId) return;
     joinRoom(currentChannelId);
+    fetchChannelUserIdsApi(currentChannelId);
 
     return () => {
       leaveRoom(currentChannelId);
       clearUsersTyping();
     };
-  }, [clearUsersTyping, currentChannelId, joinRoom, leaveRoom, setCurrentChannelUuid]);
+  }, [clearUsersTyping, currentChannelId, fetchChannelUserIdsApi, joinRoom, leaveRoom]);
 
   return (
     <Content>

@@ -5,6 +5,8 @@ import { useStore } from '@/stores/RootStore';
 
 import { ChannelType } from '../enums/channelType';
 
+import channelApi from '../api';
+
 import Modal from '@/components/modal/Modal';
 import About from './About';
 import Members from './Members';
@@ -12,13 +14,31 @@ import Settings from './Settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import ChannelIcon from './ChannelIcon';
+import { useEffect, useState } from 'react';
+import { User } from '@/features/users/types';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
-  const { getChannelByUuid } = useStore('channelStore');
+  const { getChannelByUuid, fetchChannelUserIdsApi } = useStore('channelStore');
+  const { findUserByUuid } = useStore('userStore');
+  const [channelUserIds, setChannelUserIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fn = async () => {
+      const userIds = await channelApi.getChannelUsers(id);
+
+      setChannelUserIds(userIds);
+    };
+
+    fn();
+  }, [fetchChannelUserIdsApi, id]);
 
   const channel = getChannelByUuid(id);
 
   if (!channel) return null;
+
+  const channelUsers = channelUserIds
+    .map((el: string) => findUserByUuid(el))
+    .filter((user: User | undefined): user is User => user !== undefined) as User[];
 
   return (
     <Modal
@@ -60,7 +80,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
             <About channel={channel} />
           </TabsContent>
           <TabsContent value="members" className="h-full">
-            <Members users={[]} channel={channel} />
+            <Members users={channelUsers} channel={channel} />
           </TabsContent>
           <TabsContent value="settings" className="h-full">
             <Settings channel={channel} />

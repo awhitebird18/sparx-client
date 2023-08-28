@@ -14,12 +14,14 @@ dayjs.extend(timezone);
 export class ChannelStore {
   subscribedChannels: Channel[] = [];
   currentChannelId: string | undefined;
+  channelUserIds: string[] = [];
   isLoading = true;
 
   constructor() {
     makeObservable(this, {
       subscribedChannels: observable,
       currentChannelId: observable,
+      channelUserIds: observable,
       isLoading: observable,
       currentChannel: computed,
       getChannelByUuid: computed,
@@ -34,6 +36,7 @@ export class ChannelStore {
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
       leaveChannelApi: action,
+      fetchChannelUserIdsApi: action,
     });
   }
 
@@ -126,6 +129,16 @@ export class ChannelStore {
   updateChannelApi = async (uuid: string, updateChannel: UpdateChannel) => {
     const updatedChannel = await channelApi.updateChannel(uuid, updateChannel);
     this.updateSubscribedChannel(updatedChannel);
+  };
+
+  setChannelUsers = (channelUserIds: string[]) => {
+    this.channelUserIds = channelUserIds;
+  };
+
+  fetchChannelUserIdsApi = async (channelId: string) => {
+    const userIds = await channelApi.getChannelUsers(channelId);
+
+    this.setChannelUsers(userIds);
   };
 
   fetchSubscribedChannelsApi = async () => {
