@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ChevronBarExpand, X } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
-import { useAuth } from '@/providers/auth';
 
 import Modal from '@/components/modal/Modal';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
@@ -18,14 +17,14 @@ import {
 
 import { Channel } from '@/features/channels/types';
 import { User } from '@/features/users/types/user';
+import { observer } from 'mobx-react-lite';
 
 type AddUserModalProps = {
   channel: Channel;
 };
 
 const AddUserModal = ({ channel }: AddUserModalProps) => {
-  const { users, findBot } = useStore('userStore');
-  const { currentUser } = useAuth();
+  const { users, findBot, currentUser } = useStore('userStore');
   const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
   const { inviteUsersToChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
@@ -87,23 +86,25 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
             </PopoverTrigger>
             <PopoverContent className="w-56 p-0">
               <Command>
-                <CommandInput placeholder="Search framework..." />
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandInput placeholder="Search users..." />
+                <CommandEmpty>No users found.</CommandEmpty>
                 <CommandGroup>
-                  {unsubscribedUsers.map((user: User) => (
-                    <CommandItem
-                      key={user.uuid}
-                      onSelect={(currentValue) => {
-                        setSearchValue(currentValue === searchValue ? '' : currentValue);
-                        handleAddUserToInviteList(user);
-                        setOpen(false);
-                      }}
-                      className="gap-2 bg-transparent"
-                    >
-                      <UserAvatar userId={user.uuid} profileImage={user.profileImage} size={24} />
-                      {`${user.firstName} ${user.lastName}`}
-                    </CommandItem>
-                  ))}
+                  {unsubscribedUsers
+                    .filter((user: User) => user.uuid !== currentUser?.uuid)
+                    .map((user: User) => (
+                      <CommandItem
+                        key={user.uuid}
+                        onSelect={(currentValue) => {
+                          setSearchValue(currentValue === searchValue ? '' : currentValue);
+                          handleAddUserToInviteList(user);
+                          setOpen(false);
+                        }}
+                        className="gap-2 bg-transparent"
+                      >
+                        <UserAvatar userId={user.uuid} profileImage={user.profileImage} size={24} />
+                        {`${user.firstName} ${user.lastName}`}
+                      </CommandItem>
+                    ))}
                 </CommandGroup>
               </Command>
             </PopoverContent>
@@ -147,4 +148,4 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
   );
 };
 
-export default AddUserModal;
+export default observer(AddUserModal);

@@ -12,11 +12,16 @@ type ChannelIntroductionProps = { channelId: string | undefined };
 const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
   const [channel, setChannel] = useState<Channel | undefined>(undefined);
   const { findChannelByUuid } = useStore('channelStore');
+  const { setActiveModal } = useStore('modalStore');
 
   useEffect(() => {
     if (!channelId) return;
     setChannel(findChannelByUuid(channelId) || undefined);
   }, [channelId, findChannelByUuid]);
+
+  const handleAddUser = () => {
+    setActiveModal({ type: 'AddUserModal', payload: { channel } });
+  };
 
   if (!channel) return;
   return (
@@ -38,7 +43,11 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
               : 'This is the one channel that will always include everyone. Its a great spot for announcements and team-wide conversations.'}
           </span>
         </p>
-        <Button variant="outline" className="w-fit flex gap-2 text-base font-normal items-center">
+        <Button
+          variant="outline"
+          className="w-fit flex gap-2 text-base font-normal items-center"
+          onClick={handleAddUser}
+        >
           <Person className="text-xl" />
           Add People
           <Plus />
