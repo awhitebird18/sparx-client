@@ -1,6 +1,4 @@
 import { Moon, Sun } from 'react-bootstrap-icons';
-
-import { useTheme } from '@/providers/theme';
 import { primaryColors } from '@/utils/primaryColors';
 import { Theme } from '../enums/Theme';
 
@@ -14,19 +12,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
+import { useStore } from '@/stores/RootStore';
+import { getValidPrimaryColor } from '@/utils/getValidPrimaryColor';
+import { getValidTheme } from '@/utils/getValidTheme';
 
 const ThemeTab = () => {
-  const { theme, setAppTheme, primaryColor, setPrimaryColor } = useTheme();
+  const { theme, updateThemeApi, primaryColor, updatePrimaryColorApi } =
+    useStore('userPreferencesStore');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleThemeSelect = (e: any) => {
-    window.localStorage.setItem('theme', e.target.value);
-    setAppTheme(e.target.value);
+  const handleThemeSelect = (value: string) => {
+    updateThemeApi(getValidTheme(value));
   };
 
   const handlePrimaryColorSelect = (value: string) => {
-    window.localStorage.setItem('primaryColor', value);
-    setPrimaryColor(value);
+    updatePrimaryColorApi(getValidPrimaryColor(value));
   };
 
   return (
@@ -40,7 +40,7 @@ const ThemeTab = () => {
           <h2 className="text-sm mb-2">App theme</h2>
           <RadioGroup
             defaultValue={theme}
-            onClick={(e) => handleThemeSelect(e)}
+            onValueChange={(value) => handleThemeSelect(value)}
             className="space-y-4"
           >
             <div className="flex items-center border border-border rounded-lg overflow-hidden">
@@ -49,11 +49,11 @@ const ThemeTab = () => {
               </div>
               <div
                 className={`${
-                  theme === 'light' ? 'bg-yellow-500' : 'bg-secondary'
+                  theme === Theme.LIGHT ? 'bg-yellow-500' : 'bg-secondary'
                 } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
               >
                 Light
-                {theme === 'light' && <Sun className="mt-0.5" />}
+                {theme === Theme.LIGHT && <Sun className="mt-0.5" />}
               </div>
             </div>
             <div className="flex items-center border border-border rounded-lg overflow-hidden">
@@ -62,11 +62,11 @@ const ThemeTab = () => {
               </div>
               <div
                 className={`${
-                  theme === 'dark' ? 'bg-indigo-800' : 'bg-secondary'
+                  theme === Theme.DARK ? 'bg-indigo-800' : 'bg-secondary'
                 } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
               >
                 Dark
-                {theme === 'dark' && <Moon className="mt-0.5" />}
+                {theme === Theme.DARK && <Moon className="mt-0.5" />}
               </div>
             </div>
           </RadioGroup>
