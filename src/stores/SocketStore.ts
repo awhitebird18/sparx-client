@@ -36,7 +36,7 @@ export class SocketStore {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emitSocket = (connectionString: string, value: any) => {
+  emitSocket = (connectionString: string, value?: any) => {
     if (!this.socket) return;
 
     this.socket.emit(connectionString, value);

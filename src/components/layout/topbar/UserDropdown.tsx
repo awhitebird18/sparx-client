@@ -14,6 +14,7 @@ import { useStore } from '@/stores/RootStore';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { observer } from 'mobx-react-lite';
 import Username from '@/features/users/components/Username';
+import { UserStatus } from '@/features/users/enums';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -21,13 +22,18 @@ const UserDropdown: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { userLogout } = useAuth();
-  const { currentUser } = useStore('userStore');
+  const { currentUser, setUserOnlineStatus, userOnlineStatus } = useStore('userStore');
+  const { emitSocket } = useStore('socketStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
     setActiveModal({ type, payload });
   };
 
-  // Todo: need to refactor this
+  const handleSetOnlineStatus = (userStatus: UserStatus) => {
+    setUserOnlineStatus(userStatus);
+    emitSocket('change-status', { status: userStatus });
+  };
+
   if (!currentUser) return;
 
   return (
@@ -69,14 +75,24 @@ const UserDropdown: React.FC = () => {
               <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
             </div>
             <div className="flex items-center gap-1">
-              <div className="rounded-full bg-green-600 h-2.5 w-2.5"></div>
-              <p className="text-sm text-secondary-foreground">Online</p>
+              <div
+                className={`rounded-full h-2.5 w-2.5 ${
+                  userOnlineStatus === UserStatus.ONLINE ? 'bg-green-600' : 'bg-transparent'
+                }`}
+              ></div>
+              <p className="text-sm text-secondary-foreground">{userOnlineStatus}</p>
             </div>
           </div>
         </div>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => console.info('changeStatus')}>
-            Set yourself as away
+          <DropdownMenuItem
+            onClick={() =>
+              handleSetOnlineStatus(
+                userOnlineStatus === UserStatus.ONLINE ? UserStatus.AWAY : UserStatus.ONLINE,
+              )
+            }
+          >
+            {`Set yourself ${userOnlineStatus === UserStatus.ONLINE ? 'as away' : 'online'}`}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => console.info('pauseNotifications')}>
             Pause notifications

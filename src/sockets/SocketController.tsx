@@ -6,10 +6,11 @@ import { setFavicon } from '@/utils/setFavicon';
 
 import { Message } from '@/features/messages/types';
 import { UserTyping } from '@/features/userTyping/types';
+import { UserStatus } from '@/features/users/enums';
 
 const SocketController = () => {
   const { setOnlineUsers, currentUser } = useStore('userStore');
-  const { connectSocket, disconnectSocket, emitSocket } = useStore('socketStore');
+  const { connectSocket, emitSocket } = useStore('socketStore');
   const {
     currentChannelId,
     addSubscribedChannel,
@@ -23,7 +24,7 @@ const SocketController = () => {
   const { addUserTyping } = useStore('userTypingStore');
   const { incrementChannelUnreads, channelUnreadsCount } = useStore('channelUnreadStore');
   const { addMessage, removeMessage, updateMessage } = useStore('messageStore');
-  const { updateUser, addUser, removeUser } = useStore('userStore');
+  const { updateUser, addUser, removeUser, userOnlineStatus } = useStore('userStore');
   const {
     addSection,
     updateSection,
@@ -42,8 +43,20 @@ const SocketController = () => {
 
   // User heartbeat
   useEffect(() => {
-    setInterval(() => emitSocket('heartbeat', setOnlineUsers), 10000);
-  }, [connectSocket, disconnectSocket, emitSocket, setOnlineUsers]);
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    if (userOnlineStatus !== UserStatus.OFFLINE) {
+      intervalId = setInterval(() => {
+        emitSocket('heartbeat', { status: userOnlineStatus });
+      }, 10000);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [emitSocket, userOnlineStatus]);
 
   // New user
   useEffect(() => {
