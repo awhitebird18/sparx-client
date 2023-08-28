@@ -73,6 +73,7 @@ export class ChannelStore {
   };
 
   addSubscribedChannel = (channel: Channel) => {
+    if (this.findChannelByUuid(channel.uuid)) return;
     this.subscribedChannels.push(channel);
   };
 
@@ -107,8 +108,9 @@ export class ChannelStore {
     return channel;
   };
 
-  joinChannelApi = async (channelUuid: string) => {
-    const channel = await channelApi.joinChannel(channelUuid);
+  joinChannelApi = async ({ channelId, sectionId }: { channelId: string; sectionId: string }) => {
+    const channel = await channelApi.joinChannel({ channelId, sectionId });
+
     this.addSubscribedChannel(channel);
   };
 

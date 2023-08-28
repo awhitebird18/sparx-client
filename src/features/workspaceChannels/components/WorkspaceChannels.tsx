@@ -28,6 +28,7 @@ import {
 import { Channel } from '@/features/channels/types';
 import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
+import { SectionTypes } from '@/features/sections/enums';
 
 const pageSize = 15;
 
@@ -56,6 +57,7 @@ const WorkspaceChannels: React.FC = () => {
     leaveChannelApi,
     subscribedChannels,
   } = useStore('channelStore');
+  const { findSectionByChannelType, addChannelUuidToSection } = useStore('sectionStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
@@ -105,28 +107,38 @@ const WorkspaceChannels: React.FC = () => {
     switch (action) {
       case ChannelActions.JOIN:
         {
-          await joinChannelApi(channelUuid);
-
+          const section = findSectionByChannelType(SectionTypes.CHANNEL);
+          if (!section) return;
           const formattedMessage = formatAutomatedMessage({
             userId: currentUser.uuid,
             channelId: channelUuid,
             content: `has joined the channel.`,
           });
 
-          await createMessageApi(formattedMessage);
+          const joinChannelPromise = joinChannelApi({
+            channelId: channelUuid,
+            sectionId: section.uuid,
+          });
+          const createMessagePromise = createMessageApi(formattedMessage);
+
+          await Promise.all([joinChannelPromise, createMessagePromise]);
+          addChannelUuidToSection(channelUuid, section.uuid);
+
+          navigate(`/app/${channelUuid}`);
         }
         break;
       case ChannelActions.LEAVE:
         {
-          await leaveChannelApi(channelUuid);
-
           const formattedMessage = formatAutomatedMessage({
             userId: currentUser.uuid,
             channelId: channelUuid,
             content: `has left the channel.`,
           });
 
-          await createMessageApi(formattedMessage);
+          const leaveChannelPromise = leaveChannelApi(channelUuid);
+          const createMessagePromise = createMessageApi(formattedMessage);
+
+          await Promise.all([createMessagePromise, leaveChannelPromise]);
         }
         break;
     }

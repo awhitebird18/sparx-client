@@ -3,9 +3,15 @@ import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
 
-export const joinChannel = async (channelId: string) => {
+export const joinChannel = async ({
+  channelId,
+  sectionId,
+}: {
+  channelId: string;
+  sectionId: string;
+}) => {
   try {
-    const { data } = await axios.post(`/channel-management/join/${channelId}`);
+    const { data } = await axios.post('/channel-management/join', { channelId, sectionId });
 
     stores.notificationStore.addNotification({
       title: 'Channel joined',

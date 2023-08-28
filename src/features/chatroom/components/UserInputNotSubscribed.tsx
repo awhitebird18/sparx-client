@@ -5,9 +5,13 @@ import { useStore } from '@/stores/RootStore';
 
 import { Button } from '@/components/ui/Button';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
+import { SectionTypes } from '@/features/sections/enums';
 
 const UserInputNotSubscribed = () => {
-  const { currentChannel, currentChannelId, joinChannelApi } = useStore('channelStore');
+  const { currentChannel, joinChannelApi, updateSubscribedChannel } = useStore('channelStore');
+  const { findSectionByChannelType, addChannelUuidToSection } = useStore('sectionStore');
+  const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
+  const { currentUser } = useStore('userStore');
   const navigate = useNavigate();
 
   const handleNavigateToChannelsPage = () => {
@@ -15,9 +19,27 @@ const UserInputNotSubscribed = () => {
   };
 
   const handleJoinChannel = async () => {
-    if (!currentChannelId) return;
+    if (!currentChannel || !currentUser) return;
 
-    await joinChannelApi(currentChannelId);
+    const section = findSectionByChannelType(SectionTypes.CHANNEL);
+    if (!section) return;
+
+    const formattedMessage = formatAutomatedMessage({
+      userId: currentUser.uuid,
+      channelId: currentChannel.uuid,
+      content: `has joined the channel.`,
+    });
+
+    const joinChannelPromise = joinChannelApi({
+      channelId: currentChannel.uuid,
+      sectionId: section.uuid,
+    });
+    const createMessagePromise = createMessageApi(formattedMessage);
+
+    await Promise.all([joinChannelPromise, createMessagePromise]);
+
+    addChannelUuidToSection(currentChannel.uuid, section.uuid);
+    updateSubscribedChannel({ ...currentChannel, isTemp: false });
   };
 
   return (
