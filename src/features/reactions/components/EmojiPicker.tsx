@@ -2,7 +2,6 @@ import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from '@/stores/RootStore';
-import { useTheme } from '@/providers/theme';
 import { Message } from '@/features/messages/types';
 
 type EmojiPickerProps = {
@@ -13,7 +12,7 @@ type EmojiPickerProps = {
 
 const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
   const { addReactionApi } = useStore('messageStore');
-  const { theme } = useTheme();
+  const { theme } = useStore('userPreferencesStore');
 
   const handleAddReaction = async (emojiId: string) => {
     await addReactionApi({
