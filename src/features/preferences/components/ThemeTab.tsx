@@ -20,7 +20,6 @@ const ThemeTab = () => {
   const { theme, updateThemeApi, primaryColor, updatePrimaryColorApi } =
     useStore('userPreferencesStore');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleThemeSelect = (value: string) => {
     updateThemeApi(getValidTheme(value));
   };
