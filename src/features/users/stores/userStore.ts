@@ -52,8 +52,9 @@ export class UserStore {
   get filteredUsers() {
     return this.users.filter(
       (user: User) =>
-        user.firstName.toLowerCase().includes(this.searchValue.toLowerCase()) &&
-        user.uuid !== this?.currentUser?.uuid,
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(this.searchValue.toLowerCase()) && user.uuid !== this?.currentUser?.uuid,
     );
   }
 
