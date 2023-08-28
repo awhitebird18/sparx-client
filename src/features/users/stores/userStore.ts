@@ -3,17 +3,19 @@ import { makeObservable, observable, action, computed } from 'mobx';
 import usersApi from '../api';
 import userProfileApi from '@/features/profile/api';
 
-import { UpdateUser, User } from '../types';
+import { OnlineUser, UpdateUser, User } from '../types';
+import { UserStatus } from '../enums';
 
 export class UserStore {
   users: User[] = [];
   currentUser: User | undefined = undefined;
   isLoading = true;
-  onlineUsers: Map<string, Date> = new Map();
+  onlineUsers: OnlineUser[] = [];
   currentPage = 1;
   usersPerPage = 10;
   searchValue = '';
   hasMore = true;
+  userOnlineStatus = UserStatus.ONLINE;
 
   constructor() {
     makeObservable(
@@ -24,6 +26,7 @@ export class UserStore {
         isLoading: observable,
         searchValue: observable,
         currentUser: observable,
+        userOnlineStatus: observable,
         displayedUsers: computed,
         filteredUsers: computed,
         setCurrentPage: action,
@@ -40,6 +43,7 @@ export class UserStore {
         updateUserApi: action,
         uploadProfileImageApi: action,
         fetchUsersApi: action,
+        setUserOnlineStatus: action,
       },
       { autoBind: true },
     );
@@ -88,8 +92,22 @@ export class UserStore {
     this.currentUser = user;
   };
 
-  setOnlineUsers = (users: Map<string, Date>) => {
-    this.onlineUsers = new Map(users);
+  setUserOnlineStatus = (userOnlineStatus: UserStatus) => {
+    this.userOnlineStatus = userOnlineStatus;
+  };
+
+  updateOnlineUser = (onlineUser: OnlineUser) => {
+    const onlineUserFound = this.onlineUsers.find(
+      (el: OnlineUser) => el.userId === onlineUser.userId,
+    );
+
+    if (!onlineUserFound) return;
+
+    onlineUserFound.status = onlineUser.status;
+  };
+
+  setOnlineUsers = (users: OnlineUser[]) => {
+    this.onlineUsers = users;
   };
 
   addUser = (user: User) => {

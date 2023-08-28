@@ -5,7 +5,6 @@ import { API_URL } from '@/config';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
-import { useStore } from '@/stores/RootStore';
 
 type UserAvatarProps = {
   size?: number;
@@ -15,8 +14,6 @@ type UserAvatarProps = {
 };
 
 const UserAvatar = ({ size = 40, showStatus, userId, profileImage }: UserAvatarProps) => {
-  const { onlineUsers } = useStore('userStore');
-
   return (
     <Avatar
       className="relative overflow-visible"
@@ -39,7 +36,7 @@ const UserAvatar = ({ size = 40, showStatus, userId, profileImage }: UserAvatarP
 
       {showStatus && (
         <div className="rounded-full absolute -bottom-1.5 -right-1.5 w-4 h-4 flex justify-center items-center">
-          {onlineUsers.has(userId) && <OnlineStatusIndicator userId={userId} />}
+          <OnlineStatusIndicator userId={userId} />
         </div>
       )}
     </Avatar>

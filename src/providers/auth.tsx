@@ -79,12 +79,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await authApi.verify();
 
       setCurrentUser(data.currentUser);
+      connectToSocketServer(data.currentUser);
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);
       setSections(data.sections);
       setSubscribedChannels(data.channels);
       setUsers(data.users);
-      connectToSocketServer(data.user);
 
       setLoading(false);
     } finally {
