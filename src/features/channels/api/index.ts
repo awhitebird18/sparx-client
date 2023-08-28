@@ -10,6 +10,7 @@ import { leaveChannel } from './leaveChannel';
 import { removeUserFromChannel } from './removeUserFromChannel';
 import { updateChannel } from './updateChannel';
 import { updateUserChannel } from './updateUserChannel';
+import { getChannelUsers } from './getChannelUsers';
 
 export default {
   createChannel,
@@ -24,4 +25,5 @@ export default {
   removeUserFromChannel,
   updateChannel,
   updateUserChannel,
+  getChannelUsers,
 };
