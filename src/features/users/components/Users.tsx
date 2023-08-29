@@ -89,7 +89,7 @@ const Users = () => {
         ) : null}
 
         {displayedUsers.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-4 lg:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
             {displayedUsers
               .filter((user: User) => user.uuid !== currentUser?.uuid)
               .map((user: User) => (
@@ -129,7 +129,7 @@ const Users = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <CardContent className="flex items-center justify-center">
-                    <UserAvatar size={120} userId={user.uuid} profileImage={user.profileImage} />
+                    <UserAvatar size={200} userId={user.uuid} profileImage={user.profileImage} />
                   </CardContent>
                   <CardFooter className="flex-col p-0">
                     <div className="flex items-center gap-2">
