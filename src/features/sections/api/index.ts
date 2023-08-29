@@ -3,6 +3,7 @@ import { updateSection } from './updateSection';
 import { removeSection } from './removeSection';
 import { getSections } from './getSections';
 import { updateChannelSection } from './updateChannelSection';
+import { updateSectionOrder } from './updateSectionorder';
 
 export default {
   createSection,
@@ -10,4 +11,5 @@ export default {
   removeSection,
   getSections,
   updateChannelSection,
+  updateSectionOrder,
 };

@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
-import { SortBy } from './enums';
+import { SidebarItem, SortBy } from './enums';
 
 import {
   ContextMenu,
@@ -17,22 +17,36 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/ContextMenu';
 import { ModalName } from '@/components/modal/modalList';
+import { useDrag } from 'react-dnd';
+import { observer } from 'mobx-react-lite';
 
 interface ListHeaderProps {
   id: string;
   icon?: JSX.Element;
   title: string;
   isSystem?: boolean;
+  index: number;
   isOpen?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ref?: any;
   sortBy?: SortBy;
 }
 
-const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps) => {
+const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { updateSectionApi } = useStore('sectionStore');
   const [hasOpenDialog] = useState(false);
+
+  const dragFunction = useCallback(
+    () => ({
+      type: SidebarItem.SECTION,
+      item: { id, type: SidebarItem.SECTION, index },
+      collect: () => ({}),
+    }),
+    [id, index],
+  );
+
+  const [, dragRef] = useDrag(dragFunction);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
@@ -53,7 +67,10 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps)
 
   return (
     <ContextMenu>
-      <div className="h-8 p-0 px-2 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden">
+      <div
+        ref={dragRef}
+        className="h-8 p-0 px-2 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden"
+      >
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
         <ContextMenuTrigger>
           <div
@@ -140,4 +157,4 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy }: ListHeaderProps)
   );
 };
 
-export default ListHeader;
+export default observer(ListHeader);

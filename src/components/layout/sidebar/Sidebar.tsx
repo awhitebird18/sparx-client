@@ -3,11 +3,11 @@ import { useStore } from '@/stores/RootStore';
 import { useLocation } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { observer } from 'mobx-react-lite';
 
 import { Section as SectionType } from '@/features/sections/types';
 import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
-import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { At, Pencil, Person, Tv } from 'react-bootstrap-icons';
 
@@ -36,8 +36,8 @@ const Sidebar = () => {
         </div>
         <Divider />
         <div className="p-1.5 overflow-auto flex flex-col">
-          {sections.map((section: SectionType) => (
-            <Section key={section.uuid} section={section} />
+          {sections.slice().map((section: SectionType, index: number) => (
+            <Section key={section.uuid} section={section} index={index} />
           ))}
         </div>
       </div>

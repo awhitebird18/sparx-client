@@ -116,8 +116,8 @@ const ChatRoom: React.FC = () => {
                   <Spinner />
                 ) : (
                   <>
-                    {groupedMessagesWithUser.map(({ date, messages }: any) => (
-                      <>
+                    {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
+                      <div key={index}>
                         <div key={date} className="relative">
                           <div className="w-full flex my-2 sticky top-2">
                             <Badge
@@ -145,7 +145,7 @@ const ChatRoom: React.FC = () => {
                               );
                             })}
                         </div>
-                      </>
+                      </div>
                     ))}
 
                     {!hasMore && <ChannelIntroduction channelId={channelId} />}

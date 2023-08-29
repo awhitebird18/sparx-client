@@ -19,11 +19,13 @@ export class SectionStore {
     makeObservable(this, {
       sections: observable,
       isLoading: observable,
+      sortedSections: computed,
       updateSection: action,
       removeSection: action,
       setSections: action,
       setIsLoading: action,
       addSection: action,
+      reorderSections: action,
       createSectionApi: action,
       updateSectionApi: action,
       removeSectionApi: action,
@@ -40,12 +42,44 @@ export class SectionStore {
     return this.sections.find((section: Section) => section.type === SectionTypes.DIRECT)?.uuid;
   }
 
+  get sortedSections() {
+    return this.sections.slice().sort((a: Section, b: Section) => a.orderIndex - b.orderIndex);
+  }
+
+  reorderSections = async (draggedSectionId: string, newPosition: number) => {
+    // Find the section that is being dragged
+    const draggedSection = this.sections.find((section) => section.uuid === draggedSectionId);
+
+    if (!draggedSection) {
+      console.error(`Could not find section with id ${draggedSectionId}`);
+      return;
+    }
+
+    // Remove the dragged section from its current position
+    this.sections = this.sections.filter((section) => section.uuid !== draggedSectionId);
+
+    // Insert it into its new position
+    this.sections.splice(newPosition, 0, draggedSection);
+
+    // Optionally, you can update the `orderIndex` for all items to reflect the new order
+    this.sections = [...this.sections.map((s, i) => ({ ...s, orderIndex: i }))];
+
+    const sectionOrderIndexs = this.sections.map((s: Section) => ({
+      uuid: s.uuid,
+      orderIndex: s.orderIndex,
+    }));
+
+    const sections = await sectionsApi.updateSectionOrder(sectionOrderIndexs);
+
+    this.setSections(sections);
+  };
+
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
   };
 
   setSections = (sections: Section[]) => {
-    this.sections = sections;
+    this.sections = sections.sort((a: Section, b: Section) => a.orderIndex - b.orderIndex);
   };
 
   findSectionByUuid = (uuid: string) => {
@@ -75,6 +109,25 @@ export class SectionStore {
     const section = await sectionsApi.createSection(createSection);
 
     this.addSection(section);
+  };
+
+  // May use this for shortcut key of moving a section
+  moveSectionApi = async (
+    sectionA: { index: number; id: string },
+    sectionB: { index: number; id: string },
+  ) => {
+    // await sectionsApi.moveSection({ sectionId1: sectionA.id, sectionId2: sectionB.id });
+
+    const sectionAFound = this.findSectionByUuid(sectionA.id);
+    const sectionBFound = this.findSectionByUuid(sectionB.id);
+
+    if (!sectionAFound || !sectionBFound) return;
+
+    sectionAFound.orderIndex = sectionB.index;
+    sectionBFound.orderIndex = sectionA.index;
+
+    this.updateSection(sectionAFound);
+    this.updateSection(sectionBFound);
   };
 
   findSectionByChannelType = (channelType: SectionTypes) => {
