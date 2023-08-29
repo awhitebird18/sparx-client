@@ -24,10 +24,6 @@ import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
 
 import { Message as MessageType } from '@/features/messages/types';
 
-// import { ChannelType } from '@/features/channels/enums';
-// import channelApi from '@/features/channels/api';
-// import { User } from '@/features/users/types';
-
 const ChatRoom: React.FC = () => {
   const {
     isLoading,
@@ -143,6 +139,7 @@ const ChatRoom: React.FC = () => {
                                   message={message}
                                   showUser={displayUser}
                                   setThread={setThread}
+                                  disabled={message.isSystem}
                                 />
                               );
                             })}

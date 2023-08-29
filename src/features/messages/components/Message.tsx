@@ -82,7 +82,7 @@ const Message = ({
   return (
     <>
       <ContextMenu>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger disabled={disabled}>
           <div
             className={`message ${showEmojiPicker ? 'hovered' : ''} rounded-lg ${
               !disabled ? 'hover:bg-secondary hover:dark:bg-secondary' : ''
