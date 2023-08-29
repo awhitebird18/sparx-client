@@ -5,6 +5,7 @@ import { DropTargetMonitor, useDrop } from 'react-dnd';
 
 import { useStore } from '@/stores/RootStore';
 import { SidebarItem } from './enums/itemTypes';
+import { sortSectionChannels } from '@/utils/sortUtils';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import ListItem from './ListItem';
@@ -13,6 +14,7 @@ import { SectionTypes } from '@/features/sections/enums/sectionsType';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/features/sections/types';
+import { Channel } from '@/features/channels/types';
 
 interface SectionProps {
   section: Section;
@@ -182,14 +184,18 @@ const Section = ({ section, index }: SectionProps) => {
 
       <CollapsibleContent>
         {channelIds?.length
-          ? channelIds.map((channelUuid: string) => {
-              const channel = findChannelByUuid(channelUuid);
+          ? sortSectionChannels(
+              channelIds
+                .map((channelUuid: string) => findChannelByUuid(channelUuid))
+                .filter((channel: Channel | undefined) => channel !== undefined) as Channel[],
+              section.sortBy,
+            ).map((channel: Channel | undefined) => {
               if (!channel) return null;
 
               return (
                 <ListItem
-                  key={channelUuid}
-                  id={channelUuid}
+                  key={channel.uuid}
+                  id={channel.uuid}
                   title={channel.name}
                   isChannel
                   isTemp={channel.isTemp}
@@ -197,7 +203,7 @@ const Section = ({ section, index }: SectionProps) => {
                     <ChannelIcon
                       imageUrl={channel.icon}
                       isPrivate={channel.isPrivate}
-                      isSelected={selectedId === channelUuid}
+                      isSelected={selectedId === channel.uuid}
                       size={19}
                     />
                   }

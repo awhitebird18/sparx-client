@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
-// import { addEventListener } from '@/events/eventHandler';
 import { CreateSection, Section, UpdateSection } from '@/features/sections/types';
 import sectionsApi from '../api';
 import { SectionTypes } from '../enums';
@@ -34,8 +33,6 @@ export class SectionStore {
       removeChannelUuidFromSection: action,
       directChannelSectionId: computed,
     });
-
-    // addEventListener('channelUpdate', this.fetchsectionsApi);
   }
 
   get directChannelSectionId() {
