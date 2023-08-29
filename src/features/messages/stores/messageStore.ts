@@ -94,6 +94,7 @@ export class MessageStore {
       createdAt: dayjs(),
       timezone: 'toronto',
       uuid: uuid(),
+      isSystem: true,
     };
   };
 
