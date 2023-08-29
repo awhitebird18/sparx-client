@@ -6,7 +6,7 @@ import { SortOptions } from '@/features/channels/enums';
 import { SortBy } from '@/components/layout/sidebar/enums';
 import { ChannelUserCount } from '@/features/workspaceChannels/types/channelUserCount';
 
-export const sortChannels = (channels: Channel[], sortBy?: SortBy) => {
+export const sortSectionChannels = (channels: Channel[], sortBy: SortBy) => {
   if (sortBy === SortBy.ALPHA) {
     return channels.slice().sort((a, b) => a.name.localeCompare(b.name));
   } else if (sortBy === SortBy.RECENT) {
