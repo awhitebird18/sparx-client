@@ -45,7 +45,7 @@ const ListItem = ({ id, title, primary, isTemp, isChannel, disabled, icon }: Lis
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
     type: SidebarItem.ITEM,
-    item: { channelId: id },
+    item: { id, type: SidebarItem.ITEM },
     collect: () => ({}),
   }));
 

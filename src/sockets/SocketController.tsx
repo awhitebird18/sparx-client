@@ -31,6 +31,7 @@ const SocketController = () => {
     removeSection,
     addChannelUuidToSection,
     removeChannelUuidFromSection,
+    setSections,
   } = useStore('sectionStore');
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
     useStore('notificationStore');
@@ -149,6 +150,14 @@ const SocketController = () => {
       addSection(section);
     });
   }, [connectSocket, addSection]);
+
+  useEffect(() => {
+    return connectSocket('user-sections', (data) => {
+      const { sections } = data.payload;
+
+      setSections(sections);
+    });
+  }, [connectSocket, setSections]);
 
   // Update section
   useEffect(() => {
