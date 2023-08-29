@@ -131,9 +131,11 @@ const ChatRoom: React.FC = () => {
 
                           {messages
                             .filter((message: MessageType) => !message.parentId)
-                            .map((message: any, index: number) => {
+                            .map((message: MessageType, index: number) => {
                               const displayUser =
-                                index === 0 || messages[index - 1].userId !== message.userId;
+                                index === 0 ||
+                                messages[index - 1].userId !== message.userId ||
+                                !!message.isSystem;
 
                               return (
                                 <Message

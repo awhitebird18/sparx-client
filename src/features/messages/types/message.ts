@@ -11,4 +11,5 @@ export interface Message extends Base {
   reactions: Reaction[];
   childMessages?: Message[];
   parentId?: string;
+  isSystem?: boolean;
 }

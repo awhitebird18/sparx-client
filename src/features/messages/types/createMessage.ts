@@ -6,4 +6,5 @@ export interface CreateMesssage {
   channelId: string;
   userId: string;
   createdAt: Dayjs;
+  isSystem?: boolean;
 }
