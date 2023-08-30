@@ -54,10 +54,18 @@ const ResizableSidebar = () => {
           style={{
             width: `${sidebarWidth}px`,
             position: 'relative',
+            overflow: 'hidden',
             ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
           }}
           className="border-r border-border bg-background z-50"
         >
+          {/* Glass Blur Background with Image */}
+          <div
+            className="glass-blur-background"
+            // style={{ backgroundImage: `url(${bgBlueImage})` }}
+          />
+
+          {/* Existing Sidebar Content */}
           <DndProvider backend={HTML5Backend}>
             <Sidebar />
           </DndProvider>

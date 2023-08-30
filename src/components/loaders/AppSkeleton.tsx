@@ -5,7 +5,7 @@ const AppSkeleton = () => {
   const isLight = appTheme === 'light';
 
   const borderColor = isLight ? 'border-gray-300' : 'border-gray-800';
-  const bgColor = isLight ? 'bg-white' : 'bg-slate-950';
+  const bgColor = isLight ? 'bg-white' : 'bg-background';
 
   return (
     <div className={`h-screen w-screen flex overflow-hidden bg-background ${bgColor}`}>

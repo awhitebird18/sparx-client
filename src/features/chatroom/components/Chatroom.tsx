@@ -48,10 +48,6 @@ const ChatRoom: React.FC = () => {
   const handleSubmit = async (messageContent: string) => {
     if (!currentChannel || !currentUser) return;
 
-    // if (currentChannel.isTemp && currentChannel.type === ChannelType.DIRECT) {
-    //   await createDirectChannelApi();
-    // }
-
     await createMessageApi({
       content: messageContent,
       channelId: currentChannel.uuid,
@@ -102,7 +98,7 @@ const ChatRoom: React.FC = () => {
             <ChannelTitle />
             <AvatarGroup />
           </Header>
-          <div className=" relative flex flex-1 bg-card dark:bg-background rounded-xl shadow-lg p-2 pb-5 overflow-hidden m-3">
+          <div className="relative flex flex-1 bg-card dark:bg-background rounded-xl pb-5 overflow-hidden m-3">
             <div className="flex flex-col flex-1 overflow-hidden w-full">
               <div
                 className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"

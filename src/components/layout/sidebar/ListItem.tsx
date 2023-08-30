@@ -33,16 +33,7 @@ interface ListitemProps {
   type?: ChannelType;
 }
 
-const ListItem = ({
-  id,
-  title,
-  primary,
-  isTemp,
-  isChannel,
-  disabled,
-  icon,
-  type,
-}: ListitemProps) => {
+const ListItem = ({ id, title, isTemp, isChannel, disabled, icon, type }: ListitemProps) => {
   const { currentUser } = useStore('userStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
@@ -126,11 +117,11 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 p-0 px-3 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
             isSelected
-              ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
-              : 'text-muted-foreground'
-          } ${primary && !isSelected ? 'text-primary' : ''}`}
+              ? 'bg-userMedium hover:bg-userMedium text-white hover:text-white'
+              : 'text-neutral'
+          } ${'text-neutral'}`}
         >
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full">
             <div className="w-6 h-6 min-w-fit flex items-center justify-center flex-shrink-0">

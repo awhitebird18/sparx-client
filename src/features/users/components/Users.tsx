@@ -79,7 +79,7 @@ const Users = () => {
               .map((user: User) => (
                 <Card
                   key={user.uuid}
-                  className="border p-4 rounded shadow relative cursor-pointer dark:bg-card"
+                  className="border p-4 rounded shadow relative cursor-pointer"
                   onClick={() => {
                     handleMessageUser(user);
                   }}

@@ -20,7 +20,7 @@ const Topbar = () => {
         <Tooltip>
           <TooltipTrigger>
             <Button size="icon" variant="ghost" onClick={handleShowSidebar}>
-              <LayoutTextSidebarReverse className="text-xl" />
+              <LayoutTextSidebarReverse className="text-xl text-neutral" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" align="start">
