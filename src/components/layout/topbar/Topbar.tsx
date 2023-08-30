@@ -15,12 +15,12 @@ const Topbar = () => {
   };
 
   return (
-    <div className="h-14 border-b border-border flex items-center justify-between pr-4 pl-3 gap-6">
+    <div className="h-12 border-b border-border flex items-center justify-between pr-4 pl-3 gap-6">
       {!sidebarWidth ? (
         <Tooltip>
           <TooltipTrigger>
             <Button size="icon" variant="ghost" onClick={handleShowSidebar}>
-              <LayoutTextSidebarReverse className="text-xl" />
+              <LayoutTextSidebarReverse className="text-xl text-neutral" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" align="start">

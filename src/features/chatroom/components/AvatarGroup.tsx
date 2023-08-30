@@ -27,7 +27,7 @@ const AvatarGroup = () => {
 
   return (
     <div
-      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer bg-background`}
+      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer dark:bg-background`}
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >

@@ -5,10 +5,11 @@
 @layer base {
   :root,
   .light {
-    --background: 220 20% 93.5%;
+    --background: 220 20% 93%;
     --foreground: 222.2 84% 4.9%;
 
-    --scrollbar: 230.2 25% 7.5%;
+    --scrollbarThumb: 230.2 20% 83%;
+    --scrollbarTrack: 230.2 20% 88%;
 
     --hover: 100 50% 20%;
 
@@ -27,7 +28,8 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 220 28% 90.1%;
+    --secondary-hover: 220 28% 85.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
@@ -44,12 +46,17 @@
     --userLight: var(--color-primary-500);
     --userMedium: var(--color-primary-600);
     --userDark: var(--color-primary-700);
+
+    --text-neutral: 220 25% 45%;
+
+    --border-neutral: 220 35% 80%;
   }
   .dark {
-    --background: 230.2 25% 7.5%;
+    --background: 230.2 25% 7%;
     --foreground: 210 40% 98%;
 
-    --scrollbar: 230.2 25% 7.5%;
+    --scrollbarThumb: 230.2 25% 17%;
+    --scrollbarTrack: 230.2 25% 12%;
 
     --hover: 230.2 25% 10%;
 
@@ -68,7 +75,8 @@
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217.2 28.6% 19.5%;
+    --secondary-hover: 220 28% 17.1%;
     --secondary-foreground: 210 40% 98%;
 
     --accent: 217.2 32.6% 17.5%;
@@ -83,6 +91,10 @@
     --userLight: var(--color-primary-500);
     --userMedium: var(--color-primary-600);
     --userDark: var(--color-primary-700);
+
+    --text-neutral: 220 25% 70%;
+
+    --border-neutral: 220 35% 30%;
   }
 }
 

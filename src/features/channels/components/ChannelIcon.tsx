@@ -34,18 +34,18 @@ const ChannelIcon = ({
       children={
         isPrivate ? (
           <Lock
-            className={`p-0 text-xl ${
-              isSelected && !textPrimary ? 'text-white' : 'text-slate-500 dark:text-slate-400'
+            className={`p-0 text-xl ${isSelected && !textPrimary ? 'text-white' : 'text-neutral'} ${
+              textPrimary && 'text-primary'
             }`}
             style={{
-              height: `${size}px`,
-              width: `${size}px`,
+              height: `${size - 5}px`,
+              width: `${size - 5}px`,
             }}
           />
         ) : (
           <Hash
-            className={`p-0 text-xl ${
-              isSelected && !textPrimary ? 'text-white' : 'text-slate-500'
+            className={`p-0 text-xl ${isSelected && !textPrimary ? 'text-white' : 'text-neutral'} ${
+              textPrimary && 'text-primary'
             }`}
             style={{
               height: `${size}px`,
@@ -58,7 +58,7 @@ const ChannelIcon = ({
 
     {showStatus && (
       <div className="rounded-full absolute -bottom-1.5 -right-1.5 w-4 h-4 flex justify-center items-center">
-        <div className="rounded-full w-2.5 h-2.5 bg-teal-500"></div>
+        <div className="rounded-full w-2.5 h-2.5 bg-teal-500" />
       </div>
     )}
   </Avatar>

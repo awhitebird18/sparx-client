@@ -10,8 +10,9 @@ import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
 import { useEffect } from 'react';
 import { At, Pencil, Person, Tv } from 'react-bootstrap-icons';
+import Search from '@/features/search/components/Search';
 
-const Divider = () => <div className="w-100 h-px border-border border-b" />;
+const Divider = () => <div className="w-100 mx-4 border-neutral border-b" />;
 
 const Sidebar = () => {
   const { setSelectedId } = useStore('sidebarStore');
@@ -28,14 +29,19 @@ const Sidebar = () => {
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-col w-full overflow-hidden h-full">
         <CompanyDropdown />
-        <div className="p-1.5">
+        <Divider />
+        <div className="p-2">
+          <div className="py-1.5">
+            <Search />
+          </div>
+
           <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
           <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
           <ListItem id="mentions" title="Mentions" primary icon={<At size={18} />} />
           <ListItem id="drafts" title="Drafts" primary icon={<Pencil size={15} />} />
         </div>
         <Divider />
-        <div className="p-1.5 overflow-auto flex flex-col">
+        <div className="p-2 overflow-auto flex flex-col">
           {sections.slice().map((section: ChannelType, index: number) => (
             <Section key={section.uuid} section={section} index={index} />
           ))}

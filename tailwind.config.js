@@ -33,6 +33,7 @@ module.exports = {
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+          hover: 'hsl(var(--secondary-hover))',
         },
         hover: {
           DEFAULT: 'hsl(var(--hovered))',
@@ -57,6 +58,10 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+        },
+        scrollbar: {
+          thumb: 'hsl(var(--scrollbarThumb))',
+          track: 'hsl(var(--scrollbarTrack))',
         },
         userLighter: 'var(--userLighter)',
         userLight: 'var(--userLight)',
@@ -87,6 +92,12 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         spin: 'spin 1s linear infinite',
       },
+      textColor: {
+        neutral: 'hsl(var(--text-neutral))',
+      },
+      borderColor: {
+        neutral: 'hsl(var(--border-neutral))',
+      },
     },
   },
   plugins: [
@@ -95,18 +106,14 @@ module.exports = {
       addBase({
         '::-webkit-scrollbar': {
           width: theme('spacing.2'),
-          height: theme('spacing.2'),
         },
         '::-webkit-scrollbar-track': {
-          background: theme('colors.gray.300'),
+          background: theme('colors.scrollbar.track'),
           borderRadius: '0.5rem',
         },
         '::-webkit-scrollbar-thumb': {
-          backgroundColor: theme('colors.gray.400'),
+          backgroundColor: theme('colors.scrollbar.thumb'),
           borderRadius: theme('borderRadius.DEFAULT'),
-          '&:hover': {
-            backgroundColor: theme('colors.gray.700'),
-          },
         },
       });
     },

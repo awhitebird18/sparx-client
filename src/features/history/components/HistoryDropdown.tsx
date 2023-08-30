@@ -55,7 +55,7 @@ const HistoryDropdown = () => {
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger>
         <div className="flex gap-1.5 hover:bg-transparent px-3.5 h-12 cursor-pointer items-center">
-          <ClockHistory size={18} />
+          <ClockHistory size={18} className="text-neutral" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent

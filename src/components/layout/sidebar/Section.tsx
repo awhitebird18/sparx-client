@@ -210,7 +210,7 @@ const Section = ({ section, index }: SectionProps) => {
                       imageUrl={channel.icon}
                       isPrivate={channel.isPrivate}
                       isSelected={selectedId === channel.uuid}
-                      size={19}
+                      size={18}
                     />
                   }
                 />

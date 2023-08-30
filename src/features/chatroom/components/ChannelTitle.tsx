@@ -20,14 +20,14 @@ const ChannelTitle = () => {
 
   return (
     <Button
-      className="flex items-center h-full p-0 hover:bg-transparent gap-3 justify-start"
+      className="flex items-center h-full p-0 hover:bg-transparent gap-2 justify-start"
       variant="ghost"
       onClick={handleOpenChannelDetails}
     >
       {currentChannel ? (
         <ChannelIcon
           imageUrl={currentChannel.icon}
-          size={28}
+          size={26}
           isSelected
           isPrivate={currentChannel.isPrivate}
           textPrimary
@@ -40,7 +40,7 @@ const ChannelTitle = () => {
         <div className="flex items-center gap-3">
           <p className="h-full text-xl flex items-center whitespace-nowrap overflow-hidden text-ellipsis w-min">
             {currentChannel.name}
-            <ChevronDown className="mt-1 text-sm ml-2" />
+            <ChevronDown className="mt-1 ml-3" size={16} />
           </p>
         </div>
       ) : (

@@ -200,7 +200,7 @@ const WorkspaceChannels: React.FC = () => {
                 <Button
                   variant={filterChannelVisibility ? 'default' : 'outline'}
                   className={`gap-2 py-0 w-40 justify-between ${
-                    filterChannelVisibility && 'bg-userLight hover:bg-userLight text-white'
+                    filterChannelVisibility && 'bg-userMedium hover:bg-userMedium text-white'
                   }`}
                   size="sm"
                 >
@@ -226,7 +226,7 @@ const WorkspaceChannels: React.FC = () => {
                 <Button
                   variant={filterSubscribed ? 'default' : 'outline'}
                   className={`gap-2 py-0 w-40 justify-between ${
-                    filterSubscribed && 'bg-userLight hover:bg-userLight text-white'
+                    filterSubscribed && 'bg-userMedium hover:bg-userMedium text-white'
                   }`}
                   size="sm"
                 >
@@ -252,7 +252,7 @@ const WorkspaceChannels: React.FC = () => {
           </div>
           {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
             <Button
-              className="justify-self-end bg-muted-foreground hover:bg-muted-foreground text-white"
+              className="justify-self-end bg-secondary hover:bg-secondary-hover dark:text-white text-primary"
               size="sm"
               onClick={handleClearFilters}
               variant="default"
