@@ -23,6 +23,7 @@ import UserInputNotSubscribed from './UserInputNotSubscribed';
 import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
 
 import { Message as MessageType } from '@/features/messages/types';
+import { ChannelType } from '@/features/channels/enums';
 
 const ChatRoom: React.FC = () => {
   const {
@@ -48,7 +49,7 @@ const ChatRoom: React.FC = () => {
     if (!currentChannel || !currentUser) return;
 
     // if (currentChannel.isTemp && currentChannel.type === ChannelType.DIRECT) {
-    //   await channelApi.createDirectChannel(currentChannel.users.map((user: User) => user.uuid));
+    //   await createDirectChannelApi();
     // }
 
     await createMessageApi({
@@ -151,7 +152,7 @@ const ChatRoom: React.FC = () => {
                   </>
                 )}
               </div>
-              {currentChannel?.isTemp ? (
+              {currentChannel?.isTemp && currentChannel.type !== ChannelType.DIRECT ? (
                 <UserInputNotSubscribed />
               ) : (
                 <Editor

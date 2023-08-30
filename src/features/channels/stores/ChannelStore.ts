@@ -26,6 +26,7 @@ export class ChannelStore {
       currentChannel: computed,
       getChannelByUuid: computed,
       findChannelByUuid: action,
+      setChannelUsers: action,
       updateSubscribedChannel: action,
       setCurrentChannelUuid: action,
       setSubscribedChannels: action,
@@ -77,6 +78,7 @@ export class ChannelStore {
 
   addSubscribedChannel = (channel: Channel) => {
     if (this.findChannelByUuid(channel.uuid)) return;
+
     this.subscribedChannels.push(channel);
   };
 
@@ -107,6 +109,12 @@ export class ChannelStore {
 
   createChannelApi = async (createChannel: CreateChannel, sectionId: string) => {
     const channel = await channelApi.createChannel(createChannel, sectionId);
+    this.addSubscribedChannel(channel);
+    return channel;
+  };
+
+  createDirectChannelApi = async (channelUserIds: string[]) => {
+    const channel = await channelApi.createDirectChannel(channelUserIds);
     this.addSubscribedChannel(channel);
     return channel;
   };

@@ -5,7 +5,7 @@ import timezone from 'dayjs/plugin/timezone';
 
 import { CreateSection, Section, UpdateSection } from '@/features/sections/types';
 import sectionsApi from '../api';
-import { SectionTypes } from '../enums';
+import { ChannelType } from '@/features/channels/enums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,7 +36,7 @@ export class SectionStore {
   }
 
   get directChannelSectionId() {
-    return this.sections.find((section: Section) => section.type === SectionTypes.DIRECT)?.uuid;
+    return this.sections.find((section: Section) => section.type === ChannelType.DIRECT)?.uuid;
   }
 
   get sortedSections() {
@@ -127,7 +127,7 @@ export class SectionStore {
     this.updateSection(sectionBFound);
   };
 
-  findSectionByChannelType = (channelType: SectionTypes) => {
+  findSectionByChannelType = (channelType: ChannelType) => {
     return this.sections.find((el: Section) => el.type === channelType);
   };
 
