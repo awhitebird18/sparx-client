@@ -15,7 +15,7 @@ const Topbar = () => {
   };
 
   return (
-    <div className="h-12 border-b border-border flex items-center justify-between pr-4 pl-3 gap-6">
+    <div className="h-14 border-b border-border flex items-center justify-between pr-4 pl-3 gap-6">
       {!sidebarWidth ? (
         <Tooltip>
           <TooltipTrigger>

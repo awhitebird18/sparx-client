@@ -98,11 +98,11 @@ module.exports = {
           height: theme('spacing.2'),
         },
         '::-webkit-scrollbar-track': {
-          background: theme('colors.gray.500'),
+          background: theme('colors.gray.300'),
           borderRadius: '0.5rem',
         },
         '::-webkit-scrollbar-thumb': {
-          backgroundColor: theme('colors.gray.700'),
+          backgroundColor: theme('colors.gray.400'),
           borderRadius: theme('borderRadius.DEFAULT'),
           '&:hover': {
             backgroundColor: theme('colors.gray.700'),

@@ -9,6 +9,7 @@ type UserAvatarProps = {
   imageUrl?: string;
   isSelected?: boolean | undefined;
   isPrivate?: boolean | undefined;
+  textPrimary?: boolean;
 };
 
 const ChannelIcon = ({
@@ -17,8 +18,12 @@ const ChannelIcon = ({
   imageUrl,
   isSelected,
   isPrivate,
+  textPrimary,
 }: UserAvatarProps) => (
-  <Avatar className="relative overflow-visible" style={{ height: `${size}px`, width: `${size}px` }}>
+  <Avatar
+    className="relative overflow-visible"
+    style={{ height: `${size}px`, width: `${size}px ` }}
+  >
     <AvatarImage
       src={`${API_URL}${imageUrl}`}
       style={{ height: `${size}px`, width: `${size}px` }}
@@ -29,7 +34,9 @@ const ChannelIcon = ({
       children={
         isPrivate ? (
           <Lock
-            className={`p-0 text-xl ${isSelected ? 'text-white' : 'text-muted-foreground'}`}
+            className={`p-0 text-xl ${
+              isSelected && !textPrimary ? 'text-white' : 'text-slate-500 dark:text-slate-400'
+            }`}
             style={{
               height: `${size}px`,
               width: `${size}px`,
@@ -37,7 +44,9 @@ const ChannelIcon = ({
           />
         ) : (
           <Hash
-            className={`p-0 text-xl ${isSelected ? 'text-white' : 'text-muted-foreground'}`}
+            className={`p-0 text-xl ${
+              isSelected && !textPrimary ? 'text-white' : 'text-slate-500'
+            }`}
             style={{
               height: `${size}px`,
               width: `${size}px`,

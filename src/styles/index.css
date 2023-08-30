@@ -5,8 +5,10 @@
 @layer base {
   :root,
   .light {
-    --background: 220 12% 94.5%;
+    --background: 220 20% 93.5%;
     --foreground: 222.2 84% 4.9%;
+
+    --scrollbar: 230.2 25% 7.5%;
 
     --hover: 100 50% 20%;
 
@@ -19,7 +21,7 @@
     --card: 0 0% 98%;
     --card-foreground: 222.2 84% 4.9%;
 
-    --border: 214.3 10.8% 86.4%;
+    --border: 214.3 30.8% 90%;
     --input: 214.3 31.8% 91.4%;
 
     --primary: 222.2 47.4% 11.2%;
@@ -44,21 +46,23 @@
     --userDark: var(--color-primary-700);
   }
   .dark {
-    --background: 230.2 40% 5.9%;
+    --background: 230.2 25% 7.5%;
     --foreground: 210 40% 98%;
 
-    --hover: 222.2 84% 55.9%;
+    --scrollbar: 230.2 25% 7.5%;
+
+    --hover: 230.2 25% 10%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 222.2 84% 10.9%;
     --popover-foreground: 210 40% 98%;
 
-    --card: 222.2 35% 8.9%;
+    --card: 230.2 25% 15.5%;
     --card-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
+    --border: 217.2 32.6% 13%;
     --input: 217.2 32.6% 17.5%;
 
     --primary: 210 40% 98%;

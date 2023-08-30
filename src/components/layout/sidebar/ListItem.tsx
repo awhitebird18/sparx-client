@@ -126,10 +126,10 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 p-0 px-2 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 p-0 px-3 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
             isSelected
               ? 'bg-userDark hover:bg-userDark text-white hover:text-white'
-              : 'text-muted-foreground'
+              : 'text-slate-600 dark:text-slate-400'
           } ${primary && !isSelected ? 'text-primary' : ''}`}
         >
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full">
