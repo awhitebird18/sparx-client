@@ -44,6 +44,7 @@ export class UserStore {
         uploadProfileImageApi: action,
         fetchUsersApi: action,
         setUserOnlineStatus: action,
+        findUserByName: action,
       },
       { autoBind: true },
     );
@@ -70,6 +71,12 @@ export class UserStore {
 
   findUserByUuid = (userId: string) => {
     return this.users.find((user: User) => user.uuid === userId);
+  };
+
+  findUserByName = (userName: string) => {
+    return this.users.find(
+      (user: User) => `${user.firstName} ${user.lastName}`.toLowerCase() === userName.toLowerCase(),
+    );
   };
 
   findBot = () => {
