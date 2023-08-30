@@ -33,6 +33,7 @@ const Section = ({ section, index }: SectionProps) => {
   const { selectedId } = useStore('sidebarStore');
   const { updateSectionApi, updateChannelSectionApi, reorderSections } = useStore('sectionStore');
   const { findChannelByUuid } = useStore('channelStore');
+  const { findUserByName } = useStore('userStore');
   const [isOverTopHalf, setIsOverTopHalf] = useState(false);
   const [isOverBottomHalf, setIsOverBottomHalf] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -196,6 +197,13 @@ const Section = ({ section, index }: SectionProps) => {
               section.sortBy,
             ).map((channel: Channel | undefined) => {
               if (!channel) return null;
+              let channelIcon = channel.icon;
+
+              if (channel.type === ChannelType.DIRECT) {
+                const user = findUserByName(channel.name);
+                if (!user) return;
+                channelIcon = user.profileImage;
+              }
 
               return (
                 <ListItem
@@ -207,7 +215,7 @@ const Section = ({ section, index }: SectionProps) => {
                   isTemp={channel.isTemp}
                   icon={
                     <ChannelIcon
-                      imageUrl={channel.icon}
+                      imageUrl={channelIcon}
                       isPrivate={channel.isPrivate}
                       isSelected={selectedId === channel.uuid}
                       size={18}
