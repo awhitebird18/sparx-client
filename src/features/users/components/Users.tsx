@@ -1,8 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-import dayjs from 'dayjs';
 
 import { useStore } from '@/stores/RootStore';
 import { User } from '../types';
@@ -24,7 +22,6 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
-import { ChannelType } from '@/features/channels/enums';
 import NoUsersFallback from './NoUsersFallback';
 
 enum UserMenuOptions {
@@ -36,42 +33,29 @@ const Users = () => {
   const { isLoading, displayedUsers, searchValue, setSearchValue } = useStore('userStore');
   const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
-  const { addSubscribedChannel } = useStore('channelStore');
-  const { directChannelSectionId } = useStore('sectionStore');
+  const { createDirectChannelApi } = useStore('channelStore');
+  const { directChannelSectionId, addChannelUuidToSection } = useStore('sectionStore');
   const { currentUser } = useStore('userStore');
   const { setSelectedId } = useStore('sidebarStore');
 
-  const handleViewUserProfile = (userId: string) => {
+  const handleViewUserProfile = async (userId: string) => {
     setActiveModal({ type: 'ProfileModal', payload: { userId } });
   };
 
   const handleMessageUser = async (user: User) => {
-    if (!currentUser) return;
+    if (!currentUser || !directChannelSectionId) return;
+
     const directChannel = await getDirectChannel(user.uuid);
 
     if (directChannel) {
       return navigate(`/app/${directChannel.uuid}`);
     }
 
-    const sectionId = directChannelSectionId;
-    const channelId = uuid();
+    const newDirectChannel = await createDirectChannelApi([currentUser.uuid, user.uuid]);
 
-    if (!sectionId) return;
-
-    const tempChannel = {
-      uuid: uuid(),
-      channelId: channelId,
-      name: `${user.firstName} ${user.lastName}`,
-      sectionId: sectionId,
-      type: ChannelType.DIRECT,
-      isTemp: true,
-      isSubscribed: true,
-      createdAt: dayjs(),
-    };
-
-    addSubscribedChannel(tempChannel);
-    setSelectedId(tempChannel.uuid);
-    return navigate(`/app/${channelId}`);
+    addChannelUuidToSection(newDirectChannel.uuid, directChannelSectionId);
+    setSelectedId(newDirectChannel.uuid);
+    return navigate(`/app/${newDirectChannel.uuid}`);
   };
 
   return (

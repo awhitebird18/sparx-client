@@ -1,10 +1,10 @@
 import { Base } from '@/types/base';
-import { SectionTypes } from '../enums/sectionsType';
 import { SortBy } from '@/components/layout/sidebar/enums';
+import { ChannelType } from '@/features/channels/enums';
 
 export interface Section extends Base {
   name: string;
-  type: SectionTypes;
+  type: ChannelType;
   isSystem: boolean;
   isOpen: boolean;
   channelIds: string[];

@@ -5,7 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { observer } from 'mobx-react-lite';
 
-import { Section as SectionType } from '@/features/sections/types';
+import { Section as ChannelType } from '@/features/sections/types';
 import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
 import { useEffect } from 'react';
@@ -36,7 +36,7 @@ const Sidebar = () => {
         </div>
         <Divider />
         <div className="p-1.5 overflow-auto flex flex-col">
-          {sections.slice().map((section: SectionType, index: number) => (
+          {sections.slice().map((section: ChannelType, index: number) => (
             <Section key={section.uuid} section={section} index={index} />
           ))}
         </div>

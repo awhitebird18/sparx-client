@@ -10,11 +10,11 @@ import { sortSectionChannels } from '@/utils/sortUtils';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import ListItem from './ListItem';
 import ListHeader from './ListHeader';
-import { SectionTypes } from '@/features/sections/enums/sectionsType';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/features/sections/types';
 import { Channel } from '@/features/channels/types';
+import { ChannelType } from '@/features/channels/enums';
 
 interface SectionProps {
   section: Section;
@@ -25,6 +25,7 @@ interface DraggedItem {
   type: string;
   id: string;
   index: number;
+  channelType: ChannelType;
 }
 
 const Section = ({ section, index }: SectionProps) => {
@@ -62,7 +63,6 @@ const Section = ({ section, index }: SectionProps) => {
         }
 
         reorderSections(item.id, hoverIndex);
-        // item.index = hoverIndex;
       }
 
       setIsOverTopHalf(false);
@@ -114,15 +114,20 @@ const Section = ({ section, index }: SectionProps) => {
   );
 
   // React dnd can drop handler
-  const canDropHandler = (item: DraggedItem) => {
-    if (item.type === SidebarItem.SECTION) {
-      return true;
-    }
-    if (item.type === SidebarItem.ITEM) {
-      return true;
-    }
-    return false;
-  };
+  const canDropHandler = useCallback(
+    (item: DraggedItem) => {
+      if (item.type === SidebarItem.SECTION) {
+        return true;
+      }
+      if (item.type === SidebarItem.ITEM) {
+        if (item.channelType === section.type || section.type === ChannelType.ANY) {
+          return true;
+        }
+      }
+      return false;
+    },
+    [section.type],
+  );
 
   // React dnd collect handler
   const collectHandler = (monitor: DropTargetMonitor) => ({
@@ -145,7 +150,7 @@ const Section = ({ section, index }: SectionProps) => {
       hover: handleHover,
       collect: collectHandler,
     }),
-    [handleDrop, handleHover],
+    [canDropHandler, handleDrop, handleHover],
   );
 
   const [{ isOver }, drop] = useDrop(dropSpec);
@@ -198,6 +203,7 @@ const Section = ({ section, index }: SectionProps) => {
                   id={channel.uuid}
                   title={channel.name}
                   isChannel
+                  type={channel.type}
                   isTemp={channel.isTemp}
                   icon={
                     <ChannelIcon
@@ -214,13 +220,13 @@ const Section = ({ section, index }: SectionProps) => {
 
         {isSystem ? (
           <ListItem
-            id={type === 'channel' ? 'channels' : 'users'}
+            id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
             icon={
               <Button size="icon" className="p-0 h-6 w-6" variant="secondary">
                 <Plus size={16} />
               </Button>
             }
-            title={type === SectionTypes.DIRECT ? 'View Users' : 'Explore Channels'}
+            title={type === ChannelType.DIRECT ? 'View Users' : 'Explore Channels'}
             disabled
           />
         ) : (

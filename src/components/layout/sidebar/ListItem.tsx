@@ -20,6 +20,7 @@ import {
   ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
+import { ChannelType } from '@/features/channels/enums';
 
 interface ListitemProps {
   id: string;
@@ -29,9 +30,19 @@ interface ListitemProps {
   isChannel?: boolean;
   disabled?: boolean;
   isTemp?: boolean;
+  type?: ChannelType;
 }
 
-const ListItem = ({ id, title, primary, isTemp, isChannel, disabled, icon }: ListitemProps) => {
+const ListItem = ({
+  id,
+  title,
+  primary,
+  isTemp,
+  isChannel,
+  disabled,
+  icon,
+  type,
+}: ListitemProps) => {
   const { currentUser } = useStore('userStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
@@ -45,7 +56,7 @@ const ListItem = ({ id, title, primary, isTemp, isChannel, disabled, icon }: Lis
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
     type: SidebarItem.ITEM,
-    item: { id, type: SidebarItem.ITEM },
+    item: { id, type: SidebarItem.ITEM, channelType: type },
     collect: () => ({}),
   }));
 

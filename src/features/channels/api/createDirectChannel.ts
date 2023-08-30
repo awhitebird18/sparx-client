@@ -5,7 +5,7 @@ import { stores } from '@/stores/RootStore';
 
 export const createDirectChannel = async (memberIds: string[]) => {
   try {
-    const { data } = await axios.post('/channels/direct-channel', { memberIds });
+    const { data } = await axios.post('/channel-management/direct-channel', { memberIds });
 
     stores.notificationStore.addNotification({
       title: 'Channel created',

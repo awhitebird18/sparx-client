@@ -5,7 +5,7 @@ import { useStore } from '@/stores/RootStore';
 
 import { Button } from '@/components/ui/Button';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
-import { SectionTypes } from '@/features/sections/enums';
+import { ChannelType } from '@/features/channels/enums';
 
 const UserInputNotSubscribed = () => {
   const { currentChannel, joinChannelApi, updateSubscribedChannel } = useStore('channelStore');
@@ -21,7 +21,7 @@ const UserInputNotSubscribed = () => {
   const handleJoinChannel = async () => {
     if (!currentChannel || !currentUser) return;
 
-    const section = findSectionByChannelType(SectionTypes.CHANNEL);
+    const section = findSectionByChannelType(ChannelType.CHANNEL);
     if (!section) return;
 
     const formattedMessage = formatAutomatedMessage({

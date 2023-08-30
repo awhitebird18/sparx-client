@@ -28,7 +28,7 @@ import {
 import { Channel } from '@/features/channels/types';
 import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
-import { SectionTypes } from '@/features/sections/enums';
+import { ChannelType } from '@/features/channels/enums';
 
 const pageSize = 15;
 
@@ -107,7 +107,7 @@ const WorkspaceChannels: React.FC = () => {
     switch (action) {
       case ChannelActions.JOIN:
         {
-          const section = findSectionByChannelType(SectionTypes.CHANNEL);
+          const section = findSectionByChannelType(ChannelType.CHANNEL);
           if (!section) return;
           const formattedMessage = formatAutomatedMessage({
             userId: currentUser.uuid,
