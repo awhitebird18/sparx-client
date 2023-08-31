@@ -1,0 +1,18 @@
+.message:hover .timestamp,
+[data-state='open'] .timestamp {
+  display: inline;
+}
+
+.message:hover .options-panel,
+[data-state='open'] .options-panel {
+  display: flex;
+}
+
+.timestamp {
+  display: none;
+}
+
+[data-state='open'] .message,
+.message.hovered {
+  background-color: hsl(var(--secondary));
+}
