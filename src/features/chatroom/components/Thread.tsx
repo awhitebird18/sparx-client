@@ -6,7 +6,6 @@ import { Resizable, ResizeHandle } from 'react-resizable';
 import dayjs from 'dayjs';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 
-import { useAuth } from '@/providers/auth';
 import { useStore } from '@/stores/RootStore';
 
 import Header from '@/components/layout/containers/Header';
@@ -22,7 +21,7 @@ const Thread = ({ message, setMessage }: ThreadProps) => {
   const { createMessageApi } = useStore('messageStore');
   const { findUserByUuid } = useStore('userStore');
   const { currentChannelId } = useStore('channelStore');
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
 
   const childMessages = message.childMessages;
 
