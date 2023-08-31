@@ -4,9 +4,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import data from '@emoji-mart/data/sets/14/apple.json';
 import { init } from 'emoji-mart';
-import '@/styles/app.css';
-import '@/styles/chatroom.css';
-import '@/styles/index.css';
+import '../styles/app.css';
+import '../styles/chatroom.css';
+import '../styles/index.css';
 import 'react-resizable/css/styles.css';
 
 import { TooltipProvider } from '@/components/ui/Tooltip';
