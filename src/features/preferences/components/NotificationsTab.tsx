@@ -22,7 +22,7 @@ enum NotificationSchedule {
 }
 
 const NotificationsTab = () => {
-  const { userPreferences, setNotificationType } = useStore('userPreferencesStore');
+  const { notificationType, setNotificationType } = useStore('userPreferencesStore');
   const [notificationSchedule, setNotificationSchedule] = useState<NotificationSchedule>(
     NotificationSchedule.DAILY,
   );
@@ -54,7 +54,7 @@ const NotificationsTab = () => {
         </p>
 
         <RadioGroup
-          defaultValue={userPreferences.notificationType}
+          defaultValue={notificationType}
           className="flex flex-col space-y-3 mb-10"
           onValueChange={handleSetNotificationType}
         >

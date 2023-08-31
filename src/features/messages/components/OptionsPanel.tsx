@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
-import { useAuth } from '@/providers/auth';
 
 import { Button } from '@/components/ui/Button';
 import { ModalName } from '@/components/modal/modalList';
@@ -19,7 +18,7 @@ type OptionsPanelProps = {
 
 const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );

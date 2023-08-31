@@ -8,6 +8,8 @@ import { Message } from '@/features/messages/types';
 import { UserTyping } from '@/features/userTyping/types';
 import { UserStatus } from '@/features/users/enums';
 
+import { API_URL } from '@/config';
+
 const SocketController = () => {
   const { setOnlineUsers, currentUser } = useStore('userStore');
   const { connectSocket, emitSocket } = useStore('socketStore');
@@ -113,7 +115,7 @@ const SocketController = () => {
           sendBrowserNotification({
             title: `New message from ${channel.name}`,
             body: message.content,
-            icon: `http://localhost:3000${channel.icon}`,
+            icon: `${API_URL}${channel.icon}`,
           });
         }
       }

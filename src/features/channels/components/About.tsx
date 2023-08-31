@@ -20,7 +20,6 @@ import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
 
 import ChannelIcon from './ChannelIcon';
-import { useAuth } from '@/providers/auth';
 
 import { Channel } from '../types';
 import { ChannelType } from '../enums';
@@ -33,7 +32,7 @@ enum FieldEnum {
 const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 
 const About = ({ channel }: { channel: Channel }) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useStore('userStore');
   const [editField, setEditField] = useState<FieldEnum | null>(null);
   const { leaveChannelApi, updateChannelApi } = useStore('channelStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
