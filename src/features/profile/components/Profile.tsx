@@ -29,6 +29,7 @@ const formSchema = z.object({
 });
 
 type ProfileModalProps = { userId: string };
+
 const ProfileModal = ({ userId }: ProfileModalProps) => {
   const { findUserByUuid, updateUserApi, uploadProfileImageApi, currentUser } =
     useStore('userStore');

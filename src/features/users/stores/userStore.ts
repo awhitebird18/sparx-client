@@ -131,12 +131,17 @@ export class UserStore {
     const user = this.users.find((el: User) => el.uuid === updateUser.uuid);
     if (!user) return;
 
+    if (user.uuid === this?.currentUser?.uuid) {
+      this.updateCurrentUser(user);
+    }
+
     Object.assign(user, updateUser);
   };
 
   updateCurrentUser = (user: User) => {
     if (!this.currentUser) return;
-    Object.assign(this.currentUser, user);
+
+    this.currentUser = user;
   };
 
   removeUser = (uuid: string) => {
