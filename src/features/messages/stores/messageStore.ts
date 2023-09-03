@@ -9,6 +9,7 @@ import reactionsApi from '@/features/reactions/api';
 
 import { CreateMesssage, Message, UpdateMessage } from '@/features/messages/types';
 import { CreateReaction } from '@/features/reactions/types';
+import { convertToDayJs } from '@/utils/convertToDayjs';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -110,7 +111,7 @@ export class MessageStore {
     const messageFound = this.findMessageByUuid(message.uuid);
     if (messageFound) return;
 
-    this.messages.unshift(message);
+    this.messages.unshift(convertToDayJs(message));
   };
 
   addMessages = (newMessages: Message[]) => {
@@ -118,11 +119,11 @@ export class MessageStore {
   };
 
   updateMessage = (updatedMessage: Message) => {
-    const index = this.messages.findIndex((message) => message.uuid === updatedMessage.uuid);
+    const message = this.messages.find((message) => message.uuid === updatedMessage.uuid);
 
-    if (index === -1) return;
+    if (!message) return;
 
-    this.messages.splice(index, 1, updatedMessage);
+    Object.assign(message, convertToDayJs(updatedMessage));
   };
 
   removeMessage = (uuid: string) => {
@@ -133,7 +134,7 @@ export class MessageStore {
     try {
       const updatedMessage = await messageApi.updateMessage(uuid, updatMessage);
 
-      this.updateMessage(updatedMessage);
+      this.updateMessage(convertToDayJs(updatedMessage));
     } catch (err) {
       console.error(err);
     }

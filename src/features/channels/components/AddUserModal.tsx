@@ -45,7 +45,6 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
   };
 
   const handleInviteUsers = async () => {
-    console.log('submitting!');
     if (!inviteList.length) return;
 
     await inviteUsersToChannelApi(channel.uuid, inviteList);
