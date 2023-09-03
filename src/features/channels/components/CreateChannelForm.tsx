@@ -10,17 +10,16 @@ import {
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
 
 import { useStore } from '@/stores/RootStore';
+import { ChannelType } from '../enums';
 
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/modal/Modal';
 import { Checkbox } from '@/components/ui/Checkbox';
-
-import { ChannelType } from '../enums';
-import { useNavigate } from 'react-router-dom';
-import { observer } from 'mobx-react-lite';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -57,7 +56,11 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
   return (
     <Modal title="Create Channel">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2 flex flex-col w-96 space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="mt-2 flex flex-col space-y-12"
+          style={{ width: '28rem' }}
+        >
           <FormField
             control={form.control}
             name="name"
@@ -80,6 +83,7 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
                 <div className="flex items-center gap-2">
                   <FormControl>
                     <Checkbox
+                      className="h-5 w-5 border border-primary"
                       checked={field.value}
                       onCheckedChange={(checked) => {
                         if (typeof checked === 'boolean') {
@@ -100,7 +104,15 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
           />
 
           <div className="flex ml-auto gap-3 mt-10">
-            <Button className="ml-auto w-28" variant="outline" onClick={handleCloseModal}>
+            <Button
+              type="button"
+              className="ml-auto w-28"
+              variant="outline"
+              onClick={() => {
+                console.log('closed!');
+                handleCloseModal();
+              }}
+            >
               Cancel
             </Button>
             <Button

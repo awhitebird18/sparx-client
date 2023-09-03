@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,10 +40,13 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: currentUser?.firstName,
-      lastName: currentUser?.lastName,
-    },
+    defaultValues: useMemo(
+      () => ({
+        firstName: currentUser?.firstName,
+        lastName: currentUser?.lastName,
+      }),
+      [currentUser],
+    ),
   });
 
   useEffect(() => {
@@ -188,7 +191,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex gap-2 w-fit ml-auto h-10">
               {isEditing ? (
                 <>
-                  <Button onClick={handleCancelEdit} variant="secondary">
+                  <Button onClick={handleCancelEdit} variant="secondary" type="button">
                     Cancel
                   </Button>
                   <Button className="bg-userMedium hover:bg-userDark text-white" type="submit">

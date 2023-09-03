@@ -45,6 +45,7 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
   };
 
   const handleInviteUsers = async () => {
+    console.log('submitting!');
     if (!inviteList.length) return;
 
     await inviteUsersToChannelApi(channel.uuid, inviteList);
@@ -133,12 +134,13 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
           </div>
         </div>
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={handleCancelInvite}>
+          <Button variant="outline" onClick={handleCancelInvite} type="button">
             Cancel
           </Button>
           <Button
             className="bg-userMedium text-white hover:bg-userDark"
             onClick={handleInviteUsers}
+            type="submit"
           >
             Invite Users
           </Button>
