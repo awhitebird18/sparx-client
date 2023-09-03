@@ -97,6 +97,7 @@ const RegisterPage: React.FC = () => {
                     {...register('email', { required: 'Email is required.' })}
                     type="email"
                     placeholder="Email address"
+                    autoFocus
                   />
                 </div>
                 {errors.email && <ErrorLabel>{errors.email.message}</ErrorLabel>}

@@ -148,7 +148,17 @@ const EditField = observer(
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea placeholder={`Enter a ${type}`} {...field} className="resize-none" />
+                    <Textarea
+                      placeholder={`Enter a ${type}`}
+                      {...field}
+                      className="resize-none"
+                      onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                        if (event.key === 'Enter' && !event.shiftKey) {
+                          event.preventDefault();
+                          form.handleSubmit(onSubmit)();
+                        }
+                      }}
+                    />
                   </FormControl>
                   <FormDescription>{`This is your publicly displayed channel ${type}`}</FormDescription>
                   <FormMessage />
@@ -158,7 +168,7 @@ const EditField = observer(
 
             <Button
               variant="default"
-              className="ml-auto bg-userMedium hover:bg-userDark"
+              className="ml-auto bg-userMedium hover:bg-userDark text-white"
               type="submit"
             >
               Submit
