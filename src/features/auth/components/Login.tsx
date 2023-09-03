@@ -47,6 +47,7 @@ const Login: React.FC = () => {
                     name="email"
                     placeholder="Email"
                     value={email}
+                    autoFocus
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>

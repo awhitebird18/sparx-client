@@ -23,7 +23,7 @@ const ChannelIcon = ({
   userId,
 }: UserAvatarProps) => (
   <Avatar
-    className="relative overflow-visible shadow-md"
+    className="relative overflow-visible"
     style={{ height: `${size}px`, width: `${size}px ` }}
   >
     <AvatarImage

@@ -203,9 +203,7 @@ const WorkspaceChannels: React.FC = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant={filterChannelVisibility ? 'default' : 'outline'}
-                className={`gap-2 py-0 w-40 justify-between ${
-                  filterChannelVisibility && 'bg-userMedium hover:bg-userMedium text-white'
-                }`}
+                className="gap-2 py-0 w-40 justify-between"
                 size="sm"
               >
                 {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
@@ -229,10 +227,8 @@ const WorkspaceChannels: React.FC = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant={filterSubscribed ? 'default' : 'outline'}
-                className={`gap-2 py-0 w-40 justify-between ${
-                  filterSubscribed && 'bg-userMedium hover:bg-userMedium text-white'
-                }`}
                 size="sm"
+                className="gap-2 py-0 w-40 justify-between"
               >
                 {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
               </Button>
@@ -255,12 +251,7 @@ const WorkspaceChannels: React.FC = () => {
           </DropdownMenu>
         </div>
         {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
-          <Button
-            className="justify-self-end bg-secondary hover:bg-secondary-hover dark:text-white text-primary"
-            size="sm"
-            onClick={handleClearFilters}
-            variant="default"
-          >
+          <Button size="sm" onClick={handleClearFilters} variant="secondary">
             Clear Filters
           </Button>
         )}
