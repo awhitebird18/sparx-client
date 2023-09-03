@@ -12,4 +12,5 @@ export interface Message extends Base {
   childMessages?: Message[];
   parentId?: string;
   isSystem?: boolean;
+  threadCount?: number;
 }

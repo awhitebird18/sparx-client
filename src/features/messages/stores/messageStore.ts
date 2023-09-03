@@ -19,13 +19,17 @@ export class MessageStore {
   page = 1;
   isLoading = true;
   hasMore = true;
+  thread: Message | undefined = undefined;
 
   constructor() {
     makeObservable(this, {
       messages: observable,
+      threadMessages: computed,
       page: observable,
+      thread: observable,
       hasMore: observable,
       findMessageByUuid: action,
+      closeThread: action,
       addMessage: action,
       addMessages: action,
       updateMessage: action,
@@ -42,8 +46,9 @@ export class MessageStore {
   }
 
   get groupedMessagesWithUser() {
-    const groupedMessages = this.messages.reduce(
-      (groups: { [key: string]: Message[] }, message) => {
+    const groupedMessages = this.messages
+      .filter((message: Message) => !message.parentId)
+      .reduce((groups: { [key: string]: Message[] }, message) => {
         const date = message.createdAt.format('MM-DD-YYYY');
 
         if (!groups[date]) {
@@ -51,9 +56,7 @@ export class MessageStore {
         }
         groups[date].unshift(message);
         return groups;
-      },
-      {},
-    );
+      }, {});
 
     return Object.entries(groupedMessages).map(([date, messages]) => {
       return {
@@ -61,6 +64,13 @@ export class MessageStore {
         messages,
       };
     });
+  }
+
+  get threadMessages() {
+    return this.messages
+      .filter((message: Message) => message.parentId)
+      .slice()
+      .sort((a: Message, b: Message) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1));
   }
 
   incrementPage = () => {
@@ -99,6 +109,15 @@ export class MessageStore {
     };
   };
 
+  setThread = (parentMessage: Message | undefined) => {
+    this.thread = parentMessage;
+  };
+
+  closeThread = () => {
+    this.messages = this.messages.filter((message: Message) => !message.parentId);
+    this.setThread(undefined);
+  };
+
   setMessages = (messages: Message[]) => {
     this.messages = messages;
   };
@@ -115,7 +134,7 @@ export class MessageStore {
   };
 
   addMessages = (newMessages: Message[]) => {
-    this.setMessages([...this.messages, ...newMessages]);
+    this.setMessages([...this.messages, ...convertToDayJs(newMessages)]);
   };
 
   updateMessage = (updatedMessage: Message) => {
@@ -167,6 +186,20 @@ export class MessageStore {
         this.removeMessage(createMessage.uuid);
       }
     }
+  };
+
+  fetchThreadMessagesApi = async (parentMessageId: string) => {
+    if (parentMessageId === this.thread?.uuid) return;
+
+    this.closeThread();
+
+    const messages = await messageApi.getThreadMessages(parentMessageId);
+
+    this.addMessages(messages);
+
+    const parentMessage = this.findMessageByUuid(parentMessageId);
+
+    this.setThread(parentMessage);
   };
 
   fetchMessagesApi = async (channelId: string) => {
