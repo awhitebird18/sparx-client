@@ -2,8 +2,9 @@ import { action, makeObservable } from 'mobx';
 import io, { Socket } from 'socket.io-client';
 
 import { User } from '@/features/users/types';
+import { API_URL } from '@/config';
 
-const SOCKET_SERVER_URL = 'http://localhost:3000';
+const SOCKET_SERVER_URL = API_URL;
 
 export class SocketStore {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
