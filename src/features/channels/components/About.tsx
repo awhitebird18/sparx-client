@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Form,
@@ -19,8 +19,6 @@ import { Textarea } from '@/components/ui/Textarea';
 import Modal from '@/components/modal/Modal';
 import { observer } from 'mobx-react-lite';
 
-import ChannelIcon from './ChannelIcon';
-
 import { Channel } from '../types';
 import { ChannelType } from '../enums';
 
@@ -34,11 +32,10 @@ const fields = [FieldEnum.TOPIC, FieldEnum.DESCRIPTION];
 const About = ({ channel }: { channel: Channel }) => {
   const { currentUser } = useStore('userStore');
   const [editField, setEditField] = useState<FieldEnum | null>(null);
-  const { leaveChannelApi, updateChannelApi } = useStore('channelStore');
+  const { leaveChannelApi } = useStore('channelStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fileInput = useRef<any>(null);
+
   const isDirectChannel = channel.type === ChannelType.DIRECT;
 
   const handleOpenForm = (field: FieldEnum) => {
@@ -59,27 +56,13 @@ const About = ({ channel }: { channel: Channel }) => {
     navigate(`/app`);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSelectImage = (e: any) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = async () => {
-      const imageBase64 = reader.result as string;
-
-      updateChannelApi(channel.uuid, { icon: imageBase64 });
-    };
-
-    reader.readAsDataURL(file);
-  };
-
   return (
     <div className="flex flex-col space-y-5 pt-2 flex-1 h-full">
       {fields.map((field: FieldEnum) => (
         <Button
           key={field}
-          className="flex-col justify-start items-start h-28 border border-border relative space-y-1 hover:bg-secondary/50 gap-2"
-          variant="outline"
+          className="flex-col justify-start items-start h-28 border border-border relative space-y-1 hover:bg-secondary/30 gap-2"
+          variant="ghost"
           onClick={() => handleOpenForm(field)}
         >
           <p className="text-md font-semibold">{`${field.charAt(0).toUpperCase()}${field
@@ -94,29 +77,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       {!isDirectChannel && (
         <Button
-          variant="outline"
-          className="text-userDark w-full cursor-pointer flex justify-start h-auto gap-3 items-start p-2 hover:bg-secondary/50"
-          onClick={() => {
-            fileInput.current.click();
-          }}
-        >
-          <ChannelIcon size={60} imageUrl={channel.icon} isPrivate={channel.isPrivate} />
-
-          <p className="mt-0.5 text-primary">Change channel image</p>
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            ref={fileInput}
-            onChange={handleSelectImage}
-          />
-        </Button>
-      )}
-
-      {!isDirectChannel && (
-        <Button
-          className="flex-col justify-start items-start h-20 border border-border space-y-1"
+          className="flex-col justify-start items-start h-20 border border-border space-y-1 hover:bg-secondary/30"
           variant="ghost"
           onClick={() => console.info('copy managed')}
         >
@@ -127,7 +88,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       {!isDirectChannel && (
         <Button
-          className="justify-start items-start h-12 text-rose-500 border border-border space-y-1"
+          className="justify-start items-start h-12 text-rose-500 hover:text-rose-500  border border-border space-y-1 hover:bg-secondary/30"
           variant="ghost"
           onClick={handleLeaveChannel}
         >
@@ -138,7 +99,7 @@ const About = ({ channel }: { channel: Channel }) => {
       <div className="flex-grow" />
 
       <Button
-        className="justify-start text-muted dark:hover:bg-transparent hover:bg-transparent"
+        className="justify-start dark:hover:bg-transparent hover:bg-transparent"
         variant="ghost"
         onClick={() => console.info('copy channel id')}
       >
@@ -195,7 +156,11 @@ const EditField = observer(
               )}
             />
 
-            <Button className="ml-auto bg-userDark hover:bg-userDark text-primary" type="submit">
+            <Button
+              variant="default"
+              className="ml-auto bg-userMedium hover:bg-userDark"
+              type="submit"
+            >
               Submit
             </Button>
           </form>

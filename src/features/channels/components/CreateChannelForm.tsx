@@ -103,7 +103,10 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
             <Button className="ml-auto w-28" variant="outline" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button className="ml-auto w-28 bg-userDark hover:bg-userDark text-white" type="submit">
+            <Button
+              className="ml-auto w-28 bg-userMedium hover:bg-userDark text-white"
+              type="submit"
+            >
               Submit
             </Button>
           </div>

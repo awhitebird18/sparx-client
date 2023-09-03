@@ -108,11 +108,11 @@ const ChatRoom: React.FC = () => {
                       <div className="w-full flex my-2 sticky top-2">
                         <Badge
                           variant="outline"
-                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
+                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-card z-10 border border-border"
                         >
                           {formatDate(date)}
                         </Badge>
-                        <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
+                        <div className="bg-border h-px absolute top-[50%] left-0 w-full" />
                       </div>
 
                       {messages

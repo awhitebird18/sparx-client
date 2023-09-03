@@ -90,8 +90,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <UserAvatar size={165} userId={user.uuid} profileImage={user.profileImage} />
             {user.uuid === currentUser.uuid && (
               <Button
-                variant="outline"
-                className="text-userDark w-full cursor-pointer"
+                variant="ghost"
+                className="text-userMedium hover:text-userMedium w-full cursor-pointer border border-userMedium"
                 onClick={(e) => {
                   e.preventDefault();
 
@@ -188,8 +188,10 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex gap-2 w-fit ml-auto h-10">
               {isEditing ? (
                 <>
-                  <Button onClick={handleCancelEdit}>Cancel</Button>
-                  <Button className="bg-userDark text-white" type="submit">
+                  <Button onClick={handleCancelEdit} variant="secondary">
+                    Cancel
+                  </Button>
+                  <Button className="bg-userMedium hover:bg-userDark text-white" type="submit">
                     Save Changes
                   </Button>
                 </>

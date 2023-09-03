@@ -38,7 +38,7 @@ const PreferencesModal: React.FC = () => {
             onClick={() => setActiveTab(PreferenceTabs.THEMING)}
             className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
               activeTab === PreferenceTabs.THEMING
-                ? 'bg-userDark text-white hover:bg-userDark hover:text-text-white px-2'
+                ? 'bg-userMedium hover:bg-userMedium text-white hover:text-text-white px-2'
                 : ''
             }`}
           >
@@ -49,7 +49,7 @@ const PreferencesModal: React.FC = () => {
             onClick={() => setActiveTab(PreferenceTabs.NOTIFICATIONS)}
             className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
               activeTab === PreferenceTabs.NOTIFICATIONS
-                ? 'bg-userDark text-white hover:bg-userDark hover:text-text-white px-2'
+                ? 'bg-userMedium hover:bg-userMedium text-white hover:text-text-white px-2'
                 : ''
             }`}
           >
@@ -60,7 +60,7 @@ const PreferencesModal: React.FC = () => {
             onClick={() => setActiveTab(PreferenceTabs.ACCOUNT)}
             className={`text-secondary-foreground py-0 px-1 h-8 block w-full text-left ${
               activeTab === PreferenceTabs.ACCOUNT
-                ? 'bg-userDark text-white hover:bg-userDark hover:text-text-white px-2'
+                ? 'bg-userMedium hover:bg-userMedium text-white hover:text-text-white px-2'
                 : ''
             }`}
           >

@@ -18,7 +18,7 @@ type UserAvatarProps = {
 const UserAvatar = ({ size = 40, profileImage, userId, showStatus }: UserAvatarProps) => {
   return (
     <Avatar
-      className="relative overflow-visible"
+      className="relative overflow-visible shadow-md"
       style={{ height: `${size}px`, width: `${size}px` }}
     >
       <AvatarImage
