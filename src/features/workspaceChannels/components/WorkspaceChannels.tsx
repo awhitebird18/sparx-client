@@ -92,7 +92,7 @@ const WorkspaceChannels: React.FC = () => {
     return () => {
       resetWorkspaceChannelStore();
     };
-  }, []);
+  }, [resetWorkspaceChannelStore]);
 
   const handleViewChannel = (channel: Channel) => {
     const subscribedChannel = findChannelByUuid(channel.uuid);
