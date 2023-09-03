@@ -30,6 +30,7 @@ export class WorkspaceChannelStore {
       sortBy: observable,
       page: observable,
       pageSize: observable,
+      channelUserCounts: observable,
       hasMore: observable,
       filterBySearchValue: observable,
       filterChannelVisibility: observable,
