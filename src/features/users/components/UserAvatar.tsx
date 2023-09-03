@@ -5,15 +5,17 @@ import { API_URL } from '@/config';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
+import { UserStatus } from '../enums';
 
 type UserAvatarProps = {
   size?: number;
   showStatus?: boolean;
   userId: string;
   profileImage?: string;
+  onlineStatus?: UserStatus;
 };
 
-const UserAvatar = ({ size = 40, showStatus, userId, profileImage }: UserAvatarProps) => {
+const UserAvatar = ({ size = 40, profileImage, userId, showStatus }: UserAvatarProps) => {
   return (
     <Avatar
       className="relative overflow-visible"

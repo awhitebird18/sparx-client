@@ -17,20 +17,22 @@ const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
 
   switch (onlineUserFound.status) {
     case UserStatus.AWAY:
-      onlineStatusColor = 'bg-gray-500';
+      onlineStatusColor = 'bg-slate-400';
       break;
     case UserStatus.BUSY:
       onlineStatusColor = 'bg-yellow-500';
       break;
     case UserStatus.ONLINE:
-      onlineStatusColor = 'bg-green-500';
+      onlineStatusColor = 'bg-emerald-500';
       break;
     default:
       onlineStatusColor = 'transparent';
       break;
   }
 
-  return <div className={`rounded-full ${onlineStatusColor} w-2.5 h-2.5`} />;
+  return (
+    <div className={`rounded-full ${onlineStatusColor} w-3.5 h-3.5 border-background border-2`} />
+  );
 };
 
 export default observer(OnlineStatusIndicator);
