@@ -109,7 +109,6 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
               className="ml-auto w-28"
               variant="outline"
               onClick={() => {
-                console.log('closed!');
                 handleCloseModal();
               }}
             >

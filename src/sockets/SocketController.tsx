@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { setFavicon } from '@/utils/setFavicon';
 
-import { Message } from '@/features/messages/types';
 import { UserTyping } from '@/features/userTyping/types';
 import { UserStatus } from '@/features/users/enums';
 
@@ -98,15 +97,15 @@ const SocketController = () => {
   // New message
   useEffect(() => {
     if (!currentUser) return;
-    connectSocket('new message', (message: Message) => {
-      if (message.userId === currentUser?.uuid) return;
-      const channel = findChannelByUuid(message.channelId);
+    return connectSocket('new-message', (data) => {
+      const { message } = data.payload;
 
-      if (!channel) return;
-
-      if (channel.uuid === currentChannelId) {
+      if (message.channelId === currentChannelId) {
         addMessage(message);
       } else {
+        const channel = findChannelByUuid(message.channelId);
+        if (!channel) return;
+
         incrementChannelUnreads(channel.uuid);
         setUnreadsCount(channelUnreadsCount + 1);
         setFavicon('/faviconUnread.ico');
@@ -135,7 +134,11 @@ const SocketController = () => {
 
   // Update message
   useEffect(() => {
-    return connectSocket(`messages/${currentChannelId}/update`, updateMessage);
+    return connectSocket('updated-message', (data) => {
+      const { message } = data.payload;
+
+      updateMessage(message);
+    });
   }, [connectSocket, currentChannelId, updateMessage]);
 
   // Remove message
@@ -218,7 +221,7 @@ const SocketController = () => {
 
   // User typing
   useEffect(() => {
-    connectSocket('typing', (data: UserTyping) => {
+    return connectSocket('typing', (data: UserTyping) => {
       if (data.userId === currentUser?.uuid) return;
 
       addUserTyping(data);

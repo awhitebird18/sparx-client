@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { v4 as uuid } from 'uuid';
 import { useParams } from 'react-router-dom';
@@ -32,6 +32,7 @@ const ChatRoom: React.FC = () => {
     setPage,
     createMessageApi,
     hasMore,
+    thread,
   } = useStore('messageStore');
   const { setCurrentChannelUuid, currentChannelId, currentChannel, fetchChannelUserIdsApi } =
     useStore('channelStore');
@@ -41,7 +42,6 @@ const ChatRoom: React.FC = () => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const [thread, setThread] = useState<MessageType | null>(null);
   const { channelId } = useParams();
 
   const handleSubmit = async (messageContent: string) => {
@@ -128,7 +128,6 @@ const ChatRoom: React.FC = () => {
                               key={message.uuid}
                               message={message}
                               showUser={displayUser}
-                              setThread={setThread}
                               disabled={message.isSystem}
                             />
                           );
@@ -153,7 +152,7 @@ const ChatRoom: React.FC = () => {
           )}
           <UsersTypingDisplay />
         </div>
-        {thread && <Thread message={thread} setMessage={setThread} />}
+        {thread && <Thread />}
       </div>
     </ContentLayout>
   );
