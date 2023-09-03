@@ -7,11 +7,8 @@ import { useStore } from '@/stores/RootStore';
 
 import { Button } from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
-import Header from '@/components/layout/containers/Header';
-import Content from '@/components/layout/containers/Content';
 import SearchInput from '@/components/ui/SearchInput';
 import NoChannelsFallback from '@/features/channels/components/NoChannelsFallback';
-import Body from '@/components/layout/containers/Body';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +26,7 @@ import { Channel } from '@/features/channels/types';
 import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
 import { ChannelType } from '@/features/channels/enums';
+import ContentLayout from '@/components/layout/ContentLayout';
 
 const pageSize = 15;
 
@@ -174,198 +172,196 @@ const WorkspaceChannels: React.FC = () => {
     sortBy,
   );
 
-  return (
-    <Content>
-      <Header>
-        <h3 className="text-lg leading-6 font-medium">Channels</h3>
-        <Button
-          className="bg-userDark hover:bg-userDark text-white h-8 px-2"
-          onClick={handleClickCreateChannel}
-          size="sm"
-        >
-          Create Channel
-        </Button>
-      </Header>
-      <Body>
-        <SearchInput
-          value={filterBySearchValue}
-          setValue={setFilterBySearchValue}
-          placeholder="Search channels"
-        />
-        <div className="flex gap-2 mt-2 justify-between">
-          <div className="flex gap-2">
-            {/* Channel type filter */}
-            <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={filterChannelVisibility ? 'default' : 'outline'}
-                  className={`gap-2 py-0 w-40 justify-between ${
-                    filterChannelVisibility && 'bg-userMedium hover:bg-userMedium text-white'
-                  }`}
-                  size="sm"
-                >
-                  {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-                <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
-                  Any Channel Type
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
-                  Public Channels
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
-                  Private Channels
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+  const headerBtn = (
+    <Button
+      className="bg-userDark hover:bg-userDark text-white h-8 px-2"
+      onClick={handleClickCreateChannel}
+      size="sm"
+    >
+      Create Channel
+    </Button>
+  );
 
-            {/* Subscribed Status filter */}
-            <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={filterSubscribed ? 'default' : 'outline'}
-                  className={`gap-2 py-0 w-40 justify-between ${
-                    filterSubscribed && 'bg-userMedium hover:bg-userMedium text-white'
-                  }`}
-                  size="sm"
-                >
-                  {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-                <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
-                  All Channels
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
-                >
-                  Subscribed
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
-                >
-                  Unsubsribed
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
-            <Button
-              className="justify-self-end bg-secondary hover:bg-secondary-hover dark:text-white text-primary"
-              size="sm"
-              onClick={handleClearFilters}
-              variant="default"
-            >
-              Clear Filters
-            </Button>
-          )}
-        </div>
-        <div className="flex gap-2 mt-2 justify-between border-b border-border items-center py-1 pl-2">
-          <span className="text-sm text-muted-foreground items-center">
-            {sortedWorkspaceChannels.length} Results
-          </span>
-          {/* Channel Sort */}
-          <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
+  return (
+    <ContentLayout title="Channels" headerComponent={headerBtn}>
+      <SearchInput
+        value={filterBySearchValue}
+        setValue={setFilterBySearchValue}
+        placeholder="Search channels"
+      />
+      <div className="flex gap-2 mt-2 justify-between">
+        <div className="flex gap-2">
+          {/* Channel type filter */}
+          <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-2" size="sm">
-                Sort: {sortBy} <ChevronDown className="text-xs" />
+              <Button
+                variant={filterChannelVisibility ? 'default' : 'outline'}
+                className={`gap-2 py-0 w-40 justify-between ${
+                  filterChannelVisibility && 'bg-userMedium hover:bg-userMedium text-white'
+                }`}
+                size="sm"
+              >
+                {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ATOZ)}>
-                A to Z
+              <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
+                Any Channel Type
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ZTOA)}>
-                Z to A
+              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
+                Public Channels
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.MOSTMEMBERS)}>
-                Most members
+              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
+                Private Channels
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.LEASTMEMBERS)}>
-                Least members
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Subscribed Status filter */}
+          <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant={filterSubscribed ? 'default' : 'outline'}
+                className={`gap-2 py-0 w-40 justify-between ${
+                  filterSubscribed && 'bg-userMedium hover:bg-userMedium text-white'
+                }`}
+                size="sm"
+              >
+                {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+              <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
+                All Channels
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.NEWEST)}>
-                Newest channel
+              <DropdownMenuItem
+                onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
+              >
+                Subscribed
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.OLDEST)}>
-                Oldest channel
+              <DropdownMenuItem
+                onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
+              >
+                Unsubsribed
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <ul className="mt-3 flex-1 overflow-auto">
-          {sortedWorkspaceChannels.map((channel: Channel) => {
-            const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
+        {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
+          <Button
+            className="justify-self-end bg-secondary hover:bg-secondary-hover dark:text-white text-primary"
+            size="sm"
+            onClick={handleClearFilters}
+            variant="default"
+          >
+            Clear Filters
+          </Button>
+        )}
+      </div>
+      <div className="flex gap-2 mt-2 justify-between border-b border-border items-center py-1 pl-2">
+        <span className="text-sm text-muted-foreground items-center">
+          {sortedWorkspaceChannels.length} Results
+        </span>
+        {/* Channel Sort */}
+        <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="gap-2" size="sm">
+              Sort: {sortBy} <ChevronDown className="text-xs" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ATOZ)}>
+              A to Z
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ZTOA)}>
+              Z to A
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.MOSTMEMBERS)}>
+              Most members
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.LEASTMEMBERS)}>
+              Least members
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.NEWEST)}>
+              Newest channel
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.OLDEST)}>
+              Oldest channel
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <ul className="mt-3 flex-1 overflow-auto">
+        {sortedWorkspaceChannels.map((channel: Channel) => {
+          const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
 
-            const isSubscribed = !!channelFound;
-            const userCount = findChannelUserCountByChannelUuid(channel.uuid);
+          const isSubscribed = !!channelFound;
+          const userCount = findChannelUserCountByChannelUuid(channel.uuid);
 
-            return (
-              <li
-                key={channel.uuid}
-                className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
-                onClick={() => handleViewChannel(channel)}
-              >
-                <div>
-                  <p className="font-semibold">{channel.name}</p>
-                  <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
-                    {isSubscribed ? (
-                      <span className="text-emerald-500 flex items-center gap-1">
-                        <Check className="text-lg mt-1" /> <span>Joined</span>
-                      </span>
-                    ) : null}
-
-                    {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
-                    {userCount ? (
-                      <span className="flex items-center gap-1">
-                        {userCount} member{userCount === 1 ? '' : 's'}
-                      </span>
-                    ) : null}
-                    {userCount && channel.description ? <Dot className="text-lg" /> : null}
-                    {channel.description && (
-                      <span className="flex items-center gap-1">{channel.description}</span>
-                    )}
-                  </p>
-                </div>
-                <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+          return (
+            <li
+              key={channel.uuid}
+              className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
+              onClick={() => handleViewChannel(channel)}
+            >
+              <div>
+                <p className="font-semibold">{channel.name}</p>
+                <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
                   {isSubscribed ? (
-                    <Button
-                      variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
-                      }}
-                      className="py-1 px-2 font-semibold rounded text-white bg-popover dark:bg-secondary hover:bg-secondary w-20"
-                    >
-                      {ChannelActions.LEAVE}
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
-                      }}
-                      className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
-                    >
-                      {ChannelActions.JOIN}
-                    </Button>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-          {isLoading && (
-            <div className="flex justify-center">
-              <Spinner />
-            </div>
-          )}
+                    <span className="text-emerald-500 flex items-center gap-1">
+                      <Check className="text-lg mt-1" /> <span>Joined</span>
+                    </span>
+                  ) : null}
 
-          {!isLoading && !sortedWorkspaceChannels.length ? <NoChannelsFallback /> : null}
-          <div ref={setLoader} />
-        </ul>
-      </Body>
-    </Content>
+                  {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
+                  {userCount ? (
+                    <span className="flex items-center gap-1">
+                      {userCount} member{userCount === 1 ? '' : 's'}
+                    </span>
+                  ) : null}
+                  {userCount && channel.description ? <Dot className="text-lg" /> : null}
+                  {channel.description && (
+                    <span className="flex items-center gap-1">{channel.description}</span>
+                  )}
+                </p>
+              </div>
+              <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+                {isSubscribed ? (
+                  <Button
+                    variant="outline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
+                    }}
+                    className="py-1 px-2 font-semibold rounded text-white bg-popover dark:bg-secondary hover:bg-secondary w-20"
+                  >
+                    {ChannelActions.LEAVE}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
+                    }}
+                    className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
+                  >
+                    {ChannelActions.JOIN}
+                  </Button>
+                )}
+              </div>
+            </li>
+          );
+        })}
+        {isLoading && (
+          <div className="flex justify-center">
+            <Spinner />
+          </div>
+        )}
+
+        {!isLoading && !sortedWorkspaceChannels.length ? <NoChannelsFallback /> : null}
+        <div ref={setLoader} />
+      </ul>
+    </ContentLayout>
   );
 };
 

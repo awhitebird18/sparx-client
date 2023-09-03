@@ -2,7 +2,7 @@ import AuthRoutes from '@/features/auth/routes';
 
 export const publicRoutes = [
   {
-    path: 'auth/*',
+    path: '/auth/*',
     element: <AuthRoutes />,
   },
 ];

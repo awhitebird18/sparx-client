@@ -5,12 +5,13 @@ import { publicRoutes } from '@/routes/public';
 import { protectedRoutes } from '@/routes/protected';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import storage from '@/utils/storage';
 
 const navigateToPath = () => {
-  const savedHistory = localStorage.getItem('navigationHistory');
+  const savedHistory = storage.getNavigationHistory();
   const parsedHistory = savedHistory ? JSON.parse(savedHistory) : [];
   if (parsedHistory.length) {
-    return parsedHistory[parsedHistory.length - 1].primaryView;
+    return `/app/${parsedHistory[parsedHistory.length - 1].primaryView}`;
   }
 
   return '/app';
@@ -18,14 +19,7 @@ const navigateToPath = () => {
 
 const AppRoutes = () => {
   const { currentUser } = useStore('userStore');
-  const commonRoutes = [
-    {
-      path: '*',
-      element: (
-        <Navigate to={currentUser ? `/app/${navigateToPath()}` : 'auth/login'} replace={true} />
-      ),
-    },
-  ];
+  const commonRoutes = [{ path: '*', element: <Navigate to={navigateToPath()} /> }];
 
   const routes = currentUser ? protectedRoutes : publicRoutes;
 

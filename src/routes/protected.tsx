@@ -1,8 +1,8 @@
-import { lazy } from 'react';
+import { Suspense, lazy } from 'react';
 
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
-import AppLayout from '@/components/layout/AppLayout';
+import MainLayout from '@/components/layout/MainLayout';
 import VerificationSuccess from '@/features/auth/components/VerificationSuccess';
 
 const UserRoutes = lazy(() => import('@/features/users/routes'));
@@ -11,10 +11,20 @@ const MentionRoutes = lazy(() => import('@/features/mentions/routes'));
 const DraftRoutes = lazy(() => import('@/features/drafts/routes'));
 const ChatroomRoutes = lazy(() => import('@/features/chatroom/routes'));
 
+const App = () => {
+  return (
+    <MainLayout>
+      <Suspense>
+        <Outlet />
+      </Suspense>
+    </MainLayout>
+  );
+};
+
 export const protectedRoutes = [
   {
     path: '/app',
-    element: <AppLayout />,
+    element: <App />,
     children: [
       { path: 'users/*', element: <UserRoutes /> },
       { path: 'verification-success', element: <VerificationSuccess /> },
@@ -22,7 +32,7 @@ export const protectedRoutes = [
       { path: 'mentions/*', element: <MentionRoutes /> },
       { path: 'drafts/*', element: <DraftRoutes /> },
       { path: ':channelId/*', element: <ChatroomRoutes /> },
-      { path: '*', element: <Navigate to="/" /> },
+      { path: '*', element: <Navigate to="." /> },
     ],
   },
 ];

@@ -1,6 +1,8 @@
+import storage from '@/utils/storage';
+
 const AppSkeleton = () => {
-  const sidebarWidth = Number(window.localStorage.getItem('sidebarWidth')) || 250;
-  const appTheme = String(window.localStorage.getItem('theme')) || 'light';
+  const sidebarWidth = storage.getSidebarWidth() || 250;
+  const appTheme = storage.getTheme() || 'light';
 
   const isLight = appTheme === 'light';
 
