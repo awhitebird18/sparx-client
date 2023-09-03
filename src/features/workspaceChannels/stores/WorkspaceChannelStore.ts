@@ -47,6 +47,7 @@ export class WorkspaceChannelStore {
       findWorkspaceChannelByUuid: action,
       findChannelUserCountByChannelUuid: action,
       updateChannelUserCount: action,
+      resetWorkspaceChannelStore: action,
     });
   }
 
@@ -54,9 +55,12 @@ export class WorkspaceChannelStore {
     this.page = this.page + 1;
   };
 
-  setHasMore(bool: boolean) {
+  setHasMore = (bool: boolean) => {
     this.hasMore = bool;
-  }
+  };
+  setPage = (page: number) => {
+    this.page = page;
+  };
 
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
@@ -80,6 +84,10 @@ export class WorkspaceChannelStore {
 
   findWorkspaceChannelByUuid = (uuid: string) => {
     return this.workspaceChannels.find((el: Channel) => el.uuid === uuid);
+  };
+
+  setChannelUserCounts = (channelUserCoutns: ChannelUserCount[]) => {
+    this.channelUserCounts = channelUserCoutns;
   };
 
   setWorkspaceChannels = (channels: Channel[]) => {
@@ -138,6 +146,17 @@ export class WorkspaceChannelStore {
     if (!channelUserCount) return 0;
 
     return channelUserCount.userCount;
+  };
+
+  resetWorkspaceChannelStore = () => {
+    this.setWorkspaceChannels([]);
+    this.setHasMore(true);
+    this.setChannelUserCounts([]);
+    this.setFilterBySearchValue('');
+    this.setFilterChannelVisibility(null);
+    this.setFilterSubscribed(null);
+    this.setPage(1);
+    this.setSortBy(SortOptions.ATOZ);
   };
 
   fetchWorkspaceChannelsApi = async (page: number, pageSize?: number) => {
