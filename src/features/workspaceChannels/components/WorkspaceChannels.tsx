@@ -47,6 +47,7 @@ const WorkspaceChannels: React.FC = () => {
     workspaceChannels,
     findChannelUserCountByChannelUuid,
     channelUserCounts,
+    resetWorkspaceChannelStore,
   } = useStore('workspaceChannelStore');
   const {
     findChannelByUuid,
@@ -86,6 +87,12 @@ const WorkspaceChannels: React.FC = () => {
       }
     };
   }, [fetchWorkspaceChannelsApi, hasMore, loader, page]);
+
+  useEffect(() => {
+    return () => {
+      resetWorkspaceChannelStore();
+    };
+  }, []);
 
   const handleViewChannel = (channel: Channel) => {
     const subscribedChannel = findChannelByUuid(channel.uuid);
