@@ -6,6 +6,7 @@ import { getValidTheme } from '@/utils/getValidTheme';
 
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
+import storage from '@/utils/storage';
 
 export class UserPreferencesStore {
   primaryColor: PrimaryColors;
@@ -44,8 +45,8 @@ export class UserPreferencesStore {
       },
     );
 
-    this.primaryColor = getValidPrimaryColor(window.localStorage.getItem('theme'));
-    this.theme = getValidTheme(window.localStorage.getItem('theme'));
+    this.primaryColor = getValidPrimaryColor(storage.getPrimaryColor());
+    this.theme = getValidTheme(storage.getTheme());
     this.notificationType = NotificationType.DIRECT;
   }
 
@@ -65,14 +66,14 @@ export class UserPreferencesStore {
     const userPreferences = await userPreferencesApi.updateUserPreferences({ primaryColor });
 
     this.primaryColor = userPreferences.primaryColor;
-    window.localStorage.setItem('primaryColor', primaryColor);
+    storage.setPrimaryColor(userPreferences.primaryColor);
   };
 
   updateThemeApi = async (theme: Theme) => {
     const userPreferences = await userPreferencesApi.updateUserPreferences({ theme });
 
     this.theme = userPreferences.theme;
-    window.localStorage.setItem('theme', theme);
+    storage.setTheme(userPreferences.theme);
   };
 
   updateNotificationTypeApi = (notificationType: NotificationType) => {

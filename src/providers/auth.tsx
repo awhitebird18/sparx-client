@@ -59,6 +59,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogout = async () => {
     try {
       await authApi.logout();
+
+      window.location.assign(`${window.location.origin}/auth/login` as unknown as string);
     } catch (err) {
       console.error(err);
     } finally {

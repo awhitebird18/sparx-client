@@ -11,11 +11,9 @@ import { useStore } from '@/stores/RootStore';
 
 import { Badge } from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
-import Header from '@/components/layout/containers/Header';
 import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
-import Content from '@/components/layout/containers/Content';
 import ChannelIntroduction from './ChannelIntroduction';
 import Thread from './Thread';
 import Editor from '@/features/messageInput/Editor';
@@ -24,6 +22,7 @@ import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
 
 import { Message as MessageType } from '@/features/messages/types';
 import { ChannelType } from '@/features/channels/enums';
+import ContentLayout from '@/components/layout/ContentLayout';
 
 const ChatRoom: React.FC = () => {
   const {
@@ -91,80 +90,72 @@ const ChatRoom: React.FC = () => {
   }, [clearUsersTyping, currentChannelId, fetchChannelUserIdsApi, joinRoom, leaveRoom]);
 
   return (
-    <Content>
-      <div className="flex overflow-hidden flex-1">
-        <div className="flex flex-col w-full">
-          <Header>
-            <ChannelTitle />
-            <AvatarGroup />
-          </Header>
-          <div className="relative flex flex-1 bg-card dark:bg-background rounded-xl pb-5 overflow-hidden m-3">
-            <div className="flex flex-col flex-1 overflow-hidden w-full">
-              <div
-                className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
-                ref={scrollRef}
-              >
-                <div ref={bottomRef} />
-                {isLoading ? (
-                  <Spinner />
-                ) : (
-                  <>
-                    {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
-                      <div key={index}>
-                        <div key={date} className="relative">
-                          <div className="w-full flex my-2 sticky top-2">
-                            <Badge
-                              variant="outline"
-                              className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
-                            >
-                              {formatDate(date)}
-                            </Badge>
-                            <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
-                          </div>
-
-                          {messages
-                            .filter((message: MessageType) => !message.parentId)
-                            .map((message: MessageType, index: number) => {
-                              const displayUser =
-                                index === 0 ||
-                                messages[index - 1].userId !== message.userId ||
-                                !!message.isSystem;
-
-                              return (
-                                <Message
-                                  key={message.uuid}
-                                  message={message}
-                                  showUser={displayUser}
-                                  setThread={setThread}
-                                  disabled={message.isSystem}
-                                />
-                              );
-                            })}
-                        </div>
+    <ContentLayout title={<ChannelTitle />} headerComponent={<AvatarGroup />} disablePadding>
+      <div className="relative flex flex-1 bg-card dark:bg-background rounded-xl pb-5 overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden w-full p-3">
+          <div
+            className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
+            ref={scrollRef}
+          >
+            <div ref={bottomRef} />
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
+                  <div key={index}>
+                    <div key={date} className="relative">
+                      <div className="w-full flex my-2 sticky top-2">
+                        <Badge
+                          variant="outline"
+                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10"
+                        >
+                          {formatDate(date)}
+                        </Badge>
+                        <div className="bg-border h-px absolute top-[50%] left-0 w-full opacity-50" />
                       </div>
-                    ))}
 
-                    {!hasMore && <ChannelIntroduction channelId={channelId} />}
-                  </>
-                )}
-              </div>
-              {currentChannel?.isTemp && currentChannel.type !== ChannelType.DIRECT ? (
-                <UserInputNotSubscribed />
-              ) : (
-                <Editor
-                  placeholder={`Message ${currentChannel?.name}`}
-                  config={editorConfig}
-                  onSubmit={handleSubmit}
-                  onChange={handleInputChange}
-                />
-              )}
-              <UsersTypingDisplay />
-            </div>
+                      {messages
+                        .filter((message: MessageType) => !message.parentId)
+                        .map((message: MessageType, index: number) => {
+                          const displayUser =
+                            index === 0 ||
+                            messages[index - 1].userId !== message.userId ||
+                            !!message.isSystem;
+
+                          return (
+                            <Message
+                              key={message.uuid}
+                              message={message}
+                              showUser={displayUser}
+                              setThread={setThread}
+                              disabled={message.isSystem}
+                            />
+                          );
+                        })}
+                    </div>
+                  </div>
+                ))}
+
+                {!hasMore && <ChannelIntroduction channelId={channelId} />}
+              </>
+            )}
           </div>
+          {currentChannel?.isTemp && currentChannel.type !== ChannelType.DIRECT ? (
+            <UserInputNotSubscribed />
+          ) : (
+            <Editor
+              placeholder={`Message ${currentChannel?.name}`}
+              config={editorConfig}
+              onSubmit={handleSubmit}
+              onChange={handleInputChange}
+            />
+          )}
+          <UsersTypingDisplay />
         </div>
         {thread && <Thread message={thread} setMessage={setThread} />}
       </div>
-    </Content>
+    </ContentLayout>
   );
 };
 

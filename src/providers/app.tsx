@@ -10,6 +10,9 @@ import '@/styles/index.css';
 import 'react-resizable/css/styles.css';
 
 import { TooltipProvider } from '@/components/ui/Tooltip';
+import { StoreProvider } from './store';
+import AuthProvider from '@/providers/auth';
+import NotificationController from '@/components/notifications/NotificationController';
 
 init({ data });
 
@@ -28,11 +31,16 @@ export type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <Suspense fallback={<div></div>}>
+    <Suspense>
       <ErrorBoundary fallback={<ErrorFallback />}>
-        <TooltipProvider>
-          <Router>{children}</Router>
-        </TooltipProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <NotificationController />
+            <TooltipProvider>
+              <Router>{children}</Router>
+            </TooltipProvider>
+          </AuthProvider>
+        </StoreProvider>
       </ErrorBoundary>
     </Suspense>
   );
