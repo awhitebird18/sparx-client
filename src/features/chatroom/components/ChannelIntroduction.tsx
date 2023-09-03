@@ -32,7 +32,7 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
       <div className="flex flex-col gap-5 overflow-hidden">
         <p className="text-3xl font-bold space-y-6">
           You're looking at the{' '}
-          <span className="text-userDark">
+          <span className="text-userMedium">
             #{channel.name.charAt(0).toUpperCase()}
             {channel.name.substring(1).toLowerCase()}{' '}
           </span>
@@ -44,8 +44,8 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
           </span>
         </p>
         <Button
-          variant="outline"
-          className="w-fit flex gap-2 text-base font-normal items-center"
+          variant="ghost"
+          className="text-userMedium text-md hover:text-userMedium cursor-pointer border border-userMedium w-fit gap-2"
           onClick={handleAddUser}
         >
           <Person className="text-xl" />
