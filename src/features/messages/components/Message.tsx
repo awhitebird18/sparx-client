@@ -96,7 +96,6 @@ const Message = ({
                       size={38}
                       userId={message.userId}
                       profileImage={user.profileImage}
-                      showStatus
                     />
                   </HoverCardTrigger>
 
