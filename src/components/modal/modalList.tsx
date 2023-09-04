@@ -9,6 +9,7 @@ import ProfileModal from '@/features/profile/components/Profile';
 import DeleteSection from '@/features/sections/components/DeleteSection';
 import { User } from '@/features/users/types';
 import { lazy } from 'react';
+import ChangePasswordModal from '@/features/auth/components/ChangePasswordModal';
 
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
 const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
@@ -26,6 +27,7 @@ const modalList = {
   AddUserModal: (props: { channel: Channel }) => <AddUserModal {...props} />,
   RemoveUserModal: (props: { user: User; channel: Channel }) => <RemoveUserModal {...props} />,
   ProfileModal: (props: { userId: string }) => <ProfileModal {...props} />,
+  ChangePasswordModal: () => <ChangePasswordModal />,
   ConfirmChannelTypeChange: (props: { channel: Channel }) => (
     <ConfirmChannelChangeModal {...props} />
   ),
