@@ -13,7 +13,7 @@ import ChangePasswordModal from '@/features/auth/components/ChangePasswordModal'
 
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
 const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
-const InviteUserModal = lazy(() => import('@/features/users/components/InviteUserForm'));
+const InviteUserModal = lazy(() => import('@/features/auth/components/InviteUserModal'));
 const ChannelDetails = lazy(() => import('@/features/channels/components/ChannelDetails'));
 
 const modalList = {
