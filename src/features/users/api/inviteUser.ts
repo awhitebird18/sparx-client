@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
-import { InviteUser } from '../types';
+import { InviteUser } from '../../auth/types';
 
 export const inviteUser = async (inviteUser: InviteUser) => {
   try {
