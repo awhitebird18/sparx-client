@@ -20,6 +20,7 @@ interface AuthContextData {
   userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<void>;
   loading: boolean;
+  verifyAndLoginUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
@@ -78,6 +79,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
+      setLoading(true);
+
       const data = await authApi.verify();
 
       setCurrentUser(data.currentUser);
@@ -87,8 +90,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSections(data.sections);
       setSubscribedChannels(data.channels);
       setUsers(data.users);
-
-      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -103,11 +104,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ]);
 
   useEffect(() => {
-    try {
-      verifyAndLoginUser();
-    } catch (err) {
-      setCurrentUser(undefined);
-    }
+    const fn = async () => {
+      try {
+        await verifyAndLoginUser();
+      } catch (err) {
+        setCurrentUser(undefined);
+      }
+    };
+
+    fn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -116,6 +121,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userLogout,
     registerUser,
     loading,
+    verifyAndLoginUser,
   };
 
   if (loading) return <AppSkeleton />;

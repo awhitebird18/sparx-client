@@ -70,32 +70,19 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center">
-                  <input
-                    id="remember_me"
-                    name="remember_me"
-                    type="checkbox"
-                    className="h-4 w-4 text-userDark focus:ring-userDark border-gray-300 rounded"
-                  />
-                  <label htmlFor="remember_me" className="ml-2 block text-sm ">
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-userLight">
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
+                className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
               >
                 Sign in
               </button>
+
+              <div className="flex items-center justify-end mb-6 gap-2 text-sm">
+                Forgot your password?
+                <Link to="/auth/forgot-password" className="font-medium text-userLight">
+                  Get help signing in
+                </Link>
+              </div>
             </form>
           </div>
         </div>
