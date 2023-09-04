@@ -4,6 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import MainLayout from '@/components/layout/MainLayout';
 import VerificationSuccess from '@/features/auth/components/VerificationSuccess';
+import ThreadRoutes from '@/features/threads/routes';
 
 const UserRoutes = lazy(() => import('@/features/users/routes'));
 const ChannelRoutes = lazy(() => import('@/features/channels/routes'));
@@ -31,6 +32,7 @@ export const protectedRoutes = [
       { path: 'channels/*', element: <ChannelRoutes /> },
       { path: 'mentions/*', element: <MentionRoutes /> },
       { path: 'drafts/*', element: <DraftRoutes /> },
+      { path: 'threads/*', element: <ThreadRoutes /> },
       { path: ':channelId/*', element: <ChatroomRoutes /> },
       { path: '*', element: <Navigate to="." /> },
     ],
