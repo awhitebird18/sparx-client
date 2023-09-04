@@ -3,9 +3,13 @@ import { NotificationType } from '@/stores/NotificationStore';
 
 import { stores } from '@/stores/RootStore';
 
-export const changePassword = async (password: string, token: string) => {
+export const changePassword = async (changePasswordDto: {
+  password: string;
+  token?: string;
+  email?: string;
+}) => {
   try {
-    const { data } = await axios.post('/auth/change-password', { password, token });
+    const { data } = await axios.post('/auth/change-password', changePasswordDto);
 
     stores.notificationStore.addNotification({
       title: 'Password change successful!',

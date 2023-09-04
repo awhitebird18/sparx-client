@@ -111,6 +111,9 @@ const UserDropdown: React.FC = () => {
           <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
             Preferences
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}>
+            Change password
+          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="DropdownMenuSeparator" />
