@@ -46,7 +46,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
   return (
     <div className="flex gap-1 max-w-xl flex-wrap">
       {message.reactions.map((reaction: Reaction) => {
-        const currentUserReacted = reaction.users.includes(currentUser.uuid);
+        const currentUserReacted = reaction.users?.includes(currentUser.uuid);
         return (
           <Tooltip key={reaction.uuid}>
             <TooltipTrigger asChild>
@@ -80,7 +80,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
                 </div>
 
                 <div className="text-center text-sm flex justify-center leading-6">
-                  {reaction.users.map((userId: string, index: number) => {
+                  {reaction.users?.map((userId: string, index: number) => {
                     const user = findUserByUuid(userId);
                     if (!user) return;
                     return `${user.firstName} ${user.lastName}${
