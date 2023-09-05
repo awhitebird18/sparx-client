@@ -63,8 +63,8 @@ const Message = ({
     }
   };
 
-  const handleReplyToMessage = (parentMessageId: string) => {
-    fetchThreadMessagesApi(parentMessageId);
+  const handleReplyToMessage = (message: Message) => {
+    fetchThreadMessagesApi(message);
   };
 
   const handleEditMessage = () => {
@@ -142,7 +142,7 @@ const Message = ({
                     className="p-0 justify-between px-2 h-7 w-44"
                     size="sm"
                     variant="outline"
-                    onClick={() => handleReplyToMessage(message.uuid)}
+                    onClick={() => handleReplyToMessage(message)}
                   >
                     <span className="text-userMedium">{`${message.threadCount} replies`}</span>
                     <ChevronRight />
@@ -166,7 +166,7 @@ const Message = ({
             </ContextMenuItem>
             <ContextMenuItem
               className="gap-3 py-2 px-4"
-              onClick={() => handleReplyToMessage(message.uuid)}
+              onClick={() => handleReplyToMessage(message)}
             >
               <ChatDots />
               Reply in thread

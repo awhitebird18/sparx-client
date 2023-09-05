@@ -188,16 +188,13 @@ export class MessageStore {
     }
   };
 
-  fetchThreadMessagesApi = async (parentMessageId: string) => {
-    if (parentMessageId === this.thread?.uuid) return;
+  fetchThreadMessagesApi = async (parentMessage: Message) => {
+    if (parentMessage.uuid === this.thread?.uuid) return;
 
-    this.closeThread();
-
-    const messages = await messageApi.getThreadMessages(parentMessageId);
+    const messages = await messageApi.getThreadMessages(parentMessage.uuid);
+    this.messages = this.messages.filter((message: Message) => !message.parentId);
 
     this.addMessages(messages);
-
-    const parentMessage = this.findMessageByUuid(parentMessageId);
 
     this.setThread(parentMessage);
   };
