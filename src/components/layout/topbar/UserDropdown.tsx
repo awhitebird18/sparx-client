@@ -16,6 +16,7 @@ import { observer } from 'mobx-react-lite';
 import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/enums';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -83,6 +84,11 @@ const UserDropdown: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <div className="p-2">
+          <SetUserStatusButton />
+        </div>
+
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() =>

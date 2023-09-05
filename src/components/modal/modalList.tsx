@@ -10,6 +10,7 @@ import DeleteSection from '@/features/sections/components/DeleteSection';
 import { User } from '@/features/users/types';
 import { lazy } from 'react';
 import ChangePasswordModal from '@/features/auth/components/ChangePasswordModal';
+import UserStatusModal from '@/features/userStatus/components/UserStatusModal';
 
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
 const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
@@ -31,6 +32,7 @@ const modalList = {
   ConfirmChannelTypeChange: (props: { channel: Channel }) => (
     <ConfirmChannelChangeModal {...props} />
   ),
+  UserStatusModal: () => <UserStatusModal />,
 };
 
 export type ModalName = keyof typeof modalList;

@@ -1,7 +1,7 @@
 import { CreateUserStatus } from '@/features/userStatus/types/createUserStatus';
 import { UpdateUserStatus } from '@/features/userStatus/types/updateUserStatus';
 import { UserStatus } from '@/features/userStatus/types/userStatus';
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 
 import { userStatusApi } from '@/features/userStatus/api';
 
@@ -14,8 +14,18 @@ export class UserStatusStore {
       createUserStatusApi: action,
       updateUserStatusApi: action,
       removeUserStatusApi: action,
+      addUserStatus: action,
+      activeUserStatus: computed,
     });
   }
+
+  get activeUserStatus() {
+    return this.userStatuses.find((u: UserStatus) => u.isActive);
+  }
+
+  setUserStatuses = (userStatuses: UserStatus[]) => {
+    this.userStatuses = userStatuses;
+  };
 
   addUserStatus = (userStatus: UserStatus) => {
     const userStatusFound = this.findUserStatusByUuid(userStatus.uuid);
@@ -37,19 +47,19 @@ export class UserStatusStore {
     Object.assign(userStatusFound, userStatus);
   };
 
-  async createUserStatusApi(createUserStatus: CreateUserStatus) {
+  createUserStatusApi = async (createUserStatus: CreateUserStatus) => {
     const userStatus = await userStatusApi.createUserStatus(createUserStatus);
 
     this.addUserStatus(userStatus);
-  }
+  };
 
-  async updateUserStatusApi(userStatusUuid: string, updatedStatus: UpdateUserStatus) {
+  updateUserStatusApi = async (userStatusUuid: string, updatedStatus: UpdateUserStatus) => {
     const updatedUserStatus = await userStatusApi.updateUserStatus(userStatusUuid, updatedStatus);
 
     this.updateUserStatus(updatedUserStatus);
-  }
+  };
 
-  async removeUserStatusApi(userStatusUuid: string) {
+  removeUserStatusApi = async (userStatusUuid: string) => {
     await userStatusApi.removeUserStatus(userStatusUuid);
-  }
+  };
 }

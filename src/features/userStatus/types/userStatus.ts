@@ -12,4 +12,6 @@ export interface UserStatus {
   dateExpire: Date;
 
   duration: StatusDuration;
+
+  isActive: boolean;
 }

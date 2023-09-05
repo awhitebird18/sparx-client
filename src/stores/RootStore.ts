@@ -15,7 +15,7 @@ import { ModalStore } from '@/stores/ModalStore';
 import { SocketStore } from '@/stores/SocketStore';
 import { SidebarStore } from '@/stores/SidebarStore';
 import { ThreadStore } from '@/features/threads/stores/threadStore';
-import { UserStatusStore } from '@/features/users/stores/userStatusStore';
+import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
 
 interface RootStore {
   userStore: UserStore;
