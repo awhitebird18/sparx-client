@@ -53,7 +53,7 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
   };
 
   const handleReply = () => {
-    fetchThreadMessagesApi(message.uuid);
+    fetchThreadMessagesApi(message);
   };
 
   return (

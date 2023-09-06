@@ -15,6 +15,7 @@ import { ModalStore } from '@/stores/ModalStore';
 import { SocketStore } from '@/stores/SocketStore';
 import { SidebarStore } from '@/stores/SidebarStore';
 import { ThreadStore } from '@/features/threads/stores/threadStore';
+import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
 
 interface RootStore {
   userStore: UserStore;
@@ -30,6 +31,7 @@ interface RootStore {
   modalStore: ModalStore;
   socketStore: SocketStore;
   threadStore: ThreadStore;
+  userStatusStore: UserStatusStore;
 }
 
 class RootStoreImpl implements RootStore {
@@ -46,6 +48,7 @@ class RootStoreImpl implements RootStore {
   notificationStore = new NotificationStore();
   modalStore = new ModalStore();
   threadStore = new ThreadStore();
+  userStatusStore = new UserStatusStore();
 }
 
 export const stores = new RootStoreImpl();
