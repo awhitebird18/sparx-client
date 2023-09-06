@@ -29,7 +29,6 @@ const Message = ({
   message,
   showUser,
   disabled,
-  setThread,
   isThread,
 }: {
   message: Message;
@@ -38,6 +37,7 @@ const Message = ({
   setThread?: (message: Message | null) => void;
   isThread?: boolean;
 }) => {
+  const { fetchThreadMessagesApi } = useStore('messageStore');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
   const { findUserByUuid } = useStore('userStore');
@@ -63,8 +63,8 @@ const Message = ({
     }
   };
 
-  const handleReplyToMessage = () => {
-    setThread?.(message);
+  const handleReplyToMessage = (message: Message) => {
+    fetchThreadMessagesApi(message);
   };
 
   const handleEditMessage = () => {
@@ -85,7 +85,7 @@ const Message = ({
         <ContextMenuTrigger disabled={disabled}>
           <div
             className={`message ${showEmojiPicker ? 'hovered' : ''} rounded-lg ${
-              !disabled ? 'hover:bg-secondary hover:dark:bg-secondary' : ''
+              !disabled ? 'hover:bg-accent hover:dark:bg-card' : ''
             } relative`}
           >
             <div className="flex gap-3 p-1.5 h-min">
@@ -96,7 +96,6 @@ const Message = ({
                       size={38}
                       userId={message.userId}
                       profileImage={user.profileImage}
-                      showStatus
                     />
                   </HoverCardTrigger>
 
@@ -138,25 +137,20 @@ const Message = ({
                   </span>
                 ) : null}
                 <ReactionsDisplay message={message} />
-                {!isThread && message.childMessages?.length ? (
+                {message.threadCount && !isThread ? (
                   <Button
-                    className="p-0 justify-between px-2 h-7 w-44 hover:border border-background"
+                    className="p-0 justify-between px-2 h-7 w-44"
                     size="sm"
-                    variant="ghost"
-                    onClick={() => setThread?.(message)}
+                    variant="outline"
+                    onClick={() => handleReplyToMessage(message)}
                   >
-                    <span className="text-blue-500">{`${message.childMessages.length} replies`}</span>
+                    <span className="text-userMedium">{`${message.threadCount} replies`}</span>
                     <ChevronRight />
                   </Button>
                 ) : null}
               </div>
               {!disabled && !isEditing ? (
-                <OptionsPanel
-                  message={message}
-                  setIsEditing={setIsEditing}
-                  setThread={setThread}
-                  isThread={isThread}
-                />
+                <OptionsPanel message={message} setIsEditing={setIsEditing} isThread={isThread} />
               ) : null}
             </div>
           </div>
@@ -170,7 +164,10 @@ const Message = ({
             >
               <EmojiLaughing /> Add Reaction
             </ContextMenuItem>
-            <ContextMenuItem className="gap-3 py-2 px-4" onClick={handleReplyToMessage}>
+            <ContextMenuItem
+              className="gap-3 py-2 px-4"
+              onClick={() => handleReplyToMessage(message)}
+            >
               <ChatDots />
               Reply in thread
             </ContextMenuItem>

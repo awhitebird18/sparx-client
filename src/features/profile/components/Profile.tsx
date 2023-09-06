@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,6 +29,7 @@ const formSchema = z.object({
 });
 
 type ProfileModalProps = { userId: string };
+
 const ProfileModal = ({ userId }: ProfileModalProps) => {
   const { findUserByUuid, updateUserApi, uploadProfileImageApi, currentUser } =
     useStore('userStore');
@@ -39,10 +40,13 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: currentUser?.firstName,
-      lastName: currentUser?.lastName,
-    },
+    defaultValues: useMemo(
+      () => ({
+        firstName: currentUser?.firstName,
+        lastName: currentUser?.lastName,
+      }),
+      [currentUser],
+    ),
   });
 
   useEffect(() => {
@@ -51,6 +55,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     await updateUserApi(values);
+    setIsEditing(false);
   }
 
   const handleEditForm = () => {
@@ -88,8 +93,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <UserAvatar size={165} userId={user.uuid} profileImage={user.profileImage} />
             {user.uuid === currentUser.uuid && (
               <Button
-                variant="outline"
-                className="text-userDark w-full cursor-pointer"
+                variant="ghost"
+                className="text-userMedium hover:text-userMedium w-full cursor-pointer border border-userMedium"
                 onClick={(e) => {
                   e.preventDefault();
 
@@ -186,8 +191,10 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex gap-2 w-fit ml-auto h-10">
               {isEditing ? (
                 <>
-                  <Button onClick={handleCancelEdit}>Cancel</Button>
-                  <Button className="bg-userDark text-white" type="submit">
+                  <Button onClick={handleCancelEdit} variant="secondary" type="button">
+                    Cancel
+                  </Button>
+                  <Button className="bg-userMedium hover:bg-userDark text-white" type="submit">
                     Save Changes
                   </Button>
                 </>

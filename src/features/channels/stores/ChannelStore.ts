@@ -83,13 +83,13 @@ export class ChannelStore {
   };
 
   updateSubscribedChannel = (udpatedChannel: Channel) => {
-    const index = this.subscribedChannels.findIndex(
+    const channelFound = this.subscribedChannels.find(
       (channel) => channel.uuid === udpatedChannel.uuid,
     );
 
-    if (index === -1) return;
+    if (!channelFound) return;
 
-    this.subscribedChannels.splice(index, 1, udpatedChannel);
+    Object.assign(channelFound, udpatedChannel);
   };
 
   removeSubscribedChannel = (uuid: string) => {

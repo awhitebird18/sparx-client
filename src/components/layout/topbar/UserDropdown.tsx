@@ -15,6 +15,9 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { observer } from 'mobx-react-lite';
 import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/enums';
+import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
+import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -24,8 +27,10 @@ const UserDropdown: React.FC = () => {
   const { userLogout } = useAuth();
   const { currentUser, setUserOnlineStatus, userOnlineStatus } = useStore('userStore');
   const { emitSocket } = useStore('socketStore');
+  const { activeUserStatus } = useStore('userStatusStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
+    setDropdownOpen(false);
     setActiveModal({ type, payload });
   };
 
@@ -39,18 +44,23 @@ const UserDropdown: React.FC = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <Tooltip>
-        <TooltipTrigger>
-          <DropdownMenuTrigger className="flex items-center" asChild>
-            <div>
+        <div className="gap-1 flex items-center">
+          {activeUserStatus && (
+            <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
+              <UserStatusDisplay status={activeUserStatus} />
+            </div>
+          )}
+          <TooltipTrigger>
+            <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
-                size={30}
+                size={31}
                 userId={currentUser.uuid}
                 profileImage={currentUser.profileImage}
                 showStatus
               />
-            </div>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+        </div>
         <TooltipContent>
           <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
         </TooltipContent>
@@ -70,20 +80,23 @@ const UserDropdown: React.FC = () => {
       >
         <div className="w-full p-2 flex gap-2 mb-1 overflow-hidden">
           <UserAvatar size={40} userId={currentUser.uuid} profileImage={currentUser.profileImage} />
-          <div>
-            <div className="w-40">
+          <div style={{ height: '40px' }} className="flex flex-col justify-between w-full">
+            <div className="w-full">
               <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
             </div>
-            <div className="flex items-center gap-1">
-              <div
-                className={`rounded-full h-2.5 w-2.5 ${
-                  userOnlineStatus === UserStatus.ONLINE ? 'bg-green-600' : 'bg-transparent'
-                }`}
-              ></div>
-              <p className="text-sm text-secondary-foreground">{userOnlineStatus}</p>
+            <div className="flex items-center gap-1 mt-0.5">
+              <OnlineStatusIndicator userId={currentUser.uuid} />
+              <p className="text-sm text-secondary-foreground h-3 leading-3 mb-0.5">
+                {`${userOnlineStatus[0].toUpperCase()}${userOnlineStatus.substring(1)}`}
+              </p>
             </div>
           </div>
         </div>
+
+        <div className="p-2" onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
+          <SetUserStatusButton />
+        </div>
+
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() =>
@@ -111,6 +124,9 @@ const UserDropdown: React.FC = () => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
             Preferences
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}>
+            Change password
           </DropdownMenuItem>
         </DropdownMenuGroup>
 

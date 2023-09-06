@@ -7,4 +7,5 @@ export interface CreateMesssage {
   userId: string;
   createdAt: Dayjs;
   isSystem?: boolean;
+  parentId?: string;
 }

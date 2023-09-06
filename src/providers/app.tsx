@@ -4,12 +4,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import data from '@emoji-mart/data/sets/14/apple.json';
 import { init } from 'emoji-mart';
-import '@/styles/App.css';
+import '@/styles/app.css';
 import '@/styles/chatroom.css';
 import '@/styles/index.css';
 import 'react-resizable/css/styles.css';
 
 import { TooltipProvider } from '@/components/ui/Tooltip';
+import { StoreProvider } from './store';
+import AuthProvider from '@/providers/auth';
+import NotificationController from '@/components/notifications/NotificationController';
 
 init({ data });
 
@@ -28,11 +31,16 @@ export type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <Suspense fallback={<div></div>}>
+    <Suspense>
       <ErrorBoundary fallback={<ErrorFallback />}>
-        <TooltipProvider>
-          <Router>{children}</Router>
-        </TooltipProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <NotificationController />
+            <TooltipProvider>
+              <Router>{children}</Router>
+            </TooltipProvider>
+          </AuthProvider>
+        </StoreProvider>
       </ErrorBoundary>
     </Suspense>
   );

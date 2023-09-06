@@ -198,11 +198,15 @@ const Section = ({ section, index }: SectionProps) => {
             ).map((channel: Channel | undefined) => {
               if (!channel) return null;
               let channelIcon = channel.icon;
+              let userId = undefined;
+              let userStatus = undefined;
 
               if (channel.type === ChannelType.DIRECT) {
                 const user = findUserByName(channel.name);
                 if (!user) return;
                 channelIcon = user.profileImage;
+                userId = user.uuid;
+                userStatus = user.status;
               }
 
               return (
@@ -213,12 +217,14 @@ const Section = ({ section, index }: SectionProps) => {
                   isChannel
                   type={channel.type}
                   isTemp={channel.isTemp}
+                  status={userStatus}
                   icon={
                     <ChannelIcon
                       imageUrl={channelIcon}
                       isPrivate={channel.isPrivate}
                       isSelected={selectedId === channel.uuid}
-                      size={18}
+                      size={21}
+                      userId={userId}
                     />
                   }
                 />

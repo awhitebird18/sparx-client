@@ -2,6 +2,7 @@ import { makeObservable, observable, computed, action } from 'mobx';
 
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
+import storage from '@/utils/storage';
 
 export class SidebarStore {
   channelStore: ChannelStore;
@@ -65,15 +66,14 @@ export class SidebarStore {
     }, 300);
   };
 
-  saveSidebarWidthToLocalStorage = (val: number) => {
-    localStorage.setItem('sidebarWidth', val.toString());
+  saveSidebarWidthToLocalStorage = (width: number) => {
+    storage.setSidebarWidth(width);
   };
 
   loadSidebarWidthFromLocalStorage = () => {
-    const savedWidth = localStorage.getItem('sidebarWidth');
-    if (savedWidth) {
-      this.sidebarWidth = Number(savedWidth);
-    }
+    const savedWidth = storage.getSidebarWidth();
+
+    this.sidebarWidth = savedWidth || this.sidebarWidth;
   };
 
   get organizedChannels() {

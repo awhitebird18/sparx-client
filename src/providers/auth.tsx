@@ -20,6 +20,7 @@ interface AuthContextData {
   userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<void>;
   loading: boolean;
+  verifyAndLoginUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
@@ -43,6 +44,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setChannelUnreads } = useStore('channelUnreadStore');
   const { setUsers, setCurrentUser } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
+  const { setUserStatuses } = useStore('userStatusStore');
 
   const [loading, setLoading] = useState(true);
 
@@ -59,6 +61,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogout = async () => {
     try {
       await authApi.logout();
+
+      window.location.assign(`${window.location.origin}/auth/login` as unknown as string);
     } catch (err) {
       console.error(err);
     } finally {
@@ -76,6 +80,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
+      setLoading(true);
+
       const data = await authApi.verify();
 
       setCurrentUser(data.currentUser);
@@ -85,8 +91,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSections(data.sections);
       setSubscribedChannels(data.channels);
       setUsers(data.users);
-
-      setLoading(false);
+      setUserStatuses(data.userStatuses);
     } finally {
       setLoading(false);
     }
@@ -98,14 +103,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setSubscribedChannels,
     setUsers,
     connectToSocketServer,
+    setUserStatuses,
   ]);
 
   useEffect(() => {
-    try {
-      verifyAndLoginUser();
-    } catch (err) {
-      setCurrentUser(undefined);
-    }
+    const fn = async () => {
+      try {
+        await verifyAndLoginUser();
+      } catch (err) {
+        setCurrentUser(undefined);
+      }
+    };
+
+    fn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -114,6 +124,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userLogout,
     registerUser,
     loading,
+    verifyAndLoginUser,
   };
 
   if (loading) return <AppSkeleton />;

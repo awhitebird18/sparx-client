@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { Bell, ChevronDown, Hash } from 'react-bootstrap-icons';
+import { Bell, Check, ChevronDown, Hash } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
 
@@ -14,13 +14,14 @@ import Settings from './Settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import ChannelIcon from './ChannelIcon';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { User } from '@/features/users/types';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
-  const { getChannelByUuid, fetchChannelUserIdsApi } = useStore('channelStore');
+  const { getChannelByUuid, fetchChannelUserIdsApi, updateChannelApi } = useStore('channelStore');
   const { findUserByUuid } = useStore('userStore');
   const [channelUserIds, setChannelUserIds] = useState<string[]>([]);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fn = async () => {
@@ -34,6 +35,20 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
 
   const channel = getChannelByUuid(id);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectImage = (e: any) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      const imageBase64 = reader.result as string;
+
+      updateChannelApi(id, { icon: imageBase64 });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   if (!channel) return null;
 
   const channelUsers = channelUserIds
@@ -43,21 +58,50 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
   return (
     <Modal
       title={
-        <p className="text-2xl flex gap-3 items-center">
-          <ChannelIcon imageUrl={channel.icon} size={25} isSelected isPrivate={channel.isPrivate} />{' '}
-          {channel.name}
-        </p>
+        <div className="flex gap-4 items-center mb-2">
+          <Button
+            variant="ghost"
+            className="text-userDark cursor-pointer flex justify-start h-auto gap-3 items-start h-18 p-0"
+            onClick={() => {
+              fileInput.current?.click();
+            }}
+          >
+            <ChannelIcon
+              imageUrl={channel.icon}
+              size={50}
+              isSelected
+              isPrivate={channel.isPrivate}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInput}
+              onChange={handleSelectImage}
+            />
+          </Button>
+          <div className="flex flex-col h-18 gap-1 h-12">
+            <p className="text-2xl leading-none">{channel.name}</p>
+
+            <p className="text-emerald-500 text-sm flex it8ems-center">
+              Joined <Check size={18} />
+            </p>
+          </div>
+        </div>
       }
     >
       <>
         <div className="flex gap-3">
-          <Button className="p-0 text-base text-muted-foreground h-7 w-12 gap-1" variant="outline">
+          <Button
+            className="p-0 text-base text-muted-foreground h-7 w-12 gap-1 bg-userLight hover:bg-userMedium text-white"
+            variant="secondary"
+          >
             <Hash className="" />
             <ChevronDown className="text-xs" />
           </Button>
           <Button
-            className="px-2 justify-start text-xs text-muted-foreground h-7 gap-2"
-            variant="outline"
+            className="px-2 justify-start text-xs text-muted-foreground h-7 gap-2 bg-userLight hover:bg-userMedium text-white"
+            variant="secondary"
           >
             <Bell />
             Get Notifications for All Messages <ChevronDown className="text-xs" />

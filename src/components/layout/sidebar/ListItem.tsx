@@ -21,6 +21,8 @@ import {
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
 import { ChannelType } from '@/features/channels/enums';
+import { UserStatus } from '@/features/userStatus/types/userStatus';
+import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 
 interface ListitemProps {
   id: string;
@@ -31,9 +33,19 @@ interface ListitemProps {
   disabled?: boolean;
   isTemp?: boolean;
   type?: ChannelType;
+  status?: UserStatus;
 }
 
-const ListItem = ({ id, title, isTemp, isChannel, disabled, icon, type }: ListitemProps) => {
+const ListItem = ({
+  id,
+  title,
+  isTemp,
+  isChannel,
+  disabled,
+  icon,
+  type,
+  status,
+}: ListitemProps) => {
   const { currentUser } = useStore('userStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { setTitle } = useStore('notificationStore');
@@ -123,12 +135,13 @@ const ListItem = ({ id, title, isTemp, isChannel, disabled, icon, type }: Listit
               : 'text-neutral'
           } ${'text-neutral'}`}
         >
-          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full">
+          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
             <div className="w-6 h-6 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
 
             {title}
+            {status && <UserStatusDisplay status={status} />}
           </div>
           {unreadCount ? (
             <Badge

@@ -16,9 +16,10 @@ type OptionsPanelProps = {
   isThread?: boolean;
 };
 
-const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPanelProps) => {
+const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { currentUser } = useStore('userStore');
+  const { fetchThreadMessagesApi } = useStore('messageStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
@@ -52,7 +53,7 @@ const OptionsPanel = ({ message, setIsEditing, setThread, isThread }: OptionsPan
   };
 
   const handleReply = () => {
-    setThread?.(message);
+    fetchThreadMessagesApi(message);
   };
 
   return (

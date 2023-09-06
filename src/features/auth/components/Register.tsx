@@ -97,6 +97,7 @@ const RegisterPage: React.FC = () => {
                     {...register('email', { required: 'Email is required.' })}
                     type="email"
                     placeholder="Email address"
+                    autoFocus
                   />
                 </div>
                 {errors.email && <ErrorLabel>{errors.email.message}</ErrorLabel>}
@@ -144,7 +145,7 @@ const RegisterPage: React.FC = () => {
                 {errors.password && <ErrorLabel>{errors.password.message}</ErrorLabel>}
               </div>
 
-              <div className="relative pb-6 mb-6">
+              <div className="relative pb-6 mb-4">
                 <label htmlFor="confirmPassword" className="block text-sm font-medium">
                   Confirm Password
                 </label>
