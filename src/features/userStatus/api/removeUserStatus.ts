@@ -5,7 +5,7 @@ import { UserStatus } from '../types/userStatus';
 
 export const removeUserStatus = async (userStatusUuid: string): Promise<UserStatus> => {
   try {
-    const res = await axios.delete('/user-statuses', { params: userStatusUuid });
+    const res = await axios.delete(`/user-statuses/${userStatusUuid}`);
 
     return res.data;
   } catch (err: unknown) {

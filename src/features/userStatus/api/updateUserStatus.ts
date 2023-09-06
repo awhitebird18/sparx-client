@@ -9,7 +9,7 @@ export const updateUserStatus = async (
   updateUserStatus: UpdateUserStatus,
 ): Promise<UserStatus> => {
   try {
-    const res = await axios.patch('/user-statuses', updateUserStatus, { params: userStatusUuid });
+    const res = await axios.patch(`/user-statuses/${userStatusUuid}`, updateUserStatus);
 
     return res.data;
   } catch (err: unknown) {

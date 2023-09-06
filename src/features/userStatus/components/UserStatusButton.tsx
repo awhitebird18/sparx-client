@@ -5,18 +5,9 @@ import { useStore } from '@/stores/RootStore';
 
 const SetUserStatusButton = () => {
   const { activeUserStatus } = useStore('userStatusStore');
-  const { setActiveModal } = useStore('modalStore');
-
-  const handleShowModal = () => {
-    setActiveModal({ type: 'UserStatusModal' });
-  };
 
   return (
-    <Button
-      onClick={handleShowModal}
-      className="w-full roudned-sm p-2 gap-2"
-      variant="primaryOutlined"
-    >
+    <Button className="w-full roudned-sm p-2 gap-2" variant="primaryOutlined">
       <div className="h-6 border-r border-border pr-2">
         <em-emoji
           id={activeUserStatus ? activeUserStatus.emoji : 'smiley'}

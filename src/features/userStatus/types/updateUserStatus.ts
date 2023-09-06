@@ -8,4 +8,6 @@ export interface UpdateUserStatus {
   dateExpire?: Date;
 
   duration?: StatusDuration;
+
+  isActive?: boolean;
 }

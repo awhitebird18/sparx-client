@@ -1,0 +1,8 @@
+.close-icon {
+  visibility: hidden;
+}
+
+li:hover .close-icon {
+  opacity: 1;
+  visibility: visible;
+}

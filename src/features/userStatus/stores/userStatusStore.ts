@@ -14,12 +14,13 @@ export class UserStatusStore {
       createUserStatusApi: action,
       updateUserStatusApi: action,
       removeUserStatusApi: action,
+      findUserStatusByUuid: action,
       addUserStatus: action,
       activeUserStatus: computed,
     });
   }
 
-  get activeUserStatus() {
+  get activeUserStatus(): UserStatus | undefined {
     return this.userStatuses.find((u: UserStatus) => u.isActive);
   }
 
@@ -33,6 +34,10 @@ export class UserStatusStore {
     if (userStatusFound) return;
 
     this.userStatuses.push(userStatus);
+  };
+
+  removeUserStatus = (uuid: string) => {
+    this.userStatuses = this.userStatuses.filter((u: UserStatus) => u.uuid !== uuid);
   };
 
   findUserStatusByUuid = (userStatusUuid: string) => {
@@ -61,5 +66,7 @@ export class UserStatusStore {
 
   removeUserStatusApi = async (userStatusUuid: string) => {
     await userStatusApi.removeUserStatus(userStatusUuid);
+
+    this.removeUserStatus(userStatusUuid);
   };
 }

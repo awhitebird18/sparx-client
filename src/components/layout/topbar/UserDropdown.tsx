@@ -17,6 +17,7 @@ import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/enums';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
+import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -26,8 +27,10 @@ const UserDropdown: React.FC = () => {
   const { userLogout } = useAuth();
   const { currentUser, setUserOnlineStatus, userOnlineStatus } = useStore('userStore');
   const { emitSocket } = useStore('socketStore');
+  const { activeUserStatus } = useStore('userStatusStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
+    setDropdownOpen(false);
     setActiveModal({ type, payload });
   };
 
@@ -41,18 +44,23 @@ const UserDropdown: React.FC = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <Tooltip>
-        <TooltipTrigger>
-          <DropdownMenuTrigger className="flex items-center" asChild>
-            <div>
+        <div className="gap-1 flex items-center">
+          {activeUserStatus && (
+            <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
+              <UserStatusDisplay status={activeUserStatus} />
+            </div>
+          )}
+          <TooltipTrigger>
+            <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
-                size={30}
+                size={31}
                 userId={currentUser.uuid}
                 profileImage={currentUser.profileImage}
                 showStatus
               />
-            </div>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+        </div>
         <TooltipContent>
           <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
         </TooltipContent>
@@ -85,7 +93,7 @@ const UserDropdown: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-2">
+        <div className="p-2" onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
           <SetUserStatusButton />
         </div>
 
