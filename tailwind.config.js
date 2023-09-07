@@ -27,8 +27,12 @@ module.exports = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'var(--primary)',
+          darkest: 'var(--primary-darkest)',
+          dark: 'var(--primary-dark)',
+          light: 'var(--primary-light)',
+          lighter: 'var(--primary-lighter)',
+          lightest: 'var(--primary-lightest)',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
@@ -36,8 +40,9 @@ module.exports = {
           hover: 'hsl(var(--secondary-hover))',
         },
         hover: {
-          DEFAULT: 'hsl(var(--hovered))',
-          foreground: 'hsl(var(--hovered))',
+          DEFAULT: 'hsl(var(--hover))',
+          foreground: 'hsl(var(--primary-dark))',
+          primary: 'var(--primary-hover)',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
@@ -46,6 +51,10 @@ module.exports = {
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
+        },
+        active: {
+          DEFAULT: 'var(--primary-lightest)',
+          foreground: 'var(--primary-darkest)',
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
@@ -65,7 +74,7 @@ module.exports = {
         },
         userLighter: 'var(--userLighter)',
         userLight: 'var(--userLight)',
-        userMedium: 'var(--userMedium)',
+        'primary-medium': 'var(--primary-medium)',
         userDark: 'var(--userDark)',
       },
       borderRadius: {
@@ -93,7 +102,12 @@ module.exports = {
         spin: 'spin 1s linear infinite',
       },
       textColor: {
+        main: 'hsl(var(--text-main))',
+        primary: 'var(--primary-text)',
+        active: 'var(--primary-active)',
         neutral: 'hsl(var(--text-neutral))',
+        secondary: 'hsl(var(--text-secondary))',
+        muted: 'hsl(var(--text-muted))',
       },
       borderColor: {
         neutral: 'hsl(var(--border-neutral))',

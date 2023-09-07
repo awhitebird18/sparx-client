@@ -74,7 +74,7 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
         <ContextMenuTrigger>
           <div
-            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm "
+            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm"
             ref={ref}
           >
             {title}

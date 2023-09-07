@@ -92,17 +92,11 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     >
       <>
         <div className="flex gap-3">
-          <Button
-            className="p-0 text-base text-muted-foreground h-7 w-12 gap-1 bg-userLight hover:bg-userMedium text-white"
-            variant="secondary"
-          >
+          <Button className="h-7 w-12 gap-1 p-0" variant="outline-primary">
             <Hash className="" />
             <ChevronDown className="text-xs" />
           </Button>
-          <Button
-            className="px-2 justify-start text-xs text-muted-foreground h-7 gap-2 bg-userLight hover:bg-userMedium text-white"
-            variant="secondary"
-          >
+          <Button className="px-2 justify-start text-xs h-7 gap-2" variant="outline-primary">
             <Bell />
             Get Notifications for All Messages <ChevronDown className="text-xs" />
           </Button>

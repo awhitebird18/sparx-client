@@ -67,13 +67,13 @@ const Users = () => {
       ) : null}
 
       {displayedUsers.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto mt-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto my-3">
           {displayedUsers
             .filter((user: User) => user.uuid !== currentUser?.uuid)
             .map((user: User) => (
               <Card
                 key={user.uuid}
-                className="border p-4 rounded shadow relative cursor-pointer"
+                className="p-4 rounded relative cursor-pointer"
                 onClick={() => {
                   handleMessageUser(user);
                 }}

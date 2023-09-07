@@ -91,7 +91,7 @@ const ChatRoom: React.FC = () => {
 
   return (
     <ContentLayout title={<ChannelTitle />} headerComponent={<AvatarGroup />} disablePadding>
-      <div className="relative flex flex-1 bg-card dark:bg-background rounded-xl pb-5 overflow-hidden">
+      <div className="relative flex flex-1 rounded-xl pb-5 overflow-hidden">
         <div className="flex flex-col flex-1 overflow-hidden w-full p-3">
           <div
             className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
@@ -108,7 +108,7 @@ const ChatRoom: React.FC = () => {
                       <div className="w-full flex my-2 sticky top-2">
                         <Badge
                           variant="outline"
-                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-card z-10 border border-border"
+                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10 border border-border"
                         >
                           {formatDate(date)}
                         </Badge>

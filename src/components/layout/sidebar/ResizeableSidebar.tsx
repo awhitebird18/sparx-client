@@ -57,7 +57,7 @@ const ResizableSidebar = () => {
             overflow: 'hidden',
             ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
           }}
-          className="border-r border-border bg-background z-50"
+          className="border-r border-border z-50"
         >
           {/* Glass Blur Background with Image */}
           <div

@@ -168,7 +168,7 @@ const UserStatusModal = () => {
         <div className="flex ml-auto gap-3 mt-10">
           {currentUserStatus?.isActive ? (
             <Button
-              className="ml-auto w-28 bg-userMedium hover:bg-userDark text-white"
+              className="ml-auto w-28"
               onClick={() => handleSetCurrentStatusInactive(currentUserStatus.uuid)}
             >
               Clear Status
@@ -185,11 +185,7 @@ const UserStatusModal = () => {
               >
                 Cancel
               </Button>
-              <Button
-                className="ml-auto w-28 bg-userMedium hover:bg-userDark text-white"
-                onClick={handleSubmit}
-                disabled={!currentUserStatus}
-              >
+              <Button className="ml-auto w-28" onClick={handleSubmit} disabled={!currentUserStatus}>
                 Submit
               </Button>
             </>

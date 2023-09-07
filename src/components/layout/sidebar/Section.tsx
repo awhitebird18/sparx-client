@@ -161,7 +161,7 @@ const Section = ({ section, index }: SectionProps) => {
     <Collapsible
       open={isOpen}
       onOpenChange={handleToggleSection}
-      className={`py-1 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''} ${
+      className={`py-1 my-1 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''} ${
         isOverBottomHalf ? 'border-b-2' : ''
       } ${isOverTopHalf ? 'border-t-2' : ''}`}
       ref={ref}
@@ -223,7 +223,7 @@ const Section = ({ section, index }: SectionProps) => {
                       imageUrl={channelIcon}
                       isPrivate={channel.isPrivate}
                       isSelected={selectedId === channel.uuid}
-                      size={21}
+                      size={22}
                       userId={userId}
                     />
                   }
@@ -236,7 +236,7 @@ const Section = ({ section, index }: SectionProps) => {
           <ListItem
             id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
             icon={
-              <Button size="icon" className="p-0 h-6 w-6" variant="secondary">
+              <Button size="icon" className="p-0 h-6 w-6" variant="ghost">
                 <Plus size={16} />
               </Button>
             }
