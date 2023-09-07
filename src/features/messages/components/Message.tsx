@@ -37,7 +37,7 @@ const Message = ({
   setThread?: (message: Message | null) => void;
   isThread?: boolean;
 }) => {
-  const { fetchThreadMessagesApi } = useStore('messageStore');
+  const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
   const { findUserByUuid } = useStore('userStore');
@@ -79,6 +79,17 @@ const Message = ({
     setShowEmojiPicker(null);
   };
 
+  const handleAddReaction = async (emojiId: string) => {
+    await addReactionApi({
+      emojiId,
+      userId: message.userId,
+      messageId: message.uuid,
+    });
+    handleCloseEmojiPicker();
+  };
+
+  console.log(showEmojiPicker);
+
   return (
     <>
       <ContextMenu>
@@ -113,13 +124,13 @@ const Message = ({
                 <div className="w-11" />
               )}
 
-              <div className={`flex flex-col space-y-1 ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
+              <div className={`flex flex-col ${showUser ? 'h-fit' : 'h-fit'} w-full`}>
                 {showUser ? (
-                  <div className="flex gap-2 items-center h-5">
+                  <div className="flex gap-3 items-center h-5">
                     <h2 className="font-semibold dark:text-gray-100 h-5 leading-4">
                       <Username firstName={user.firstName} lastName={user.lastName} />
                     </h2>
-                    <p className="text-xs text-muted-foreground mb-2">
+                    <p className="text-xs text-neutral mb-1">
                       {dayjs(message.createdAt).format('h:mm a')}
                     </p>
                   </div>
@@ -136,12 +147,14 @@ const Message = ({
                     {dayjs(message.createdAt).format('h:mm')}
                   </span>
                 ) : null}
+
                 <ReactionsDisplay message={message} />
+
                 {message.threadCount && !isThread ? (
                   <Button
-                    className="p-0 justify-between px-2 h-7 w-44"
+                    className="p-0 justify-between px-2 h-7 w-28"
                     size="sm"
-                    variant="outline"
+                    variant="link"
                     onClick={() => handleReplyToMessage(message)}
                   >
                     <span className="text-userMedium">{`${message.threadCount} replies`}</span>
@@ -186,9 +199,9 @@ const Message = ({
 
       {showEmojiPicker && (
         <EmojiPicker
-          message={message}
-          onClickAway={handleCloseEmojiPicker}
+          onEmojiClick={handleAddReaction}
           position={showEmojiPicker}
+          onClickAway={handleCloseEmojiPicker}
         />
       )}
     </>

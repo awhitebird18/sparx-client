@@ -8,6 +8,7 @@ import { useAuth } from '@/providers/auth';
 
 import { Input } from '@/components/ui/Input';
 import Logo from '@/components/logo/Logo';
+import { Button } from '@/components/ui/Button';
 
 type FormData = {
   email: string;
@@ -72,14 +73,14 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4">
-      <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+      <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Register for an account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">Already have an account?</p>
-            <Link to="/auth/login" className="font-medium text-userLight">
+            <Link to="/auth/login" className="font-medium text-primary">
               Login here
             </Link>
           </div>
@@ -161,13 +162,9 @@ const RegisterPage: React.FC = () => {
                 )}
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userDark hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
-              >
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Registering...' : 'Register'}
-              </button>
+              </Button>
             </form>
           </div>
         </div>

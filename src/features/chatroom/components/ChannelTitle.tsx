@@ -36,35 +36,32 @@ const ChannelTitle = () => {
       variant="ghost"
       onClick={handleOpenChannelDetails}
     >
-      {currentChannel ? (
+      {channelIcon ? (
         <ChannelIcon
           imageUrl={channelIcon}
-          size={38}
+          size={34}
           isSelected
-          isPrivate={currentChannel.isPrivate}
+          isPrivate={currentChannel?.isPrivate}
           textPrimary
           userId={userId}
         />
-      ) : (
-        <Skeleton className="h-full w-7 rounded-sm" />
-      )}
+      ) : null}
 
-      <div className="flex flex-col justify-center gap-0.5" style={{ height: '38px' }}>
+      {!currentChannel ? <Skeleton className="h-full w-7 rounded-sm" /> : null}
+
+      <div className="flex justify-center items-center gap-4">
         {currentChannel ? (
-          <div className="flex items-center gap-1 leading-none" style={{ height: '22px' }}>
+          <div className="flex items-center gap-1">
             <p className="text-xl flex items-center whitespace-nowrap overflow-hidden text-ellipsis w-min">
               {currentChannel.name}
             </p>
-            <ChevronDown className="mt-0.5 ml-3" size={16} />
+            <ChevronDown className="mt-1 ml-1" size={14} />
           </div>
         ) : (
           <Skeleton className="h-full w-36" />
         )}
         {currentChannel?.topic && (
-          <p
-            className="text-sm text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap text-start h-min leading-none"
-            style={{ height: '16px' }}
-          >
+          <p className="text-sm text-main font-normal overflow-hidden text-ellipsis whitespace-nowrap text-start">
             {currentChannel.topic}
           </p>
         )}

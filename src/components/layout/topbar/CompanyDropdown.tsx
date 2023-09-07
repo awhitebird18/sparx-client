@@ -1,6 +1,4 @@
 import { useRef, useState } from 'react';
-import Logo from '@/components/logo/Logo';
-
 import { ChevronDown } from 'react-bootstrap-icons';
 import {
   DropdownMenu,
@@ -28,13 +26,10 @@ const CompanyDropdown = () => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger>
-        <div className="flex gap-1.5 hover:bg-transparent mx-2 px-2 h-12 cursor-pointer items-center">
-          <Logo size={6} />
-          <div className="flex items-center gap-1 flex-1 justify-between">
-            <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl">SPARX</h1>
-            <ChevronDown size={16} className="mt-1 ml-2 opacity-75" />
-          </div>
+      <DropdownMenuTrigger className="w-full">
+        <div className="flex gap-1.5 hover:bg-transparent px-4 pl-6 h-14 cursor-pointer items-center border-b border-border">
+          <h1 className="font-medium flex-grow-1 whitespace-nowrap text-lg">Company Name</h1>
+          <ChevronDown size={13} className="mt-1" />
         </div>
       </DropdownMenuTrigger>
 

@@ -61,7 +61,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
         <div className="flex gap-4 items-center mb-2">
           <Button
             variant="ghost"
-            className="text-userDark cursor-pointer flex justify-start h-auto gap-3 items-start h-18 p-0"
+            className="text-primary-dark cursor-pointer flex justify-start h-auto gap-3 items-start h-18 p-0"
             onClick={() => {
               fileInput.current?.click();
             }}
@@ -92,11 +92,11 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     >
       <>
         <div className="flex gap-3">
-          <Button className="h-7 w-12 gap-1 p-0" variant="outline-primary">
+          <Button className="h-7 w-12 gap-1 p-0">
             <Hash className="" />
             <ChevronDown className="text-xs" />
           </Button>
-          <Button className="px-2 justify-start text-xs h-7 gap-2" variant="outline-primary">
+          <Button className="px-2 justify-start text-xs h-7 gap-2">
             <Bell />
             Get Notifications for All Messages <ChevronDown className="text-xs" />
           </Button>

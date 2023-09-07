@@ -5,6 +5,7 @@ import { useAuth } from '@/providers/auth';
 
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,14 +22,14 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4">
-      <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+      <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Sign in to your account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">or</p>
-            <Link to="/auth/register" className="font-medium text-userLight">
+            <Link to="/auth/register" className="font-medium text-primary">
               register your free account
             </Link>
           </div>
@@ -70,16 +71,13 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
-              >
+              <Button type="submit" className="mt-4">
                 Sign in
-              </button>
+              </Button>
 
               <div className="flex items-center justify-end mb-6 gap-2 text-sm">
                 Forgot your password?
-                <Link to="/auth/forgot-password" className="font-medium text-userLight">
+                <Link to="/auth/forgot-password" className="font-medium text-primary">
                   Get help signing in
                 </Link>
               </div>

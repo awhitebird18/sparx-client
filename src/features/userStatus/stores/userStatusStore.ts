@@ -60,6 +60,7 @@ export class UserStatusStore {
 
   updateUserStatusApi = async (userStatusUuid: string, updatedStatus: UpdateUserStatus) => {
     const updatedUserStatus = await userStatusApi.updateUserStatus(userStatusUuid, updatedStatus);
+    console.log(updatedUserStatus);
 
     this.updateUserStatus(updatedUserStatus);
   };

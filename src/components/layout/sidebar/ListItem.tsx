@@ -136,18 +136,18 @@ const ListItem = ({
           }`}
         >
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
-            <div className="w-6 h-6 min-w-fit flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
 
             {title}
-            {status && <UserStatusDisplay status={status} />}
+            <div className="overflow-hidden">{status && <UserStatusDisplay status={status} />}</div>
           </div>
           {unreadCount ? (
             <Badge
               itemType="div"
               variant="outline"
-              className="text-sm p-0 w-7 h-5 justify-center items-center bg-userDark border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
+              className="text-sm p-0 w-7 h-5 justify-center items-center bg-primary-dark border-transparent outline-transparent border-none text-white shadow-inner shadow-primary-dark rounded-xl"
             >
               {unreadCount}
             </Badge>

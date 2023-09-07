@@ -32,13 +32,12 @@ const ChannelIcon = ({
       className={`rounded-${size > 30 ? 'lg' : 'sm'}`}
     />
     <AvatarFallback
-      className={`h-full flex-1 w-full rounded-sm overflow-hidden bg-transparent dark:bg-transparent`}
+      className={`h-full flex-1 w-full rounded-sm overflow-hidden bg-transparent dark:bg-transparent p-0 text-xl ${
+        isSelected && !textPrimary ? 'text-primary-darkest bg-transparent' : 'text-main'
+      } ${textPrimary && 'text-main'}`}
       children={
         isPrivate ? (
           <Lock
-            className={`p-0 text-xl ${
-              isSelected && !textPrimary ? 'text-userDark' : 'text-neutral'
-            } ${textPrimary && 'text-primary'}`}
             style={{
               height: `${size - 6}px`,
               width: `${size - 6}px`,
@@ -46,9 +45,6 @@ const ChannelIcon = ({
           />
         ) : (
           <Hash
-            className={`p-0 text-xl ${
-              isSelected && !textPrimary ? 'text-userDark' : 'text-neutral'
-            } ${textPrimary && 'text-userDark'}`}
             style={{
               height: `${size - 5}px`,
               width: `${size - 5}px`,
