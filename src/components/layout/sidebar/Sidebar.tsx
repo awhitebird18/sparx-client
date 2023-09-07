@@ -31,7 +31,7 @@ const Sidebar = () => {
         <CompanyDropdown />
         <Divider />
         <div className="p-2">
-          <div className="py-1.5">
+          <div className="my-2">
             <Search />
           </div>
 

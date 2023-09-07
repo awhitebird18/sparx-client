@@ -31,13 +31,13 @@ const Threads = () => {
                 onClick={() => {
                   fetchThreadMessagesApi(t.rootMessage);
                 }}
-                className="w-full h-min  cursor-pointer rounded-lg"
+                className="w-full h-min cursor-pointer rounded-lg"
               >
                 <div className="mb-4 flex items-center gap-2 text-lg">
                   <ChannelIcon imageUrl={channel.icon} size={23} />
                   {channel.name}
                 </div>
-                <div className=" bg-background hover:bg-card/50 p-3 rounded-lg border border-border">
+                <div className=" bg-background hover:bg-hover p-3 rounded-lg border border-border">
                   <div className="pointer-events-none">
                     {/* Parent message */}
                     <Message message={t.rootMessage} showUser />

@@ -36,22 +36,22 @@ const ChannelIcon = ({
       children={
         isPrivate ? (
           <Lock
-            className={`p-0 text-xl ${isSelected && !textPrimary ? 'text-white' : 'text-neutral'} ${
-              textPrimary && 'text-primary'
-            }`}
+            className={`p-0 text-xl ${
+              isSelected && !textPrimary ? 'text-userDark' : 'text-neutral'
+            } ${textPrimary && 'text-primary'}`}
             style={{
-              height: `${size - 5}px`,
-              width: `${size - 5}px`,
+              height: `${size - 6}px`,
+              width: `${size - 6}px`,
             }}
           />
         ) : (
           <Hash
-            className={`p-0 text-xl ${isSelected && !textPrimary ? 'text-white' : 'text-neutral'} ${
-              textPrimary && 'text-primary'
-            }`}
+            className={`p-0 text-xl ${
+              isSelected && !textPrimary ? 'text-userDark' : 'text-neutral'
+            } ${textPrimary && 'text-userDark'}`}
             style={{
-              height: `${size}px`,
-              width: `${size}px`,
+              height: `${size - 5}px`,
+              width: `${size - 5}px`,
             }}
           />
         )

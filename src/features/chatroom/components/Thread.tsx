@@ -84,7 +84,7 @@ const Thread = () => {
             </Button>
           }
         >
-          <div className="bg-card dark:bg-background rounded-xl pt-4 shadow-lg max-h-full flex flex-col">
+          <div className="bg-background rounded-xl pt-4 max-h-full flex flex-col">
             <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1">
               {threadMessages
                 .map((message: MessageType, index: number) => {

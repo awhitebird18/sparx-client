@@ -85,7 +85,7 @@ const Message = ({
         <ContextMenuTrigger disabled={disabled}>
           <div
             className={`message ${showEmojiPicker ? 'hovered' : ''} rounded-lg ${
-              !disabled ? 'hover:bg-accent hover:dark:bg-card' : ''
+              !disabled ? 'hover:bg-hover hover:dark:hover' : ''
             } relative`}
           >
             <div className="flex gap-3 p-1.5 h-min">

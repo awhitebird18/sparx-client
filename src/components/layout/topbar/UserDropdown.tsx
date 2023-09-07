@@ -69,7 +69,7 @@ const UserDropdown: React.FC = () => {
       <DropdownMenuContent
         align="end"
         sideOffset={5}
-        className="DropdownMenuContent w-60"
+        className="DropdownMenuContent w-80 p-4 space-y-4"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -78,60 +78,61 @@ const UserDropdown: React.FC = () => {
           }
         }}
       >
-        <div className="w-full p-2 flex gap-2 mb-1 overflow-hidden">
-          <UserAvatar size={40} userId={currentUser.uuid} profileImage={currentUser.profileImage} />
+        <div className="flex gap-2 overflow-hidden">
+          <UserAvatar size={50} userId={currentUser.uuid} profileImage={currentUser.profileImage} />
           <div style={{ height: '40px' }} className="flex flex-col justify-between w-full">
             <div className="w-full">
               <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
             </div>
-            <div className="flex items-center gap-1 mt-0.5">
+            <div className="flex items-center gap-1">
               <OnlineStatusIndicator userId={currentUser.uuid} />
-              <p className="text-sm text-secondary-foreground h-3 leading-3 mb-0.5">
+              <p className="text-sm text-secondary-foreground h-3 leading-3">
                 {`${userOnlineStatus[0].toUpperCase()}${userOnlineStatus.substring(1)}`}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="p-2" onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
+        <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })} className="">
           <SetUserStatusButton />
         </div>
+        <div>
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetOnlineStatus(
+                  userOnlineStatus === UserStatus.ONLINE ? UserStatus.AWAY : UserStatus.ONLINE,
+                )
+              }
+            >
+              {`Set yourself ${userOnlineStatus === UserStatus.ONLINE ? 'as away' : 'online'}`}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => console.info('pauseNotifications')}>
+              Pause notifications
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
 
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() =>
-              handleSetOnlineStatus(
-                userOnlineStatus === UserStatus.ONLINE ? UserStatus.AWAY : UserStatus.ONLINE,
-              )
-            }
-          >
-            {`Set yourself ${userOnlineStatus === UserStatus.ONLINE ? 'as away' : 'online'}`}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => console.info('pauseNotifications')}>
-            Pause notifications
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+          <DropdownMenuSeparator className="DropdownMenuSeparator" />
 
-        <DropdownMenuSeparator className="DropdownMenuSeparator" />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() =>
+                handleOpenModal({ type: 'ProfileModal', payload: { userId: currentUser?.uuid } })
+              }
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
+              Preferences
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}>
+              Change password
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
 
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() =>
-              handleOpenModal({ type: 'ProfileModal', payload: { userId: currentUser?.uuid } })
-            }
-          >
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
-            Preferences
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}>
-            Change password
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator className="DropdownMenuSeparator" />
-        <DropdownMenuItem onClick={userLogout}>Logout</DropdownMenuItem>
+          <DropdownMenuSeparator className="DropdownMenuSeparator" />
+          <DropdownMenuItem onClick={userLogout}>Logout</DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
