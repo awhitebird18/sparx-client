@@ -31,16 +31,13 @@ const AvatarGroup = () => {
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >
-      <p className="w-[20px] h-full flex justify-center items-center text-sm text-muted-foreground">
-        {userCount}
-      </p>
       <Avatar
-        className={`absolute w-7 h-7 rounded-md border-2 border-background`}
+        className={`absolute w-7 h-7 rounded-md border-2 border-border`}
         style={{ left: `${userCount * avatarSize}px` }}
       >
         <AvatarFallback
           children={userCount}
-          className={`w-full h-full text-sm font-medium rounded-sm bg-ring text-white`}
+          className={`w-full h-full text-base font-medium rounded-sm bg-secondary text-main pl-0.5`}
         />
       </Avatar>
       {userCount ? (
@@ -51,13 +48,13 @@ const AvatarGroup = () => {
           return (
             <Avatar
               key={user.uuid}
-              className={`absolute w-7 h-7 rounded-md border-2 border-background`}
+              className={`absolute w-7 h-7 rounded-md border-2 border-border`}
               style={{ left: `${index * avatarSize}px` }}
             >
               <AvatarImage src={`${API_URL}${user.profileImage}`} />
               <AvatarFallback
                 children={user.firstName.charAt(0).toUpperCase()}
-                className={`w-full h-full text-sm font-light rounded-sm bg-userDark dark:bg-userDark text-white`}
+                className={`w-full h-full text-sm font-light rounded-sm bg-primary dark:bg-primary-dark text-white`}
               />
             </Avatar>
           );

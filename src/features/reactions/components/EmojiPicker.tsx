@@ -2,33 +2,26 @@ import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from '@/stores/RootStore';
-import { Message } from '@/features/messages/types';
+import { createPortal } from 'react-dom';
 
 type EmojiPickerProps = {
-  message: Message;
   onClickAway: () => void;
   position: { top: number; left: number };
+  onEmojiClick: (id: string) => void;
 };
 
-const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
-  const { addReactionApi } = useStore('messageStore');
+const EmojiPicker = ({ onClickAway, position, onEmojiClick }: EmojiPickerProps) => {
   const { theme } = useStore('userPreferencesStore');
-
-  const handleAddReaction = async (emojiId: string) => {
-    await addReactionApi({
-      emojiId,
-      userId: message.userId,
-      messageId: message.uuid,
-    });
-    onClickAway();
-  };
 
   return (
     <>
       <div className="flex fixed z-30" style={position}>
         <Picker
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onEmojiSelect={(emojiObj: any) => handleAddReaction(emojiObj.id)}
+          onEmojiSelect={(emojiObj: any) => {
+            console.log('derpeeee');
+            onEmojiClick(emojiObj.id);
+          }}
           set="apple"
           theme={theme}
           emojiButtonRadius="5px"
@@ -36,7 +29,17 @@ const EmojiPicker = ({ message, onClickAway, position }: EmojiPickerProps) => {
         />
       </div>
 
-      <div className="fixed top-0 left-0 w-screen h-screen z-10" onClick={onClickAway} />
+      {createPortal(
+        <div
+          id="hohoho"
+          className="fixed top-0 left-0 w-screen h-screen z-20"
+          onClick={() => {
+            onClickAway();
+            console.log('derp');
+          }}
+        />,
+        document.body,
+      )}
     </>
   );
 };

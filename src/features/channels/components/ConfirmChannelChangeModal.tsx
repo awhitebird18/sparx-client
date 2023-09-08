@@ -28,7 +28,9 @@ const ConfirmChannelChangeModal = ({ channel }: { channel: Channel }) => {
         <p className="mb-10">Once a channel is made private, it cannot be made public.</p>
 
         <div className="flex gap-2 justify-end">
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleCancel} variant="outline">
+            Cancel
+          </Button>
           <Button variant="destructive" onClick={handleUpdateChannel}>
             Change to Private
           </Button>

@@ -22,7 +22,7 @@ const VerificationSuccess: React.FC = () => {
           <div className="gap-2 flex ml-auto">
             <Button
               onClick={() => setTourStep((prev) => (prev += 1))}
-              className="w-16 bg-userMedium hover:bg-userDark text-white"
+              className="w-16 bg-userMedium hover:bg-primary-dark text-white"
               size="sm"
             >
               Next
@@ -45,7 +45,7 @@ const VerificationSuccess: React.FC = () => {
             </Button>
             <Button
               onClick={() => setTourStep((prev) => (prev += 1))}
-              className="w-16 bg-userMedium hover:bg-userDark text-white"
+              className="w-16 bg-userMedium hover:bg-primary-dark text-white"
               size="sm"
             >
               Next
@@ -68,7 +68,7 @@ const VerificationSuccess: React.FC = () => {
             </Button>
             <Button
               onClick={() => setTourStep((prev) => (prev += 1))}
-              className="w-16 bg-userMedium hover:bg-userDark text-white"
+              className="w-16 bg-userMedium hover:bg-primary-dark text-white"
               size="sm"
             >
               Next
@@ -91,7 +91,7 @@ const VerificationSuccess: React.FC = () => {
             </Button>
             <Button
               onClick={() => setTourStep((prev) => (prev += 1))}
-              className="w-16 bg-userMedium hover:bg-userDark text-white"
+              className="w-16 bg-userMedium hover:bg-primary-dark text-white"
               size="sm"
             >
               Next
@@ -114,7 +114,7 @@ const VerificationSuccess: React.FC = () => {
             </Button>
             <Button
               onClick={() => setTourStep((prev) => (prev += 1))}
-              className="w-16 bg-userMedium hover:bg-userDark text-white"
+              className="w-16 bg-userMedium hover:bg-primary-dark text-white"
               size="sm"
             >
               Next

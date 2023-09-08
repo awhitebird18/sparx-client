@@ -13,10 +13,10 @@ const Search = () => {
 
   return (
     <div className="w-full max-w-xl relative">
-      <SearchInput value={searchValue} setValue={handleSearch} placeholder="Search" />
+      <SearchInput value={searchValue} setValue={handleSearch} placeholder="Search" dark />
 
       {searchValue ? (
-        <div className="w-full max-h-72 border border-border rounded-md absolute top-11 left-0 bg-background z-10 p-3 space-y-3">
+        <div className="w-full max-h-72 border-border rounded-md absolute top-11 left-0 bg-background z-10 p-3 space-y-3 shadow">
           <div className="flex flex-col gap-2">
             <div className="text-sm text-muted-foreground">Recent Searchs</div>
             {['Channel name 1', 'Channel name 2'].map((name: string) => (

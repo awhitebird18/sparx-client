@@ -69,12 +69,12 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
     <ContextMenu>
       <div
         ref={dragRef}
-        className="h-8 p-0 px-3 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden"
+        className="h-8 p-0 px-3 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden text-main"
       >
         <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
         <ContextMenuTrigger>
           <div
-            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm "
+            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm"
             ref={ref}
           >
             {title}

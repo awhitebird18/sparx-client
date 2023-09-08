@@ -1,35 +1,17 @@
 import Search from '@/features/search/components/Search';
 import UserDropdown from './UserDropdown';
-import { LayoutTextSidebarReverse } from 'react-bootstrap-icons';
-import { Button } from '@/components/ui/Button';
-import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
 import HistoryDropdown from '@/features/history/components/HistoryDropdown';
+import Logo from '@/components/logo/Logo';
 
 const Topbar = () => {
-  const { sidebarWidth, setSidebarWidth } = useStore('sidebarStore');
-
-  const handleShowSidebar = () => {
-    setSidebarWidth(250);
-  };
-
   return (
-    <div className="h-12 border-b border-border flex items-center justify-between pr-4 pl-3 gap-6">
-      {!sidebarWidth ? (
-        <Tooltip>
-          <TooltipTrigger>
-            <Button size="icon" variant="ghost" onClick={handleShowSidebar}>
-              <LayoutTextSidebarReverse className="text-xl text-neutral" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right" align="start">
-            Show sidebar
-          </TooltipContent>
-        </Tooltip>
-      ) : (
-        <div />
-      )}
+    <div className="h-12 border-b border-border flex items-center justify-between px-6 gap-6 bg-neutral-800 dark:bg-hover">
+      <div className="flex gap-1.5 hover:bg-transparent h-12 cursor-pointer items-center">
+        <Logo size={5} />
+        <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl text-white">SPARX</h1>
+      </div>
+
       <div className="flex items-center gap-1 max-w-xl w-full">
         <HistoryDropdown />
         <Search />

@@ -7,7 +7,6 @@ import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -15,6 +14,8 @@ import {
 import { useStore } from '@/stores/RootStore';
 import { getValidPrimaryColor } from '@/utils/getValidPrimaryColor';
 import { getValidTheme } from '@/utils/getValidTheme';
+import { observer } from 'mobx-react-lite';
+import { Label } from '@/components/ui/Label';
 
 const ThemeTab = () => {
   const { theme, updateThemeApi, primaryColor, updatePrimaryColorApi } =
@@ -28,71 +29,71 @@ const ThemeTab = () => {
     updatePrimaryColorApi(getValidPrimaryColor(value));
   };
 
-  return (
-    <div className="flex flex-col h-100 flex-1 h-full">
-      <p className="text-sm text-muted-foreground">
-        Change the appearance of Sparx across all of your spaces.
-      </p>
+  const colorOptions = primaryColors.map((color: string) => (
+    <SelectItem key={color} value={color}>
+      <div className="flex items-center gap-4">
+        <div className={`w-8 h-8 rounded-lg ${`bg-${color}-500`}`} />
+        {`${color.charAt(0).toUpperCase()}${color.substring(1).toLowerCase()}`}
+      </div>
+    </SelectItem>
+  ));
 
-      <ScrollArea className="h-full pr-1 space-y-6">
-        <div className="mb-6">
-          <h2 className="text-sm mb-2">App theme</h2>
+  return (
+    <ScrollArea>
+      <div className="flex flex-col flex-1 gap-6">
+        <p className="text-muted-foreground">
+          Change the appearance of Sparx across all of your workspaces:
+        </p>
+
+        <div>
+          <h2 className="text-lg text-muted mb-2">App theme</h2>
           <RadioGroup
             defaultValue={theme}
             onValueChange={(value) => handleThemeSelect(value)}
-            className="space-y-4"
+            className="flex gap-4 h-44"
           >
-            <div className="flex items-center border border-border rounded-lg overflow-hidden">
-              <div className="gap-2 px-4 mt-1 border-r border-border">
-                <RadioGroupItem value={Theme.LIGHT} id="light" />
-              </div>
+            <div className="flex flex-col items-center border border-border rounded-lg overflow-hidden flex-1 w-full text-black/70">
               <div
-                className={`${
-                  theme === Theme.LIGHT ? 'bg-yellow-500' : 'bg-secondary'
-                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
+                className={`bg-yellow-500/80 dark:bg-yellow-500/50 text-white text-2xl p-3 border-b border-border w-full flex justify-center flex-1 gap-4 items-center`}
               >
-                Light
-                {theme === Theme.LIGHT && <Sun className="mt-0.5" />}
+                {<Sun size={50} />}
+              </div>
+              <div className="flex gap-2 items-center justify-center p-4">
+                <RadioGroupItem value={Theme.LIGHT} id="light" />
+                <Label className="text-main text-lg" htmlFor="dark">
+                  Light
+                </Label>
               </div>
             </div>
-            <div className="flex items-center border border-border rounded-lg overflow-hidden">
-              <div className="px-4 mt-1 border-r border-border">
-                <RadioGroupItem value={Theme.DARK} id="dark" />
-              </div>
+            <div className="flex flex-col items-center border border-border rounded-lg flex-1 overflow-hidden w-full text-black/70">
               <div
-                className={`${
-                  theme === Theme.DARK ? 'bg-indigo-800' : 'bg-secondary'
-                } text-accent-foreground p-3 border-b border-border w-full flex gap-4 items-center h-14`}
+                className={`bg-indigo-500/80 dark:bg-indigo-500/50 text-white text-2xl  p-3 border-b border-border w-full flex justify-center flex-1 gap-4 items-center`}
               >
-                Dark
-                {theme === Theme.DARK && <Moon className="mt-0.5" />}
+                {<Moon size={50} />}
+              </div>
+              <div className="flex gap-2 items-center justify-center p-4">
+                <RadioGroupItem value={Theme.DARK} id="dark" />
+                <Label className="text-main text-lg" htmlFor="dark">
+                  Dark
+                </Label>
               </div>
             </div>
           </RadioGroup>
         </div>
         <div>
-          <p className="text-sm my-2">Primary Color</p>
+          <p className="text-lg text-muted mb-2">Primary Color</p>
           <Select onValueChange={handlePrimaryColorSelect} defaultValue={primaryColor}>
             <SelectTrigger className="h-14">
               <SelectValue placeholder="Select primary color" />
             </SelectTrigger>
-            <SelectContent className="max-h-48">
-              <SelectGroup>
-                {primaryColors.map((color: string) => (
-                  <SelectItem key={color} value={color}>
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 bg-${color}-500 rounded-lg`} />
-                      {`${color.charAt(0).toUpperCase()}${color.substring(1).toLowerCase()}`}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
+            <SelectContent className="max-h-48">{colorOptions}</SelectContent>
           </Select>
         </div>
-      </ScrollArea>
-    </div>
+      </div>
+    </ScrollArea>
   );
 };
 
-export default ThemeTab;
+export default observer(ThemeTab);
+
+// bg-violet-500 bg-sky-500 bg-blue-500 bg-lime-500 bg-teal-500 bg-cyan-500 bg-purple-500 bg-fuchsia-500 bg-pink-500 bg-rose-500 bg-slate-500 bg-green-500 bg-orange-500 bg-indigo-500
