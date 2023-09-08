@@ -24,6 +24,7 @@ import {
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 
 import { Message } from '../types';
+import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 
 const Message = ({
   message,
@@ -110,14 +111,26 @@ const Message = ({
                     />
                   </HoverCardTrigger>
 
-                  <HoverCardContent align="start" side="top" className="p-4 flex gap-4">
-                    <Button
-                      variant="ghost"
-                      onClick={handleViewUserProfile}
-                      className="w-fit h-fit p-0"
-                    >
-                      <UserAvatar size={80} userId={message.userId} />
-                    </Button>
+                  <HoverCardContent align="start" side="top" className="w-fit">
+                    <div className="flex flex-col gap-4 w-64 p-2">
+                      <div className="flex gap-3">
+                        <UserAvatar
+                          size={80}
+                          userId={message.userId}
+                          profileImage={user.profileImage}
+                        />
+                        <div className="flex flex-col gap-1">
+                          <div className="flex gap-1">
+                            <Username firstName={user.firstName} lastName={user.lastName} />
+                            <OnlineStatusIndicator userId={user.uuid} />
+                          </div>
+                          <p className="text-muted">Software Developer</p>
+                        </div>
+                      </div>
+                      <Button className="w-full" onClick={handleViewUserProfile}>
+                        View Profile
+                      </Button>
+                    </div>
                   </HoverCardContent>
                 </HoverCard>
               ) : (

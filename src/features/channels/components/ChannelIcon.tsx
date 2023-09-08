@@ -1,4 +1,4 @@
-import { Hash, Lock } from 'react-bootstrap-icons';
+import { Hash } from 'react-bootstrap-icons';
 import { API_URL } from '@/config';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
@@ -14,14 +14,7 @@ type UserAvatarProps = {
   textPrimary?: boolean;
 };
 
-const ChannelIcon = ({
-  size = 40,
-  imageUrl,
-  isSelected,
-  isPrivate,
-  textPrimary,
-  userId,
-}: UserAvatarProps) => (
+const ChannelIcon = ({ size = 40, imageUrl, isSelected, textPrimary, userId }: UserAvatarProps) => (
   <Avatar
     className="relative overflow-visible"
     style={{ height: `${size}px`, width: `${size}px ` }}
@@ -36,21 +29,12 @@ const ChannelIcon = ({
         isSelected && !textPrimary ? 'text-primary-darkest bg-transparent' : 'text-main'
       } ${textPrimary && 'text-main'}`}
       children={
-        isPrivate ? (
-          <Lock
-            style={{
-              height: `${size - 6}px`,
-              width: `${size - 6}px`,
-            }}
-          />
-        ) : (
-          <Hash
-            style={{
-              height: `${size - 5}px`,
-              width: `${size - 5}px`,
-            }}
-          />
-        )
+        <Hash
+          style={{
+            height: `${size - 5}px`,
+            width: `${size - 5}px`,
+          }}
+        />
       }
     />
 

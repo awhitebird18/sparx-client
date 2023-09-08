@@ -13,21 +13,28 @@ type UserAvatarProps = {
   userId: string;
   profileImage?: string;
   onlineStatus?: UserStatus;
+  rounded?: string;
 };
 
-const UserAvatar = ({ size = 40, profileImage, userId, showStatus }: UserAvatarProps) => {
+const UserAvatar = ({
+  size = 40,
+  profileImage,
+  userId,
+  showStatus,
+  rounded = 'rounded-lg',
+}: UserAvatarProps) => {
   return (
     <Avatar
-      className="relative overflow-visible"
+      className={`relative overflow-visible ${rounded}`}
       style={{ height: `${size}px`, width: `${size}px` }}
     >
       <AvatarImage
         src={`${API_URL}${profileImage}`}
         style={{ height: `${size}px`, width: `${size}px` }}
-        className="rounded-lg border border-border"
+        className={`${rounded} border border-border`}
       />
       <AvatarFallback
-        className={`h-full flex-1 w-full rounded-sm border border-border overflow-hidden bg-card`}
+        className={`h-full flex-1 w-full ${rounded} border border-border overflow-hidden bg-card`}
         children={
           <PersonFill
             className={`mt-2 text-primary-dark`}

@@ -11,7 +11,9 @@ const Username = ({ firstName, lastName }: UsernameProps) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <p className="text-ellipsis whitespace-nowrap overflow-hidden">{formattedName}</p>
+        <p className="text-ellipsis whitespace-nowrap overflow-hidden font-medium">
+          {formattedName}
+        </p>
       </TooltipTrigger>
       <TooltipContent>{formattedName}</TooltipContent>
     </Tooltip>

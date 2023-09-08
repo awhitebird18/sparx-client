@@ -23,6 +23,7 @@ import {
 import { ChannelType } from '@/features/channels/enums';
 import { UserStatus } from '@/features/userStatus/types/userStatus';
 import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
+import { Lock } from 'react-bootstrap-icons';
 
 interface ListitemProps {
   id: string;
@@ -34,6 +35,7 @@ interface ListitemProps {
   isTemp?: boolean;
   type?: ChannelType;
   status?: UserStatus;
+  isPrivate?: boolean;
 }
 
 const ListItem = ({
@@ -45,6 +47,7 @@ const ListItem = ({
   icon,
   type,
   status,
+  isPrivate,
 }: ListitemProps) => {
   const { currentUser } = useStore('userStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
@@ -133,7 +136,7 @@ const ListItem = ({
             isSelected
               ? 'bg-active hover:bg-active text-active dark:text-active'
               : 'text-main hover:bg-hover'
-          }`}
+          } ${disabled && 'text-muted/70'}`}
         >
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
             <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
@@ -141,6 +144,7 @@ const ListItem = ({
             </div>
 
             {title}
+            {isPrivate && <Lock />}
             <div className="overflow-hidden">{status && <UserStatusDisplay status={status} />}</div>
           </div>
           {unreadCount ? (
