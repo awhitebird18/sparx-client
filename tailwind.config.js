@@ -75,7 +75,7 @@ module.exports = {
         userLighter: 'var(--userLighter)',
         userLight: 'var(--userLight)',
         'primary-medium': 'var(--primary-medium)',
-        userDark: 'var(--userDark)',
+        'primary-dark': 'var(--primary-dark)',
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -10,9 +10,8 @@ import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
 import { useEffect } from 'react';
 import { At, ChatLeftDots, Pencil, Person, Tv } from 'react-bootstrap-icons';
-import Search from '@/features/search/components/Search';
 
-const Divider = () => <div className="w-100 mx-4 border-neutral border-b" />;
+const Divider = () => <div className="w-100 mx-4 border-border border-b" />;
 
 const Sidebar = () => {
   const { setSelectedId } = useStore('sidebarStore');
@@ -28,13 +27,10 @@ const Sidebar = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-col w-full overflow-hidden h-full">
-        <CompanyDropdown />
-        <Divider />
+        <div className="w-full">
+          <CompanyDropdown />
+        </div>
         <div className="p-2">
-          <div className="my-2">
-            <Search />
-          </div>
-
           <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
           <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
           <ListItem id="mentions" title="Mentions" primary icon={<At size={18} />} />

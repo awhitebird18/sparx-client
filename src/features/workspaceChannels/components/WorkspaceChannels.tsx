@@ -188,68 +188,74 @@ const WorkspaceChannels: React.FC = () => {
   return (
     <ContentLayout title="Channels" headerComponent={headerBtn} disablePadding>
       <div className="p-3">
-        <SearchInput
-          value={filterBySearchValue}
-          setValue={setFilterBySearchValue}
-          placeholder="Search channels"
-        />
-
-        <div className="flex gap-2 mt-2 justify-between">
-          <div className="flex gap-2">
+        <div className="flex gap-2 justify-between">
+          <div className="flex gap-2 my-2 w-full">
             {/* Channel type filter */}
-            <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={filterChannelVisibility ? 'default' : 'outline'}
-                  className="gap-2 py-0 w-40 justify-between"
-                  size="sm"
-                >
-                  {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-                <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
-                  Any Channel Type
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
-                  Public Channels
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
-                  Private Channels
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="w-44">
+              <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant={filterChannelVisibility ? 'default' : 'outline'}
+                    className="gap-2 py-0 w-full overflow-hidden justify-between"
+                    size="sm"
+                  >
+                    {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+                  <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
+                    Any Channel Type
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
+                    Public Channels
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
+                    Private Channels
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
             {/* Subscribed Status filter */}
-            <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant={filterSubscribed ? 'default' : 'outline'}
-                  size="sm"
-                  className="gap-2 py-0 w-40 justify-between"
-                >
-                  {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-                <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
-                  All Channels
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
-                >
-                  Subscribed
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
-                >
-                  Unsubsribed
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="w-44 ">
+              <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant={filterSubscribed ? 'default' : 'outline'}
+                    size="sm"
+                    className="gap-2 py-0 w-full flex-1 min-w-fit overflow-hidden justify-between"
+                  >
+                    {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+                  <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
+                    All Channels
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
+                  >
+                    Subscribed
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
+                  >
+                    Unsubsribed
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="max-w-sm flex-1">
+              <SearchInput
+                value={filterBySearchValue}
+                setValue={setFilterBySearchValue}
+                placeholder="Search channels"
+                collapsible
+              />
+            </div>
           </div>
           {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
-            <Button size="sm" onClick={handleClearFilters} variant="secondary">
+            <Button size="sm" onClick={handleClearFilters} variant="secondary" className="w-28">
               Clear Filters
             </Button>
           )}

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 
 type FormData = {
   password: string;
@@ -77,13 +78,9 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
         {errors.confirmPassword && <ErrorLabel>{errors.confirmPassword.message}</ErrorLabel>}
       </div>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="mt-4 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-userMedium hover:bg-userDark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-userDark"
-      >
+      <Button type="submit" disabled={isLoading} className="mt-4">
         Change password
-      </button>
+      </Button>
     </form>
   );
 };

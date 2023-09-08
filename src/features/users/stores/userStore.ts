@@ -9,7 +9,7 @@ import { UserStatus } from '../enums';
 export class UserStore {
   users: User[] = [];
   currentUser: User | undefined = undefined;
-  isLoading = true;
+  isLoading = false;
   onlineUsers: OnlineUser[] = [];
   currentPage = 1;
   usersPerPage = 10;
@@ -164,6 +164,7 @@ export class UserStore {
     this.setIsLoading(true);
 
     const users = await usersApi.getUsers();
+    console.log(users);
 
     this.setUsers(users);
 

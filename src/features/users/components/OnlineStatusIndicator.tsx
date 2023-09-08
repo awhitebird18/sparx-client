@@ -30,7 +30,7 @@ const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
       break;
   }
 
-  return <div className={`rounded-full ${onlineStatusColor} w-3.5 h-3.5 border-card border-2`} />;
+  return <div className={`rounded-full ${onlineStatusColor} w-3.5 h-3.5 border-card border`} />;
 };
 
 export default observer(OnlineStatusIndicator);

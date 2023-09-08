@@ -53,7 +53,10 @@ const UserInputNotSubscribed = () => {
         {currentChannel?.name}
       </div>
       <div className="text-lg">{currentChannel?.description}</div>
-      <Button className="bg-userMedium text-white hover:bg-userDark" onClick={handleJoinChannel}>
+      <Button
+        className="bg-userMedium text-white hover:bg-primary-dark"
+        onClick={handleJoinChannel}
+      >
         Join Channel
       </Button>
       <Button

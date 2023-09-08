@@ -43,11 +43,8 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
               : 'This is the one channel that will always include everyone. Its a great spot for announcements and team-wide conversations.'}
           </span>
         </p>
-        <Button
-          variant="outline-primary"
-          onClick={handleAddUser}
-          className="gap-3 justify-between text-lg w-fit"
-        >
+
+        <Button onClick={handleAddUser} className="gap-3 justify-between text-lg w-fit">
           <Person size={20} />
           Add People
           <Plus size={24} />

@@ -177,7 +177,7 @@ const Section = ({ section, index }: SectionProps) => {
           icon={
             <CollapsibleTrigger asChild>
               <Button
-                className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md`}
+                className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md text-main`}
                 size="icon"
                 variant="ghost"
               >
@@ -218,6 +218,7 @@ const Section = ({ section, index }: SectionProps) => {
                   type={channel.type}
                   isTemp={channel.isTemp}
                   status={userStatus}
+                  isPrivate={channel.isPrivate}
                   icon={
                     <ChannelIcon
                       imageUrl={channelIcon}
@@ -235,11 +236,7 @@ const Section = ({ section, index }: SectionProps) => {
         {isSystem ? (
           <ListItem
             id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
-            icon={
-              <Button size="icon" className="p-0 h-6 w-6" variant="ghost">
-                <Plus size={16} />
-              </Button>
-            }
+            icon={<Plus size={16} />}
             title={type === ChannelType.DIRECT ? 'View Users' : 'Explore Channels'}
             disabled
           />

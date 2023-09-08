@@ -66,7 +66,7 @@ const Thread = () => {
       maxConstraints={[800, Infinity]}
     >
       <div
-        className="flex flex-col border-l border-border"
+        className="flex flex-col border-l border-border bg-background"
         style={{
           width: `${containerWidth}px`,
         }}
@@ -96,6 +96,7 @@ const Thread = () => {
                   );
                 })
                 .reverse()}
+
               <Message message={message} showUser={true} isThread />
             </div>
             <Editor

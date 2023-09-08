@@ -5,12 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from '@/stores/RootStore';
 import { User } from '../types';
 
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import Spinner from '@/components/ui/Spinner';
@@ -21,11 +15,7 @@ import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndic
 import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
 import NoUsersFallback from './NoUsersFallback';
 import ContentLayout from '@/components/layout/ContentLayout';
-
-enum UserMenuOptions {
-  PROFILE = 'Profile',
-  MESSAGE = 'Message',
-}
+import { ChevronDown } from 'react-bootstrap-icons';
 
 const Users = () => {
   const { isLoading, displayedUsers, searchValue, setSearchValue } = useStore('userStore');
@@ -58,7 +48,33 @@ const Users = () => {
 
   return (
     <ContentLayout title="Users">
-      <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
+      <div className="flex gap-2 justify-between">
+        <div className="flex gap-2 my-2">
+          {/* Channel type filter */}
+
+          <Button className="gap-2 py-0 w-48 justify-between" size="sm" variant="outline">
+            Location
+            <ChevronDown className="text-xs" />
+          </Button>
+
+          <Button className="gap-2 py-0 w-48 justify-between" size="sm" variant="outline">
+            Department
+            <ChevronDown className="text-xs" />
+          </Button>
+
+          <SearchInput
+            placeholder="Search users"
+            value={searchValue}
+            setValue={setSearchValue}
+            collapsible
+          />
+        </div>
+        {searchValue && (
+          <Button size="sm" variant="secondary">
+            Clear Filters
+          </Button>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="absolute right-auto top-20 w-full">
@@ -67,52 +83,51 @@ const Users = () => {
       ) : null}
 
       {displayedUsers.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto my-3">
+        <div className="h-full grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto my-3">
           {displayedUsers
             .filter((user: User) => user.uuid !== currentUser?.uuid)
             .map((user: User) => (
               <Card
                 key={user.uuid}
-                className="p-4 rounded relative cursor-pointer"
+                className="p-4 rounded-xl relative cursor-pointer"
                 onClick={() => {
-                  handleMessageUser(user);
+                  handleViewUserProfile(user.uuid);
                 }}
               >
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="absolute top-0 right-4" asChild>
+                <CardContent className="flex items-center justify-center">
+                  <UserAvatar
+                    size={150}
+                    userId={user.uuid}
+                    profileImage={user.profileImage}
+                    rounded="rounded-xl"
+                  />
+                </CardContent>
+                <CardFooter className="flex-col gap-3 p-0">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-2 text-main">
+                      <Username firstName={user.firstName} lastName={user.lastName} />
+                      <OnlineStatusIndicator userId={user.uuid} />
+                    </div>
+                    <p className="text-muted">Developer, Brampon Ontario</p>
+                  </div>
+                  <div className="flex gap-3">
                     <Button
-                      className="mt-2 text-right text-2xl hover:bg-transparent p-1"
-                      variant="ghost"
-                    >
-                      ⋮
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" side="bottom">
-                    <DropdownMenuItem
+                      variant="outline"
                       onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleViewUserProfile(user.uuid);
                       }}
                     >
-                      {UserMenuOptions.PROFILE}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
+                      Profile
+                    </Button>
+                    <Button
                       onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleMessageUser(user);
                       }}
                     >
-                      {UserMenuOptions.MESSAGE}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <CardContent className="flex items-center justify-center">
-                  <UserAvatar size={200} userId={user.uuid} profileImage={user.profileImage} />
-                </CardContent>
-                <CardFooter className="flex-col p-0">
-                  <div className="flex items-center gap-2">
-                    <Username firstName={user.firstName} lastName={user.lastName} />
-                    <OnlineStatusIndicator userId={user.uuid} />
+                      Message
+                    </Button>
                   </div>
                 </CardFooter>
               </Card>

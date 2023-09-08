@@ -11,10 +11,12 @@ import { UserStatus } from '../types/userStatus';
 
 import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
+import Emoji from '@/components/ui/Emoji';
+import EmojiPicker from '@emoji-mart/react';
 
 const UserStatusModal = () => {
   const {
-    removeUserStatusApi,
+    // removeUserStatusApi,
     createUserStatusApi,
     userStatuses,
     activeUserStatus,
@@ -22,9 +24,9 @@ const UserStatusModal = () => {
     findUserStatusByUuid,
   } = useStore('userStatusStore');
   const { setActiveModal } = useStore('modalStore');
-  // const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
-  //   null,
-  // );
+  const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
+    null,
+  );
   const [currentUserStatus, setCurrentUserStatus] = useState<UserStatus | undefined>(
     activeUserStatus,
   );
@@ -32,25 +34,25 @@ const UserStatusModal = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
 
-  const handleRemoveUserStatus = async (userStatusUuid: string) => {
-    await removeUserStatusApi(userStatusUuid);
-  };
+  // const handleRemoveUserStatus = async (userStatusUuid: string) => {
+  //   await removeUserStatusApi(userStatusUuid);
+  // };
 
   const handleCloseModal = () => {
     setActiveModal(null);
   };
 
-  // const handleShowEmojiPicker = () => {
-  //   if (emojiButtonRef.current) {
-  //     const rect = emojiButtonRef.current.getBoundingClientRect();
+  const handleShowEmojiPicker = () => {
+    if (emojiButtonRef.current) {
+      const rect = emojiButtonRef.current.getBoundingClientRect();
 
-  //     setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
-  //   }
-  // };
+      setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
+    }
+  };
 
-  // const handleCloseEmojiPicker = () => {
-  //   setShowEmojiPicker(null);
-  // };
+  const handleCloseEmojiPicker = () => {
+    setShowEmojiPicker(null);
+  };
 
   const handleSubmit = async () => {
     if (!currentUserStatus?.text) return;
@@ -79,43 +81,48 @@ const UserStatusModal = () => {
     setCurrentUserStatus(userStatus);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClearCurrentUserStatus = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setCurrentUserStatus(undefined);
-  };
-
   const handleSetCurrentStatusInactive = async (uuid: string) => {
     await updateUserStatusApi(uuid, { isActive: false });
     setCurrentUserStatus(undefined);
   };
 
+  const handleAddReaction = (emojiId: string) => {
+    console.log(emojiId);
+    handleCloseEmojiPicker();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setCurrentUserStatus((prev: any) => ({ ...prev, emoji: emojiId }));
+  };
+
+  console.log(currentUserStatus?.text);
+
   return (
     <Modal title="Set a status">
       <div className="flex flex-col w-96 space-y-8">
-        <div className="relative flex items-center w-full">
+        <div ref={emojiButtonRef} className="relative flex items-center w-full">
           <div className="absolute left-0 top-0">
             <Button
-              ref={emojiButtonRef}
               size="icon"
               variant="ghost"
               className="p-0 w-12 h-12 relative"
-              // onClick={handleShowEmojiPicker}
+              onClick={handleShowEmojiPicker}
             >
-              <EmojiSmile size={16} />
+              {currentUserStatus ? (
+                <Emoji id={currentUserStatus.emoji} />
+              ) : (
+                <EmojiSmile size={16} />
+              )}
             </Button>
-            {/* {showEmojiPicker && (
+            {showEmojiPicker && (
               <EmojiPicker
-                message={message}
+                onEmojiClick={handleAddReaction}
                 onClickAway={handleCloseEmojiPicker}
                 position={showEmojiPicker}
               />
-            )} */}
+            )}
           </div>
           <Input
             placeholder="What's your status?"
-            className="pl-14 h-12 bg-card border-border"
+            className="pl-14 h-12 border-border"
             onChange={(e) =>
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               setCurrentUserStatus((prev: any) => ({
@@ -123,7 +130,7 @@ const UserStatusModal = () => {
                 text: e.target.value,
               }))
             }
-            value={currentUserStatus?.text}
+            value={currentUserStatus ? currentUserStatus.text : ''}
           />
           {currentUserStatus ? (
             <Button
@@ -131,7 +138,7 @@ const UserStatusModal = () => {
               size="icon"
               variant="ghost"
               className="w-8 h-8 absolute right-2 top-2 rounded-full"
-              onClick={handleClearCurrentUserStatus}
+              onClick={() => handleSetCurrentStatusInactive(currentUserStatus.uuid)}
             >
               <X />
             </Button>
@@ -143,20 +150,16 @@ const UserStatusModal = () => {
             <div className="w-full">
               {userStatuses.map((u: UserStatus) => (
                 <li
-                  className="flex gap-2 p-2 w-full text-left justify-start hover:bg-secondary rounded-sm cursor-pointer"
+                  className="flex gap-2 p-2 w-full text-left justify-start hover:bg-hover rounded-sm cursor-pointer"
                   onClick={() => handleClickPreviousStatus(u)}
                 >
-                  {/* <em-emoji
-                    id={u.emoji}
-                    set="apple"
-                    style={{ fontSize: '1.3rem', lineHeight: '1.1rem' }}
-                  ></em-emoji> */}
+                  <Emoji id={u.emoji} />
                   <p className="flex-1">{u.text}</p>
                   <Button
                     className="close-icon p-0.5 h-6 w-6"
                     size="icon"
                     variant="ghost"
-                    onClick={() => handleRemoveUserStatus(u.uuid)}
+                    onClick={() => handleSetCurrentStatusInactive(u.uuid)}
                   >
                     <X size={20} />
                   </Button>

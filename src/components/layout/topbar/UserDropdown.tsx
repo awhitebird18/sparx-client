@@ -93,7 +93,7 @@ const UserDropdown: React.FC = () => {
           </div>
         </div>
 
-        <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })} className="">
+        <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
           <SetUserStatusButton />
         </div>
         <div>

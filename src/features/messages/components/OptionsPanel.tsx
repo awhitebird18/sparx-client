@@ -19,7 +19,7 @@ type OptionsPanelProps = {
 const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { currentUser } = useStore('userStore');
-  const { fetchThreadMessagesApi } = useStore('messageStore');
+  const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
@@ -56,14 +56,23 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
     fetchThreadMessagesApi(message);
   };
 
+  const handleAddReaction = async (emojiId: string) => {
+    await addReactionApi({
+      emojiId,
+      userId: message.userId,
+      messageId: message.uuid,
+    });
+    handleCloseEmojiPicker();
+  };
+
   return (
-    <div className="options-panel hidden border border-border absolute -top-5 right-5 rounded-md bg-card">
+    <div className="options-panel hidden absolute -top-5 right-5 rounded-md bg-background shadow-sm shadow-black/70">
       <div className="relative">
         <Button
           ref={emojiButtonRef}
           size="icon"
           variant="ghost"
-          className="p-0 w-9 h-9 relative"
+          className="p-0 w-10 h-10 relative"
           onClick={handleShowEmojiPicker}
         >
           <EmojiSmile />
@@ -71,26 +80,26 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
         </Button>
         {showEmojiPicker && (
           <EmojiPicker
-            message={message}
-            onClickAway={handleCloseEmojiPicker}
             position={showEmojiPicker}
+            onEmojiClick={handleAddReaction}
+            onClickAway={handleCloseEmojiPicker}
           />
         )}
       </div>
       {!isThread && (
-        <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleReply}>
+        <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleReply}>
           <ChatDots />
         </Button>
       )}
       {message.userId === currentUser?.uuid && (
-        <Button size="icon" variant="ghost" className="p-0 w-9 h-9" onClick={handleEditMessage}>
+        <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleEditMessage}>
           <Pencil />
         </Button>
       )}
       <Button
         size="icon"
         variant="ghost"
-        className="p-0 w-9 h-9 text-rose-500"
+        className="p-0 w-10 h-10 text-rose-500"
         onClick={() => handleOpenModal({ type: 'DeleteMessageModal', payload: { message } })}
       >
         <Trash />

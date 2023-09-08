@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Message } from '@/features/messages/types';
@@ -9,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 import { EmojiSmile, Plus } from 'react-bootstrap-icons';
 import EmojiPicker from './EmojiPicker';
+import Emoji from '@/components/ui/Emoji';
 
 type ReactionsDisplayProps = { message: Message };
 
@@ -22,6 +21,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
   const emojiButtonRef = useRef<any>(null);
 
   const handleClickReaction = async (emojiId: string) => {
+    if (!currentUser) return;
     await addReactionApi({
       emojiId,
       userId: currentUser.uuid,
@@ -41,10 +41,19 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
     setShowEmojiPicker(null);
   };
 
+  const handleAddReaction = async (emojiId: string) => {
+    await addReactionApi({
+      emojiId,
+      userId: message.userId,
+      messageId: message.uuid,
+    });
+    handleCloseEmojiPicker();
+  };
+
   if (!currentUser || !message.reactions?.length) return null;
 
   return (
-    <div className="flex gap-1 max-w-xl flex-wrap">
+    <div className="flex gap-1 max-w-xl flex-wrap my-3">
       {message.reactions.map((reaction: Reaction) => {
         const currentUserReacted = reaction.users?.includes(currentUser.uuid);
         return (
@@ -52,31 +61,27 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
             <TooltipTrigger asChild>
               <Button
                 className={`h-fit rounded-2xl w-10 gap-0.5
-                ${currentUserReacted && 'bg-userDark hover:bg-userDark'}
+                ${currentUserReacted && 'bg-primary hover:bg-primary-dark'}
                 `}
                 style={{ padding: '0.15rem 0.2rem' }}
                 size="icon"
                 variant="outline"
                 onClick={() => handleClickReaction(reaction.emojiId)}
               >
-                <em-emoji
-                  id={reaction.emojiId}
-                  set="apple"
-                  style={{ fontSize: '1.2rem', lineHeight: '1rem' }}
-                ></em-emoji>
+                <Emoji id={reaction.emojiId} />
                 <span
                   className={`text-primary text-xs ${
                     currentUserReacted ? 'text-white' : 'text-primary'
                   }`}
                 >
-                  {reaction.count}
+                  {reaction.users.length}
                 </span>
               </Button>
             </TooltipTrigger>
             <TooltipContent className="rounded-xl">
               <div className="items-center justify-center gap-2 flex flex-col w-52 p-2">
                 <div className="border border-border rounded-xl p-2 bg-secondary">
-                  <em-emoji id={reaction.emojiId} set="apple" style={{ fontSize: '4rem' }} />
+                  <Emoji id={reaction.emojiId} size={32} />
                 </div>
 
                 <div className="text-center text-sm flex justify-center leading-6">
@@ -108,9 +113,9 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
         </Button>
         {showEmojiPicker && (
           <EmojiPicker
-            message={message}
-            onClickAway={handleCloseEmojiPicker}
             position={showEmojiPicker}
+            onEmojiClick={handleAddReaction}
+            onClickAway={handleCloseEmojiPicker}
           />
         )}
       </div>

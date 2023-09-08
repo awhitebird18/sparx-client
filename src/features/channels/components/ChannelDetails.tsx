@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { Bell, Check, ChevronDown, Hash } from 'react-bootstrap-icons';
+import { Bell, Check, ChevronDown, Hash, Lock } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
 
@@ -19,7 +19,7 @@ import { User } from '@/features/users/types';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { getChannelByUuid, fetchChannelUserIdsApi, updateChannelApi } = useStore('channelStore');
-  const { findUserByUuid } = useStore('userStore');
+  const { findUserByUuid, findUserByName } = useStore('userStore');
   const [channelUserIds, setChannelUserIds] = useState<string[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -34,6 +34,8 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
   }, [fetchChannelUserIdsApi, id]);
 
   const channel = getChannelByUuid(id);
+  if (!channel) return null;
+  const channelIsDirect = channel.type === ChannelType.DIRECT;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelectImage = (e: any) => {
@@ -49,11 +51,17 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     reader.readAsDataURL(file);
   };
 
-  if (!channel) return null;
-
   const channelUsers = channelUserIds
     .map((el: string) => findUserByUuid(el))
     .filter((user: User | undefined): user is User => user !== undefined) as User[];
+
+  let channelIcon = channel?.icon;
+
+  if (channel?.type === ChannelType.DIRECT) {
+    const user = findUserByName(channel.name);
+    if (!user) return;
+    channelIcon = user.profileImage;
+  }
 
   return (
     <Modal
@@ -61,13 +69,16 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
         <div className="flex gap-4 items-center mb-2">
           <Button
             variant="ghost"
-            className="text-userDark cursor-pointer flex justify-start h-auto gap-3 items-start h-18 p-0"
+            className={`text-primary-dark cursor-pointer flex justify-start h-auto gap-3 items-start h-18 p-0 ${
+              channelIsDirect && 'pointer-events-none'
+            }`}
             onClick={() => {
+              if (channelIsDirect) return;
               fileInput.current?.click();
             }}
           >
             <ChannelIcon
-              imageUrl={channel.icon}
+              imageUrl={channelIcon}
               size={50}
               isSelected
               isPrivate={channel.isPrivate}
@@ -81,7 +92,10 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
             />
           </Button>
           <div className="flex flex-col h-18 gap-1 h-12">
-            <p className="text-2xl leading-none">{channel.name}</p>
+            <div className="flex gap-1 items-center">
+              <p className="text-2xl leading-none">{channel.name}</p>
+              <Lock size={17} className="mt-0.5" />
+            </div>
 
             <p className="text-emerald-500 text-sm flex it8ems-center">
               Joined <Check size={18} />
@@ -92,11 +106,11 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     >
       <>
         <div className="flex gap-3">
-          <Button className="h-7 w-12 gap-1 p-0" variant="outline-primary">
+          <Button className="h-7 w-12 gap-1 p-0">
             <Hash className="" />
             <ChevronDown className="text-xs" />
           </Button>
-          <Button className="px-2 justify-start text-xs h-7 gap-2" variant="outline-primary">
+          <Button className="px-2 justify-start text-xs h-7 gap-2">
             <Bell />
             Get Notifications for All Messages <ChevronDown className="text-xs" />
           </Button>
