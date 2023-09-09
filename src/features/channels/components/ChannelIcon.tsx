@@ -1,5 +1,5 @@
 import { Hash } from 'react-bootstrap-icons';
-import { API_URL } from '@/config';
+import { API_URL } from '@/config/api';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';

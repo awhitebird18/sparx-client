@@ -7,7 +7,7 @@ import { setFavicon } from '@/utils/setFavicon';
 import { UserTyping } from '@/features/userTyping/types';
 import { UserStatus } from '@/features/users/enums';
 
-import { API_URL } from '@/config';
+import { API_URL } from '@/config/api';
 
 const SocketController = () => {
   const { setOnlineUsers, currentUser } = useStore('userStore');

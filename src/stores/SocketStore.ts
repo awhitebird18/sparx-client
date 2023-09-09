@@ -2,7 +2,7 @@ import { action, makeObservable } from 'mobx';
 import io, { Socket } from 'socket.io-client';
 
 import { User } from '@/features/users/types';
-import { API_URL } from '@/config';
+import { API_URL } from '@/config/api';
 
 const SOCKET_SERVER_URL = API_URL;
 
