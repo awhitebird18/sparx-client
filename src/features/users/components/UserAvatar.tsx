@@ -1,7 +1,7 @@
 import { PersonFill } from 'react-bootstrap-icons';
 import { observer } from 'mobx-react-lite';
 
-import { API_URL } from '@/config';
+import { API_URL } from '@/config/api';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
