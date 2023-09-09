@@ -66,7 +66,7 @@ const Thread = () => {
       maxConstraints={[800, Infinity]}
     >
       <div
-        className="flex flex-col border-l border-border"
+        className="flex flex-col border-l border-border bg-background"
         style={{
           width: `${containerWidth}px`,
         }}
@@ -84,7 +84,7 @@ const Thread = () => {
             </Button>
           }
         >
-          <div className="bg-card dark:bg-background rounded-xl pt-4 shadow-lg max-h-full flex flex-col">
+          <div className="bg-background rounded-xl pt-4 max-h-full flex flex-col">
             <div className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1">
               {threadMessages
                 .map((message: MessageType, index: number) => {
@@ -96,6 +96,7 @@ const Thread = () => {
                   );
                 })
                 .reverse()}
+
               <Message message={message} showUser={true} isThread />
             </div>
             <Editor

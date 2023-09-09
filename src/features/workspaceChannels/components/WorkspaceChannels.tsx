@@ -180,116 +180,122 @@ const WorkspaceChannels: React.FC = () => {
   );
 
   const headerBtn = (
-    <Button
-      className="bg-userDark hover:bg-userDark text-white h-8 px-2"
-      onClick={handleClickCreateChannel}
-      size="sm"
-    >
+    <Button onClick={handleClickCreateChannel} size="sm" variant="default">
       Create Channel
     </Button>
   );
 
   return (
-    <ContentLayout title="Channels" headerComponent={headerBtn}>
-      <SearchInput
-        value={filterBySearchValue}
-        setValue={setFilterBySearchValue}
-        placeholder="Search channels"
-      />
-      <div className="flex gap-2 mt-2 justify-between">
-        <div className="flex gap-2">
-          {/* Channel type filter */}
-          <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant={filterChannelVisibility ? 'default' : 'outline'}
-                className="gap-2 py-0 w-40 justify-between"
-                size="sm"
-              >
-                {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-              <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
-                Any Channel Type
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
-                Public Channels
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
-                Private Channels
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+    <ContentLayout title="Channels" headerComponent={headerBtn} disablePadding>
+      <div className="p-3">
+        <div className="flex gap-2 justify-between">
+          <div className="flex gap-2 my-2 w-full">
+            {/* Channel type filter */}
+            <div className="w-44">
+              <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant={filterChannelVisibility ? 'default' : 'outline'}
+                    className="gap-2 py-0 w-full overflow-hidden justify-between"
+                    size="sm"
+                  >
+                    {filterChannelVisibility || 'Channel Type'} <ChevronDown className="text-xs" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+                  <DropdownMenuItem onClick={() => handleSetChannelType(null)}>
+                    Any Channel Type
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PUBLIC)}>
+                    Public Channels
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleSetChannelType(ChannelVisibility.PRIVATE)}>
+                    Private Channels
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-          {/* Subscribed Status filter */}
-          <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
+            {/* Subscribed Status filter */}
+            <div className="w-44 ">
+              <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant={filterSubscribed ? 'default' : 'outline'}
+                    size="sm"
+                    className="gap-2 py-0 w-full flex-1 min-w-fit overflow-hidden justify-between"
+                  >
+                    {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
+                  <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
+                    All Channels
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
+                  >
+                    Subscribed
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
+                  >
+                    Unsubsribed
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="max-w-sm flex-1">
+              <SearchInput
+                value={filterBySearchValue}
+                setValue={setFilterBySearchValue}
+                placeholder="Search channels"
+                collapsible
+              />
+            </div>
+          </div>
+          {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
+            <Button size="sm" onClick={handleClearFilters} variant="secondary" className="w-28">
+              Clear Filters
+            </Button>
+          )}
+        </div>
+
+        <div className="flex gap-2 mt-2 justify-between border-b border-border items-center py-1 pl-2">
+          <span className="text-sm text-muted-foreground items-center">
+            {sortedWorkspaceChannels.length} Results
+          </span>
+          {/* Channel Sort */}
+          <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant={filterSubscribed ? 'default' : 'outline'}
-                size="sm"
-                className="gap-2 py-0 w-40 justify-between"
-              >
-                {filterSubscribed || 'Subscribed Status'} <ChevronDown className="text-xs" />
+              <Button variant="ghost" className="gap-2" size="sm">
+                Sort: {sortBy} <ChevronDown className="text-xs" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-              <DropdownMenuItem onClick={() => handleFilterSubscribedChannels(null)}>
-                All Channels
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ATOZ)}>
+                A to Z
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleFilterSubscribedChannels(SubscribeStatus.SUBSCSRIBED)}
-              >
-                Subscribed
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ZTOA)}>
+                Z to A
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleFilterSubscribedChannels(SubscribeStatus.UNSUBSCRIBED)}
-              >
-                Unsubsribed
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.MOSTMEMBERS)}>
+                Most members
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.LEASTMEMBERS)}>
+                Least members
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.NEWEST)}>
+                Newest channel
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSetSort(SortOptions.OLDEST)}>
+                Oldest channel
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
-          <Button size="sm" onClick={handleClearFilters} variant="secondary">
-            Clear Filters
-          </Button>
-        )}
       </div>
-      <div className="flex gap-2 mt-2 justify-between border-b border-border items-center py-1 pl-2">
-        <span className="text-sm text-muted-foreground items-center">
-          {sortedWorkspaceChannels.length} Results
-        </span>
-        {/* Channel Sort */}
-        <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="gap-2" size="sm">
-              Sort: {sortBy} <ChevronDown className="text-xs" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="DropdownMenuContent w-60" align="start">
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ATOZ)}>
-              A to Z
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.ZTOA)}>
-              Z to A
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.MOSTMEMBERS)}>
-              Most members
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.LEASTMEMBERS)}>
-              Least members
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.NEWEST)}>
-              Newest channel
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleSetSort(SortOptions.OLDEST)}>
-              Oldest channel
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <ul className="mt-3 flex-1 overflow-auto">
+      <ul className=" flex-1 overflow-auto">
         {sortedWorkspaceChannels.map((channel: Channel) => {
           const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
 
@@ -299,7 +305,7 @@ const WorkspaceChannels: React.FC = () => {
           return (
             <li
               key={channel.uuid}
-              className="flex justify-between items-center border-b border-border p-4 cursor-pointer group hover:bg-secondary/25"
+              className="flex justify-between items-center border-b border-border p-5 cursor-pointer group hover:bg-hover"
               onClick={() => handleViewChannel(channel)}
             >
               <div>

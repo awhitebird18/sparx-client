@@ -23,6 +23,7 @@ import {
 import { ChannelType } from '@/features/channels/enums';
 import { UserStatus } from '@/features/userStatus/types/userStatus';
 import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
+import { Lock } from 'react-bootstrap-icons';
 
 interface ListitemProps {
   id: string;
@@ -34,6 +35,7 @@ interface ListitemProps {
   isTemp?: boolean;
   type?: ChannelType;
   status?: UserStatus;
+  isPrivate?: boolean;
 }
 
 const ListItem = ({
@@ -45,6 +47,7 @@ const ListItem = ({
   icon,
   type,
   status,
+  isPrivate,
 }: ListitemProps) => {
   const { currentUser } = useStore('userStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
@@ -129,25 +132,26 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 p-0 px-3 w-full hover:bg-card text-sm justify-between rounded-sm flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
             isSelected
-              ? 'bg-userMedium hover:bg-userMedium text-white hover:text-white'
-              : 'text-neutral'
-          } ${'text-neutral'}`}
+              ? 'bg-active hover:bg-active text-active dark:text-active'
+              : 'text-main hover:bg-hover'
+          } ${disabled && 'text-muted/70'}`}
         >
           <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
-            <div className="w-6 h-6 min-w-fit flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
 
             {title}
-            {status && <UserStatusDisplay status={status} />}
+            {isPrivate && <Lock />}
+            <div className="overflow-hidden">{status && <UserStatusDisplay status={status} />}</div>
           </div>
           {unreadCount ? (
             <Badge
               itemType="div"
               variant="outline"
-              className="text-sm p-0 w-7 h-5 justify-center items-center bg-userDark border-transparent outline-transparent border-none text-white shadow-inner shadow-userDark rounded-xl"
+              className="text-sm p-0 w-7 h-5 justify-center items-center bg-primary-dark border-transparent outline-transparent border-none text-white shadow-inner shadow-primary-dark rounded-xl"
             >
               {unreadCount}
             </Badge>

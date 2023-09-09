@@ -61,7 +61,7 @@ const About = ({ channel }: { channel: Channel }) => {
       {fields.map((field: FieldEnum) => (
         <Button
           key={field}
-          className="flex-col justify-start items-start h-28 border border-border relative space-y-1 hover:bg-secondary/30 gap-2"
+          className="flex-col justify-start items-start h-28 border border-border relative space-y-1 hover:bg-hover gap-2"
           variant="ghost"
           onClick={() => handleOpenForm(field)}
         >
@@ -77,7 +77,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       {!isDirectChannel && (
         <Button
-          className="flex-col justify-start items-start h-20 border border-border space-y-1 hover:bg-secondary/30"
+          className="flex-col justify-start items-start h-20 border border-border space-y-1 hover:bg-hover"
           variant="ghost"
           onClick={() => console.info('copy managed')}
         >
@@ -88,7 +88,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       {!isDirectChannel && (
         <Button
-          className="justify-start items-start h-12 text-rose-500 hover:text-rose-500  border border-border space-y-1 hover:bg-secondary/30"
+          className="justify-start items-start h-12 text-rose-500 hover:text-rose-500  border border-border space-y-1 hover:bg-red-50"
           variant="ghost"
           onClick={handleLeaveChannel}
         >
@@ -166,11 +166,7 @@ const EditField = observer(
               )}
             />
 
-            <Button
-              variant="default"
-              className="ml-auto bg-userMedium hover:bg-userDark text-white"
-              type="submit"
-            >
+            <Button className="ml-auto" type="submit">
               Submit
             </Button>
           </form>

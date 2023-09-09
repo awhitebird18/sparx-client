@@ -136,11 +136,7 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
           <Button variant="outline" onClick={handleCancelInvite} type="button">
             Cancel
           </Button>
-          <Button
-            className="bg-userMedium text-white hover:bg-userDark"
-            onClick={handleInviteUsers}
-            type="submit"
-          >
+          <Button onClick={handleInviteUsers} type="submit">
             Invite Users
           </Button>
         </div>

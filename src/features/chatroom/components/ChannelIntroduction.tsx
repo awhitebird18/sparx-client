@@ -34,7 +34,7 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
           You're looking at the{' '}
           <span className="text-userMedium">
             #{channel.name.charAt(0).toUpperCase()}
-            {channel.name.substring(1).toLowerCase()}{' '}
+            {channel.name.substring(1).toLowerCase()}
           </span>
           channel
           <span className="text-muted-foreground text-base block font-normal">
@@ -43,14 +43,11 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
               : 'This is the one channel that will always include everyone. Its a great spot for announcements and team-wide conversations.'}
           </span>
         </p>
-        <Button
-          variant="ghost"
-          className="text-userMedium text-md hover:text-userMedium cursor-pointer border border-userMedium w-fit gap-2"
-          onClick={handleAddUser}
-        >
-          <Person className="text-xl" />
+
+        <Button onClick={handleAddUser} className="gap-3 justify-between text-lg w-fit">
+          <Person size={20} />
           Add People
-          <Plus />
+          <Plus size={24} />
         </Button>
       </div>
     </div>

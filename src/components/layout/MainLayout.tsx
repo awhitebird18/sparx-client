@@ -21,17 +21,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   return (
-    <div className="h-screen flex overflow-hidden">
-      <ResizableSidebar />
-      <Suspense fallback={<div />}>
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <Topbar />
+    <Suspense fallback={<div />}>
+      <div className="h-screen flex flex-col overflow-hidden">
+        <Topbar />
+        <div className="flex flex-1 overflow-hidden">
+          <ResizableSidebar />
           <div className="flex-1 overflow-hidden">{children}</div>
         </div>
-      </Suspense>
-      <SocketController />
-      <ModalController />
-    </div>
+        <SocketController />
+        <ModalController />
+      </div>
+    </Suspense>
   );
 };
 

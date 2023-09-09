@@ -191,12 +191,10 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
             <div className="flex gap-2 w-fit ml-auto h-10">
               {isEditing ? (
                 <>
-                  <Button onClick={handleCancelEdit} variant="secondary" type="button">
+                  <Button onClick={handleCancelEdit} variant="outline" type="button">
                     Cancel
                   </Button>
-                  <Button className="bg-userMedium hover:bg-userDark text-white" type="submit">
-                    Save Changes
-                  </Button>
+                  <Button type="submit">Save Changes</Button>
                 </>
               ) : null}
             </div>

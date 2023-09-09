@@ -5,94 +5,118 @@
 @layer base {
   :root,
   .light {
-    --background: 220 20% 93%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%;
+    --foreground: 220, 6%, 26%;
 
-    --scrollbarThumb: 230.2 20% 83%;
-    --scrollbarTrack: 230.2 20% 88%;
+    --scrollbarThumb: 230.2 10% 83%;
+    --scrollbarTrack: 230.2 10% 88%;
 
-    --hover: 100 50% 20%;
+    --hover: 220 11% 97%;
 
-    --muted: 210% 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 220 16.3% 46.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 84% 4.9%;
 
     --card: 0 0% 98%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 84% 4.9%;
 
-    --border: 214.3 30.8% 90%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 220 30.8% 90%;
+    --input: 220 31.8% 91.4%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 220 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 220 28% 90.1%;
     --secondary-hover: 220 28% 85.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 220 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 220 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 220 40% 98%;
 
-    --ring: 215 20.2% 65.1%;
+    --ring: 220 20.2% 65.1%;
 
     --radius: 0.5rem;
 
-    --userLighter: var(--color-primary-400);
-    --userLight: var(--color-primary-500);
-    --userMedium: var(--color-primary-600);
-    --userDark: var(--color-primary-700);
+    --primary-lightest: var(--color-primary-100);
+    --primary-lighter: var(--color-primary-400);
+    --primary-light: var(--color-primary-500);
+    --primary: var(--color-primary-600);
+    --primary-dark: var(--color-primary-700);
+    --primary-darkest: var(--color-primary-800);
 
-    --text-neutral: 220 25% 53%;
+    --primary-text: var(--color-primary-700);
+    --primary-hover: var(--color-primary-100);
+    --primary-active: var(--color-primary-900);
+
+    --text-neutral: 220 10% 53%;
+
+    --secondary-text: 0 0% 20%;
+
+    --text-main: 0 0% 28%;
+
+    --text-muted: 0 0% 40%;
 
     --border-neutral: 220 35% 80%;
   }
   .dark {
-    --background: 230.2 25% 7%;
-    --foreground: 210 40% 98%;
+    --background: 220 11% 18%;
+    --foreground: 220, 7%, 34%;
 
-    --scrollbarThumb: 230.2 25% 17%;
-    --scrollbarTrack: 230.2 25% 12%;
+    --scrollbarThumb: 220, 10%, 15%;
+    --scrollbarTrack: 220 11% 27%;
 
-    --hover: 230.2 25% 10%;
+    --hover: 220, 11%, 26%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220.2 32.6% 17.5%;
+    --muted-foreground: 220 20.2% 65.1%;
 
-    --popover: 222.2 84% 10.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220.2 84% 10.9%;
+    --popover-foreground: 220 40% 98%;
 
-    --card: 230.2 25% 15.5%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 11% 10%;
+    --card-foreground: 220 40% 98%;
 
-    --border: 217.2 32.6% 13%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 220 11% 27%;
+    --input: 220.2 32.6% 17.5%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 220 9% 91%;
+    --primary-foreground: 220 47.4% 11.2%;
 
-    --secondary: 217.2 28.6% 19.5%;
-    --secondary-hover: 220 28% 17.1%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 11% 35%;
+    --secondary-hover: 220 11% 30%;
+    --secondary-foreground: 220 40% 98%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 220.2 32.6% 17.5%;
+    --accent-foreground: 220 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
 
-    --ring: 217.2 32.6% 17.5%;
+    --ring: 220 32.6% 17.5%;
 
-    --userLighter: var(--color-primary-400);
-    --userLight: var(--color-primary-500);
-    --userMedium: var(--color-primary-600);
-    --userDark: var(--color-primary-700);
+    --primary-lightest: var(--color-primary-200);
+    --primary-lighter: var(--color-primary-400);
+    --primary-light: var(--color-primary-500);
+    --primary: var(--color-primary-600);
+    --primary-dark: var(--color-primary-700);
+    --primary-darkest: var(--color-primary-800);
+
+    --primary-text: var(--color-primary-100);
+    --primary-active: var(--color-primary-900);
+    --primary-hover: var(--color-primary-100);
+
+    --secondary-text: 0 0% 90%;
+
+    --text-main: 0 0% 85%;
 
     --text-neutral: 220 25% 70%;
+
+    --text-muted: 220 17% 60%;
 
     --border-neutral: 220 35% 30%;
   }
@@ -110,6 +134,7 @@
     --color-primary-700: theme('colors.slate.700');
     --color-primary-800: theme('colors.slate.800');
     --color-primary-900: theme('colors.slate.900');
+    --color-primary-hover: `${theme('colors.slate.500')}AA`
   }
   .red {
     --color-primary-50: theme('colors.red.50');
@@ -317,6 +342,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-main;
   }
 }
