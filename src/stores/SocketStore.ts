@@ -20,7 +20,6 @@ export class SocketStore {
   }
 
   connectToSocketServer = (currentUser: User) => {
-    console.log(SOCKET_SERVER_URL);
     this.socket = io(SOCKET_SERVER_URL, { query: { userId: currentUser?.uuid } });
   };
 

@@ -87,13 +87,10 @@ const UserStatusModal = () => {
   };
 
   const handleAddReaction = (emojiId: string) => {
-    console.log(emojiId);
     handleCloseEmojiPicker();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setCurrentUserStatus((prev: any) => ({ ...prev, emoji: emojiId }));
   };
-
-  console.log(currentUserStatus?.text);
 
   return (
     <Modal title="Set a status">

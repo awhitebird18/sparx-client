@@ -89,8 +89,6 @@ const Message = ({
     handleCloseEmojiPicker();
   };
 
-  console.log(showEmojiPicker);
-
   return (
     <>
       <ContextMenu>

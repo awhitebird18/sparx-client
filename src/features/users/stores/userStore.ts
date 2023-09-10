@@ -164,7 +164,6 @@ export class UserStore {
     this.setIsLoading(true);
 
     const users = await usersApi.getUsers();
-    console.log(users);
 
     this.setUsers(users);
 
