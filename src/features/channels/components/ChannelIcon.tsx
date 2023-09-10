@@ -1,6 +1,4 @@
 import { Hash } from 'react-bootstrap-icons';
-import { API_URL } from '@/config/api';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 
@@ -20,7 +18,7 @@ const ChannelIcon = ({ size = 40, imageUrl, isSelected, textPrimary, userId }: U
     style={{ height: `${size}px`, width: `${size}px ` }}
   >
     <AvatarImage
-      src={`${API_URL}${imageUrl}`}
+      src={imageUrl}
       style={{ height: `${size}px`, width: `${size}px` }}
       className={`rounded-${size > 30 ? 'lg' : 'sm'}`}
     />

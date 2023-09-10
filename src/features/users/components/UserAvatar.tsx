@@ -1,8 +1,5 @@
 import { PersonFill } from 'react-bootstrap-icons';
 import { observer } from 'mobx-react-lite';
-
-import { API_URL } from '@/config/api';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
 import { UserStatus } from '../enums';
@@ -29,7 +26,7 @@ const UserAvatar = ({
       style={{ height: `${size}px`, width: `${size}px` }}
     >
       <AvatarImage
-        src={`${API_URL}${profileImage}`}
+        src={profileImage}
         style={{ height: `${size}px`, width: `${size}px` }}
         className={`${rounded} border border-border`}
       />
