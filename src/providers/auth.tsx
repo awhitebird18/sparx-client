@@ -83,6 +83,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
 
       const data = await authApi.verify();
+      console.log(data);
 
       setCurrentUser(data.currentUser);
       connectToSocketServer(data.currentUser);
@@ -91,7 +92,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSections(data.sections);
       setSubscribedChannels(data.channels);
       setUsers(data.users);
-      setUserStatuses(data.userStatuses);
+      setUserStatuses(data?.userStatuses);
     } finally {
       setLoading(false);
     }
