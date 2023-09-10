@@ -19,7 +19,6 @@ const EmojiPicker = ({ onClickAway, position, onEmojiClick }: EmojiPickerProps) 
         <Picker
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onEmojiSelect={(emojiObj: any) => {
-            console.log('derpeeee');
             onEmojiClick(emojiObj.id);
           }}
           set="apple"
@@ -35,7 +34,6 @@ const EmojiPicker = ({ onClickAway, position, onEmojiClick }: EmojiPickerProps) 
           className="fixed top-0 left-0 w-screen h-screen z-20"
           onClick={() => {
             onClickAway();
-            console.log('derp');
           }}
         />,
         document.body,

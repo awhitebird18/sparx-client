@@ -83,7 +83,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
 
       const data = await authApi.verify();
-      console.log(data);
 
       setCurrentUser(data.currentUser);
       connectToSocketServer(data.currentUser);
