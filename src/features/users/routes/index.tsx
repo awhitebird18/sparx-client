@@ -1,6 +1,6 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import Users from "../components/Users";
+import Users from '../components/Users';
 
 const UserRoutes = () => {
   return (
