@@ -3,7 +3,6 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import MainLayout from '@/components/layout/MainLayout';
-import VerificationSuccess from '@/features/auth/components/VerificationSuccess';
 import ThreadRoutes from '@/features/threads/routes';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -37,7 +36,6 @@ export const protectedRoutes = [
     element: <App />,
     children: [
       { path: 'users/*', element: <UserRoutes /> },
-      { path: 'verification-success', element: <VerificationSuccess /> },
       { path: 'channels/*', element: <ChannelRoutes /> },
       { path: 'mentions/*', element: <MentionRoutes /> },
       { path: 'drafts/*', element: <DraftRoutes /> },
