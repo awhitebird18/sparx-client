@@ -52,6 +52,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       verifyAndLoginUser();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 

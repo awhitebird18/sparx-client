@@ -12,7 +12,9 @@ export const changePassword = async (changePasswordDto: {
     const { data } = await axios.post('/auth/change-password', changePasswordDto);
 
     stores.notificationStore.addNotification({
-      title: 'Password change successful!',
+      title: 'Success!',
+      description:
+        "Your password has been changed successfully, and you've been logged in automatically. Please ensure you remember your new password for future logins.",
       type: NotificationType.SUCCESS,
       show: true,
     });
@@ -20,7 +22,9 @@ export const changePassword = async (changePasswordDto: {
     return data;
   } catch (err) {
     stores.notificationStore.addNotification({
-      title: 'Something went wrong!',
+      title: 'Error!',
+      description:
+        'We encountered an issue changing your password. Please try again or contact support if the problem persists.',
       type: NotificationType.ERROR,
       show: true,
     });

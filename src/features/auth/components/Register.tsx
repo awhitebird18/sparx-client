@@ -51,6 +51,7 @@ const RegisterPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
@@ -64,6 +65,7 @@ const RegisterPage: React.FC = () => {
 
     try {
       await registerUser(data);
+      reset();
     } catch (error) {
       console.error(error);
       setIsLoading(false);
