@@ -11,9 +11,11 @@ import {
 import { useAuth } from '@/providers/auth';
 import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
+import { ChannelType } from '@/features/channels/enums';
 
 const CompanyDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
+  const { findSectionByChannelType } = useStore('sectionStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +24,12 @@ const CompanyDropdown = () => {
 
   const handleOpenModal = ({ type }: { type: ModalName }) => {
     setActiveModal({ type, payload: {} });
+  };
+
+  const handleCreateChannel = () => {
+    const section = findSectionByChannelType(ChannelType.CHANNEL);
+    if (!section) return;
+    setActiveModal({ type: 'CreateChannelModal', payload: { id: section.uuid } });
   };
 
   return (
@@ -47,9 +55,7 @@ const CompanyDropdown = () => {
         }}
       >
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleOpenModal({ type: 'CreateChannelModal' })}>
-            Create Channel
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleCreateChannel}>Create Channel</DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleOpenModal({ type: 'InviteUserModal' })}>
             Invite people to Sparx
           </DropdownMenuItem>

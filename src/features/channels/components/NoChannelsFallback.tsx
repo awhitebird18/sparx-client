@@ -1,11 +1,15 @@
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
+import { ChannelType } from '../enums';
 
 const NoChannelsFallback = () => {
   const { setActiveModal } = useStore('modalStore');
+  const { findSectionByChannelType } = useStore('sectionStore');
 
   const handleClickAddChannel = () => {
-    setActiveModal({ type: 'CreateChannelModal', payload: null });
+    const section = findSectionByChannelType(ChannelType.CHANNEL);
+    if (!section) return;
+    setActiveModal({ type: 'CreateChannelModal', payload: { id: section.uuid } });
   };
   return (
     <div className="w-full flex flex-col justify-center items-center mt-16">
