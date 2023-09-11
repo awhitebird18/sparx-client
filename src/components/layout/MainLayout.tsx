@@ -17,7 +17,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const { currentUser } = useStore('userStore');
 
   if (!currentUser) {
-    return <Navigate to="/auth/login" />;
+    return <Navigate to="/login" />;
   }
 
   return (

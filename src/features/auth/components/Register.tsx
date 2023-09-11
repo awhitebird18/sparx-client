@@ -80,7 +80,7 @@ const RegisterPage: React.FC = () => {
           <h2 className="mt-6 text-center text-3xl font-extrabold">Register for an account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">Already have an account?</p>
-            <Link to="/auth/login" className="font-medium text-primary">
+            <Link to="/login" className="font-medium text-primary">
               Login here
             </Link>
           </div>
