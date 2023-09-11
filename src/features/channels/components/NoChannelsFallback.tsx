@@ -13,10 +13,10 @@ const NoChannelsFallback = () => {
     setActiveModal({ type: 'CreateChannelModal', payload: { id: section.uuid } });
   };
   return (
-    <div className="w-full flex flex-col justify-center items-center mt-8">
+    <div className="w-full flex flex-col justify-center items-center mt-16 ">
       <Tv size={96} className="mb-2" />
-      <p className="text-xl font-bold mb-4">No results</p>
-      <p className="text-sm mb-6">You may want to try adjusting your filters. </p>
+      <p className="text-xl font-bold mb-4">No Channels Found</p>
+      <p className="text-sm mb-4">You may want to try adjusting your filters.</p>
       <Button onClick={handleClickAddChannel}>Create channel</Button>
     </div>
   );

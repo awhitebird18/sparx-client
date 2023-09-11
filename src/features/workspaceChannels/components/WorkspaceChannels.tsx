@@ -187,6 +187,8 @@ const WorkspaceChannels: React.FC = () => {
     </Button>
   );
 
+  console.log(isLoading, sortedWorkspaceChannels);
+
   return (
     <ContentLayout title="Channels" headerComponent={headerBtn} disablePadding>
       <div className="p-3">
@@ -297,76 +299,81 @@ const WorkspaceChannels: React.FC = () => {
           </DropdownMenu>
         </div>
       </div>
-      <ul className=" flex-1 overflow-auto">
-        {sortedWorkspaceChannels.map((channel: Channel) => {
-          const channelFound = subscribedChannels.find((el: Channel) => el.uuid === channel.uuid);
+      {!isLoading ? (
+        <ul className=" flex-1 overflow-auto">
+          {sortedWorkspaceChannels.length ? (
+            sortedWorkspaceChannels.map((channel: Channel) => {
+              const channelFound = subscribedChannels.find(
+                (el: Channel) => el.uuid === channel.uuid,
+              );
 
-          const isSubscribed = !!channelFound;
-          const userCount = findChannelUserCountByChannelUuid(channel.uuid);
+              const isSubscribed = !!channelFound;
+              const userCount = findChannelUserCountByChannelUuid(channel.uuid);
 
-          return (
-            <li
-              key={channel.uuid}
-              className="flex justify-between items-center border-b border-border p-5 cursor-pointer group hover:bg-hover"
-              onClick={() => handleViewChannel(channel)}
-            >
-              <div>
-                <p className="font-semibold">{channel.name}</p>
-                <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
-                  {isSubscribed ? (
-                    <span className="text-emerald-500 flex items-center gap-1">
-                      <Check className="text-lg mt-1" /> <span>Joined</span>
-                    </span>
-                  ) : null}
+              return (
+                <li
+                  key={channel.uuid}
+                  className="flex justify-between items-center border-b border-border p-5 cursor-pointer group hover:bg-hover"
+                  onClick={() => handleViewChannel(channel)}
+                >
+                  <div>
+                    <p className="font-semibold">{channel.name}</p>
+                    <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
+                      {isSubscribed ? (
+                        <span className="text-emerald-500 flex items-center gap-1">
+                          <Check className="text-lg mt-1" /> <span>Joined</span>
+                        </span>
+                      ) : null}
 
-                  {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
-                  {userCount ? (
-                    <span className="flex items-center gap-1">
-                      {userCount} member{userCount === 1 ? '' : 's'}
-                    </span>
-                  ) : null}
-                  {userCount && channel.description ? <Dot className="text-lg" /> : null}
-                  {channel.description && (
-                    <span className="flex items-center gap-1">{channel.description}</span>
-                  )}
-                </p>
-              </div>
-              <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
-                {isSubscribed ? (
-                  <Button
-                    variant="secondary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
-                    }}
-                    className="py-1 px-2 font-semibold rounded w-20"
-                  >
-                    {ChannelActions.LEAVE}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
-                    }}
-                    className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
-                  >
-                    {ChannelActions.JOIN}
-                  </Button>
-                )}
-              </div>
-            </li>
-          );
-        })}
-        {isLoading && (
-          <div className="flex justify-center">
-            <Spinner />
-          </div>
-        )}
-
-        {!isLoading && !sortedWorkspaceChannels.length ? <NoChannelsFallback /> : null}
-        <div ref={setLoader} />
-      </ul>
+                      {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
+                      {userCount ? (
+                        <span className="flex items-center gap-1">
+                          {userCount} member{userCount === 1 ? '' : 's'}
+                        </span>
+                      ) : null}
+                      {userCount && channel.description ? <Dot className="text-lg" /> : null}
+                      {channel.description && (
+                        <span className="flex items-center gap-1">{channel.description}</span>
+                      )}
+                    </p>
+                  </div>
+                  <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
+                    {isSubscribed ? (
+                      <Button
+                        variant="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
+                        }}
+                        className="py-1 px-2 font-semibold rounded w-20"
+                      >
+                        {ChannelActions.LEAVE}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJoinLeaveChannel(channel.uuid, ChannelActions.JOIN);
+                        }}
+                        className="py-1 px-2 font-semibold rounded shadow-md  bg-emerald-500 hover:bg-emerald-600 w-20 text-white"
+                      >
+                        {ChannelActions.JOIN}
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              );
+            })
+          ) : (
+            <NoChannelsFallback />
+          )}
+        </ul>
+      ) : (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      )}
+      <div ref={setLoader} />
     </ContentLayout>
   );
 };

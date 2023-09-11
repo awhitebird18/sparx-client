@@ -158,6 +158,7 @@ export class WorkspaceChannelStore {
     this.setFilterSubscribed(null);
     this.setPage(1);
     this.setSortBy(SortOptions.ATOZ);
+    this.setIsLoading(true);
   };
 
   fetchWorkspaceChannelsApi = async (page: number, pageSize?: number) => {
