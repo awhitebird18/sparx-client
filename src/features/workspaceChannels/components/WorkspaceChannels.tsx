@@ -104,7 +104,9 @@ const WorkspaceChannels: React.FC = () => {
   };
 
   const handleClickCreateChannel = () => {
-    setActiveModal({ type: 'CreateChannelModal', payload: null });
+    const section = findSectionByChannelType(ChannelType.CHANNEL);
+    if (!section) return;
+    setActiveModal({ type: 'CreateChannelModal', payload: { id: section.uuid } });
   };
 
   const handleJoinLeaveChannel = async (channelUuid: string, action: ChannelActions) => {

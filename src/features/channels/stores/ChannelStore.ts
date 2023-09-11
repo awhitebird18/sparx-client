@@ -115,6 +115,7 @@ export class ChannelStore {
 
   createDirectChannelApi = async (channelUserIds: string[]) => {
     const channel = await channelApi.createDirectChannel(channelUserIds);
+
     this.addSubscribedChannel(channel);
     return channel;
   };

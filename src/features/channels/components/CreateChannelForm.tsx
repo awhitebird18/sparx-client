@@ -29,6 +29,8 @@ const formSchema = z.object({
 const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
   const { createChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
+  const { addChannelUuidToSection, findSectionByChannelType } = useStore('sectionStore');
+  const { setSelectedId } = useStore('sidebarStore');
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,6 +47,14 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
       isPrivate: values.isPrivate,
     };
     const channel = await createChannelApi(channelData, sectionId);
+
+    const defaultSection = findSectionByChannelType(ChannelType.CHANNEL);
+
+    if (!channel || !defaultSection) return;
+
+    addChannelUuidToSection(channel.uuid, defaultSection.uuid);
+
+    setSelectedId(channel.uuid);
     handleCloseModal();
     navigate(`/app/${channel.uuid}`);
   }

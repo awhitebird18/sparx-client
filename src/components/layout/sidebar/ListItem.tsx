@@ -178,21 +178,29 @@ const ListItem = ({
           <ContextMenuSubContent className="w-48 ">
             <ContextMenuLabel className="text-xs text-muted-foreground">Move to..</ContextMenuLabel>
             <div className="max-h-48 overflow-auto">
-              {sections.map((section: Section) => (
-                <ContextMenuItem
-                  key={section.uuid}
-                  onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
-                >
-                  {section.name}
-                </ContextMenuItem>
-              ))}
+              {sections
+                .filter(
+                  (section: Section) => section.type === type || section.type === ChannelType.ANY,
+                )
+                .map((section: Section) => (
+                  <ContextMenuItem
+                    key={section.uuid}
+                    onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
+                  >
+                    {section.name}
+                  </ContextMenuItem>
+                ))}
             </div>
           </ContextMenuSubContent>
         </ContextMenuSub>
-        <ContextMenuSeparator />
-        <ContextMenuItem inset className="text-rose-500" onClick={handleLeaveChannel}>
-          Leave Channel
-        </ContextMenuItem>
+        {type !== ChannelType.DIRECT && (
+          <>
+            <ContextMenuSeparator />
+            <ContextMenuItem inset className="text-rose-500" onClick={handleLeaveChannel}>
+              Leave Channel
+            </ContextMenuItem>
+          </>
+        )}
       </ContextMenuContent>
     </ContextMenu>
   );
