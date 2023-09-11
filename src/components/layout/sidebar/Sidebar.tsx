@@ -9,7 +9,7 @@ import { Section as ChannelType } from '@/features/sections/types';
 import Section from './Section';
 import CompanyDropdown from '../topbar/CompanyDropdown';
 import { useEffect } from 'react';
-import { ChatLeftDots, Person, Tv } from 'react-bootstrap-icons';
+import { ChatSquareDots, Person, Tv } from 'react-bootstrap-icons';
 
 const Divider = () => <div className="w-100 mx-4 border-border border-b" />;
 
@@ -33,7 +33,7 @@ const Sidebar = () => {
         <div className="p-2">
           <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
           <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
-          <ListItem id="threads" title="Threads" primary icon={<ChatLeftDots size={15} />} />
+          <ListItem id="threads" title="Threads" primary icon={<ChatSquareDots size={15} />} />
         </div>
         <Divider />
         <div className="p-2 overflow-auto flex flex-col">
