@@ -18,6 +18,7 @@ import { UserStatus } from '@/features/users/enums';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
 import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -41,6 +42,8 @@ const UserDropdown: React.FC = () => {
 
   if (!currentUser) return;
 
+  const transformedImage = transformCloudinaryUrl(currentUser.profileImage, 60, 60);
+
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <Tooltip>
@@ -55,7 +58,7 @@ const UserDropdown: React.FC = () => {
               <UserAvatar
                 size={31}
                 userId={currentUser.uuid}
-                profileImage={currentUser.profileImage}
+                profileImage={transformedImage}
                 showStatus
               />
             </DropdownMenuTrigger>
@@ -79,7 +82,7 @@ const UserDropdown: React.FC = () => {
         }}
       >
         <div className="flex gap-2 overflow-hidden">
-          <UserAvatar size={50} userId={currentUser.uuid} profileImage={currentUser.profileImage} />
+          <UserAvatar size={50} userId={currentUser.uuid} profileImage={transformedImage} />
           <div style={{ height: '40px' }} className="flex flex-col justify-between w-full">
             <div className="w-full">
               <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />

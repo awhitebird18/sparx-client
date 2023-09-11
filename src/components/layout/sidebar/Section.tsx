@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { Section } from '@/features/sections/types';
 import { Channel } from '@/features/channels/types';
 import { ChannelType } from '@/features/channels/enums';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 interface SectionProps {
   section: Section;
@@ -207,6 +208,10 @@ const Section = ({ section, index }: SectionProps) => {
                 channelIcon = user.profileImage;
                 userId = user.uuid;
                 userStatus = user.status;
+              }
+
+              if (channelIcon) {
+                channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
               }
 
               return (
