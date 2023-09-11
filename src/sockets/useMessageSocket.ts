@@ -20,7 +20,7 @@ const useMessageSocket = () => {
 
     return () => {
       subscribedChannels.forEach((channel) => {
-        emitSocket('unsubscribe', channel.uuid);
+        emitSocket('leaveChannel', channel.uuid);
       });
     };
   }, [emitSocket, subscribedChannels]);

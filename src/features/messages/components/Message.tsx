@@ -42,7 +42,7 @@ const Message = ({
   const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
-  const { findUserByUuid } = useStore('userStore');
+  const { findUserByUuid, currentUser } = useStore('userStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
@@ -196,14 +196,16 @@ const Message = ({
             </ContextMenuItem>
           </ContextMenuGroup>
           <ContextMenuSeparator />
-          <ContextMenuGroup>
-            <ContextMenuItem className="py-2 px-4" onClick={handleEditMessage}>
-              Edit Message
-            </ContextMenuItem>
-            <ContextMenuItem className="text-rose-500 py-2 px-4" onClick={handleDeleteMessage}>
-              Delete Message
-            </ContextMenuItem>
-          </ContextMenuGroup>
+          {currentUser?.uuid === message.userId && (
+            <ContextMenuGroup>
+              <ContextMenuItem className="py-2 px-4" onClick={handleEditMessage}>
+                Edit Message
+              </ContextMenuItem>
+              <ContextMenuItem className="text-rose-500 py-2 px-4" onClick={handleDeleteMessage}>
+                Delete Message
+              </ContextMenuItem>
+            </ContextMenuGroup>
+          )}
         </ContextMenuContent>
       </ContextMenu>
 
