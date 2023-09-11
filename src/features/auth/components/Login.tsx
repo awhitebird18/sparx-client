@@ -29,7 +29,7 @@ const Login: React.FC = () => {
           <h2 className="mt-6 text-center text-3xl font-extrabold">Sign in to your account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">or</p>
-            <Link to="/auth/register" className="font-medium text-primary">
+            <Link to="/register" className="font-medium text-primary">
               register your free account
             </Link>
           </div>
@@ -77,7 +77,7 @@ const Login: React.FC = () => {
 
               <div className="flex items-center justify-end mb-6 gap-2 text-sm">
                 Forgot your password?
-                <Link to="/auth/forgot-password" className="font-medium text-primary">
+                <Link to="/forgot-password" className="font-medium text-primary">
                   Get help signing in
                 </Link>
               </div>

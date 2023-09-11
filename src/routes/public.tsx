@@ -4,7 +4,6 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import Login from '@/features/auth/components/Login';
 import Register from '@/features/auth/components/Register';
-import VerificationSuccess from '@/features/auth/components/VerificationSuccess';
 import ForgotPassword from '@/features/auth/components/ForgotPassword';
 import ChangePassword from '@/features/auth/components/ChangePassword';
 
@@ -27,7 +26,6 @@ export const publicRoutes = [
       { path: 'login', element: <Login /> },
       { path: 'forgot-password', element: <ForgotPassword /> },
       { path: 'change-password', element: <ChangePassword /> },
-      { path: 'verification-success', element: <VerificationSuccess /> },
       { path: '*', element: <Navigate to="/login" /> },
     ],
   },
