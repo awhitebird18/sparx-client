@@ -66,7 +66,11 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
   };
 
   return (
-    <div className="options-panel hidden absolute -top-5 right-5 rounded-md bg-background shadow-sm shadow-black/70">
+    <div
+      className={`options-panel flex absolute -top-5 right-5 rounded-md bg-background shadow-sm shadow-black/70 ${
+        !showEmojiPicker && 'hidden'
+      }`}
+    >
       <div className="relative">
         <Button
           ref={emojiButtonRef}
@@ -92,18 +96,20 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
         </Button>
       )}
       {message.userId === currentUser?.uuid && (
-        <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleEditMessage}>
-          <Pencil />
-        </Button>
+        <>
+          <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleEditMessage}>
+            <Pencil />
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="p-0 w-10 h-10 text-rose-500"
+            onClick={() => handleOpenModal({ type: 'DeleteMessageModal', payload: { message } })}
+          >
+            <Trash />
+          </Button>
+        </>
       )}
-      <Button
-        size="icon"
-        variant="ghost"
-        className="p-0 w-10 h-10 text-rose-500"
-        onClick={() => handleOpenModal({ type: 'DeleteMessageModal', payload: { message } })}
-      >
-        <Trash />
-      </Button>
     </div>
   );
 };
