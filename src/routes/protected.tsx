@@ -3,7 +3,6 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import MainLayout from '@/components/layout/MainLayout';
-import ThreadRoutes from '@/features/threads/routes';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { navigateToLastPage } from '@/utils/navigateToLastPage';
@@ -13,6 +12,7 @@ const ChannelRoutes = lazy(() => import('@/features/channels/routes'));
 const MentionRoutes = lazy(() => import('@/features/mentions/routes'));
 const DraftRoutes = lazy(() => import('@/features/drafts/routes'));
 const ChatroomRoutes = lazy(() => import('@/features/chatroom/routes'));
+const ThreadRoutes = lazy(() => import('@/features/threads/routes'));
 
 const App = observer(() => {
   const { currentUser } = useStore('userStore');
