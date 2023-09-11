@@ -187,8 +187,6 @@ const WorkspaceChannels: React.FC = () => {
     </Button>
   );
 
-  console.log(isLoading, sortedWorkspaceChannels);
-
   return (
     <ContentLayout title="Channels" headerComponent={headerBtn} disablePadding>
       <div className="p-3">
