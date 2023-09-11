@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/Button';
 import ChannelIcon from './ChannelIcon';
 import { useEffect, useRef, useState } from 'react';
 import { User } from '@/features/users/types';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { getChannelByUuid, fetchChannelUserIdsApi, updateChannelApi } = useStore('channelStore');
@@ -61,6 +62,10 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     const user = findUserByName(channel.name);
     if (!user) return;
     channelIcon = user.profileImage;
+  }
+
+  if (channelIcon) {
+    channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
   }
 
   return (

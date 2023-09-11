@@ -4,6 +4,7 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Pencil } from 'react-bootstrap-icons';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 import {
   Form,
@@ -85,12 +86,14 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   if (!user || !currentUser) return;
 
+  const transformedImage = transformCloudinaryUrl(user.profileImage, 120, 120);
+
   return (
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
         <div className="flex gap-10 mt-4">
           <div className="flex flex-col items-center gap-4">
-            <UserAvatar size={165} userId={user.uuid} profileImage={user.profileImage} />
+            <UserAvatar size={165} userId={user.uuid} profileImage={transformedImage} />
             {user.uuid === currentUser.uuid && (
               <Button
                 variant="ghost"

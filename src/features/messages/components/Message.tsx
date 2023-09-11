@@ -25,6 +25,7 @@ import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 
 import { Message } from '../types';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const Message = ({
   message,
@@ -89,6 +90,8 @@ const Message = ({
     handleCloseEmojiPicker();
   };
 
+  const transformedImage = transformCloudinaryUrl(user.profileImage, 80, 80);
+
   return (
     <>
       <ContextMenu>
@@ -102,11 +105,7 @@ const Message = ({
               {showUser ? (
                 <HoverCard>
                   <HoverCardTrigger>
-                    <UserAvatar
-                      size={38}
-                      userId={message.userId}
-                      profileImage={user.profileImage}
-                    />
+                    <UserAvatar size={38} userId={message.userId} profileImage={transformedImage} />
                   </HoverCardTrigger>
 
                   <HoverCardContent align="start" side="top" className="w-fit">
@@ -115,7 +114,7 @@ const Message = ({
                         <UserAvatar
                           size={80}
                           userId={message.userId}
-                          profileImage={user.profileImage}
+                          profileImage={transformedImage}
                         />
                         <div className="flex flex-col gap-1">
                           <div className="flex gap-1">
