@@ -155,6 +155,8 @@ export class UserStore {
     const user = await usersApi.updateUser(updatedUser);
 
     this.updateCurrentUser(user);
+
+    return user;
   };
 
   uploadProfileImageApi = async (profileImage: string) => {

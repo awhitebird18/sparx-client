@@ -55,8 +55,9 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   }, [currentUser, findUserByUuid, userId]);
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
-    await updateUserApi(values);
+    const updatedUser = await updateUserApi(values);
     setIsEditing(false);
+    setUser(updatedUser);
   }
 
   const handleEditForm = () => {
