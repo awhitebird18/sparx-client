@@ -30,6 +30,7 @@ export class ChannelStore {
       updateSubscribedChannel: action,
       setCurrentChannelUuid: action,
       setSubscribedChannels: action,
+      removeSubscribedChannel: action,
       addSubscribedChannel: action,
       setIsLoading: action,
       createChannelApi: action,
@@ -37,7 +38,12 @@ export class ChannelStore {
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
       leaveChannelApi: action,
+      filterTempChannels: action,
       fetchChannelUserIdsApi: action,
+      findTempChannel: action,
+      inviteUsersToChannelApi: action,
+      createDirectChannelApi: action,
+      removeUserFromChannelApi: action,
     });
   }
 

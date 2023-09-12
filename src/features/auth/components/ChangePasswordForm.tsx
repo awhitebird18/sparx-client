@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 type FormData = {
   password: string;
@@ -17,11 +17,12 @@ const registrationSchema = z
   .object({
     password: z
       .string()
+      .min(1, 'Password is required.')
       .refine(
         (value) => passwordRegex.test(value),
         'Password must contain at least one lowercase, upper, and number.',
       ),
-    confirmPassword: z.string(),
+    confirmPassword: z.string().min(1, 'Confirm password is required.'),
   })
   .refine((schema) => schema.password === schema.confirmPassword, {
     message: 'Passwords must match.',
@@ -36,6 +37,7 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
@@ -43,24 +45,25 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const submit = async (data: FormData) => {
-    setIsLoading(true);
-    await onSubmit(data);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      await onSubmit(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      reset();
+      setIsLoading(false);
+    }
   };
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={handleSubmit(submit)}>
+    <form className="flex flex-col gap-8" onSubmit={handleSubmit(submit)}>
       <div className="relative">
         <label htmlFor="password" className="block text-sm font-medium">
           Password
         </label>
-        <div className="mt-1">
-          <Input
-            {...register('password', { required: 'Password is required.' })}
-            type="password"
-            placeholder="Password"
-          />
-        </div>
+
+        <PasswordInput {...register('password')} placeholder="Password" />
         {errors.password && <ErrorLabel>{errors.password.message}</ErrorLabel>}
       </div>
 
@@ -68,13 +71,9 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
         <label htmlFor="confirmPassword" className="block text-sm font-medium">
           Confirm Password
         </label>
-        <div className="mt-1">
-          <Input
-            {...register('confirmPassword', { required: 'Confirm Password is required.' })}
-            type="password"
-            placeholder="Confirm Password"
-          />
-        </div>
+
+        <PasswordInput {...register('confirmPassword')} placeholder="Confirm Password" />
+
         {errors.confirmPassword && <ErrorLabel>{errors.confirmPassword.message}</ErrorLabel>}
       </div>
 
@@ -88,5 +87,5 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
 export default ChangePasswordForm;
 
 const ErrorLabel = ({ children }: { children?: string }) => (
-  <p className="absolute bottom-1.5 left-1 mt-1 text-red-500 text-xs">{children}</p>
+  <p className="absolute -bottom-5 left-1 mt-1 text-red-500 text-xs">{children}</p>
 );

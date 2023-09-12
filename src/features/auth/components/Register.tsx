@@ -9,6 +9,7 @@ import { useAuth } from '@/providers/auth';
 import { Input } from '@/components/ui/Input';
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/Button';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 type FormData = {
   email: string;
@@ -75,7 +76,7 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-zinc-900">
       <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
@@ -139,9 +140,8 @@ const RegisterPage: React.FC = () => {
                   Password
                 </label>
                 <div className="mt-1">
-                  <Input
+                  <PasswordInput
                     {...register('password', { required: 'Password is required.' })}
-                    type="password"
                     placeholder="Password"
                   />
                 </div>
@@ -153,9 +153,8 @@ const RegisterPage: React.FC = () => {
                   Confirm Password
                 </label>
                 <div className="mt-1">
-                  <Input
+                  <PasswordInput
                     {...register('confirmPassword', { required: 'Confirm Password is required.' })}
-                    type="password"
                     placeholder="Confirm Password"
                   />
                 </div>

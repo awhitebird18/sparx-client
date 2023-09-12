@@ -17,7 +17,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
   ContextMenuSeparator,
-  ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
 import { ChannelType } from '@/features/channels/enums';
@@ -163,16 +162,6 @@ const ListItem = ({
           View channel details
         </ContextMenuItem>
 
-        <ContextMenuSub>
-          <ContextMenuSubTrigger inset>Copy</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <ContextMenuItem>Copy name</ContextMenuItem>
-            <ContextMenuItem>Copy link</ContextMenuItem>
-          </ContextMenuSubContent>
-        </ContextMenuSub>
-        <ContextMenuSeparator />
-        <ContextMenuCheckboxItem checked>Mute channel</ContextMenuCheckboxItem>
-        <ContextMenuSeparator />
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Move channel</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48 ">

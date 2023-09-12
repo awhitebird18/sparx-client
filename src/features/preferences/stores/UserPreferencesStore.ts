@@ -1,4 +1,4 @@
-import { makeObservable, observable, reaction } from 'mobx';
+import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { NotificationType, PrimaryColors, Theme } from '../enums';
 import { getValidPrimaryColor } from '@/utils/getValidPrimaryColor';
@@ -9,15 +9,22 @@ import { primaryColors } from '@/utils/primaryColors';
 import storage from '@/utils/storage';
 
 export class UserPreferencesStore {
-  primaryColor: PrimaryColors;
-  notificationType: NotificationType;
-  theme: Theme;
+  primaryColor: PrimaryColors | undefined;
+  notificationType: NotificationType | undefined;
+  theme: Theme | undefined;
 
   constructor() {
     makeObservable(this, {
       primaryColor: observable,
       theme: observable,
       notificationType: observable,
+      setPrimaryColor: action,
+      setTheme: action,
+      setNotificationType: action,
+      updateThemeApi: action,
+      updatePrimaryColorApi: action,
+      updateNotificationTypeApi: action,
+      setInitialPreferences: action,
     });
 
     reaction(
@@ -36,6 +43,7 @@ export class UserPreferencesStore {
     reaction(
       () => this.primaryColor,
       (newPrimaryColor) => {
+        if (!newPrimaryColor) return;
         // Remove primary color class from body
         for (let i = 0; i < primaryColors.length; i++) {
           document.body.classList.remove(primaryColors[i]);
@@ -45,16 +53,16 @@ export class UserPreferencesStore {
       },
     );
 
-    this.primaryColor = getValidPrimaryColor(storage.getPrimaryColor());
-    this.theme = getValidTheme(storage.getTheme());
-    this.notificationType = NotificationType.DIRECT;
+    this.setNotificationType(NotificationType.DIRECT);
+    this.setPrimaryColor(getValidPrimaryColor(storage.getPrimaryColor()));
+    this.setTheme(getValidTheme(storage.getTheme()));
   }
 
-  setPrimaryColor = async (color: PrimaryColors) => {
+  setPrimaryColor = (color: PrimaryColors) => {
     this.primaryColor = color;
   };
 
-  setTheme = async (theme: Theme) => {
+  setTheme = (theme: Theme) => {
     this.theme = theme;
   };
 

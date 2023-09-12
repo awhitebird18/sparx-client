@@ -182,7 +182,7 @@ const WorkspaceChannels: React.FC = () => {
   );
 
   const headerBtn = (
-    <Button onClick={handleClickCreateChannel} size="sm" variant="default">
+    <Button onClick={handleClickCreateChannel} size="sm">
       Create Channel
     </Button>
   );
@@ -257,7 +257,7 @@ const WorkspaceChannels: React.FC = () => {
             </div>
           </div>
           {(filterChannelVisibility || filterBySearchValue || filterSubscribed) && (
-            <Button size="sm" onClick={handleClearFilters} variant="secondary" className="w-28">
+            <Button size="sm" onClick={handleClearFilters} variant="secondary" className="w-36">
               Clear Filters
             </Button>
           )}

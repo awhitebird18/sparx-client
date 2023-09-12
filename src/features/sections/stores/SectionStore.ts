@@ -28,8 +28,12 @@ export class SectionStore {
       createSectionApi: action,
       updateSectionApi: action,
       removeSectionApi: action,
+      moveSectionApi: action,
       fetchsectionsApi: action,
+      findSectionByChannelType: action,
+      findSectionByUuid: action,
       addChannelUuidToSection: action,
+      updateChannelSectionApi: action,
       removeChannelUuidFromSection: action,
       directChannelSectionId: computed,
     });

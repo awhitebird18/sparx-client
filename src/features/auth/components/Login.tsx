@@ -6,6 +6,7 @@ import { useAuth } from '@/providers/auth';
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-zinc-900">
       <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
@@ -58,17 +59,15 @@ const Login: React.FC = () => {
                 <label htmlFor="password" className="block text-sm font-medium">
                   Password
                 </label>
-                <div className="mt-1">
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+
+                <PasswordInput
+                  id="password"
+                  name="password"
+                  required
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
 
               <Button type="submit" className="mt-4">
