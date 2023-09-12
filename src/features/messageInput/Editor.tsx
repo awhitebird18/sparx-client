@@ -26,7 +26,7 @@ type EditorProps = {
   placeholder?: string;
   config: InitialConfigType;
   onSubmit: (val: string) => void;
-  onChange?: (val: string) => void;
+  onChange?: (editorState: string, textContent: string) => void;
 };
 
 export default function Editor({ placeholder, config, onSubmit, onChange }: EditorProps) {
