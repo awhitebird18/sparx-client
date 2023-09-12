@@ -18,10 +18,6 @@ const Threads = () => {
     fetchUserTheadsApi();
   }, [fetchUserTheadsApi]);
 
-  if (thread?.uuid !== 'derp') {
-    throw Error('Error on threads page!');
-  }
-
   return (
     <div className="flex h-full">
       <ContentLayout title="Threads" disablePadding>
