@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 const useChatroomSocket = () => {
   const { currentUser } = useStore('userStore');
   const { connectSocket } = useStore('socketStore');
-  const { addUserTyping } = useStore('userTypingStore');
+  const { addUserTyping, removeUserTyping } = useStore('userTypingStore');
 
   // User typing
   useEffect(() => {
@@ -15,6 +15,13 @@ const useChatroomSocket = () => {
       addUserTyping(data);
     });
   }, [addUserTyping, connectSocket, currentUser]);
+
+  // Remove user typing
+  useEffect(() => {
+    return connectSocket('stopped-typing', (data: UserTyping) => {
+      removeUserTyping(data.userId);
+    });
+  }, [removeUserTyping, connectSocket, currentUser]);
 
   return null;
 };

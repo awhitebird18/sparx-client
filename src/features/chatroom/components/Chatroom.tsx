@@ -55,15 +55,25 @@ const ChatRoom: React.FC = () => {
       uuid: uuid(),
       createdAt: dayjs(),
     });
-  };
 
-  const handleInputChange = useCallback(() => {
-    emitSocket('typing', {
+    emitSocket('stopped-typing', {
       userId: currentUser?.uuid,
-      username: currentUser?.firstName,
       channelId: currentChannelId,
     });
-  }, [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket]);
+  };
+
+  const handleInputChange = useCallback(
+    (_: string, text: string) => {
+      if (!text) return;
+
+      emitSocket('typing', {
+        userId: currentUser?.uuid,
+        username: currentUser?.firstName,
+        channelId: currentChannelId,
+      });
+    },
+    [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket],
+  );
 
   useLayoutEffect(() => {
     if (!channelId || channelId === currentChannelId) return;
