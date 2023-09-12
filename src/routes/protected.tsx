@@ -8,6 +8,7 @@ import { navigateToLastPage } from '@/utils/navigateToLastPage';
 import { ErrorBoundary } from 'react-error-boundary';
 import ContentErrorFallback from '@/components/ErrorFallback/ContentErrorFallback';
 
+const Home = lazy(() => import('@/components/layout/Home'));
 const UserRoutes = lazy(() => import('@/features/users/routes'));
 const ChannelRoutes = lazy(() => import('@/features/channels/routes'));
 const MentionRoutes = lazy(() => import('@/features/mentions/routes'));
@@ -39,6 +40,7 @@ export const protectedRoutes = [
     path: '/app',
     element: <App />,
     children: [
+      { path: '', element: <Home /> },
       { path: 'users/*', element: <UserRoutes /> },
       { path: 'channels/*', element: <ChannelRoutes /> },
       { path: 'mentions/*', element: <MentionRoutes /> },
