@@ -34,6 +34,9 @@ export class NotificationStore {
       dismissNotification: action,
       setUnreadsCount: action,
       setTitle: action,
+      sendBrowserNotification: action,
+      handleUserClick: action,
+      handleVisibilityChange: action,
     });
 
     this.reactionDisposer = reaction(

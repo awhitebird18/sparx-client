@@ -54,51 +54,54 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
 
   return (
     <div className="flex gap-1 max-w-xl flex-wrap my-3">
-      {message.reactions.map((reaction: Reaction) => {
-        const currentUserReacted = reaction.users?.includes(currentUser.uuid);
-        return (
-          <Tooltip key={reaction.uuid}>
-            <TooltipTrigger asChild>
-              <Button
-                className={`h-fit rounded-2xl w-10 gap-0.5
+      {message.reactions
+        .slice()
+        .sort((a: Reaction, b: Reaction) => a.emojiId.localeCompare(b.emojiId))
+        .map((reaction: Reaction) => {
+          const currentUserReacted = reaction.users?.includes(currentUser.uuid);
+          return (
+            <Tooltip key={reaction.emojiId}>
+              <TooltipTrigger asChild>
+                <Button
+                  className={`h-fit rounded-2xl w-10 gap-0.5
                 ${currentUserReacted && 'bg-primary hover:bg-primary-dark'}
                 `}
-                style={{ padding: '0.15rem 0.2rem' }}
-                size="icon"
-                variant="outline"
-                onClick={() => handleClickReaction(reaction.emojiId)}
-              >
-                <Emoji id={reaction.emojiId} />
-                <span
-                  className={`text-primary text-xs ${
-                    currentUserReacted ? 'text-white' : 'text-primary'
-                  }`}
+                  style={{ padding: '0.15rem 0.2rem' }}
+                  size="icon"
+                  variant="outline"
+                  onClick={() => handleClickReaction(reaction.emojiId)}
                 >
-                  {reaction.users.length}
-                </span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="rounded-xl">
-              <div className="items-center justify-center gap-2 flex flex-col w-52 p-2">
-                <div className="border border-border rounded-xl p-2 bg-secondary">
-                  <Emoji id={reaction.emojiId} size={32} />
-                </div>
+                  <Emoji id={reaction.emojiId} />
+                  <span
+                    className={`text-primary text-xs ${
+                      currentUserReacted ? 'text-white' : 'text-primary'
+                    }`}
+                  >
+                    {reaction.users.length}
+                  </span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="rounded-xl">
+                <div className="items-center justify-center gap-2 flex flex-col w-52 p-2">
+                  <div className="border border-border rounded-xl p-2 bg-secondary">
+                    <Emoji id={reaction.emojiId} size={32} />
+                  </div>
 
-                <div className="text-center text-sm flex justify-center leading-6">
-                  {reaction.users?.map((userId: string, index: number) => {
-                    const user = findUserByUuid(userId);
-                    if (!user) return;
-                    return `${user.firstName} ${user.lastName}${
-                      index >= reaction.users.length - 1 ? '' : ' and '
-                    }`;
-                  })}{' '}
-                  reacted
+                  <div className="text-center text-sm flex justify-center leading-6">
+                    {reaction.users?.map((userId: string, index: number) => {
+                      const user = findUserByUuid(userId);
+                      if (!user) return;
+                      return `${user.firstName} ${user.lastName}${
+                        index >= reaction.users.length - 1 ? '' : ' and '
+                      }`;
+                    })}{' '}
+                    reacted
+                  </div>
                 </div>
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        );
-      })}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
 
       <div className="relative">
         <Button

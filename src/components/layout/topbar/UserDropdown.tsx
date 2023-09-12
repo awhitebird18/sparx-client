@@ -53,7 +53,7 @@ const UserDropdown: React.FC = () => {
               <UserStatusDisplay status={activeUserStatus} />
             </div>
           )}
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
                 size={31}
@@ -110,7 +110,7 @@ const UserDropdown: React.FC = () => {
             >
               {`Set yourself ${userOnlineStatus === UserStatus.ONLINE ? 'as away' : 'online'}`}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.info('pauseNotifications')}>
+            <DropdownMenuItem disabled onClick={() => console.info('pauseNotifications')}>
               Pause notifications
             </DropdownMenuItem>
           </DropdownMenuGroup>

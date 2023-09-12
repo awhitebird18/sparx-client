@@ -11,7 +11,7 @@
     --scrollbarThumb: 230.2 10% 83%;
     --scrollbarTrack: 230.2 10% 88%;
 
-    --hover: 220 11% 97%;
+    --hover: 220 25% 97%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 220 16.3% 46.9%;
@@ -51,7 +51,7 @@
 
     --primary-text: var(--color-primary-700);
     --primary-hover: var(--color-primary-100);
-    --primary-active: var(--color-primary-900);
+    --primary-active: var(--color-primary-950);
 
     --text-neutral: 220 10% 53%;
 
@@ -107,7 +107,7 @@
     --primary-darkest: var(--color-primary-800);
 
     --primary-text: var(--color-primary-100);
-    --primary-active: var(--color-primary-900);
+    --primary-active: var(--color-primary-950);
     --primary-hover: var(--color-primary-100);
 
     --secondary-text: 0 0% 90%;
@@ -134,6 +134,7 @@
     --color-primary-700: theme('colors.slate.700');
     --color-primary-800: theme('colors.slate.800');
     --color-primary-900: theme('colors.slate.900');
+    --color-primary-950: theme('colors.slate.950');
     --color-primary-hover: `${theme('colors.slate.500')}AA`
   }
   .red {
@@ -147,6 +148,7 @@
     --color-primary-700: theme('colors.red.700');
     --color-primary-800: theme('colors.red.800');
     --color-primary-900: theme('colors.red.900');
+    --color-primary-950: theme('colors.red.950');
   }
   .orange {
     --color-primary-50: theme('colors.orange.50');
@@ -159,6 +161,7 @@
     --color-primary-700: theme('colors.orange.700');
     --color-primary-800: theme('colors.orange.800');
     --color-primary-900: theme('colors.orange.900');
+    --color-primary-950: theme('colors.orange.950');
   }
   .amber {
     --color-primary-50: theme('colors.amber.50');
@@ -171,6 +174,7 @@
     --color-primary-700: theme('colors.amber.700');
     --color-primary-800: theme('colors.amber.800');
     --color-primary-900: theme('colors.amber.900');
+    --color-primary-950: theme('colors.amber.950');
   }
   .yellow {
     --color-primary-50: theme('colors.yellow.50');
@@ -183,6 +187,7 @@
     --color-primary-700: theme('colors.yellow.700');
     --color-primary-800: theme('colors.yellow.800');
     --color-primary-900: theme('colors.yellow.900');
+    --color-primary-950: theme('colors.yellow.950');
   }
   .lime {
     --color-primary-50: theme('colors.lime.50');
@@ -195,6 +200,7 @@
     --color-primary-700: theme('colors.lime.700');
     --color-primary-800: theme('colors.lime.800');
     --color-primary-900: theme('colors.lime.900');
+    --color-primary-950: theme('colors.lime.950');
   }
   .green {
     --color-primary-50: theme('colors.green.50');
@@ -207,6 +213,7 @@
     --color-primary-700: theme('colors.green.700');
     --color-primary-800: theme('colors.green.800');
     --color-primary-900: theme('colors.green.900');
+    --color-primary-950: theme('colors.green.950');
   }
   .emerald {
     --color-primary-50: theme('colors.emerald.50');
@@ -219,6 +226,7 @@
     --color-primary-700: theme('colors.emerald.700');
     --color-primary-800: theme('colors.emerald.800');
     --color-primary-900: theme('colors.emerald.900');
+    --color-primary-950: theme('colors.emerald.950');
   }
   .teal {
     --color-primary-50: theme('colors.teal.50');
@@ -231,6 +239,7 @@
     --color-primary-700: theme('colors.teal.700');
     --color-primary-800: theme('colors.teal.800');
     --color-primary-900: theme('colors.teal.900');
+    --color-primary-950: theme('colors.teal.950');
   }
   .cyan {
     --color-primary-50: theme('colors.cyan.50');
@@ -243,6 +252,7 @@
     --color-primary-700: theme('colors.cyan.700');
     --color-primary-800: theme('colors.cyan.800');
     --color-primary-900: theme('colors.cyan.900');
+    --color-primary-950: theme('colors.cyan.950');
   }
   .sky {
     --color-primary-50: theme('colors.sky.50');
@@ -255,6 +265,7 @@
     --color-primary-700: theme('colors.sky.700');
     --color-primary-800: theme('colors.sky.800');
     --color-primary-900: theme('colors.sky.900');
+    --color-primary-950: theme('colors.sky.950');
   }
   .blue {
     --color-primary-50: theme('colors.blue.50');
@@ -267,6 +278,7 @@
     --color-primary-700: theme('colors.blue.700');
     --color-primary-800: theme('colors.blue.800');
     --color-primary-900: theme('colors.blue.900');
+    --color-primary-950: theme('colors.blue.950');
   }
   .indigo {
     --color-primary-50: theme('colors.indigo.50');
@@ -279,6 +291,7 @@
     --color-primary-700: theme('colors.indigo.700');
     --color-primary-800: theme('colors.indigo.800');
     --color-primary-900: theme('colors.indigo.900');
+    --color-primary-950: theme('colors.indigo.950');
   }
   .violet {
     --color-primary-50: theme('colors.violet.50');
@@ -291,6 +304,7 @@
     --color-primary-700: theme('colors.violet.700');
     --color-primary-800: theme('colors.violet.800');
     --color-primary-900: theme('colors.violet.900');
+    --color-primary-950: theme('colors.violet.950');
   }
   .purple {
     --color-primary-50: theme('colors.purple.50');
@@ -303,6 +317,8 @@
     --color-primary-700: theme('colors.purple.700');
     --color-primary-800: theme('colors.purple.800');
     --color-primary-900: theme('colors.purple.900');
+    --color-primary-950: theme('colors.purple.950');
+    --color-primary-950: theme('colors.purple.950');
   }
   .fuchsia {
     --color-primary-50: theme('colors.fuchsia.50');
@@ -315,6 +331,7 @@
     --color-primary-700: theme('colors.fuchsia.700');
     --color-primary-800: theme('colors.fuchsia.800');
     --color-primary-900: theme('colors.fuchsia.900');
+    --color-primary-950: theme('colors.fuchsia.950');
   }
   .pink {
     --color-primary-50: theme('colors.pink.50');
@@ -327,6 +344,7 @@
     --color-primary-700: theme('colors.pink.700');
     --color-primary-800: theme('colors.pink.800');
     --color-primary-900: theme('colors.pink.900');
+    --color-primary-950: theme('colors.pink.950');
   }
   .rose {
     --color-primary-50: theme('colors.rose.50');
@@ -339,6 +357,7 @@
     --color-primary-700: theme('colors.rose.700');
     --color-primary-800: theme('colors.rose.800');
     --color-primary-900: theme('colors.rose.900');
+    --color-primary-950: theme('colors.rose.950');
   }
 
   body {

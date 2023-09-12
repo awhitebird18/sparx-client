@@ -9,6 +9,7 @@ export const inviteUsersToChannel = async (channelId: string, userIds: string[])
 
     stores.notificationStore.addNotification({
       title: 'Users invited',
+      description: 'Invited users will now be able to access this channel',
       type: NotificationType.SUCCESS,
       show: true,
     });

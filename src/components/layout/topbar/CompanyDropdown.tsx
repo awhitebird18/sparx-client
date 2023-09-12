@@ -12,6 +12,7 @@ import { useAuth } from '@/providers/auth';
 import { ModalName } from '@/components/modal/modalList';
 import { useStore } from '@/stores/RootStore';
 import { ChannelType } from '@/features/channels/enums';
+import { observer } from 'mobx-react-lite';
 
 const CompanyDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -86,4 +87,4 @@ const CompanyDropdown = () => {
   );
 };
 
-export default CompanyDropdown;
+export default observer(CompanyDropdown);

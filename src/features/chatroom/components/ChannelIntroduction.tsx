@@ -29,8 +29,8 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
       <div className="flex">
         <MegaphoneFill className="text-yellow-300 -rotate-45 text-3xl mt-1 ml-2" />
       </div>
-      <div className="flex flex-col gap-5 overflow-hidden">
-        <p className="text-3xl font-bold space-y-6">
+      <div className="flex flex-col gap-3 overflow-hidden">
+        <p className="text-3xl font-bold space-y-3">
           You're looking at the{' '}
           <span className="text-primary">
             #{channel.name.charAt(0).toUpperCase()}
@@ -38,16 +38,14 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
           </span>{' '}
           channel
           <span className="text-muted-foreground text-base block font-normal">
-            {channel.description
-              ? channel.description
-              : 'This is the one channel that will always include everyone. Its a great spot for announcements and team-wide conversations.'}
+            {channel.description}
           </span>
         </p>
 
-        <Button onClick={handleAddUser} className="gap-3 justify-between text-lg w-fit">
-          <Person size={20} />
-          Add People
-          <Plus size={24} />
+        <Button onClick={handleAddUser} className="gap-4 justify-between w-fit relative">
+          <Person size={18} />
+          Invite to channel
+          <Plus size={18} className="absolute top-1.5 left-7" />
         </Button>
       </div>
     </div>

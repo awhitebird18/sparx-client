@@ -22,8 +22,9 @@ export class SidebarStore {
       selectedId: observable,
       organizedChannels: computed,
       setSelectedId: action,
-      dispose: action,
       handleResize: action,
+      setSidebarWidth: action,
+      loadSidebarWidthFromLocalStorage: action,
     });
 
     this.channelStore = channelStore;

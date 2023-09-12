@@ -13,8 +13,10 @@ export class UserStatusStore {
       userStatuses: observable,
       createUserStatusApi: action,
       updateUserStatusApi: action,
+      updateUserStatus: action,
       removeUserStatusApi: action,
       findUserStatusByUuid: action,
+      setUserStatuses: action,
       addUserStatus: action,
       activeUserStatus: computed,
     });
