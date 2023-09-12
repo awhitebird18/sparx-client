@@ -8,7 +8,7 @@ export const inviteUser = async (inviteUser: InviteUser) => {
     const { data } = await axios.post('/users/send-invite', inviteUser);
 
     stores.notificationStore.addNotification({
-      title: 'User invites sent!',
+      title: 'User invites sent',
       type: NotificationType.SUCCESS,
       show: true,
     });

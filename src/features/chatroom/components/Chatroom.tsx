@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { formatDate } from '../utils/datefns';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
-import { CameraVideo } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 
 import { Badge } from '@/components/ui/Badge';
@@ -19,11 +18,14 @@ import Thread from './Thread';
 import Editor from '@/features/messageInput/Editor';
 import UserInputNotSubscribed from './UserInputNotSubscribed';
 import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
-import { Button } from '@/components/ui/Button';
 
 import { Message as MessageType } from '@/features/messages/types';
 import { ChannelType } from '@/features/channels/enums';
 import ContentLayout from '@/components/layout/ContentLayout';
+import data from '@emoji-mart/data/sets/14/apple.json';
+import { init } from 'emoji-mart';
+
+init({ data });
 
 const ChatRoom: React.FC = () => {
   const {
@@ -55,15 +57,25 @@ const ChatRoom: React.FC = () => {
       uuid: uuid(),
       createdAt: dayjs(),
     });
-  };
 
-  const handleInputChange = useCallback(() => {
-    emitSocket('typing', {
+    emitSocket('stopped-typing', {
       userId: currentUser?.uuid,
-      username: currentUser?.firstName,
       channelId: currentChannelId,
     });
-  }, [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket]);
+  };
+
+  const handleInputChange = useCallback(
+    (_: string, text: string) => {
+      if (!text) return;
+
+      emitSocket('typing', {
+        userId: currentUser?.uuid,
+        username: currentUser?.firstName,
+        channelId: currentChannelId,
+      });
+    },
+    [currentChannelId, currentUser?.firstName, currentUser?.uuid, emitSocket],
+  );
 
   useLayoutEffect(() => {
     if (!channelId || channelId === currentChannelId) return;
@@ -90,14 +102,7 @@ const ChatRoom: React.FC = () => {
     };
   }, [clearUsersTyping, currentChannelId, fetchChannelUserIdsApi, joinRoom, leaveRoom]);
 
-  const headerComponent =
-    currentChannel?.type === ChannelType.CHANNEL ? (
-      <AvatarGroup />
-    ) : (
-      <Button size="icon" variant="ghost">
-        <CameraVideo size={16} />
-      </Button>
-    );
+  const headerComponent = currentChannel?.type === ChannelType.CHANNEL ? <AvatarGroup /> : null;
 
   return (
     <div className="flex h-full">

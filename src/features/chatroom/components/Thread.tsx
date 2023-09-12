@@ -111,6 +111,4 @@ const Thread = () => {
   );
 };
 
-observer;
-
 export default observer(Thread);

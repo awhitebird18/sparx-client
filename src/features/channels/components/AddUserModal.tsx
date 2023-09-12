@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronBarExpand, X } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
@@ -14,6 +14,7 @@ import {
   CommandInput,
   CommandItem,
 } from '@/components/ui/Command';
+import { getChannelUsers } from '@/features/channels/api/getChannelUsers';
 
 import { Channel } from '@/features/channels/types';
 import { User } from '@/features/users/types/user';
@@ -31,6 +32,18 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
   const [searchValue, setSearchValue] = useState('');
   const [open, setOpen] = useState(false);
   const [inviteList, setInviteList] = useState<User[]>([]);
+  const [channelUsers, setChannelUsers] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fn = async () => {
+      const users = await getChannelUsers(channel.uuid);
+      if (!users) return;
+
+      setChannelUsers(users);
+    };
+
+    fn();
+  }, [channel.uuid]);
 
   const handleAddUserToInviteList = (user: User) => {
     setInviteList((prev: User[]) => [...prev, user]);
@@ -64,12 +77,12 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
       } ${currentUser.lastName}.`,
     });
 
-    createMessageApi(formattedMessage);
+    await createMessageApi(formattedMessage);
   };
 
   const unsubscribedUsers = users.filter(
     (user: User) =>
-      ![].find((channelUser: User) => channelUser.uuid === user.uuid) &&
+      !channelUsers.find((userId: string) => userId === user.uuid) &&
       !inviteList.find((invitedUser: User) => invitedUser.uuid === user.uuid),
   );
 

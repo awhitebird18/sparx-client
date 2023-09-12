@@ -7,12 +7,9 @@ import React, {
   useCallback,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
-
 import { LoginData, RegistrationData } from '@/features/auth/types';
-
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 
 interface AuthContextData {
@@ -42,7 +39,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setInitialPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
-  const { setUsers, setCurrentUser } = useStore('userStore');
+  const { setUsers, setCurrentUser, currentUser } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
 
@@ -55,6 +52,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       verifyAndLoginUser();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,11 +61,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authApi.logout();
 
-      window.location.assign(`${window.location.origin}/auth/login` as unknown as string);
+      setCurrentUser(undefined);
     } catch (err) {
       console.error(err);
-    } finally {
-      setCurrentUser(undefined);
     }
   };
 
@@ -109,6 +106,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const fn = async () => {
       try {
+        if (currentUser) return;
+
         await verifyAndLoginUser();
       } catch (err) {
         setCurrentUser(undefined);

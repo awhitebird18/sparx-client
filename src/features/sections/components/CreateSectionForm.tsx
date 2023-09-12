@@ -27,7 +27,7 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name,
+      name: name || '',
     },
   });
 
@@ -43,7 +43,10 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
   return (
     <Modal title={name ? `Update ${name}` : 'Create Section'}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col max-w-lg">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 flex flex-col max-w-xl w-96"
+        >
           <FormField
             control={form.control}
             name="name"

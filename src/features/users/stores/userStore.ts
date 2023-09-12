@@ -45,6 +45,9 @@ export class UserStore {
         fetchUsersApi: action,
         setUserOnlineStatus: action,
         findUserByName: action,
+        setCurrentUser: action,
+        updateOnlineUser: action,
+        updateCurrentUser: action,
       },
       { autoBind: true },
     );

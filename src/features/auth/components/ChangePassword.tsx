@@ -21,9 +21,10 @@ const ChangePassword: React.FC = () => {
       if (!token) return;
 
       await authApi.changePassword({ password: data.password, token });
-    } finally {
-      verifyAndLoginUser();
-      navigate('/');
+      await verifyAndLoginUser();
+      navigate('/app');
+    } catch (err) {
+      console.error(err);
     }
   };
 

@@ -22,7 +22,7 @@ const ChangePasswordModal = () => {
 
   return (
     <Modal title="Change password">
-      <div className="w-72">
+      <div className="w-96 py-4 ">
         <ChangePasswordForm onSubmit={onSubmit} />
       </div>
     </Modal>

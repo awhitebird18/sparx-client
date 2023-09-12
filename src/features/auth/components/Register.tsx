@@ -9,6 +9,7 @@ import { useAuth } from '@/providers/auth';
 import { Input } from '@/components/ui/Input';
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/Button';
+import PasswordInput from '@/components/ui/PasswordInput';
 
 type FormData = {
   email: string;
@@ -51,6 +52,7 @@ const RegisterPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
@@ -64,6 +66,7 @@ const RegisterPage: React.FC = () => {
 
     try {
       await registerUser(data);
+      reset();
     } catch (error) {
       console.error(error);
       setIsLoading(false);
@@ -73,14 +76,14 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-zinc-900">
       <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Register for an account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">Already have an account?</p>
-            <Link to="/auth/login" className="font-medium text-primary">
+            <Link to="/login" className="font-medium text-primary">
               Login here
             </Link>
           </div>
@@ -137,9 +140,8 @@ const RegisterPage: React.FC = () => {
                   Password
                 </label>
                 <div className="mt-1">
-                  <Input
+                  <PasswordInput
                     {...register('password', { required: 'Password is required.' })}
-                    type="password"
                     placeholder="Password"
                   />
                 </div>
@@ -151,9 +153,8 @@ const RegisterPage: React.FC = () => {
                   Confirm Password
                 </label>
                 <div className="mt-1">
-                  <Input
+                  <PasswordInput
                     {...register('confirmPassword', { required: 'Confirm Password is required.' })}
-                    type="password"
                     placeholder="Confirm Password"
                   />
                 </div>

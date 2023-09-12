@@ -42,7 +42,9 @@ const Users = () => {
     const newDirectChannel = await createDirectChannelApi([currentUser.uuid, user.uuid]);
 
     addChannelUuidToSection(newDirectChannel.uuid, directChannelSectionId);
+
     setSelectedId(newDirectChannel.uuid);
+
     return navigate(`/app/${newDirectChannel.uuid}`);
   };
 

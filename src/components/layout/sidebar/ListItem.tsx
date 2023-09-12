@@ -17,7 +17,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
   ContextMenuSeparator,
-  ContextMenuCheckboxItem,
   ContextMenuLabel,
 } from '@/components/ui/ContextMenu';
 import { ChannelType } from '@/features/channels/enums';
@@ -164,35 +163,33 @@ const ListItem = ({
         </ContextMenuItem>
 
         <ContextMenuSub>
-          <ContextMenuSubTrigger inset>Copy</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <ContextMenuItem>Copy name</ContextMenuItem>
-            <ContextMenuItem>Copy link</ContextMenuItem>
-          </ContextMenuSubContent>
-        </ContextMenuSub>
-        <ContextMenuSeparator />
-        <ContextMenuCheckboxItem checked>Mute channel</ContextMenuCheckboxItem>
-        <ContextMenuSeparator />
-        <ContextMenuSub>
           <ContextMenuSubTrigger inset>Move channel</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48 ">
             <ContextMenuLabel className="text-xs text-muted-foreground">Move to..</ContextMenuLabel>
             <div className="max-h-48 overflow-auto">
-              {sections.map((section: Section) => (
-                <ContextMenuItem
-                  key={section.uuid}
-                  onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
-                >
-                  {section.name}
-                </ContextMenuItem>
-              ))}
+              {sections
+                .filter(
+                  (section: Section) => section.type === type || section.type === ChannelType.ANY,
+                )
+                .map((section: Section) => (
+                  <ContextMenuItem
+                    key={section.uuid}
+                    onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
+                  >
+                    {section.name}
+                  </ContextMenuItem>
+                ))}
             </div>
           </ContextMenuSubContent>
         </ContextMenuSub>
-        <ContextMenuSeparator />
-        <ContextMenuItem inset className="text-rose-500" onClick={handleLeaveChannel}>
-          Leave Channel
-        </ContextMenuItem>
+        {type !== ChannelType.DIRECT && (
+          <>
+            <ContextMenuSeparator />
+            <ContextMenuItem inset className="text-rose-500" onClick={handleLeaveChannel}>
+              Leave Channel
+            </ContextMenuItem>
+          </>
+        )}
       </ContextMenuContent>
     </ContextMenu>
   );

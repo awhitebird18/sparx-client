@@ -49,6 +49,13 @@ export class WorkspaceChannelStore {
       findChannelUserCountByChannelUuid: action,
       updateChannelUserCount: action,
       resetWorkspaceChannelStore: action,
+      findChannelUserCount: action,
+      setHasMore: action,
+      addChannelUserCounts: action,
+      setChannelUserCounts: action,
+      updateWorkspaceChannel: action,
+      setPage: action,
+      addWorkspaceChannels: action,
     });
   }
 
@@ -59,6 +66,7 @@ export class WorkspaceChannelStore {
   setHasMore = (bool: boolean) => {
     this.hasMore = bool;
   };
+
   setPage = (page: number) => {
     this.page = page;
   };
@@ -158,6 +166,7 @@ export class WorkspaceChannelStore {
     this.setFilterSubscribed(null);
     this.setPage(1);
     this.setSortBy(SortOptions.ATOZ);
+    this.setIsLoading(true);
   };
 
   fetchWorkspaceChannelsApi = async (page: number, pageSize?: number) => {

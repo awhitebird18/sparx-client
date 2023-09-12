@@ -1,4 +1,3 @@
-import { Link } from 'react-bootstrap-icons';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -41,7 +40,10 @@ const InviteUserForm = () => {
   return (
     <Modal title="Invite user to Sparx">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-start w-96">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col items-start w-96 space-y-8"
+        >
           <FormField
             control={form.control}
             name="email"
@@ -55,15 +57,8 @@ const InviteUserForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            variant="ghost"
-            className="text-blue-500 font-semibold flex items-center gap-2 hover:bg-transparent px-0"
-          >
-            <Link size={24} />
-            Copy invite link
-          </Button>
 
-          <Button className="ml-auto" type="submit">
+          <Button className="ml-auto " type="submit">
             Send Invite
           </Button>
         </form>

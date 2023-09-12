@@ -18,6 +18,7 @@ import {
 
 import { Channel } from '../types';
 import { User } from '@/features/users/types/user';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 type MembersProps = { users: User[]; channel: Channel };
 
@@ -65,13 +66,15 @@ const Members = ({ users, channel }: MembersProps) => {
               const userFound = findUserByUuid(user.uuid);
               if (!userFound) return null;
 
+              const transformedImage = transformCloudinaryUrl(user.profileImage, 60, 60);
+
               return (
                 <div
                   key={user.uuid}
                   className="flex items-center gap-4 hover:bg-hover p-2 rounded-md cursor-pointer pr-4 mr-4"
                   onClick={() => handleOpenUserProfile(userFound.uuid)}
                 >
-                  <UserAvatar userId={userFound.uuid} profileImage={userFound.profileImage} />
+                  <UserAvatar userId={userFound.uuid} profileImage={transformedImage} />
                   <Username firstName={userFound.firstName} lastName={userFound.lastName} />
                   <OnlineStatusIndicator userId={userFound.uuid} />
                   <DropdownMenu>

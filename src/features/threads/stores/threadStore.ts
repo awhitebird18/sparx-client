@@ -20,6 +20,7 @@ export class ThreadStore {
       threads: observable,
       currentThread: observable,
       fetchUserTheadsApi: action,
+      setThreads: action,
     });
   }
 

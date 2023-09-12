@@ -30,7 +30,9 @@ const PreferencesModal: React.FC = () => {
   const listItem = (tab: PreferenceTabs) => (
     <div
       onClick={() => setActiveTab(tab)}
-      className={`h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
+      className={`${
+        tab !== PreferenceTabs.THEMING && 'pointer-events-none opacity-20'
+      } h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden font-medium ${
         activeTab === tab
           ? 'bg-active hover:bg-active text-active dark:text-active'
           : 'text-main hover:bg-hover'

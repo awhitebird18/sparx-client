@@ -16,8 +16,10 @@ export const login = async (loginData: LoginData) => {
 
     return data;
   } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Something went wrong!',
+    return stores.notificationStore.addNotification({
+      title: 'Login Unsuccessful',
+      description:
+        'Please check your email and password and try again. If you continue to face issues, you might want to reset your password.',
       type: NotificationType.ERROR,
       show: true,
     });

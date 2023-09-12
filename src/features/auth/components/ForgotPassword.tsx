@@ -21,7 +21,7 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-black/40">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-zinc-900">
       <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
@@ -55,7 +55,7 @@ const ForgotPassword: React.FC = () => {
               </Button>
 
               <div className="flex items-center justify-end gap-2 text-sm">
-                <Link to="/auth/login" className="font-medium text-primary flex gap-2 items-center">
+                <Link to="/login" className="font-medium text-primary flex gap-2 items-center">
                   <HouseFill size={16} />
                   Go back to login page
                 </Link>

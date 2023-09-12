@@ -17,6 +17,9 @@ import {
 import { HistoryItem } from '../types';
 
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
+import { ChannelType } from '@/features/channels/enums';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
+import { observer } from 'mobx-react-lite';
 
 const getDefaultType = (id: string) => {
   switch (id) {
@@ -39,6 +42,8 @@ const getDefaultType = (id: string) => {
 const HistoryDropdown = () => {
   const { setActiveModal } = useStore('modalStore');
   const { findChannelByUuid } = useStore('channelStore');
+  const { findUserByName } = useStore('userStore');
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const history = useHistoryState();
   const navigate = useNavigate();
@@ -85,11 +90,23 @@ const HistoryDropdown = () => {
 
                     if (!channel) return null;
 
+                    let channelIcon = channel.icon;
+
+                    if (channel.type === ChannelType.DIRECT) {
+                      const user = findUserByName(channel.name);
+                      if (!user) return;
+                      channelIcon = user.profileImage;
+                    }
+
+                    if (channelIcon) {
+                      channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
+                    }
+
                     itemData = {
                       title: channel.name,
                       icon: (
                         <ChannelIcon
-                          imageUrl={channel.icon}
+                          imageUrl={channelIcon}
                           size={20}
                           isPrivate={channel.isPrivate}
                         />
@@ -118,4 +135,4 @@ const HistoryDropdown = () => {
   );
 };
 
-export default HistoryDropdown;
+export default observer(HistoryDropdown);
