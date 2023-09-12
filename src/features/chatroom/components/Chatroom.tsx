@@ -24,6 +24,10 @@ import { Button } from '@/components/ui/Button';
 import { Message as MessageType } from '@/features/messages/types';
 import { ChannelType } from '@/features/channels/enums';
 import ContentLayout from '@/components/layout/ContentLayout';
+import data from '@emoji-mart/data/sets/14/apple.json';
+import { init } from 'emoji-mart';
+
+init({ data });
 
 const ChatRoom: React.FC = () => {
   const {
