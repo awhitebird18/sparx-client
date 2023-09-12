@@ -19,7 +19,6 @@ const Threads = () => {
   }, [fetchUserTheadsApi]);
 
   if (thread?.uuid !== 'derp') {
-    console.log('hey!');
     throw Error('Error on threads page!');
   }
 
