@@ -79,7 +79,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
 
-      await uploadProfileImageApi(imageBase64);
+      const updatedUser = await uploadProfileImageApi(imageBase64);
+      setUser(updatedUser);
     };
 
     reader.readAsDataURL(file);

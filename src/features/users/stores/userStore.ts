@@ -163,6 +163,7 @@ export class UserStore {
     const user = await userProfileApi.uploadProfileImage(profileImage);
 
     this.updateCurrentUser(user);
+    return user;
   };
 
   fetchUsersApi = async () => {
