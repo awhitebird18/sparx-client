@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Check } from 'react-bootstrap-icons';
 
 import { useStore } from '@/stores/RootStore';
@@ -37,14 +37,13 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
   const { updateSectionApi } = useStore('sectionStore');
   const [hasOpenDialog] = useState(false);
 
-  const dragFunction = useCallback(
-    () => ({
+  const dragFunction = useMemo(() => {
+    return {
       type: SidebarItem.SECTION,
       item: { id, type: SidebarItem.SECTION, index },
       collect: () => ({}),
-    }),
-    [id, index],
-  );
+    };
+  }, [id, index]);
 
   const [, dragRef] = useDrag(dragFunction);
 

@@ -80,7 +80,6 @@ const ListItem = ({
     channelId: string;
     selectedSectionId: string;
   }) => {
-    console.log(!sectionId, sectionId === selectedSectionId);
     if (!sectionId || sectionId === selectedSectionId) return;
 
     await updateChannelSectionApi(selectedSectionId, channelId);
