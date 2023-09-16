@@ -43,27 +43,18 @@ const UserInputNotSubscribed = () => {
   };
 
   return (
-    <div className="flex items-center justify-center border-border flex-col gap-4 p-6 bg-card rounded-xl border">
-      <div className="text-3xl flex items-center gap-2">
+    <div className="flex items-center justify-center border-border bg-card/40 flex-col gap-4 p-6 rounded-xl border">
+      <div className="text-5xl flex items-center gap-3">
         <ChannelIcon
           imageUrl={currentChannel?.icon}
-          size={28}
+          size={34}
           isPrivate={currentChannel?.isPrivate}
         />
         {currentChannel?.name}
       </div>
       <div className="text-lg">{currentChannel?.description}</div>
-      <Button
-        className="bg-userMedium text-white hover:bg-primary-dark"
-        onClick={handleJoinChannel}
-      >
-        Join Channel
-      </Button>
-      <Button
-        variant="link"
-        onClick={handleNavigateToChannelsPage}
-        className="text-muted-foreground"
-      >
+      <Button onClick={handleJoinChannel}>Join Channel</Button>
+      <Button variant="link" onClick={handleNavigateToChannelsPage} className="text-muted">
         Back to all channels
       </Button>
     </div>

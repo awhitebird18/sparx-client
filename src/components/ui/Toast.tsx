@@ -29,9 +29,9 @@ const toastVariants = cva(
       variant: {
         default: 'border bg-card',
         success:
-          'group border-emerald-500 text-emerald-600 bg-emerald-100 text-emerald-800 dark:bg-emerald-200 dark:text-emerald-800',
+          'group border-emerald-500 text-emerald-600 bg-emerald-100 text-emerald-800 dark:bg-emerald-600 dark:text-emerald-50',
         destructive:
-          'destructive group border-red-500 bg-red-400 text-slate-50 dark:border-red-900 dark:bg-red-900 dark:text-red-50',
+          'destructive group border-red-500 bg-red-400 text-slate-50 dark:border-red-900 dark:bg-red-600 dark:text-red-50',
       },
     },
     defaultVariants: {
