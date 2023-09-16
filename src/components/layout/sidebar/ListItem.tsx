@@ -139,9 +139,9 @@ const ListItem = ({
             isSelected
               ? 'bg-active hover:bg-active text-active dark:text-active'
               : 'text-main hover:bg-hover'
-          } ${disabled && 'text-muted/70'}`}
+          } ${disabled ? 'text-neutral/80' : 'font-medium'}`}
         >
-          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
+          <div className="whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
             <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>

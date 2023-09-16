@@ -22,7 +22,7 @@ const Threads = () => {
     <div className="flex h-full">
       <ContentLayout title="Threads" disablePadding>
         <div className="relative flex flex-1 bg-card dark:bg-background rounded-xl pb-5 overflow-auto h-full">
-          <div className="flex flex-col flex-1 w-full h-fit space-y-6 my-6 mx-4">
+          <div className="flex flex-col flex-1 w-full space-y-6 my-6 mx-4">
             {threads.length ? (
               threads.map((t: ThreadType) => {
                 const channel = findChannelByUuid(t.rootMessage.channelId);

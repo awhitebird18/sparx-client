@@ -22,6 +22,7 @@ module.exports = {
         'scrollbar-thumb': '#f78',
         'scrollbar-thumb-hover': '#555',
         border: 'hsl(var(--border))',
+        borderLight: 'hsl(var(--border-light))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',

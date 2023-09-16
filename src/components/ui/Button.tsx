@@ -5,15 +5,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/utils';
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'text-base text-neutral inline-flex items-center justify-center rounded-md ring-offset-secondary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
         default: 'bg-primary text-white hover:bg-primary-dark active:bg-primary-darkest',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline:
-          'border border-border bg-background hover:bg-hover hover:text-card-foreground text-neutral',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-hover',
+        outline: 'border border-border bg-background hover:bg-hover text-neutral',
+        secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary-hover border border-borderLight text-neutral dark:border-borderLight',
         ghost: 'text-main hover:bg-hover',
         link: 'text-primary underline-offset-4 hover:underline',
         'outline-primary':
@@ -50,4 +50,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 export { Button };
-<div className="text-neutral border border-text-neutral dark:text-prim"></div>;
+<div className="text-neutral border border-text-neutral dark:text-prim text-base"></div>;
