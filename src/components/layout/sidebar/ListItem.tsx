@@ -26,6 +26,7 @@ import { Lock } from 'react-bootstrap-icons';
 
 interface ListitemProps {
   id: string;
+  sectionId?: string;
   title: string;
   icon?: JSX.Element;
   primary?: boolean;
@@ -39,6 +40,7 @@ interface ListitemProps {
 
 const ListItem = ({
   id,
+  sectionId,
   title,
   isTemp,
   isChannel,
@@ -61,7 +63,7 @@ const ListItem = ({
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
     type: SidebarItem.ITEM,
-    item: { id, type: SidebarItem.ITEM, channelType: type },
+    item: { id, type: SidebarItem.ITEM, channelType: type, sectionId: sectionId },
     collect: () => ({}),
   }));
 
@@ -73,12 +75,15 @@ const ListItem = ({
 
   const handleMoveChannel = async ({
     channelId,
-    sectionId,
+    selectedSectionId,
   }: {
     channelId: string;
-    sectionId: string;
+    selectedSectionId: string;
   }) => {
-    await updateChannelSectionApi(sectionId, channelId);
+    console.log(!sectionId, sectionId === selectedSectionId);
+    if (!sectionId || sectionId === selectedSectionId) return;
+
+    await updateChannelSectionApi(selectedSectionId, channelId);
   };
 
   const handleLeaveChannel = async () => {
@@ -174,7 +179,9 @@ const ListItem = ({
                 .map((section: Section) => (
                   <ContextMenuItem
                     key={section.uuid}
-                    onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
+                    onClick={() =>
+                      handleMoveChannel({ channelId: id, selectedSectionId: section.uuid })
+                    }
                   >
                     {section.name}
                   </ContextMenuItem>

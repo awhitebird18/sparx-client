@@ -27,6 +27,7 @@ interface DraggedItem {
   id: string;
   index: number;
   channelType: ChannelType;
+  sectionId: string;
 }
 
 const Section = ({ section, index }: SectionProps) => {
@@ -42,7 +43,7 @@ const Section = ({ section, index }: SectionProps) => {
   // React dnd drop handler
   const handleDrop = useCallback(
     async (item: DraggedItem, monitor: DropTargetMonitor) => {
-      if (item.type === SidebarItem.ITEM) {
+      if (item.type === SidebarItem.ITEM && item.sectionId !== section.uuid) {
         await updateChannelSectionApi(uuid, item.id);
       }
 
@@ -70,7 +71,7 @@ const Section = ({ section, index }: SectionProps) => {
       setIsOverTopHalf(false);
       setIsOverBottomHalf(false);
     },
-    [index, reorderSections, updateChannelSectionApi, uuid],
+    [index, reorderSections, section.uuid, updateChannelSectionApi, uuid],
   );
 
   // React dnd hover handler
@@ -218,6 +219,7 @@ const Section = ({ section, index }: SectionProps) => {
                 <ListItem
                   key={channel.uuid}
                   id={channel.uuid}
+                  sectionId={section.uuid}
                   title={channel.name}
                   isChannel
                   type={channel.type}
