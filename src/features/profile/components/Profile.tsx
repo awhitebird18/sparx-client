@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,8 +35,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   const { findUserByUuid, updateUserApi, uploadProfileImageApi, currentUser } =
     useStore('userStore');
   const [user, setUser] = useState<User>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fileInput = useRef<any>(null);
+
+  const fileInput = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,8 +71,9 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
     setIsEditing(false);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSelectImage = (e: any) => {
+  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -103,7 +104,9 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                 onClick={(e) => {
                   e.preventDefault();
 
-                  fileInput.current.click();
+                  if (fileInput.current) {
+                    fileInput.current.click();
+                  }
                 }}
               >
                 Change profile image
