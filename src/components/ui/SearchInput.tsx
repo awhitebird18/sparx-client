@@ -20,7 +20,7 @@ const SearchInput = ({
   };
 
   return (
-    <div className={`relative flex items-center h-9 overflow-hidden rounded-md`}>
+    <div className={`relative flex items-center h-9 rounded-md w-full`}>
       <Input
         placeholder={placeholder}
         className={`pl-10 h-9`}

@@ -98,13 +98,12 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   return (
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
-        <div className="flex gap-10 mt-4 ">
+        <div className="flex gap-10 mt-4 h-80">
           <div className="flex flex-col items-center gap-4 flex-1 w-full">
             <UserAvatar size={165} userId={user.uuid} profileImage={transformedImage} />
             {user.uuid === currentUser.uuid && (
               <Button
-                variant="ghost"
-                className="text-userMedium hover:text-userMedium w-full cursor-pointer border border-userMedium"
+                variant="secondary"
                 onClick={(e) => {
                   e.preventDefault();
 
@@ -161,8 +160,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                         />
                       ) : (
                         <p
-                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base text-muted-foreground"
+                          style={{ paddingLeft: '0.8rem', paddingTop: '6px' }}
+                          className="text-base text-muted-foreground h-9 p-1.5"
                         >
                           {user?.firstName}
                         </p>
@@ -187,8 +186,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                         />
                       ) : (
                         <p
-                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base text-muted-foreground"
+                          style={{ paddingLeft: '0.8rem' }}
+                          className="text-base text-muted-foreground h-9 p-1.5"
                         >
                           {user?.lastName}
                         </p>

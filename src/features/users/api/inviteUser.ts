@@ -15,6 +15,11 @@ export const inviteUser = async (inviteUser: InviteUser) => {
 
     return data;
   } catch (err) {
-    return console.error(err);
+    stores.notificationStore.addNotification({
+      title: 'Invite not sent',
+      description: 'Email is already registered to another member of this workspace',
+      type: NotificationType.ERROR,
+      show: true,
+    });
   }
 };
