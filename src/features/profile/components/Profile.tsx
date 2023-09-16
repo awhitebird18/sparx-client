@@ -41,13 +41,16 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: useMemo(
-      () => ({
-        firstName: currentUser?.firstName,
-        lastName: currentUser?.lastName,
-      }),
-      [currentUser],
-    ),
+    defaultValues: useMemo(() => {
+      const user = findUserByUuid(userId);
+
+      if (!user) return;
+
+      return {
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+      };
+    }, [findUserByUuid, userId]),
   });
 
   useEffect(() => {
@@ -81,6 +84,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
       const imageBase64 = reader.result as string;
 
       const updatedUser = await uploadProfileImageApi(imageBase64);
+
       setUser(updatedUser);
     };
 
@@ -94,8 +98,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   return (
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
-        <div className="flex gap-10 mt-4">
-          <div className="flex flex-col items-center gap-4">
+        <div className="flex gap-10 mt-4 ">
+          <div className="flex flex-col items-center gap-4 flex-1 w-full">
             <UserAvatar size={165} userId={user.uuid} profileImage={transformedImage} />
             {user.uuid === currentUser.uuid && (
               <Button

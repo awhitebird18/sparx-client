@@ -39,7 +39,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setInitialPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
-  const { setUsers, setCurrentUser, currentUser } = useStore('userStore');
+  const { setUsers, setCurrentUserId, currentUser } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
 
@@ -61,7 +61,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authApi.logout();
 
-      setCurrentUser(undefined);
+      setCurrentUserId(undefined);
     } catch (err) {
       console.error(err);
     }
@@ -81,7 +81,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const data = await authApi.verify();
 
-      setCurrentUser(data.currentUser);
+      setCurrentUserId(data.currentUser.uuid);
       connectToSocketServer(data.currentUser);
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);
@@ -93,7 +93,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     }
   }, [
-    setCurrentUser,
+    setCurrentUserId,
     setChannelUnreads,
     setInitialPreferences,
     setSections,
@@ -110,7 +110,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         await verifyAndLoginUser();
       } catch (err) {
-        setCurrentUser(undefined);
+        setCurrentUserId(undefined);
       }
     };
 
