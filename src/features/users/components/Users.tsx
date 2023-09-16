@@ -64,12 +64,7 @@ const Users = () => {
             <ChevronDown className="text-xs" />
           </Button>
 
-          <SearchInput
-            placeholder="Search users"
-            value={searchValue}
-            setValue={setSearchValue}
-            collapsible
-          />
+          <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
         </div>
         {searchValue && (
           <Button size="sm" variant="secondary">
