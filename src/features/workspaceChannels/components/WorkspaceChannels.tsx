@@ -337,12 +337,11 @@ const WorkspaceChannels: React.FC = () => {
                   <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
                     {isSubscribed ? (
                       <Button
-                        variant="secondary"
+                        variant="outline"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleJoinLeaveChannel(channel.uuid, ChannelActions.LEAVE);
                         }}
-                        className="py-1 px-2 font-semibold rounded w-20"
                       >
                         {ChannelActions.LEAVE}
                       </Button>
