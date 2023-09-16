@@ -27,6 +27,7 @@ interface DraggedItem {
   id: string;
   index: number;
   channelType: ChannelType;
+  sectionId: string;
 }
 
 const Section = ({ section, index }: SectionProps) => {
@@ -42,13 +43,14 @@ const Section = ({ section, index }: SectionProps) => {
   // React dnd drop handler
   const handleDrop = useCallback(
     async (item: DraggedItem, monitor: DropTargetMonitor) => {
-      if (item.type === SidebarItem.ITEM) {
+      setIsOverTopHalf(false);
+      setIsOverBottomHalf(false);
+
+      if (item.type === SidebarItem.ITEM && item.sectionId !== section.uuid) {
         await updateChannelSectionApi(uuid, item.id);
       }
 
-      if (item.type === SidebarItem.SECTION) {
-        let hoverIndex = index;
-
+      if (item.type === SidebarItem.SECTION && item.id !== section.uuid) {
         // Determine rectangle on screen
         const hoverBoundingRect = ref.current?.getBoundingClientRect();
         if (!hoverBoundingRect) return;
@@ -60,29 +62,42 @@ const Section = ({ section, index }: SectionProps) => {
 
         const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-        if (hoverClientY > hoverMiddleY) {
-          hoverIndex += 1;
+        if (hoverClientY > hoverMiddleY && item.index - section.orderIndex === 1) {
+          return;
+        }
+        if (hoverClientY < hoverMiddleY && item.index - section.orderIndex === -1) {
+          return;
         }
 
-        reorderSections(item.id, hoverIndex);
-      }
+        if (hoverClientY < hoverMiddleY && item.index < section.orderIndex) {
+          reorderSections(item.id, section.orderIndex);
+        }
 
-      setIsOverTopHalf(false);
-      setIsOverBottomHalf(false);
+        if (hoverClientY > hoverMiddleY && item.index < section.orderIndex) {
+          reorderSections(item.id, section.orderIndex);
+        }
+
+        if (hoverClientY < hoverMiddleY && item.index > section.orderIndex) {
+          reorderSections(item.id, section.orderIndex);
+        }
+
+        if (hoverClientY > hoverMiddleY && item.index > section.orderIndex) {
+          reorderSections(item.id, section.orderIndex + 1);
+        }
+      }
     },
-    [index, reorderSections, updateChannelSectionApi, uuid],
+    [section.orderIndex, reorderSections, section.uuid, updateChannelSectionApi, uuid],
   );
 
   // React dnd hover handler
   const handleHover = useCallback(
     (item: DraggedItem, monitor: DropTargetMonitor) => {
       if (!monitor.isOver({ shallow: true })) {
-        setIsOverBottomHalf(false);
-        setIsOverTopHalf(false);
         return;
       }
+
       if (item.type === SidebarItem.SECTION) {
-        if (!ref.current) {
+        if (!ref.current || item.id === section.uuid) {
           return;
         }
         const dragIndex = item.index;
@@ -103,16 +118,30 @@ const Section = ({ section, index }: SectionProps) => {
         // Get pixels to the top
         const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
+        // if (hoverClientY > hoverMiddleY && item.index - section.orderIndex === 1) {
+        //   setIsOverTopHalf(false);
+        //   setIsOverBottomHalf(false);
+        //   return;
+        // }
+        // if (hoverClientY < hoverMiddleY && item.index - section.orderIndex === -1) {
+        //   setIsOverTopHalf(false);
+        //   setIsOverBottomHalf(false);
+        //   return;
+        // }
+
         if (hoverClientY < hoverMiddleY) {
           setIsOverTopHalf(true);
           setIsOverBottomHalf(false);
-        } else {
+        } else if (hoverClientY > hoverMiddleY) {
           setIsOverTopHalf(false);
           setIsOverBottomHalf(true);
+        } else {
+          setIsOverTopHalf(false);
+          setIsOverBottomHalf(false);
         }
       }
     },
-    [index],
+    [index, section.uuid],
   );
 
   // React dnd can drop handler
@@ -136,6 +165,9 @@ const Section = ({ section, index }: SectionProps) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     isOver: monitor.getItem()?.type === SidebarItem.ITEM && !!monitor.isOver(),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    sectionIsOver: monitor.getItem()?.type === SidebarItem.SECTION && !!monitor.isOver(),
   });
 
   // Handles opening and closing section
@@ -155,101 +187,108 @@ const Section = ({ section, index }: SectionProps) => {
     [canDropHandler, handleDrop, handleHover],
   );
 
-  const [{ isOver }, drop] = useDrop(dropSpec);
+  const [{ isOver, sectionIsOver }, drop] = useDrop(dropSpec);
   drop(ref);
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={handleToggleSection}
-      className={`py-1 my-1 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''} ${
-        isOverBottomHalf ? 'border-b-2' : ''
-      } ${isOverTopHalf ? 'border-t-2' : ''}`}
-      ref={ref}
-    >
-      <div>
-        <ListHeader
-          id={uuid}
-          title={name}
-          index={index}
-          isSystem={isSystem}
-          isOpen={isOpen}
-          sortBy={sortBy}
-          icon={
-            <CollapsibleTrigger asChild>
-              <Button
-                className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md text-main`}
-                size="icon"
-                variant="ghost"
-              >
-                <CaretDownFill />
-              </Button>
-            </CollapsibleTrigger>
-          }
-        />
-      </div>
-
-      <CollapsibleContent>
-        {channelIds?.length
-          ? sortSectionChannels(
-              channelIds
-                .map((channelUuid: string) => findChannelByUuid(channelUuid))
-                .filter((channel: Channel | undefined) => channel !== undefined) as Channel[],
-              section.sortBy,
-            ).map((channel: Channel | undefined) => {
-              if (!channel) return null;
-              let channelIcon = channel.icon;
-              let userId = undefined;
-              let userStatus = undefined;
-
-              if (channel.type === ChannelType.DIRECT) {
-                const user = findUserByName(channel.name);
-                if (!user) return;
-                channelIcon = user.profileImage;
-                userId = user.uuid;
-                userStatus = user.status;
-              }
-
-              if (channelIcon) {
-                channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
-              }
-
-              return (
-                <ListItem
-                  key={channel.uuid}
-                  id={channel.uuid}
-                  title={channel.name}
-                  isChannel
-                  type={channel.type}
-                  isTemp={channel.isTemp}
-                  status={userStatus}
-                  isPrivate={channel.isPrivate}
-                  icon={
-                    <ChannelIcon
-                      imageUrl={channelIcon}
-                      isPrivate={channel.isPrivate}
-                      isSelected={selectedId === channel.uuid}
-                      size={22}
-                      userId={userId}
-                    />
-                  }
-                />
-              );
-            })
-          : null}
-
-        {isSystem ? (
-          <ListItem
-            id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
-            icon={<Plus size={16} />}
-            title={type === ChannelType.DIRECT ? 'View Users' : 'Explore Channels'}
-            disabled
+    <div className="relative">
+      {isOverTopHalf && sectionIsOver && (
+        <div className="absolute top-0 left-0 w-full h-px bg-slate-500" />
+      )}
+      <Collapsible
+        open={isOpen}
+        onOpenChange={handleToggleSection}
+        className={`py-2 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''} `}
+        ref={ref}
+      >
+        <div>
+          <ListHeader
+            id={uuid}
+            title={name}
+            index={section.orderIndex}
+            isSystem={isSystem}
+            isOpen={isOpen}
+            sortBy={sortBy}
+            icon={
+              <CollapsibleTrigger asChild>
+                <Button
+                  className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md text-main`}
+                  size="icon"
+                  variant="ghost"
+                >
+                  <CaretDownFill />
+                </Button>
+              </CollapsibleTrigger>
+            }
           />
-        ) : (
-          ''
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+        </div>
+
+        <CollapsibleContent>
+          {channelIds?.length
+            ? sortSectionChannels(
+                channelIds
+                  .map((channelUuid: string) => findChannelByUuid(channelUuid))
+                  .filter((channel: Channel | undefined) => channel !== undefined) as Channel[],
+                section.sortBy,
+              ).map((channel: Channel | undefined) => {
+                if (!channel) return null;
+                let channelIcon = channel.icon;
+                let userId = undefined;
+                let userStatus = undefined;
+
+                if (channel.type === ChannelType.DIRECT) {
+                  const user = findUserByName(channel.name);
+                  if (!user) return;
+                  channelIcon = user.profileImage;
+                  userId = user.uuid;
+                  userStatus = user.status;
+                }
+
+                if (channelIcon) {
+                  channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
+                }
+
+                return (
+                  <ListItem
+                    key={channel.uuid}
+                    id={channel.uuid}
+                    sectionId={section.uuid}
+                    title={channel.name}
+                    isChannel
+                    type={channel.type}
+                    isTemp={channel.isTemp}
+                    status={userStatus}
+                    isPrivate={channel.isPrivate}
+                    icon={
+                      <ChannelIcon
+                        imageUrl={channelIcon}
+                        isPrivate={channel.isPrivate}
+                        isSelected={selectedId === channel.uuid}
+                        size={22}
+                        userId={userId}
+                      />
+                    }
+                  />
+                );
+              })
+            : null}
+
+          {isSystem ? (
+            <ListItem
+              id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
+              icon={<Plus size={16} />}
+              title={type === ChannelType.DIRECT ? 'View Users' : 'Explore Channels'}
+              disabled
+            />
+          ) : (
+            ''
+          )}
+        </CollapsibleContent>
+      </Collapsible>
+      {isOverBottomHalf && sectionIsOver && (
+        <div className="absolute bottom-0 left-0 w-full h-px bg-slate-500" />
+      )}
+    </div>
   );
 };
 

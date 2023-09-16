@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,19 +35,22 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   const { findUserByUuid, updateUserApi, uploadProfileImageApi, currentUser } =
     useStore('userStore');
   const [user, setUser] = useState<User>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const fileInput = useRef<any>(null);
+
+  const fileInput = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: useMemo(
-      () => ({
-        firstName: currentUser?.firstName,
-        lastName: currentUser?.lastName,
-      }),
-      [currentUser],
-    ),
+    defaultValues: useMemo(() => {
+      const user = findUserByUuid(userId);
+
+      if (!user) return;
+
+      return {
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+      };
+    }, [findUserByUuid, userId]),
   });
 
   useEffect(() => {
@@ -71,8 +74,9 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
     setIsEditing(false);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSelectImage = (e: any) => {
+  const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -80,6 +84,7 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
       const imageBase64 = reader.result as string;
 
       const updatedUser = await uploadProfileImageApi(imageBase64);
+
       setUser(updatedUser);
     };
 
@@ -93,17 +98,18 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
   return (
     <Modal title={isEditing ? 'Edit your profile' : 'View Profile'}>
       <Form {...form}>
-        <div className="flex gap-10 mt-4">
-          <div className="flex flex-col items-center gap-4">
+        <div className="flex gap-10 mt-4 h-80">
+          <div className="flex flex-col items-center gap-4 flex-1 w-full">
             <UserAvatar size={165} userId={user.uuid} profileImage={transformedImage} />
             {user.uuid === currentUser.uuid && (
               <Button
-                variant="ghost"
-                className="text-userMedium hover:text-userMedium w-full cursor-pointer border border-userMedium"
+                variant="secondary"
                 onClick={(e) => {
                   e.preventDefault();
 
-                  fileInput.current.click();
+                  if (fileInput.current) {
+                    fileInput.current.click();
+                  }
                 }}
               >
                 Change profile image
@@ -154,8 +160,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                         />
                       ) : (
                         <p
-                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base text-muted-foreground"
+                          style={{ paddingLeft: '0.8rem', paddingTop: '6px' }}
+                          className="text-base text-muted-foreground h-9 p-1.5"
                         >
                           {user?.firstName}
                         </p>
@@ -180,8 +186,8 @@ const ProfileModal = ({ userId }: ProfileModalProps) => {
                         />
                       ) : (
                         <p
-                          style={{ height: '37.5px', paddingLeft: '0.8rem', paddingTop: '0.55rem' }}
-                          className="text-base text-muted-foreground"
+                          style={{ paddingLeft: '0.8rem' }}
+                          className="text-base text-muted-foreground h-9 p-1.5"
                         >
                           {user?.lastName}
                         </p>

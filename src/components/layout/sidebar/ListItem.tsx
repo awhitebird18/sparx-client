@@ -26,6 +26,7 @@ import { Lock } from 'react-bootstrap-icons';
 
 interface ListitemProps {
   id: string;
+  sectionId?: string;
   title: string;
   icon?: JSX.Element;
   primary?: boolean;
@@ -39,6 +40,7 @@ interface ListitemProps {
 
 const ListItem = ({
   id,
+  sectionId,
   title,
   isTemp,
   isChannel,
@@ -61,7 +63,7 @@ const ListItem = ({
   const navigate = useNavigate();
   const [, dragRef] = useDrag(() => ({
     type: SidebarItem.ITEM,
-    item: { id, type: SidebarItem.ITEM, channelType: type },
+    item: { id, type: SidebarItem.ITEM, channelType: type, sectionId: sectionId },
     collect: () => ({}),
   }));
 
@@ -73,12 +75,14 @@ const ListItem = ({
 
   const handleMoveChannel = async ({
     channelId,
-    sectionId,
+    selectedSectionId,
   }: {
     channelId: string;
-    sectionId: string;
+    selectedSectionId: string;
   }) => {
-    await updateChannelSectionApi(sectionId, channelId);
+    if (!sectionId || sectionId === selectedSectionId) return;
+
+    await updateChannelSectionApi(selectedSectionId, channelId);
   };
 
   const handleLeaveChannel = async () => {
@@ -135,9 +139,9 @@ const ListItem = ({
             isSelected
               ? 'bg-active hover:bg-active text-active dark:text-active'
               : 'text-main hover:bg-hover'
-          } ${disabled && 'text-muted/70'}`}
+          } ${disabled ? 'text-neutral/80' : 'font-medium'}`}
         >
-          <div className="font-medium whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
+          <div className="whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
             <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
@@ -174,7 +178,9 @@ const ListItem = ({
                 .map((section: Section) => (
                   <ContextMenuItem
                     key={section.uuid}
-                    onClick={() => handleMoveChannel({ channelId: id, sectionId: section.uuid })}
+                    onClick={() =>
+                      handleMoveChannel({ channelId: id, selectedSectionId: section.uuid })
+                    }
                   >
                     {section.name}
                   </ContextMenuItem>

@@ -47,11 +47,11 @@ html {
   bottom: 0rem;
   height: 20rem;
   width: 20rem;
-  opacity: 0.2;
-  background: var(--userMedium);
+  opacity: 0.15;
+  background: var(--primary-dark);
   background: radial-gradient(
     circle,
-    var(--userMedium) 0%,
+    var(--primary-dark) 10%,
     rgba(121, 135, 241, 0) 38%,
     rgba(148, 186, 233, 0) 70%
   );

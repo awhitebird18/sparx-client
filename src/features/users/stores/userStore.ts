@@ -8,7 +8,6 @@ import { UserStatus } from '../enums';
 
 export class UserStore {
   users: User[] = [];
-  currentUser: User | undefined = undefined;
   isLoading = false;
   onlineUsers: OnlineUser[] = [];
   currentPage = 1;
@@ -16,6 +15,7 @@ export class UserStore {
   searchValue = '';
   hasMore = true;
   userOnlineStatus = UserStatus.ONLINE;
+  currentUserId: string | undefined = undefined;
 
   constructor() {
     makeObservable(
@@ -23,13 +23,15 @@ export class UserStore {
       {
         users: observable,
         onlineUsers: observable,
+        currentUserId: observable,
         isLoading: observable,
         searchValue: observable,
-        currentUser: observable,
         userOnlineStatus: observable,
+        currentUser: computed,
         displayedUsers: computed,
         filteredUsers: computed,
         setCurrentPage: action,
+        setCurrentUserId: action,
         setSearchValue: action,
         setIsLoading: action,
         setUsers: action,
@@ -45,12 +47,14 @@ export class UserStore {
         fetchUsersApi: action,
         setUserOnlineStatus: action,
         findUserByName: action,
-        setCurrentUser: action,
         updateOnlineUser: action,
-        updateCurrentUser: action,
       },
       { autoBind: true },
     );
+  }
+
+  get currentUser() {
+    return this.users.find((user) => user.uuid === this.currentUserId);
   }
 
   get filteredUsers() {
@@ -98,8 +102,8 @@ export class UserStore {
     this.searchValue = value;
   };
 
-  setCurrentUser = (user: User | undefined) => {
-    this.currentUser = user;
+  setCurrentUserId = (uuid: string | undefined) => {
+    this.currentUserId = uuid;
   };
 
   setUserOnlineStatus = (userOnlineStatus: UserStatus) => {
@@ -134,17 +138,7 @@ export class UserStore {
     const user = this.users.find((el: User) => el.uuid === updateUser.uuid);
     if (!user) return;
 
-    if (user.uuid === this?.currentUser?.uuid) {
-      this.updateCurrentUser(user);
-    }
-
     Object.assign(user, updateUser);
-  };
-
-  updateCurrentUser = (user: User) => {
-    if (!this.currentUser) return;
-
-    this.currentUser = user;
   };
 
   removeUser = (uuid: string) => {
@@ -154,7 +148,7 @@ export class UserStore {
   updateUserApi = async (updatedUser: UpdateUser) => {
     const user = await usersApi.updateUser(updatedUser);
 
-    this.updateCurrentUser(user);
+    this.updateUser(user);
 
     return user;
   };
@@ -162,7 +156,7 @@ export class UserStore {
   uploadProfileImageApi = async (profileImage: string) => {
     const user = await userProfileApi.uploadProfileImage(profileImage);
 
-    this.updateCurrentUser(user);
+    this.updateUser(user);
     return user;
   };
 

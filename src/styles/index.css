@@ -23,13 +23,15 @@
     --card-foreground: 220 84% 4.9%;
 
     --border: 220 30.8% 90%;
+    --border-light: 220 30.8% 93%;
+
     --input: 220 31.8% 91.4%;
 
     --primary: 220 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 220 28% 90.1%;
-    --secondary-hover: 220 28% 85.1%;
+    --secondary: 220 40% 97%;
+    --secondary-hover: 220 28% 94.1%;
     --secondary-foreground: 220 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
@@ -38,7 +40,7 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 220 40% 98%;
 
-    --ring: 220 20.2% 65.1%;
+    --ring: 220 23.2% 85.1%;
 
     --radius: 0.5rem;
 
@@ -53,11 +55,11 @@
     --primary-hover: var(--color-primary-100);
     --primary-active: var(--color-primary-950);
 
-    --text-neutral: 220 10% 53%;
+    --text-neutral: 220 20% 40%;
 
-    --secondary-text: 0 0% 20%;
+    --secondary-text: 0 0% 30%;
 
-    --text-main: 0 0% 28%;
+    --text-main: 220 10% 28%;
 
     --text-muted: 0 0% 40%;
 
@@ -82,12 +84,14 @@
     --card-foreground: 220 40% 98%;
 
     --border: 220 11% 27%;
+    --border-light: 220 11% 30%;
+  
     --input: 220.2 32.6% 17.5%;
 
     --primary: 220 9% 91%;
     --primary-foreground: 220 47.4% 11.2%;
 
-    --secondary: 220 11% 35%;
+    --secondary: 220 11% 25%;
     --secondary-hover: 220 11% 30%;
     --secondary-foreground: 220 40% 98%;
 
@@ -97,7 +101,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 85.7% 97.3%;
 
-    --ring: 220 32.6% 17.5%;
+    --ring: 220 10.6% 65.5%;
 
     --primary-lightest: var(--color-primary-200);
     --primary-lighter: var(--color-primary-400);
@@ -114,7 +118,7 @@
 
     --text-main: 0 0% 85%;
 
-    --text-neutral: 220 25% 70%;
+    --text-neutral: 220 25% 80%;
 
     --text-muted: 220 17% 60%;
 

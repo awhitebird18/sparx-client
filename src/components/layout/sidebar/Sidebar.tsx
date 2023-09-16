@@ -37,8 +37,8 @@ const Sidebar = () => {
         </div>
         <Divider />
         <div className="p-2 overflow-auto flex flex-col">
-          {sections.slice().map((section: ChannelType, index: number) => (
-            <Section key={section.uuid} section={section} index={index} />
+          {sections.slice().map((section: ChannelType) => (
+            <Section key={section.uuid} section={section} index={section.orderIndex} />
           ))}
         </div>
       </div>

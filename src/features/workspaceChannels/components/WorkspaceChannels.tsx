@@ -190,14 +190,14 @@ const WorkspaceChannels: React.FC = () => {
   return (
     <ContentLayout title="Channels" headerComponent={headerBtn} disablePadding>
       <div className="p-3">
-        <div className="flex gap-2 justify-between">
-          <div className="flex gap-2 my-2 w-full">
+        <div className="flex gap-2 justify-between mt-2">
+          <div className="flex gap-2 w-full items-center">
             {/* Channel type filter */}
             <div className="w-44">
               <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant={filterChannelVisibility ? 'default' : 'outline'}
+                    variant={filterChannelVisibility ? 'default' : 'secondary'}
                     className="gap-2 py-0 w-full overflow-hidden justify-between"
                     size="sm"
                   >
@@ -223,7 +223,7 @@ const WorkspaceChannels: React.FC = () => {
               <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant={filterSubscribed ? 'default' : 'outline'}
+                    variant={filterSubscribed ? 'default' : 'secondary'}
                     size="sm"
                     className="gap-2 py-0 w-full flex-1 min-w-fit overflow-hidden justify-between"
                   >
@@ -247,12 +247,11 @@ const WorkspaceChannels: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="max-w-sm flex-1">
+            <div className="max-w-sm w-full">
               <SearchInput
                 value={filterBySearchValue}
                 setValue={setFilterBySearchValue}
                 placeholder="Search channels"
-                collapsible
               />
             </div>
           </div>
