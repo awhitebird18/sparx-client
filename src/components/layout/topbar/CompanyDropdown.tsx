@@ -69,6 +69,7 @@ const CompanyDropdown = () => {
             onClick={() => {
               console.info('support');
             }}
+            disabled
           >
             Support
           </DropdownMenuItem>
@@ -76,6 +77,7 @@ const CompanyDropdown = () => {
             onClick={() => {
               console.info('feedback');
             }}
+            disabled
           >
             Feedback
           </DropdownMenuItem>
