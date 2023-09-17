@@ -18,7 +18,7 @@ const NoChannelsFallback = () => {
       <Tv size={500} className="text-muted opacity-5 absolute mb-28" />
       <p className="text-4xl font-bold mb-4">No Channels Found</p>
       <p className="mb-4">You may want to try adjusting your filters.</p>
-      <Button size="lg" onClick={handleClickAddChannel} variant="default" className="z-50 mb-20">
+      <Button size="lg" onClick={handleClickAddChannel} variant="default" className="z-50 mb-36">
         Create channel
       </Button>
     </div>

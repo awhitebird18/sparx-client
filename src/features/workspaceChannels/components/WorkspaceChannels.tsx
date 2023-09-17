@@ -197,7 +197,7 @@ const WorkspaceChannels: React.FC = () => {
               <DropdownMenu open={typeDropdown} onOpenChange={setTypeDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant={filterChannelVisibility ? 'default' : 'secondary'}
+                    variant={filterChannelVisibility ? 'default' : 'outline'}
                     className="gap-2 py-0 w-full overflow-hidden justify-between"
                     size="sm"
                   >
@@ -223,7 +223,7 @@ const WorkspaceChannels: React.FC = () => {
               <DropdownMenu open={subscribedDropdownOpen} onOpenChange={setSubscribedDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant={filterSubscribed ? 'default' : 'secondary'}
+                    variant={filterSubscribed ? 'default' : 'outline'}
                     size="sm"
                     className="gap-2 py-0 w-full flex-1 min-w-fit overflow-hidden justify-between"
                   >

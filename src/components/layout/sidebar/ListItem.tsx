@@ -135,7 +135,7 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 rounded-sm p-0 px-3 text-sm w-full justify-between flex items-center cursor-pointer overflow-hidden ${
             isSelected
               ? 'bg-active hover:bg-active text-active dark:text-active'
               : 'text-main hover:bg-hover'

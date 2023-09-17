@@ -31,9 +31,9 @@ const Sidebar = () => {
           <CompanyDropdown />
         </div>
         <div className="p-2">
-          <ListItem id="users" title="Users" primary icon={<Person size={18} />} />
-          <ListItem id="channels" title="Channels" primary icon={<Tv size={16} />} />
-          <ListItem id="threads" title="Threads" primary icon={<ChatSquareDots size={15} />} />
+          <ListItem id="users" title="Users" primary icon={<Person size={20} />} />
+          <ListItem id="channels" title="Channels" primary icon={<Tv size={17} />} />
+          <ListItem id="threads" title="Threads" primary icon={<ChatSquareDots size={16} />} />
         </div>
         <Divider />
         <div className="p-2 overflow-auto flex flex-col">
