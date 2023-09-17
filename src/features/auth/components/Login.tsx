@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-zinc-900">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-secondary dark:bg-popover">
       <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
