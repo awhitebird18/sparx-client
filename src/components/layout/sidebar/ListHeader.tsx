@@ -147,7 +147,6 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
                   <ContextMenuSeparator />
                 </>
               )}
-              <ContextMenuItem>Manage Sections</ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuPortal>
         </ContextMenuSub>

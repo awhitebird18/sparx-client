@@ -8,7 +8,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/Form';
-import { PencilFill, Files } from 'react-bootstrap-icons';
+import { PencilFill } from 'react-bootstrap-icons';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -88,7 +88,7 @@ const About = ({ channel }: { channel: Channel }) => {
 
       {!isDirectChannel && (
         <Button
-          className="justify-start items-start h-12 text-rose-500 hover:text-rose-500  border border-border space-y-1 hover:bg-red-50"
+          className="justify-start items-start h-12 text-rose-500 hover:text-rose-500  border border-border space-y-1 hover:bg-red-50 dark:hover:bg-red-500/10 dark:hover:text-rose-100"
           variant="ghost"
           onClick={handleLeaveChannel}
         >
@@ -97,14 +97,6 @@ const About = ({ channel }: { channel: Channel }) => {
       )}
 
       <div className="flex-grow" />
-
-      <Button
-        className="justify-start dark:hover:bg-transparent hover:bg-transparent"
-        variant="ghost"
-        onClick={() => console.info('copy channel id')}
-      >
-        Channel ID: {channel.uuid} <Files />
-      </Button>
 
       {editField && (
         <EditField type={editField} content={channel[editField] || ''} channelId={channel.uuid} />
