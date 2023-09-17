@@ -134,7 +134,7 @@ export class UserStore {
     this.users = users;
   };
 
-  updateUser = (updateUser: User) => {
+  updateUser = (updateUser: Partial<User>) => {
     const user = this.users.find((el: User) => el.uuid === updateUser.uuid);
     if (!user) return;
 

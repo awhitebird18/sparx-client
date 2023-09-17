@@ -135,7 +135,7 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden ${
+          className={`h-8 rounded-sm p-0 px-3 text-sm w-full justify-between flex items-center cursor-pointer overflow-hidden ${
             isSelected
               ? 'bg-active hover:bg-active text-active dark:text-active'
               : 'text-main hover:bg-hover'
@@ -148,7 +148,9 @@ const ListItem = ({
 
             {title}
             {isPrivate && <Lock />}
-            <div className="overflow-hidden">{status && <UserStatusDisplay status={status} />}</div>
+            <div className="overflow-hidden">
+              {status?.isActive && <UserStatusDisplay status={status} />}
+            </div>
           </div>
           {unreadCount ? (
             <Badge

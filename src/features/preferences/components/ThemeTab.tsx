@@ -41,12 +41,12 @@ const ThemeTab = () => {
   return (
     <ScrollArea>
       <div className="flex flex-col flex-1 gap-6">
-        <p className="text-muted-foreground">
+        <p className="text-neutral">
           Change the appearance of Sparx across all of your workspaces:
         </p>
 
         <div>
-          <h2 className="text-lg text-muted mb-2">App theme</h2>
+          <h2 className="text-lg text-neutral mb-2">App theme</h2>
           <RadioGroup
             defaultValue={theme}
             onValueChange={(value) => handleThemeSelect(value)}
@@ -81,7 +81,7 @@ const ThemeTab = () => {
           </RadioGroup>
         </div>
         <div>
-          <p className="text-lg text-muted mb-2">Primary Color</p>
+          <p className="text-lg text-neutral mb-2">Primary Color</p>
           <Select onValueChange={handlePrimaryColorSelect} defaultValue={primaryColor}>
             <SelectTrigger className="h-14">
               <SelectValue placeholder="Select primary color" />

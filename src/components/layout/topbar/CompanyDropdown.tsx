@@ -37,7 +37,7 @@ const CompanyDropdown = () => {
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger className="w-full">
         <div className="flex gap-1.5 hover:bg-transparent px-4 pl-6 h-14 cursor-pointer items-center border-b border-border">
-          <h1 className="font-medium flex-grow-1 whitespace-nowrap text-lg">Company Name</h1>
+          <h1 className="flex-grow-1 whitespace-nowrap text-lg font-bold">Personal Workspace</h1>
           <ChevronDown size={13} className="mt-1" />
         </div>
       </DropdownMenuTrigger>
@@ -69,6 +69,7 @@ const CompanyDropdown = () => {
             onClick={() => {
               console.info('support');
             }}
+            disabled
           >
             Support
           </DropdownMenuItem>
@@ -76,6 +77,7 @@ const CompanyDropdown = () => {
             onClick={() => {
               console.info('feedback');
             }}
+            disabled
           >
             Feedback
           </DropdownMenuItem>

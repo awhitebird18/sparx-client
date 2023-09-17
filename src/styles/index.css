@@ -55,11 +55,11 @@
     --primary-hover: var(--color-primary-100);
     --primary-active: var(--color-primary-950);
 
-    --text-neutral: 220 20% 40%;
+    --text-neutral: 220 20% 30%;
 
     --secondary-text: 0 0% 30%;
 
-    --text-main: 220 10% 28%;
+    --text-main: 220 25% 33%;
 
     --text-muted: 0 0% 40%;
 
@@ -77,7 +77,7 @@
     --muted: 220.2 32.6% 17.5%;
     --muted-foreground: 220 20.2% 65.1%;
 
-    --popover: 220.2 84% 10.9%;
+    --popover: 220.2 15% 15%;
     --popover-foreground: 220 40% 98%;
 
     --card: 220 11% 10%;

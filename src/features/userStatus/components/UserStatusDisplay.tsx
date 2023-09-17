@@ -13,12 +13,9 @@ const UserStatusDisplay = ({ status }: { status: UserStatus }) => {
         </TooltipTrigger>
 
         <TooltipContent sideOffset={7}>
-          <div className="flex flex-col gap-1 items-center">
-            <div>
-              <Emoji id={status.emoji} size={26} />
-              <p>{status?.text}</p>
-            </div>
-            <div className="text-muted-foreground">Until 06:00 PM</div>
+          <div className="flex flex-col gap-3 px-2 py-1 items-center">
+            <Emoji id={status.emoji} size={26} />
+            <p>{status?.text}</p>
           </div>
         </TooltipContent>
       </Tooltip>

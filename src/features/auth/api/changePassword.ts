@@ -13,8 +13,7 @@ export const changePassword = async (changePasswordDto: {
 
     stores.notificationStore.addNotification({
       title: 'Success!',
-      description:
-        "Your password has been changed successfully, and you've been logged in automatically. Please ensure you remember your new password for future logins.",
+      description: 'Your password has been changed successfully.',
       type: NotificationType.SUCCESS,
       show: true,
     });

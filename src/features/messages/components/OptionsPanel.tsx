@@ -57,9 +57,10 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
   };
 
   const handleAddReaction = async (emojiId: string) => {
+    if (!currentUser) return;
     await addReactionApi({
       emojiId,
-      userId: message.userId,
+      userId: currentUser.uuid,
       messageId: message.uuid,
     });
     handleCloseEmojiPicker();
