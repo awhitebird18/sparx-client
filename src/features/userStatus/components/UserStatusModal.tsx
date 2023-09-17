@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { EmojiSmile, X } from 'react-bootstrap-icons';
+import { X } from 'react-bootstrap-icons';
 
 import { Input } from '@/components/ui/Input';
 
@@ -12,7 +12,7 @@ import { UserStatus } from '../types/userStatus';
 import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import Emoji from '@/components/ui/Emoji';
-import EmojiPicker from '@emoji-mart/react';
+import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 
 const UserStatusModal = () => {
   const {
@@ -55,19 +55,19 @@ const UserStatusModal = () => {
   };
 
   const handleSubmit = async () => {
-    if (!currentUserStatus?.text) return;
+    if (!currentUserStatus?.text || !currentUserStatus?.emoji) return;
 
     if (!currentUserStatus.uuid || !findUserStatusByUuid(currentUserStatus.uuid)) {
       await createUserStatusApi({
         text: currentUserStatus.text,
-        emoji: 'banana',
+        emoji: currentUserStatus.emoji,
         duration: StatusDuration.TODAY,
         dateExpire: new Date(),
       });
     } else {
       await updateUserStatusApi(currentUserStatus.uuid, {
         text: currentUserStatus.text,
-        emoji: 'banana',
+        emoji: currentUserStatus.emoji,
         duration: StatusDuration.TODAY,
         dateExpire: new Date(),
         isActive: true,
@@ -82,6 +82,9 @@ const UserStatusModal = () => {
   };
 
   const handleSetCurrentStatusInactive = async (uuid: string) => {
+    if (!currentUserStatus) {
+      return;
+    }
     await updateUserStatusApi(uuid, { isActive: false });
     setCurrentUserStatus(undefined);
   };
@@ -93,10 +96,14 @@ const UserStatusModal = () => {
   };
 
   return (
-    <Modal title="Set a status">
-      <div className="flex flex-col w-96 space-y-8">
-        <div ref={emojiButtonRef} className="relative flex items-center w-full">
-          <div className="absolute left-0 top-0">
+    <Modal title={activeUserStatus ? 'Current status' : 'Set a status'}>
+      <div className="flex flex-col w-96 space-y-8 ">
+        <div
+          className={`relative flex items-center w-full ${
+            activeUserStatus && 'pointer-events-none'
+          }`}
+        >
+          <div className="absolute left-0 top-0" ref={emojiButtonRef}>
             <Button
               size="icon"
               variant="ghost"
@@ -104,9 +111,9 @@ const UserStatusModal = () => {
               onClick={handleShowEmojiPicker}
             >
               {currentUserStatus ? (
-                <Emoji id={currentUserStatus.emoji} />
+                <Emoji id={currentUserStatus.emoji} size={24} />
               ) : (
-                <EmojiSmile size={16} />
+                <Emoji id="smile" size={24} />
               )}
             </Button>
             {showEmojiPicker && (
@@ -129,20 +136,21 @@ const UserStatusModal = () => {
             }
             value={currentUserStatus ? currentUserStatus.text : ''}
           />
-          {currentUserStatus ? (
+          {currentUserStatus?.text && !activeUserStatus ? (
             <Button
-              ref={emojiButtonRef}
               size="icon"
               variant="ghost"
               className="w-8 h-8 absolute right-2 top-2 rounded-full"
-              onClick={() => handleSetCurrentStatusInactive(currentUserStatus.uuid)}
+              onClick={() => {
+                setCurrentUserStatus(undefined);
+              }}
             >
-              <X />
+              <X size={20} />
             </Button>
           ) : null}
         </div>
         {!currentUserStatus ? (
-          <div className="p-1 space-y-1">
+          <div className="p-1 space-y-1 max-h-80 overflow-auto">
             <p className="">Recent</p>
             <div className="w-full">
               {userStatuses.map((u: UserStatus) => (
@@ -156,7 +164,9 @@ const UserStatusModal = () => {
                     className="close-icon p-0.5 h-6 w-6"
                     size="icon"
                     variant="ghost"
-                    onClick={() => handleSetCurrentStatusInactive(u.uuid)}
+                    onClick={() => {
+                      if (currentUserStatus) setCurrentUserStatus(undefined);
+                    }}
                   >
                     <X size={20} />
                   </Button>
@@ -168,7 +178,7 @@ const UserStatusModal = () => {
         <div className="flex ml-auto gap-3 mt-10">
           {currentUserStatus?.isActive ? (
             <Button
-              className="ml-auto w-28"
+              className="ml-auto w-32"
               onClick={() => handleSetCurrentStatusInactive(currentUserStatus.uuid)}
             >
               Clear Status
@@ -177,7 +187,7 @@ const UserStatusModal = () => {
             <>
               <Button
                 type="button"
-                className="ml-auto w-28"
+                className="ml-auto w-32"
                 variant="outline"
                 onClick={() => {
                   handleCloseModal();
@@ -185,7 +195,7 @@ const UserStatusModal = () => {
               >
                 Cancel
               </Button>
-              <Button className="ml-auto w-28" onClick={handleSubmit} disabled={!currentUserStatus}>
+              <Button className="ml-auto w-32" onClick={handleSubmit} disabled={!currentUserStatus}>
                 Submit
               </Button>
             </>
