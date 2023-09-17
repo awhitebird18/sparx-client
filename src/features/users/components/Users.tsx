@@ -54,12 +54,12 @@ const Users = () => {
         <div className="flex gap-2 my-2">
           {/* Channel type filter */}
 
-          <Button className="gap-2 py-0 w-48 justify-between" size="sm" variant="outline">
+          <Button className="gap-2 py-0 w-72 justify-between" size="sm" variant="outline">
             Location
             <ChevronDown className="text-xs" />
           </Button>
 
-          <Button className="gap-2 py-0 w-48 justify-between" size="sm" variant="outline">
+          <Button className="gap-2 py-0 w-72 justify-between" size="sm" variant="outline">
             Department
             <ChevronDown className="text-xs" />
           </Button>
