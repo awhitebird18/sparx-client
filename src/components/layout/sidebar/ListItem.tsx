@@ -148,7 +148,9 @@ const ListItem = ({
 
             {title}
             {isPrivate && <Lock />}
-            <div className="overflow-hidden">{status && <UserStatusDisplay status={status} />}</div>
+            <div className="overflow-hidden">
+              {status?.isActive && <UserStatusDisplay status={status} />}
+            </div>
           </div>
           {unreadCount ? (
             <Badge
