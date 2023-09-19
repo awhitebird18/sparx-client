@@ -123,33 +123,31 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
             </ContextMenuSubContent>
           </ContextMenuPortal>
         </ContextMenuSub>
-        <ContextMenuSub>
-          <ContextMenuSubTrigger>Manage</ContextMenuSubTrigger>
-          <ContextMenuPortal>
-            <ContextMenuSubContent>
-              {!isSystem && (
-                <>
-                  <ContextMenuItem
-                    onClick={() =>
-                      handleClickItem({ type: 'CreateSectionModal', payload: { id, name: title } })
-                    }
-                  >
-                    {`Rename ${title}`}
-                  </ContextMenuItem>
+        {!isSystem && (
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>Manage</ContextMenuSubTrigger>
+            <ContextMenuPortal>
+              <ContextMenuSubContent>
+                <ContextMenuItem
+                  onClick={() =>
+                    handleClickItem({ type: 'CreateSectionModal', payload: { id, name: title } })
+                  }
+                >
+                  {`Rename ${title}`}
+                </ContextMenuItem>
 
-                  <ContextMenuItem
-                    className="text-rose-500"
-                    onClick={() =>
-                      handleClickItem({ type: 'DeleteSectionModal', payload: { id, name: title } })
-                    }
-                  >{`Delete ${title}`}</ContextMenuItem>
+                <ContextMenuItem
+                  className="text-rose-500"
+                  onClick={() =>
+                    handleClickItem({ type: 'DeleteSectionModal', payload: { id, name: title } })
+                  }
+                >{`Delete ${title}`}</ContextMenuItem>
 
-                  <ContextMenuSeparator />
-                </>
-              )}
-            </ContextMenuSubContent>
-          </ContextMenuPortal>
-        </ContextMenuSub>
+                <ContextMenuSeparator />
+              </ContextMenuSubContent>
+            </ContextMenuPortal>
+          </ContextMenuSub>
+        )}
       </ContextMenuContent>
     </ContextMenu>
   );
