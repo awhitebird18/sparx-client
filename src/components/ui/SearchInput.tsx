@@ -8,12 +8,14 @@ const SearchInput = ({
   placeholder,
   onFocus,
   dark,
+  disabled,
 }: {
   value: string | undefined;
   setValue: (value: string) => void;
   placeholder?: string;
   onFocus?: () => void;
   dark?: boolean;
+  disabled?: boolean;
 }) => {
   const handleClearSearch = () => {
     setValue('');
@@ -27,6 +29,7 @@ const SearchInput = ({
         onChange={(e) => setValue(e.target.value)}
         value={value}
         onFocus={onFocus}
+        disabled={disabled}
       />
 
       <div className="absolute left-3.5 top-auto text-base text-neutral">

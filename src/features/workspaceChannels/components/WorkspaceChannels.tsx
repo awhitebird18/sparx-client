@@ -27,6 +27,8 @@ import { filterWorkspaceChannels } from '@/utils/filterUtils';
 import { sortWorkspaceChannels } from '@/utils/sortUtils';
 import { ChannelType } from '@/features/channels/enums';
 import ContentLayout from '@/components/layout/ContentLayout';
+import ChannelIcon from '@/features/channels/components/ChannelIcon';
+import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const pageSize = 15;
 
@@ -313,26 +315,35 @@ const WorkspaceChannels: React.FC = () => {
                   className="flex justify-between items-center border-b border-border p-5 cursor-pointer group hover:bg-hover"
                   onClick={() => handleViewChannel(channel)}
                 >
-                  <div>
-                    <p className="font-semibold">{channel.name}</p>
-                    <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
-                      {isSubscribed ? (
-                        <span className="text-emerald-500 flex items-center gap-1">
-                          <Check className="text-lg mt-1" /> <span>Joined</span>
-                        </span>
-                      ) : null}
+                  <div className="flex items-center gap-6">
+                    <div>
+                      <ChannelIcon
+                        imageUrl={channel.icon ? transformCloudinaryUrl(channel.icon, 60, 60) : ''}
+                        isPrivate={channel.isPrivate}
+                        size={40}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold">{channel.name}</p>
+                      <p className="text-sm h-6 flex gap-1 text-muted-foreground items-center">
+                        {isSubscribed ? (
+                          <span className="text-emerald-500 flex items-center gap-1">
+                            <Check className="text-lg mt-1" /> <span>Joined</span>
+                          </span>
+                        ) : null}
 
-                      {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
-                      {userCount ? (
-                        <span className="flex items-center gap-1">
-                          {userCount} member{userCount === 1 ? '' : 's'}
-                        </span>
-                      ) : null}
-                      {userCount && channel.description ? <Dot className="text-lg" /> : null}
-                      {channel.description && (
-                        <span className="flex items-center gap-1">{channel.description}</span>
-                      )}
-                    </p>
+                        {isSubscribed && userCount ? <Dot className="text-lg" /> : null}
+                        {userCount ? (
+                          <span className="flex items-center gap-1">
+                            {userCount} member{userCount === 1 ? '' : 's'}
+                          </span>
+                        ) : null}
+                        {userCount && channel.description ? <Dot className="text-lg" /> : null}
+                        {channel.description && (
+                          <span className="flex items-center gap-1">{channel.description}</span>
+                        )}
+                      </p>
+                    </div>
                   </div>
                   <div className="space-x-2 opacity-0 group-hover:opacity-100 transition duration-200 ease-in-out">
                     {isSubscribed ? (

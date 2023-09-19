@@ -27,7 +27,7 @@ const AvatarGroup = () => {
 
   return (
     <div
-      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer dark:bg-background`}
+      className={`relative h-full flex justify-end items-center overflow-hidden cursor-pointer`}
       style={{ width: componentWidth }}
       onClick={handleOpenChannelDetails}
     >
@@ -50,7 +50,7 @@ const AvatarGroup = () => {
           return (
             <Avatar
               key={user.uuid}
-              className={`absolute w-7 h-7 rounded-md border-2 border-border`}
+              className={`absolute w-7 h-7 rounded-md border-2 border-border bg-background`}
               style={{ left: `${index * avatarSize}px` }}
             >
               <AvatarImage src={transformedImage} />

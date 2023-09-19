@@ -13,7 +13,7 @@ const Search = () => {
 
   return (
     <div className="w-full max-w-xl relative">
-      <SearchInput value={searchValue} setValue={handleSearch} placeholder="Search" dark />
+      <SearchInput value={searchValue} setValue={handleSearch} placeholder="Search" dark disabled />
 
       {searchValue ? (
         <div className="w-full max-h-72 border-border rounded-md absolute top-11 left-0 bg-background z-10 p-3 space-y-3 shadow">
