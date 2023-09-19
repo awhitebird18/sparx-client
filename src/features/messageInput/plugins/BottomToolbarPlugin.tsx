@@ -23,6 +23,7 @@ const BottomToolbarPLugin = () => {
           aria-label="Upload file"
           variant="secondary"
           size="icon"
+          disabled
         >
           <Plus className="text-xl" />
         </Button>
@@ -34,13 +35,26 @@ const BottomToolbarPLugin = () => {
         aria-label="Toggle top richtext toolbar"
         variant="ghost"
         size="icon"
+        disabled
       >
         <Type className="text-xl" />
       </Button>
-      <Button className={buttonClasses} aria-label="Show Emoji" variant="ghost" size="icon">
+      <Button
+        className={buttonClasses}
+        aria-label="Show Emoji"
+        variant="ghost"
+        size="icon"
+        disabled
+      >
         <EmojiSmile className="text-base" />
       </Button>
-      <Button className={buttonClasses} aria-label="Show Emoji" variant="ghost" size="icon">
+      <Button
+        className={buttonClasses}
+        aria-label="Show Emoji"
+        variant="ghost"
+        size="icon"
+        disabled
+      >
         <At className="text-xl" />
       </Button>
     </div>

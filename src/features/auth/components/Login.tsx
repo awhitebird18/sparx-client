@@ -22,9 +22,17 @@ const Login: React.FC = () => {
     }
   };
 
+  const loginAnanomously = async () => {
+    try {
+      await userLogin({ email: 'awhitebirdtestingthings2@gmail.com', password: 'Password1' });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-secondary dark:bg-popover">
-      <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md">
+      <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md relative">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={20} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Sign in to your account</h2>
@@ -83,6 +91,9 @@ const Login: React.FC = () => {
             </form>
           </div>
         </div>
+        <Button className="absolute -top-4 -right-4 shadow-lg" onClick={loginAnanomously}>
+          Login Annonymously
+        </Button>
       </div>
     </div>
   );
