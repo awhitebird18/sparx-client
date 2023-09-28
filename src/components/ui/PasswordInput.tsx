@@ -16,7 +16,9 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>((props: InputProp
         className="absolute top-0 right-1 hover:bg-inherit"
         onClick={() => setShowPassword((prev: boolean) => !prev)}
         type="button"
-        tabIndex={-1}
+        name="toggle-password-visibility"
+        aria-label={showPassword ? 'Show password' : 'Hide password'}
+        aria-pressed={showPassword}
       >
         {showPassword ? <EyeSlash size={18} /> : <Eye size={18} />}
       </Button>

@@ -17,8 +17,6 @@ srcRootContent.forEach((directory) => {
     absolutePathAliases[directory] = join(srcPath, directory);
 });
 
-console.log(absolutePathAliases);
-
 export default defineConfig({
   plugins: [react()],
   resolve: {
