@@ -13,10 +13,10 @@ import Members from './Members';
 import Settings from './Settings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
-import ChannelIcon from './ChannelIcon';
 import { useEffect, useRef, useState } from 'react';
 import { User } from '@/features/users/types';
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
+import ChannelIcon from './ChannelIcon';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
   const { getChannelByUuid, fetchChannelUserIdsApi, updateChannelApi } = useStore('channelStore');
