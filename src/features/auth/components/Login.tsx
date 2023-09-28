@@ -24,7 +24,7 @@ const Login: React.FC = () => {
 
   const loginAnanomously = async () => {
     try {
-      await userLogin({ email: 'awhitebirdtestingthings2@gmail.com', password: 'Password1' });
+      await userLogin({ email: 'awhitebird@gmail.com', password: 'Password1' });
     } catch (error) {
       console.error(error);
     }
