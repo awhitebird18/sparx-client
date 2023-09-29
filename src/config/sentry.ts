@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: process.env.VITE_SENTRY_DSN,
     environment: process.env.NODE_ENV,
+    tracePropagationTargets: ['localhost', 'spa-rx.ca'],
     integrations: [
       new Sentry.BrowserTracing({
         tracePropagationTargets: [/^https:\/\/yourproductionserver\.io\/api/],
