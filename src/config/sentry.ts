@@ -26,9 +26,9 @@ if (process.env.NODE_ENV === 'production') {
       }),
       new Sentry.Replay(),
     ],
-    tracesSampleRate: 1,
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
+    tracesSampleRate: 0.1,
+    replaysSessionSampleRate: 0.5,
+    replaysOnErrorSampleRate: 0.1,
   });
 }
 
