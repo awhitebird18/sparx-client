@@ -5,7 +5,7 @@ interface LogoProps {
   resolution?: number;
 }
 
-const Logo = ({ size = 12, resolution = 80 }: LogoProps) => {
+const Logo = ({ size = 12, resolution = 100 }: LogoProps) => {
   const thumbnailUrl = transformCloudinaryUrl(
     'https://res.cloudinary.com/dwkvw91pm/image/upload/v1692153581/logo_p2v66f.png',
     resolution,

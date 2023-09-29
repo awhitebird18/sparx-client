@@ -64,8 +64,22 @@ const UserDropdown: React.FC = () => {
             </DropdownMenuTrigger>
           </TooltipTrigger>
         </div>
-        <TooltipContent>
-          <Username firstName={currentUser.firstName} lastName={currentUser.lastName} />
+        <TooltipContent asChild>
+          {(() => {
+            const formattedName = `${currentUser.firstName
+              .charAt(0)
+              .toUpperCase()}${currentUser.firstName
+              .substring(1)
+              .toLowerCase()} ${currentUser.lastName.charAt(0).toUpperCase()}${currentUser.lastName
+              .substring(1)
+              .toLowerCase()}`;
+
+            return (
+              <p className="text-ellipsis whitespace-nowrap overflow-hidden font-medium">
+                {formattedName}
+              </p>
+            );
+          })()}
         </TooltipContent>
       </Tooltip>
 

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import MainLayout from '@/components/layout/MainLayout';
@@ -7,6 +7,8 @@ import { observer } from 'mobx-react-lite';
 import { navigateToLastPage } from '@/utils/navigateToLastPage';
 import { ErrorBoundary } from 'react-error-boundary';
 import ContentErrorFallback from '@/components/ErrorFallback/ContentErrorFallback';
+
+import { init } from 'emoji-mart';
 
 const Home = lazy(() => import('@/components/layout/Home'));
 const UserRoutes = lazy(() => import('@/features/users/routes'));
@@ -23,6 +25,17 @@ const App = observer(() => {
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
+
+  // Initializes emojis
+  useEffect(() => {
+    import('@emoji-mart/data/sets/14/apple.json')
+      .then(({ default: data }) => {
+        init({ data });
+      })
+      .catch((error) => {
+        console.error('Failed to load emoji data', error);
+      });
+  }, []);
 
   return (
     <MainLayout>
