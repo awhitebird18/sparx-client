@@ -9,7 +9,7 @@ import {
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
-    dsn: process.env.VITE_SENTRY_DSN,
+    dsn: import.meta.env.VITE_SENTRY_DSN,
     environment: process.env.NODE_ENV,
     tracePropagationTargets: ['localhost', /^https:\/\/spa-rx\.ca/],
     integrations: [
