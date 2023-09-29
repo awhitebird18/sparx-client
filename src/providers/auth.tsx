@@ -6,7 +6,6 @@ import React, {
   ReactNode,
   useCallback,
 } from 'react';
-import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
 import { LoginData, RegistrationData } from '@/features/auth/types';
@@ -16,7 +15,6 @@ interface AuthContextData {
   userLogin: (loginCredentials: LoginData) => Promise<void>;
   userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<void>;
-  loading: boolean;
   verifyAndLoginUser: () => void;
 }
 
@@ -39,7 +37,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setInitialPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
-  const { setUsers, setCurrentUserId, currentUser } = useStore('userStore');
+  const { setUsers, setCurrentUserId } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
 
@@ -52,8 +50,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       verifyAndLoginUser();
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -77,8 +73,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
-      setLoading(true);
-
       const data = await authApi.verify();
 
       setCurrentUserId(data.currentUser.uuid);
@@ -92,25 +86,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [
-    setCurrentUserId,
-    setChannelUnreads,
-    setInitialPreferences,
-    setSections,
-    setSubscribedChannels,
-    setUsers,
-    connectToSocketServer,
-    setUserStatuses,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fn = async () => {
       try {
-        if (currentUser) return;
-
         await verifyAndLoginUser();
       } catch (err) {
-        setCurrentUserId(undefined);
+        // setCurrentUserId(undefined);
       }
     };
 
@@ -122,7 +106,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userLogin,
     userLogout,
     registerUser,
-    loading,
     verifyAndLoginUser,
   };
 
@@ -131,4 +114,4 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default observer(AuthProvider);
+export default AuthProvider;

@@ -8,8 +8,10 @@ const UserStatusDisplay = ({ status }: { status: UserStatus }) => {
   return (
     <Button size="icon" className="h-8 w-8 rounded-sm" variant="link">
       <Tooltip>
-        <TooltipTrigger>
-          <Emoji id={status.emoji} />
+        <TooltipTrigger asChild>
+          <div>
+            <Emoji id={status.emoji} />
+          </div>
         </TooltipTrigger>
 
         <TooltipContent sideOffset={7}>

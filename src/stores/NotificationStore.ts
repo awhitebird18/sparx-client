@@ -2,7 +2,6 @@ import { makeObservable, observable, action, reaction, IReactionDisposer } from 
 import { v4 as uuidv4 } from 'uuid';
 
 import { setFavicon } from '@/utils/setFavicon';
-import notificationSound from '@/assets/audio/coin.mp3';
 
 export enum NotificationType {
   ERROR = 'destructive',
@@ -22,7 +21,7 @@ export class NotificationStore {
   originalTitle = document.title;
   unreadsCount = 0;
   reactionDisposer: IReactionDisposer | null = null;
-  audio = new Audio(notificationSound); // create audio object
+  audio: HTMLAudioElement | null = null;
   isWindowVisible = document.visibilityState === 'visible';
 
   constructor() {
@@ -39,6 +38,14 @@ export class NotificationStore {
       handleVisibilityChange: action,
     });
 
+    if (document.readyState === 'complete') {
+      this.loadNotificationSound(); // If the document is already complete when the store is instantiated
+    } else {
+      window.addEventListener('load', () => {
+        this.loadNotificationSound(); // If the document is still loading when the store is instantiated
+      });
+    }
+
     this.reactionDisposer = reaction(
       () => this.unreadsCount,
       (count) => {
@@ -46,7 +53,7 @@ export class NotificationStore {
           document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
             this.unreadsCount > 1 && 's'
           } - Sparx`;
-          this.audio.play();
+          this.audio?.play();
         } else {
           document.title = `${this.originalTitle} - Sparx`;
         }
@@ -54,10 +61,22 @@ export class NotificationStore {
     );
 
     window.addEventListener('click', this.handleUserClick);
-    this.audio.preload = 'auto'; // preload the audio file
+    if (this.audio) {
+      this.audio.preload = 'auto'; // preload the audio file
+    }
 
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
+
+  loadNotificationSound = async () => {
+    try {
+      const { default: notificationSound } = await import('@/assets/audio/coin.mp3');
+      this.audio = new Audio(notificationSound);
+      this.audio.preload = 'auto'; // preload the audio file
+    } catch (error) {
+      console.error('Failed to load notification sound', error);
+    }
+  };
 
   sendBrowserNotification = async ({
     title,
