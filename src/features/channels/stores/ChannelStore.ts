@@ -158,14 +158,20 @@ export class ChannelStore {
 
   fetchSubscribedChannelsApi = async () => {
     this.setIsLoading(true);
-    const channels = await channelApi.getSubscribedChannels();
-    this.setSubscribedChannels([
-      ...channels.map((channel: Channel) => ({
-        ...channel,
-        createdAt: dayjs(channel.createdAt),
-        updatedAt: dayjs(channel.updatedAt),
-      })),
-    ]);
+
+    try {
+      const channels = await channelApi.getSubscribedChannels();
+
+      this.setSubscribedChannels([
+        ...channels.map((channel: Channel) => ({
+          ...channel,
+          createdAt: dayjs(channel.createdAt),
+          updatedAt: dayjs(channel.updatedAt),
+        })),
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
     this.setIsLoading(false);
   };
 }

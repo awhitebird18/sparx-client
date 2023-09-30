@@ -10,6 +10,7 @@ import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
 import { LoginData, RegistrationData } from '@/features/auth/types';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
+import Logger from '@/utils/logger';
 
 interface AuthContextData {
   userLogin: (loginCredentials: LoginData) => Promise<void>;
@@ -47,7 +48,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authApi.login(loginCredentials);
 
-      verifyAndLoginUser();
+      await verifyAndLoginUser();
     } catch (error) {
       console.error(error);
     }
@@ -58,8 +59,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await authApi.logout();
 
       setCurrentUserId(undefined);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -75,6 +76,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const data = await authApi.verify();
 
+      Logger.warn('initial load', data);
+
       setCurrentUserId(data.currentUser.uuid);
       connectToSocketServer(data.currentUser);
       setChannelUnreads(data.channelUnreads);
@@ -83,6 +86,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSubscribedChannels(data.channels);
       setUsers(data.users);
       setUserStatuses(data?.userStatuses);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -93,8 +98,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const fn = async () => {
       try {
         await verifyAndLoginUser();
-      } catch (err) {
-        // setCurrentUserId(undefined);
+      } catch (error) {
+        console.error(error);
       }
     };
 

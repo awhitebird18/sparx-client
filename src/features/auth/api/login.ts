@@ -1,8 +1,8 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
 import { LoginData } from '../types';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const login = async (loginData: LoginData) => {
   try {
@@ -15,13 +15,7 @@ export const login = async (loginData: LoginData) => {
     });
 
     return data;
-  } catch (err) {
-    return stores.notificationStore.addNotification({
-      title: 'Login Unsuccessful',
-      description:
-        'Please check your email and password and try again. If you continue to face issues, you might want to reset your password.',
-      type: NotificationType.ERROR,
-      show: true,
-    });
+  } catch (error) {
+    return handleApiError(error);
   }
 };

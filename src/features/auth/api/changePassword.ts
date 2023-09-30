@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const changePassword = async (changePasswordDto: {
   password: string;
@@ -19,13 +19,7 @@ export const changePassword = async (changePasswordDto: {
     });
 
     return data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error!',
-      description:
-        'We encountered an issue changing your password. Please try again or contact support if the problem persists.',
-      type: NotificationType.ERROR,
-      show: true,
-    });
+  } catch (error) {
+    return handleApiError(error);
   }
 };

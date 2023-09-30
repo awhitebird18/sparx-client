@@ -3,16 +3,8 @@ import UserDropdown from './UserDropdown';
 import { observer } from 'mobx-react-lite';
 import HistoryDropdown from '@/features/history/components/HistoryDropdown';
 import Logo from '@/components/logo/Logo';
-import { useEffect } from 'react';
 
 const Topbar = () => {
-  useEffect(() => {
-    try {
-      throw new Error('This is an error!');
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
   return (
     <div className="h-12 border-b border-border flex items-center justify-between px-6 gap-6 bg-neutral-800 dark:bg-hover">
       <div className="flex gap-1.5 hover:bg-transparent h-12 cursor-pointer items-center pointer-events-none">

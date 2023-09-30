@@ -69,7 +69,6 @@ const RegisterPage: React.FC = () => {
       reset();
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }

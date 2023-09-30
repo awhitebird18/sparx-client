@@ -48,8 +48,6 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
     try {
       setIsLoading(true);
       await onSubmit(data);
-    } catch (error) {
-      console.error(error);
     } finally {
       reset();
       setIsLoading(false);

@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const inviteUsersToChannel = async (channelId: string, userIds: string[]) => {
   try {
@@ -15,11 +15,7 @@ export const inviteUsersToChannel = async (channelId: string, userIds: string[])
     });
 
     return data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error inviting users',
-      type: NotificationType.ERROR,
-      show: true,
-    });
+  } catch (error) {
+    return handleApiError(error);
   }
 };

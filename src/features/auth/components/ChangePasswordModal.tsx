@@ -15,8 +15,8 @@ const ChangePasswordModal = () => {
       if (!currentUser) return;
 
       await authApi.changePassword({ password: data.password, email: currentUser.email });
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   };
 

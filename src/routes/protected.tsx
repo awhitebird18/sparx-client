@@ -7,8 +7,8 @@ import { observer } from 'mobx-react-lite';
 import { navigateToLastPage } from '@/utils/navigateToLastPage';
 import { ErrorBoundary } from 'react-error-boundary';
 import ContentErrorFallback from '@/components/ErrorFallback/ContentErrorFallback';
-
 import { init } from 'emoji-mart';
+import { handleApiError } from '@/utils/handleApiError';
 
 const Home = lazy(() => import('@/components/layout/Home'));
 const UserRoutes = lazy(() => import('@/features/users/routes'));
@@ -40,7 +40,13 @@ const App = observer(() => {
   return (
     <MainLayout>
       <Suspense>
-        <ErrorBoundary FallbackComponent={ContentErrorFallback} key={location.pathname}>
+        <ErrorBoundary
+          FallbackComponent={ContentErrorFallback}
+          key={location.pathname}
+          onError={(error) => {
+            handleApiError(error);
+          }}
+        >
           <Outlet />
         </ErrorBoundary>
       </Suspense>
