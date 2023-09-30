@@ -1,8 +1,8 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
 import { Channel } from '../types/channel';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const updateChannel = async (channelId: string, updateFields: Partial<Channel>) => {
   try {
@@ -15,11 +15,7 @@ export const updateChannel = async (channelId: string, updateFields: Partial<Cha
     });
 
     return data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error updating channel',
-      type: NotificationType.ERROR,
-      show: true,
-    });
+  } catch (error) {
+    return handleApiError(error);
   }
 };

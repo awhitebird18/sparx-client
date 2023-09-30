@@ -1,9 +1,8 @@
 import { axios } from '@/lib/axios';
-
 import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
-
 import { Section } from '../types/section';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const removeSection = async (sectionId: string): Promise<Section[]> => {
   try {
@@ -16,13 +15,7 @@ export const removeSection = async (sectionId: string): Promise<Section[]> => {
     });
 
     return res.data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error deleting section',
-      type: NotificationType.ERROR,
-      show: true,
-    });
-
-    return [];
+  } catch (error) {
+    return handleApiError(error);
   }
 };

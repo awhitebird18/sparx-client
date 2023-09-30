@@ -1,10 +1,7 @@
 import { axios } from '@/lib/axios';
-
-import { NotificationType } from '@/stores/NotificationStore';
-import { stores } from '@/stores/RootStore';
-
 import { UpdateUserPreferences } from '../types/updateUserPreference';
 import { UserPreferences } from '../types';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const updateUserPreferences = async (
   updateFields: UpdateUserPreferences,
@@ -13,13 +10,7 @@ export const updateUserPreferences = async (
     const { data } = await axios.patch(`/user-preferences`, updateFields);
 
     return data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error updating user preferences',
-      type: NotificationType.ERROR,
-      show: true,
-    });
-
-    throw err;
+  } catch (error) {
+    return handleApiError(error);
   }
 };

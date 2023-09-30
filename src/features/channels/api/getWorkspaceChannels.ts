@@ -1,9 +1,8 @@
 import { axios } from '@/lib/axios';
-import { AxiosError } from 'axios';
-
 import { Channel } from '@/features/channels/types';
 import { ChannelUserCount } from '@/features/workspaceChannels/types/channelUserCount';
 import { convertToDayJs } from '@/utils/convertToDayjs';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const getWorkspaceChannels = async (
   page: number,
@@ -21,9 +20,7 @@ export const getWorkspaceChannels = async (
       channels: convertToDayJs(res.data.channels),
       channelUserCounts: res.data.channelUserCounts,
     };
-  } catch (err: unknown) {
-    const axiosError = err as AxiosError;
-
-    throw new Error(axiosError.message || 'Error fetching channels');
+  } catch (error) {
+    return handleApiError(error);
   }
 };

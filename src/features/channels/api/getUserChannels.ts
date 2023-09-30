@@ -1,16 +1,14 @@
 import { axios } from '@/lib/axios';
-import { AxiosError } from 'axios';
-
 import { Channel } from '../types';
 import { convertToDayJs } from '@/utils/convertToDayjs';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const getUserChannels = async (): Promise<Channel[]> => {
   try {
     const res = await axios.get('/channels/user-channels');
 
     return convertToDayJs(res.data);
-  } catch (err: unknown) {
-    const axiosError = err as AxiosError;
-    throw new Error(axiosError.message || 'Error fetching channels');
+  } catch (error) {
+    return handleApiError(error);
   }
 };

@@ -1,8 +1,7 @@
 import { axios } from '@/lib/axios';
-import { AxiosError } from 'axios';
-
 import { UserStatus } from '../types/userStatus';
 import { UpdateUserStatus } from '../types/updateUserStatus';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const updateUserStatus = async (
   userStatusUuid: string,
@@ -12,9 +11,7 @@ export const updateUserStatus = async (
     const res = await axios.patch(`/user-statuses/${userStatusUuid}`, updateUserStatus);
 
     return res.data;
-  } catch (err: unknown) {
-    const axiosError = err as AxiosError;
-
-    throw new Error(axiosError.message || 'Error fetching users');
+  } catch (error) {
+    return handleApiError(error);
   }
 };

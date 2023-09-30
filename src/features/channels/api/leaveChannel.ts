@@ -1,7 +1,7 @@
 import { axios } from '@/lib/axios';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { stores } from '@/stores/RootStore';
+import { handleApiError } from '@/utils/handleApiError';
 
 export const leaveChannel = async (channelId: string) => {
   try {
@@ -14,11 +14,7 @@ export const leaveChannel = async (channelId: string) => {
     });
 
     return data;
-  } catch (err) {
-    stores.notificationStore.addNotification({
-      title: 'Error leaving channel',
-      type: NotificationType.ERROR,
-      show: true,
-    });
+  } catch (error) {
+    return handleApiError(error);
   }
 };
