@@ -5,6 +5,9 @@ import userProfileApi from '@/features/profile/api';
 
 import { OnlineUser, UpdateUser, User } from '../types';
 import { UserStatus } from '../enums';
+import { CompletionStatus } from '@/features/channels/enums/completionStatus';
+import { Privileges } from '../enums/privileges';
+import { SubscriptionDetails } from '../types/subsciptionDetails';
 
 export class UserStore {
   users: User[] = [];
@@ -13,9 +16,12 @@ export class UserStore {
   currentPage = 1;
   usersPerPage = 10;
   searchValue = '';
+  completionFilter: CompletionStatus | null = null;
+  privilegesFilter: Privileges = Privileges.ALL;
   hasMore = true;
   userOnlineStatus = UserStatus.ONLINE;
   currentUserId: string | undefined = undefined;
+  channelUsers: SubscriptionDetails[] = [];
 
   constructor() {
     makeObservable(
@@ -26,11 +32,17 @@ export class UserStore {
         currentUserId: observable,
         isLoading: observable,
         searchValue: observable,
+        completionFilter: observable,
+        privilegesFilter: observable,
         userOnlineStatus: observable,
+        channelUsers: observable,
         currentUser: computed,
-        displayedUsers: computed,
         filteredUsers: computed,
         setCurrentPage: action,
+        setChannelUsers: action,
+        fetchChannelUserIdsApi: action,
+        setCompletionFilter: action,
+        setPrivilegesFilter: action,
         setCurrentUserId: action,
         setSearchValue: action,
         setIsLoading: action,
@@ -58,23 +70,42 @@ export class UserStore {
   }
 
   get filteredUsers() {
-    return this.users.filter(
-      (user: User) =>
-        `${user.firstName} ${user.lastName}`
-          .toLowerCase()
-          .includes(this.searchValue.toLowerCase()) && user.uuid !== this?.currentUser?.uuid,
-    );
+    return this.channelUsers.filter((userDetails: SubscriptionDetails) => {
+      // Get user
+      const user = this.findUserByUuid(userDetails.userId);
+      if (!user) return;
+
+      // Completion
+      const completionStatusMatch =
+        !this.completionFilter || userDetails.status === this.completionFilter;
+
+      // Search
+      const name = `${user?.firstName} ${user.lastName}`;
+      const searchMatch = name.toLowerCase().includes(this.searchValue.toLowerCase());
+
+      // Privilges
+      let privilegesMatch = true;
+      if (this.privilegesFilter === Privileges.ADMIN && !user.isAdmin) {
+        privilegesMatch = false;
+      } else if (this.privilegesFilter === Privileges.MEMBER && user.isAdmin) {
+        privilegesMatch = false;
+      }
+
+      return completionStatusMatch && privilegesMatch && searchMatch;
+    });
   }
 
   get totalPages() {
     return Math.ceil(this.filteredUsers.length / this.usersPerPage);
   }
 
-  get displayedUsers() {
-    return this.filteredUsers
-      .filter((user: User) => user.uuid !== this.currentUser?.uuid)
-      .slice((this.currentPage - 1) * this.usersPerPage, this.currentPage * this.usersPerPage);
-  }
+  setPrivilegesFilter = (value: Privileges) => {
+    this.privilegesFilter = value;
+  };
+
+  setCompletionFilter = (value: CompletionStatus) => {
+    this.completionFilter = value;
+  };
 
   findUserByUuid = (userId: string) => {
     return this.users.find((user: User) => user.uuid === userId);
@@ -153,6 +184,14 @@ export class UserStore {
     return user;
   };
 
+  updateWorkspaceUserApi = async (userUuid: string, updatedUser: UpdateUser) => {
+    const user = await usersApi.updateWorkspaceUser(userUuid, updatedUser);
+
+    this.updateUser(user);
+
+    return user;
+  };
+
   uploadProfileImageApi = async (profileImage: string) => {
     const user = await userProfileApi.uploadProfileImage(profileImage);
 
@@ -168,5 +207,15 @@ export class UserStore {
     this.setUsers(users);
 
     this.setIsLoading(false);
+  };
+
+  setChannelUsers = (users: SubscriptionDetails[]) => {
+    this.channelUsers = users;
+  };
+
+  fetchChannelUserIdsApi = async (channelId: string) => {
+    const userIds = await usersApi.getChannelUsers(channelId);
+
+    this.setChannelUsers(userIds);
   };
 }

@@ -6,6 +6,7 @@ import useWorkspaceChannelSocket from './useWorkspaceChannelSocket';
 import useChatroomSocket from './useChatroomSocket';
 import { observer } from 'mobx-react-lite';
 import useUserStatusSocket from './useUserStatusSocket';
+import useChannelConnectorSocket from './useChannelConnectorSocket';
 
 const SocketController = () => {
   useUserSocket();
@@ -15,6 +16,7 @@ const SocketController = () => {
   useWorkspaceChannelSocket();
   useChatroomSocket();
   useUserStatusSocket();
+  useChannelConnectorSocket();
 
   return null;
 };

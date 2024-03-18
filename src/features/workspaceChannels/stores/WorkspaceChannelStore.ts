@@ -4,10 +4,13 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 import channelApi from '@/features/channels/api';
+import nodemapApi from '@/features/workspaceChannels/api';
 
 import { Channel } from '../../channels/types';
 import { SortOptions, SubscribeStatus, ChannelVisibility } from '../../channels/enums';
 import { ChannelUserCount } from '../types/channelUserCount';
+import { Line } from '../types/line';
+import { NodemapSettings } from '../types/nodemapSettings';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,10 +26,18 @@ export class WorkspaceChannelStore {
   filterBySearchValue = '';
   filterChannelVisibility: ChannelVisibility | null = null;
   sortBy: SortOptions = SortOptions.ATOZ;
+  pointsToConnect: Line[] = [];
+  nodemapSettings: Partial<NodemapSettings> = {
+    userCountVisible: false,
+    flashcardsDueVisible: false,
+    unreadMessageCountVisible: false,
+  };
 
   constructor() {
     makeObservable(this, {
       workspaceChannels: observable,
+      pointsToConnect: observable,
+      nodemapSettings: observable,
       sortBy: observable,
       page: observable,
       pageSize: observable,
@@ -56,6 +67,7 @@ export class WorkspaceChannelStore {
       updateWorkspaceChannel: action,
       setPage: action,
       addWorkspaceChannels: action,
+      fetchNodemapSettingsApi: action,
     });
   }
 
@@ -185,5 +197,35 @@ export class WorkspaceChannelStore {
     this.addChannelUserCounts(channelUserCounts);
 
     this.setIsLoading(false);
+  };
+
+  fetchChannelUserCounts = async (workspaceId: string) => {
+    const data = await channelApi.getChannelUserCounts(workspaceId);
+
+    this.addChannelUserCounts(data);
+  };
+
+  setNodemapSettings = (nodemapSettings: NodemapSettings) => {
+    this.nodemapSettings = nodemapSettings;
+  };
+
+  updateNodemapSettings = (nodemapSettings: NodemapSettings) => {
+    Object.assign(this.nodemapSettings, nodemapSettings);
+  };
+
+  fetchNodemapSettingsApi = async (workspaceId: string) => {
+    const nodemapSettings = await nodemapApi.getNodemapSettings(workspaceId);
+
+    if (!nodemapSettings) {
+      await nodemapApi.createNodemapSettings(workspaceId);
+    }
+
+    this.setNodemapSettings(nodemapSettings);
+  };
+
+  updateNodemapSettingsApi = async (uuid: string, updateFields: Partial<NodemapSettings>) => {
+    const nodemapSettings = await nodemapApi.updateNodemapSettings(uuid, updateFields);
+
+    this.updateNodemapSettings(nodemapSettings);
   };
 }

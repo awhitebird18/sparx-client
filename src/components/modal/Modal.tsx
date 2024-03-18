@@ -5,9 +5,10 @@ import { observer } from 'mobx-react-lite';
 interface ModalProps {
   title: string | JSX.Element;
   children: JSX.Element;
+  disablePadding?: boolean;
 }
 
-function Modal({ title, children }: ModalProps) {
+function Modal({ title, children, disablePadding }: ModalProps) {
   const { activeModal, setActiveModal } = useStore('modalStore');
 
   const handleClose = () => {
@@ -15,15 +16,14 @@ function Modal({ title, children }: ModalProps) {
   };
 
   return (
-    <Dialog open={Boolean(activeModal)} onOpenChange={handleClose}>
-      <DialogContent className="w-fit max-w-fit">
+    <Dialog open={Boolean(activeModal)} onOpenChange={handleClose} modal>
+      <DialogContent className="w-full max-w-fit min-w-[20rem] gap-0 p-0 dark:border-border dark:rounded-xl bg-card">
         {title && (
-          <DialogHeader>
+          <DialogHeader className="border-b border-border p-6 m-0 ">
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
         )}
-
-        {children}
+        <div className={`${!disablePadding && 'px-10 py-8 pt-6'}`}>{children}</div>
       </DialogContent>
     </Dialog>
   );

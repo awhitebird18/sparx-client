@@ -15,12 +15,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import { useEffect, useRef, useState } from 'react';
 import { User } from '@/features/users/types';
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
+
 import ChannelIcon from './ChannelIcon';
 
 const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string }) => {
-  const { getChannelByUuid, fetchChannelUserIdsApi, updateChannelApi } = useStore('channelStore');
+  const { getChannelByUuid, updateChannelApi } = useStore('channelStore');
   const { findUserByUuid, findUserByName } = useStore('userStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
   const [channelUserIds, setChannelUserIds] = useState<string[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -32,7 +33,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     };
 
     fn();
-  }, [fetchChannelUserIdsApi, id]);
+  }, [id]);
 
   const channel = getChannelByUuid(id);
   if (!channel) return null;
@@ -46,7 +47,7 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
 
-      updateChannelApi(id, { icon: imageBase64 });
+      updateChannelApi(id, { icon: imageBase64 }, currentWorkspaceId);
     };
 
     reader.readAsDataURL(file);
@@ -62,10 +63,6 @@ const ChannelDetails = ({ id, defaultTab }: { id: string; defaultTab?: string })
     const user = findUserByName(channel.name);
     if (!user) return;
     channelIcon = user.profileImage;
-  }
-
-  if (channelIcon) {
-    channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
   }
 
   return (

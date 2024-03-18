@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { CaretDownFill, Plus } from 'react-bootstrap-icons';
+import { CaretDownFill } from 'react-bootstrap-icons';
 import { observer } from 'mobx-react-lite';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 
@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/Button';
 import { Section } from '@/features/sections/types';
 import { Channel } from '@/features/channels/types';
 import { ChannelType } from '@/features/channels/enums';
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 interface SectionProps {
   section: Section;
@@ -31,7 +30,7 @@ interface DraggedItem {
 }
 
 const Section = ({ section, index }: SectionProps) => {
-  const { uuid, type, name, channelIds, isSystem, isOpen, sortBy } = section;
+  const { uuid, name, channelIds, isSystem, isOpen, sortBy } = section;
   const { selectedId } = useStore('sidebarStore');
   const { updateSectionApi, updateChannelSectionApi, reorderSections } = useStore('sectionStore');
   const { findChannelByUuid } = useStore('channelStore');
@@ -191,39 +190,40 @@ const Section = ({ section, index }: SectionProps) => {
   drop(ref);
 
   return (
-    <div className="relative">
+    <div
+      className={`relative px-3.5 mb-3 ${isOpen && channelIds.length && 'flex-0'}`}
+      // style={{ maxHeight: '70%' }}
+    >
       {isOverTopHalf && sectionIsOver && (
         <div className="absolute top-0 left-0 w-full h-px bg-slate-500" />
       )}
       <Collapsible
         open={isOpen}
         onOpenChange={handleToggleSection}
-        className={`py-2 ${isOver ? 'outline-border rounded-lg outline-dotted' : ''} `}
+        className={`${isOver ? 'outline-border rounded-lg outline-dotted' : ''} `}
         ref={ref}
       >
-        <div>
-          <ListHeader
-            id={uuid}
-            title={name}
-            index={section.orderIndex}
-            isSystem={isSystem}
-            isOpen={isOpen}
-            sortBy={sortBy}
-            icon={
-              <CollapsibleTrigger asChild>
-                <Button
-                  className={`${!isOpen ? '-rotate-90' : ''} w-6 h-6 rounded-md text-main`}
-                  size="icon"
-                  variant="ghost"
-                >
-                  <CaretDownFill />
-                </Button>
-              </CollapsibleTrigger>
-            }
-          />
-        </div>
+        <ListHeader
+          id={uuid}
+          title={name === 'Default' ? 'Favorites' : name}
+          index={section.orderIndex}
+          isSystem={isSystem}
+          isOpen={isOpen}
+          sortBy={sortBy}
+          icon={
+            <CollapsibleTrigger asChild>
+              <Button
+                className={`${!isOpen ? '-rotate-90' : ''} w-9 h-9 mt-0.5 rounded-md text-muted`}
+                size="icon"
+                variant="ghost"
+              >
+                <CaretDownFill size={15} className="text-secondary" />
+              </Button>
+            </CollapsibleTrigger>
+          }
+        />
 
-        <CollapsibleContent>
+        <CollapsibleContent className="overflow-auto h-full max-h-[20rem]">
           {channelIds?.length
             ? sortSectionChannels(
                 channelIds
@@ -244,10 +244,6 @@ const Section = ({ section, index }: SectionProps) => {
                   userStatus = user.status;
                 }
 
-                if (channelIcon) {
-                  channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
-                }
-
                 return (
                   <ListItem
                     key={channel.uuid}
@@ -264,7 +260,7 @@ const Section = ({ section, index }: SectionProps) => {
                         imageUrl={channelIcon}
                         isPrivate={channel.isPrivate}
                         isSelected={selectedId === channel.uuid}
-                        size={22}
+                        // size={23}
                         userId={userId}
                       />
                     }
@@ -272,17 +268,6 @@ const Section = ({ section, index }: SectionProps) => {
                 );
               })
             : null}
-
-          {isSystem ? (
-            <ListItem
-              id={type === ChannelType.CHANNEL ? 'channels' : 'users'}
-              icon={<Plus size={16} />}
-              title={type === ChannelType.DIRECT ? 'View Users' : 'Explore Channels'}
-              disabled
-            />
-          ) : (
-            ''
-          )}
         </CollapsibleContent>
       </Collapsible>
       {isOverBottomHalf && sectionIsOver && (

@@ -1,138 +1,239 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
-
 import { useStore } from '@/stores/RootStore';
-import { User } from '../types';
-
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardFooter } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import Spinner from '@/components/ui/Spinner';
 import SearchInput from '@/components/ui/SearchInput';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
-import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
-import { getDirectChannel } from '@/features/channels/api/getDirectChannel';
 import NoUsersFallback from './NoUsersFallback';
 import ContentLayout from '@/components/layout/ContentLayout';
-import { ChevronDown } from 'react-bootstrap-icons';
+import {
+  ThreeDotsVertical,
+  Alarm,
+  ChevronDoubleRight,
+  PlayCircle,
+  StarFill,
+} from 'react-bootstrap-icons';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+import { Badge } from '@/components/ui/Badge';
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from '@/components/ui/Select';
+import { CompletionStatus } from '@/features/channels/enums/completionStatus';
+import { Privileges } from '../enums/privileges';
+import { SubscriptionDetails } from '../types/subsciptionDetails';
+import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 const Users = () => {
-  const { isLoading, displayedUsers, searchValue, setSearchValue } = useStore('userStore');
+  const {
+    isLoading,
+    setSearchValue,
+    updateWorkspaceUserApi,
+    findUserByUuid,
+    searchValue,
+    setCompletionFilter,
+    setPrivilegesFilter,
+    fetchChannelUserIdsApi,
+    filteredUsers,
+    setIsLoading,
+  } = useStore('userStore');
   const navigate = useNavigate();
-  const { setActiveModal } = useStore('modalStore');
-  const { createDirectChannelApi } = useStore('channelStore');
-  const { directChannelSectionId, addChannelUuidToSection } = useStore('sectionStore');
-  const { currentUser } = useStore('userStore');
-  const { setSelectedId } = useStore('sidebarStore');
+  const { currentChannelId } = useStore('channelStore');
+  const { leaveWorkspaceApi, currentWorkspaceId } = useStore('workspaceStore');
+
+  useEffect(() => {
+    if (!currentChannelId) return;
+
+    const fn = async () => {
+      await fetchChannelUserIdsApi(currentChannelId);
+      setIsLoading(false);
+    };
+
+    try {
+      setIsLoading(true);
+
+      fn();
+    } catch (err) {
+      console.error(err);
+    }
+  }, [fetchChannelUserIdsApi, currentChannelId]);
 
   const handleViewUserProfile = async (userId: string) => {
-    setActiveModal({ type: 'ProfileModal', payload: { userId } });
+    navigate(`/app/profile/${userId}`);
   };
 
-  const handleMessageUser = async (user: User) => {
-    if (!currentUser || !directChannelSectionId) return;
+  const handleSetAdmin = async (userId: string, data: { isAdmin: boolean }) => {
+    await updateWorkspaceUserApi(userId, data);
+  };
 
-    const directChannel = await getDirectChannel(user.uuid);
-
-    if (directChannel) {
-      return navigate(`/app/${directChannel.uuid}`);
-    }
-
-    const newDirectChannel = await createDirectChannelApi([currentUser.uuid, user.uuid]);
-
-    addChannelUuidToSection(newDirectChannel.uuid, directChannelSectionId);
-
-    setSelectedId(newDirectChannel.uuid);
-
-    return navigate(`/app/${newDirectChannel.uuid}`);
+  const handleRemoveFromWorkspace = (userId: string) => {
+    if (!currentWorkspaceId) return;
+    leaveWorkspaceApi(userId, currentWorkspaceId);
   };
 
   return (
     <ContentLayout title="Users">
-      <div className="flex gap-2 justify-between">
-        <div className="flex gap-2 my-2">
-          {/* Channel type filter */}
-
-          <Button className="gap-2 py-0 w-72 justify-between" size="sm" variant="outline" disabled>
-            Location
-            <ChevronDown className="text-xs" />
-          </Button>
-
-          <Button className="gap-2 py-0 w-72 justify-between" size="sm" variant="outline" disabled>
-            Department
-            <ChevronDown className="text-xs" />
-          </Button>
-
-          <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
+      <div className="flex flex-col gap-6 justify-between">
+        <div className="flex items-start pt-4">
+          {/* <Button className="card rounded-xl pointer-events-none opacity-70 h-18 w-18 bg-card border border-primary p-2 text-primary shadow-lg">
+            <Pencil size={50} />
+          </Button> */}
+          <div className="flex flex-col gap-1.5">
+            <h2 className="text-main text-3xl font-medium">Members</h2>
+            <p className="text-secondary">See all of your notes for workspace and make changes</p>
+          </div>
         </div>
-        {searchValue && (
-          <Button size="sm" variant="secondary">
-            Clear Filters
-          </Button>
-        )}
+
+        <div className="flex gap-2 my-2">
+          <div className="w-72">
+            <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
+          </div>
+          <Select onValueChange={setCompletionFilter}>
+            <SelectTrigger className="w-52">
+              <SelectValue placeholder="Completion status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">
+                <div className="flex gap-3 items-center">
+                  <ChevronDoubleRight /> All statuses
+                </div>
+              </SelectItem>
+              <SelectItem value={CompletionStatus.Skip}>
+                <div className="flex gap-3 items-center">
+                  <ChevronDoubleRight /> Skip
+                </div>
+              </SelectItem>
+              <SelectItem value={CompletionStatus.InProgress}>
+                <div className="flex gap-3 items-center">
+                  <PlayCircle /> In progress
+                </div>
+              </SelectItem>
+              <SelectItem value={CompletionStatus.OnHold}>
+                <div className="flex gap-3 items-center">
+                  <Alarm /> On hold
+                </div>
+              </SelectItem>
+              <SelectItem value={CompletionStatus.Complete}>
+                <div className="flex gap-3 items-center">
+                  <StarFill className="text-yellow-400" />
+                  Complete
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <Select onValueChange={setPrivilegesFilter}>
+            <SelectTrigger className="w-52">
+              <SelectValue placeholder="Privileges" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={Privileges.ALL}>All users</SelectItem>
+              <SelectItem value={Privileges.ADMIN}>Admin</SelectItem>
+              <SelectItem value={Privileges.MEMBER}>Member</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {searchValue && (
+            <Button size="sm" variant="secondary">
+              Clear Filters
+            </Button>
+          )}
+        </div>
       </div>
 
-      {isLoading ? (
-        <div className="absolute right-auto top-20 w-full">
-          <Spinner />
-        </div>
-      ) : null}
+      <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-4 gap-3 justify-normal items-start grid-rows-[max-content_1fr] my-3">
+        {!isLoading ? (
+          filteredUsers.map((userChannel: SubscriptionDetails) => {
+            const user = findUserByUuid(userChannel.userId);
 
-      {displayedUsers.length ? (
-        <div className="h-full grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-normal items-start grid-rows-[max-content_1fr] h-100 overflow-auto my-3">
-          {displayedUsers
-            .filter((user: User) => user.uuid !== currentUser?.uuid)
-            .map((user: User) => (
+            if (!user) return null;
+
+            return (
               <Card
                 key={user.uuid}
-                className="p-4 rounded-xl relative cursor-pointer"
-                onClick={() => {
-                  handleViewUserProfile(user.uuid);
-                }}
+                className="p-4 rounded-lg relative cursor-pointer h- shadow-sm !bg-card !border-border border card"
               >
-                <CardContent className="flex items-center justify-center">
+                <CardContent className="flex gap-4 p-0">
                   <UserAvatar
-                    size={150}
+                    size={40}
                     userId={user.uuid}
                     profileImage={user.profileImage}
-                    rounded="rounded-xl"
+                    showStatus
                   />
-                </CardContent>
-                <CardFooter className="flex-col gap-3 p-0">
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center gap-2 text-main">
+                  <div className="flex flex-col flex-1">
+                    <div className="flex text-main gap-2 items-center">
                       <Username firstName={user.firstName} lastName={user.lastName} />
-                      <OnlineStatusIndicator userId={user.uuid} />
+                      {user.isAdmin && <Badge variant="outline">Admin</Badge>}
                     </div>
-                    <p className="text-muted">Developer, Brampon Ontario</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleViewUserProfile(user.uuid);
-                      }}
-                    >
-                      Profile
-                    </Button>
-                    <Button
-                      onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleMessageUser(user);
-                      }}
-                    >
-                      Message
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-        </div>
-      ) : null}
 
-      {displayedUsers.length === 0 ? <NoUsersFallback /> : null}
+                    <p className="text-sm text-secondary text-ellipsis overflow-hidden whitespace-nowrap mb-1">
+                      Software Engineer
+                    </p>
+                    <p
+                      className={`text-sm font-medium ${
+                        userChannel.status === CompletionStatus.Complete
+                          ? 'text-yellow-400'
+                          : 'text-violet-500'
+                      }`}
+                    >
+                      {userChannel.status}
+                    </p>
+                  </div>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <ThreeDotsVertical size={20} className="text-main" />
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent className="w-50" align="end" alignOffset={-10}>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          handleViewUserProfile(user.uuid);
+                        }}
+                      >
+                        View profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          handleSetAdmin(user.uuid, { isAdmin: !user.isAdmin });
+                        }}
+                      >
+                        {user.isAdmin ? 'Set as member' : 'Set as admin'}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          handleRemoveFromWorkspace(user.uuid);
+                        }}
+                        className="text-rose-500"
+                      >
+                        Remove from workspace
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </CardContent>
+              </Card>
+            );
+          })
+        ) : (
+          <>
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
+          </>
+        )}
+      </div>
     </ContentLayout>
   );
 };

@@ -6,22 +6,22 @@ import Emoji from '@/components/ui/Emoji';
 
 const UserStatusDisplay = ({ status }: { status: UserStatus }) => {
   return (
-    <Button size="icon" className="h-8 w-8 rounded-sm" variant="link">
-      <Tooltip>
+    <Tooltip>
+      <Button size="icon" className="" variant="link">
         <TooltipTrigger asChild>
-          <div>
-            <Emoji id={status.emoji} />
+          <div className="mb-0.5 ml-1">
+            <Emoji id={status.emoji} size={21} />
           </div>
         </TooltipTrigger>
 
-        <TooltipContent sideOffset={7}>
+        <TooltipContent alignOffset={-8} align="end">
           <div className="flex flex-col gap-3 px-2 py-1 items-center">
             <Emoji id={status.emoji} size={26} />
             <p>{status?.text}</p>
           </div>
         </TooltipContent>
-      </Tooltip>
-    </Button>
+      </Button>
+    </Tooltip>
   );
 };
 

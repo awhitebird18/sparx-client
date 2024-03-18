@@ -10,7 +10,7 @@ import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
 import { LoginData, RegistrationData } from '@/features/auth/types';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
-import Logger from '@/utils/logger';
+import { observer } from 'mobx-react-lite';
 
 interface AuthContextData {
   userLogin: (loginCredentials: LoginData) => Promise<void>;
@@ -41,8 +41,24 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUsers, setCurrentUserId } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
-
+  const { setWorkspaces, setUserWorkspaceData, currentWorkspaceId } = useStore('workspaceStore');
   const [loading, setLoading] = useState(true);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const [fadeClass, setFadeClass] = useState('fade-enter');
+
+  useEffect(() => {
+    if (!loading && animationComplete) {
+      // Start with fade-enter class
+      setFadeClass('fade-enter-active');
+
+      // After a timeout, remove the AppSkeleton and show the main app
+      const timeoutId = setTimeout(() => {
+        setFadeClass('');
+      }, 400); // Match the duration of your transition
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [loading, animationComplete]);
 
   const userLogin = async (loginCredentials: LoginData) => {
     try {
@@ -74,18 +90,28 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
+      setLoading(true);
+      setAnimationComplete(false);
       const data = await authApi.verify();
 
-      Logger.warn('initial load', data);
-
       setCurrentUserId(data.currentUser.uuid);
+
+      // If user has not joined any workspaces this is currently neccessary.
+      if (!data.workspaces) {
+        setUsers([data.currentUser]);
+        return;
+      } else {
+        setUsers(data.users);
+      }
+
       connectToSocketServer(data.currentUser);
       setChannelUnreads(data.channelUnreads);
       setInitialPreferences(data.userPreferences);
       setSections(data.sections);
       setSubscribedChannels(data.channels);
-      setUsers(data.users);
       setUserStatuses(data?.userStatuses);
+      setWorkspaces(data.workspaces);
+      setUserWorkspaceData(data.userWorkspaces);
     } catch (error) {
       console.error(error);
     } finally {
@@ -105,7 +131,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     fn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentWorkspaceId]);
 
   const value = {
     userLogin,
@@ -114,9 +140,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     verifyAndLoginUser,
   };
 
-  if (loading) return <AppSkeleton />;
+  if (loading || !animationComplete) {
+    return (
+      <div>
+        <AppSkeleton setAnimationComplete={setAnimationComplete} />
+      </div>
+    );
+  }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <div className={`${fadeClass} h-full`}>
+      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    </div>
+  );
 };
 
-export default AuthProvider;
+export default observer(AuthProvider);

@@ -11,7 +11,6 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
 
 import { useStore } from '@/stores/RootStore';
 import { ChannelType } from '../enums';
@@ -20,43 +19,73 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/modal/Modal';
 import { Checkbox } from '@/components/ui/Checkbox';
+import { useMemo } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
   isPrivate: z.boolean().default(false),
 });
 
-const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
-  const { createChannelApi } = useStore('channelStore');
+const CreateChannelForm = ({
+  uuid,
+  id: sectionId,
+  x,
+  y,
+}: {
+  uuid?: string;
+  id?: string;
+  x?: number;
+  y?: number;
+}) => {
+  const { createChannelApi, updateChannelApi, findChannelByUuid, joinChannelApi } =
+    useStore('channelStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
   const { setActiveModal } = useStore('modalStore');
-  const { addChannelUuidToSection, findSectionByChannelType } = useStore('sectionStore');
-  const { setSelectedId } = useStore('sidebarStore');
-  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      isPrivate: false,
-    },
+    defaultValues: useMemo(() => {
+      if (!uuid)
+        return {
+          name: '',
+          isPrivate: false,
+        };
+
+      const existingChannel = findChannelByUuid(uuid);
+
+      return {
+        name: existingChannel?.name,
+        isPrivate: existingChannel?.isPrivate,
+      };
+    }, [findChannelByUuid, uuid]),
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const channelData = {
-      name: values.name,
-      type: ChannelType.CHANNEL,
-      isPrivate: values.isPrivate,
-    };
-    const channel = await createChannelApi(channelData, sectionId);
+    try {
+      if (!currentWorkspaceId) return;
 
-    const defaultSection = findSectionByChannelType(ChannelType.CHANNEL);
+      const channelData = {
+        name: values.name,
+        type: ChannelType.CHANNEL,
+        isPrivate: values.isPrivate,
+        x,
+        y,
+      };
 
-    if (!channel || !defaultSection) return;
+      if (uuid) {
+        await updateChannelApi(uuid, channelData, currentWorkspaceId);
+      } else {
+        const newChannel = await createChannelApi(channelData, sectionId, currentWorkspaceId);
 
-    addChannelUuidToSection(channel.uuid, defaultSection.uuid);
+        await joinChannelApi({
+          channelId: newChannel.uuid,
+          sectionId: undefined,
+        });
+      }
 
-    setSelectedId(channel.uuid);
-    handleCloseModal();
-    navigate(`/app/${channel.uuid}`);
+      handleCloseModal();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const handleCloseModal = () => {
@@ -64,7 +93,7 @@ const CreateChannelForm = ({ id: sectionId }: { id: string }) => {
   };
 
   return (
-    <Modal title="Create Channel">
+    <Modal title={uuid ? 'Update Channel' : 'Create Channel'}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

@@ -29,10 +29,13 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background">
+      <div className="flex gap-2 items-center absolute top-4 left-5">
+        <span className="text-2xl font-bold">Navinotes</span>
+      </div>
       <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-          <Logo size={20} />
+          <Logo size={28} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Change your password</h2>
           <p className="mt-2 text-center font-light">Set yourself a new password below</p>
         </div>

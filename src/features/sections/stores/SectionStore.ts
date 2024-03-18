@@ -163,12 +163,14 @@ export class SectionStore {
     this.updateSection(section);
   };
 
-  updateChannelSectionApi = async (sectionUuid: string, channelUuid: string) => {
+  updateChannelSectionApi = async (sectionUuid: string | undefined, channelUuid: string) => {
     await sectionsApi.updateChannelSection(channelUuid, sectionUuid);
 
     this.removeChannelUuidFromSection(channelUuid);
 
-    this.addChannelUuidToSection(channelUuid, sectionUuid);
+    if (sectionUuid) {
+      this.addChannelUuidToSection(channelUuid, sectionUuid);
+    }
   };
 
   removeSectionApi = async (sectionUuid: string) => {

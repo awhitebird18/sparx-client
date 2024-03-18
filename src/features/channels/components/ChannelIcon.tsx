@@ -1,4 +1,3 @@
-import { Hash } from 'react-bootstrap-icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 
@@ -12,29 +11,30 @@ type UserAvatarProps = {
   textPrimary?: boolean;
 };
 
-const ChannelIcon = ({ size = 40, imageUrl, isSelected, textPrimary, userId }: UserAvatarProps) => {
+const ChannelIcon = ({ size = 50, imageUrl, isSelected, textPrimary, userId }: UserAvatarProps) => {
   return (
     <Avatar
-      className="relative overflow-visible"
-      style={{ height: `${size}px`, width: `${size}px ` }}
+      className="relative h-9 w-9"
+      // style={{ height: `${size}px`, width: `${size}px ` }}
     >
       <AvatarImage
         src={imageUrl}
-        style={{ height: `${size}px`, width: `${size}px` }}
-        className={`rounded-${size > 30 ? 'lg' : 'sm'}`}
+        // style={{ height: `${size}px`, width: `${size}px` }}
+        className={`rounded-${size > 30 ? 'lg' : 'sm'} w-full h-full`}
       />
       <AvatarFallback
-        className={`h-full flex-1 w-full rounded-sm overflow-hidden bg-transparent dark:bg-transparent p-0 text-xl ${
+        className={`h-9 w-9 flex-1 rounded-sm overflow-hidden bg-transparent dark:bg-transparent p-0 text-xl ${
           isSelected && !textPrimary ? 'text-primary-darkest bg-transparent' : 'text-main'
         } ${textPrimary && 'text-main'}`}
-        children={
-          <Hash
-            style={{
-              height: `${size - 5}px`,
-              width: `${size - 5}px`,
-            }}
-          />
-        }
+        // children={
+        //   <Hash
+        //     className={`${isSelected ? 'text-main' : 'text-muted'}`}
+        //     style={{
+        //       height: `${size - 5}px`,
+        //       width: `${size - 5}px`,
+        //     }}
+        //   />
+        // }
       />
 
       {userId && (

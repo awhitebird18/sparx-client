@@ -14,7 +14,7 @@ type UserAvatarProps = {
 };
 
 const UserAvatar = ({
-  size = 40,
+  size = 44,
   profileImage,
   userId,
   showStatus,
@@ -28,10 +28,11 @@ const UserAvatar = ({
       <AvatarImage
         src={profileImage}
         style={{ height: `${size}px`, width: `${size}px` }}
-        className={`${rounded} border border-border`}
+        className={`${rounded}`}
       />
       <AvatarFallback
-        className={`h-full flex-1 w-full ${rounded} border border-border overflow-hidden bg-card`}
+        delayMs={2000}
+        className={`h-full flex-1 w-full ${rounded} border border-background overflow-hidden bg-card`}
         children={
           <PersonFill
             className={`mt-2 text-primary-dark`}
@@ -41,7 +42,7 @@ const UserAvatar = ({
       />
 
       {showStatus && (
-        <div className="rounded-full absolute -bottom-1.5 -right-1.5 w-4 h-4 flex justify-center items-center">
+        <div className="rounded-full absolute -bottom-1.5 -right-1.5 flex justify-center items-center">
           <OnlineStatusIndicator userId={userId} />
         </div>
       )}

@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
-import { validate } from 'uuid';
 import { useDrag } from 'react-dnd';
 
 import { SidebarItem } from './enums/itemTypes';
@@ -50,17 +49,15 @@ const ListItem = ({
   status,
   isPrivate,
 }: ListitemProps) => {
-  const { currentUser } = useStore('userStore');
+  const { setCurrentChannelUuid } = useStore('channelStore');
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
-  const { setTitle } = useStore('notificationStore');
-  const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
+
   const { setActiveModal } = useStore('modalStore');
-  const { leaveChannelApi, setCurrentChannelUuid, findChannelByUuid, filterTempChannels } =
-    useStore('channelStore');
-  const { findChannelUnreads, clearChannelUnreads } = useStore('channelUnreadStore');
-  const { selectedId, setSelectedId, setSidebarWidth, isSidebarAbsolute } =
-    useStore('sidebarStore');
+
+  const { findChannelUnreads } = useStore('channelUnreadStore');
+  const { selectedId, sidebarOpen } = useStore('sidebarStore');
   const navigate = useNavigate();
+
   const [, dragRef] = useDrag(() => ({
     type: SidebarItem.ITEM,
     item: { id, type: SidebarItem.ITEM, channelType: type, sectionId: sectionId },
@@ -85,18 +82,22 @@ const ListItem = ({
     await updateChannelSectionApi(selectedSectionId, channelId);
   };
 
-  const handleLeaveChannel = async () => {
-    if (!id || !currentUser) return;
-    await leaveChannelApi(id);
+  // const handleLeaveChannel = async () => {
+  //   if (!id || !currentUser) return;
+  //   await leaveChannelApi(id);
 
-    const formattedMessage = formatAutomatedMessage({
-      userId: currentUser.uuid,
-      channelId: id,
-      content: `has left the channel.`,
-    });
+  //   const formattedMessage = formatAutomatedMessage({
+  //     userId: currentUser.uuid,
+  //     channelId: id,
+  //     content: `has left the channel.`,
+  //   });
 
-    await createMessageApi(formattedMessage);
-    navigate(`/app`);
+  //   await createMessageApi(formattedMessage);
+  //   navigate(`/app`);
+  // };
+
+  const handleRemoveChannelFromSection = async () => {
+    await updateChannelSectionApi(undefined, id);
   };
 
   const handleOpenChannelDetails = () => {
@@ -108,25 +109,15 @@ const ListItem = ({
   };
 
   const handleClick = () => {
-    const isChannel = validate(id);
+    // if (isSidebarAbsolute) {
+    //   setSidebarWidth(0);
+    // }
 
-    if (!isChannel) {
-      setTitle(`${id.charAt(0).toUpperCase()}${id.substring(1)}`);
-      setCurrentChannelUuid(undefined);
+    if (isChannel) {
+      setCurrentChannelUuid(id);
     } else {
-      const channel = findChannelByUuid(id);
-      if (channel) {
-        setTitle(channel.name);
-      }
-      setSelectedId(id);
-      clearChannelUnreads(id);
+      navigate(`/app/${id}`);
     }
-    filterTempChannels();
-
-    if (isSidebarAbsolute) {
-      setSidebarWidth(0);
-    }
-    navigate(`/app/${id}`);
   };
 
   return (
@@ -135,18 +126,19 @@ const ListItem = ({
         <div
           ref={conditionalDragRef}
           onClick={handleClick}
-          className={`h-8 rounded-sm p-0 px-3 text-sm w-full justify-between flex items-center cursor-pointer overflow-hidden ${
-            isSelected
-              ? 'bg-active hover:bg-active text-active dark:text-active'
-              : 'text-main hover:bg-hover'
-          } ${disabled ? 'text-neutral/80' : 'font-medium'}`}
+          className={`h-9 ${
+            !sidebarOpen && 'w-9'
+          } p-0 rounded-md justify-between flex items-center cursor-pointer overflow-hidden hover:bg-hover ${
+            isChannel ? '!text-secondary' : 'text-secondary'
+          } ${isSelected && '!bg-primary !text-white'} ${disabled ? 'text-muted' : 'font-normal'}`}
         >
-          <div className="whitespace-nowrap text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full">
-            <div className="w-6 h-8 min-w-fit flex items-center justify-center flex-shrink-0">
+          <div
+            className={`whitespace-nowrap font-medium text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full text-sm`}
+          >
+            <div className="w-9 h-9 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
-
-            {title}
+            {sidebarOpen && <div>{title}</div>}
             {isPrivate && <Lock />}
             <div className="overflow-hidden">
               {status?.isActive && <UserStatusDisplay status={status} />}
@@ -156,7 +148,7 @@ const ListItem = ({
             <Badge
               itemType="div"
               variant="outline"
-              className="text-sm p-0 w-7 h-5 justify-center items-center bg-primary-dark border-transparent outline-transparent border-none text-white shadow-inner shadow-primary-dark rounded-xl"
+              className="p-0 w-7 h-5 justify-center items-center bg-primary-dark border-transparent outline-transparent border-none text-white shadow-inner shadow-primary-dark rounded-xl"
             >
               {unreadCount}
             </Badge>
@@ -193,8 +185,12 @@ const ListItem = ({
         {type !== ChannelType.DIRECT && (
           <>
             <ContextMenuSeparator />
-            <ContextMenuItem inset className="text-rose-500" onClick={handleLeaveChannel}>
-              Leave Channel
+            <ContextMenuItem
+              inset
+              className="text-rose-500"
+              onClick={handleRemoveChannelFromSection}
+            >
+              Remove from section
             </ContextMenuItem>
           </>
         )}

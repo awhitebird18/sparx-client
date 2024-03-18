@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, computed } from 'mobx';
-
+import channelApi from '@/features/channels/api';
 import { ChannelUnread } from '../types';
 
 export class ChannelUnreadStore {
@@ -12,6 +12,7 @@ export class ChannelUnreadStore {
       setChannelUnreads: action,
       clearChannelUnreads: action,
       channelUnreadsCount: computed,
+      updateUnreadCountApi: action,
       findChannelUnreads: computed,
     });
   }
@@ -43,6 +44,10 @@ export class ChannelUnreadStore {
     } else {
       this.channelUnreads.push({ channelId, unreadCount: 1 });
     }
+  };
+
+  updateUnreadCountApi = async (channelId: string) => {
+    await channelApi.updateLastRead(channelId);
   };
 
   clearChannelUnreads = (channelId: string) => {

@@ -8,9 +8,10 @@ import { Channel } from '../types';
 const ConfirmChannelChangeModal = ({ channel }: { channel: Channel }) => {
   const { updateChannelApi } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
 
   const handleUpdateChannel = async () => {
-    await updateChannelApi(channel.uuid, { isPrivate: true });
+    await updateChannelApi(channel.uuid, { isPrivate: true }, currentWorkspaceId);
 
     setActiveModal(null);
   };

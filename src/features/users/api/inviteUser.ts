@@ -6,7 +6,7 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const inviteUser = async (inviteUser: InviteUser) => {
   try {
-    const { data } = await axios.post('/users/send-invite', inviteUser);
+    const { data } = await axios.post('/user-workspaces/send-invite', inviteUser);
 
     stores.notificationStore.addNotification({
       title: 'User invites sent',

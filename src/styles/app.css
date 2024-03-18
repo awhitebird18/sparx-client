@@ -1,13 +1,3 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 15px;
-}
-
 /* resizable.css */
 .react-resizable-handle-e {
   cursor: ew-resize;
@@ -60,4 +50,101 @@ html {
   background-position: center; /* Center the background */
   background-repeat: no-repeat; /* Do not repeat the background */
   z-index: -1; /* Place it behind the sidebar content */
+}
+
+/* Scrollbar */
+/* This will style the corner of the scrollbar (where horizontal and vertical scrollbars meet) */
+::-webkit-scrollbar-corner {
+  background: transparent; /* color of the corner of the scrollbar */
+}
+
+.thick-icon {
+  stroke: currentColor;
+  stroke-width: 0.5;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Bird flapping */
+
+@keyframes flapLeft {
+  0%,
+  100% {
+    transform: rotateZ(3deg);
+  }
+  50% {
+    transform: rotateZ(-4deg); /* Adjust rotation for left wing */
+  }
+}
+
+@keyframes flapRight {
+  0%,
+  100% {
+    transform: rotateZ(-3deg);
+  }
+  50% {
+    transform: rotateZ(4deg); /* Adjust rotation for right wing */
+  }
+}
+
+@keyframes bird {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes bubbles {
+  0%,
+  100% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+.bird {
+  animation: bird 6s infinite alternate; /* Adjust time as needed */
+  transform-origin: center; /* Adjust pivot point as needed */
+}
+
+.bubbles {
+  animation: bubbles 6s infinite alternate; /* Adjust time as needed */
+  transform-origin: center; /* Adjust pivot point as needed */
+}
+
+.birdLeftWing {
+  animation: flapLeft 6s infinite alternate; /* Adjust time as needed */
+  transform-origin: center; /* Adjust pivot point as needed */
+}
+
+.birdRightWing {
+  animation: flapRight 6s infinite alternate; /* Adjust time as needed */
+  transform-origin: center; /* Adjust pivot point as needed */
+}
+
+/* App skeleton transition */
+
+/* Add this to your stylesheet */
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms; /* Adjust duration as needed */
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms; /* Adjust duration as needed */
 }

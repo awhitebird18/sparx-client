@@ -1,4 +1,4 @@
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
+import logo from '@/assets/images/appLogo.svg';
 
 interface LogoProps {
   size?: number;
@@ -6,13 +6,11 @@ interface LogoProps {
 }
 
 const Logo = ({ size = 12, resolution = 100 }: LogoProps) => {
-  const thumbnailUrl = transformCloudinaryUrl(
-    'https://res.cloudinary.com/dwkvw91pm/image/upload/v1692153581/logo_p2v66f.png',
-    resolution,
-    resolution,
+  return (
+    <div className={`w-${size} h-${size} mx-auto block`}>
+      <img className="w-full h-full" src={logo} alt="company-logo" />
+    </div>
   );
-
-  return <img className={`w-${size} h-${size} mx-auto`} src={thumbnailUrl} alt="company-logo" />;
 };
 
 export default Logo;

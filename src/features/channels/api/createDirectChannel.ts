@@ -3,9 +3,12 @@ import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const createDirectChannel = async (memberIds: string[]) => {
+export const createDirectChannel = async (memberIds: string[], workspaceId: string) => {
   try {
-    const { data } = await axios.post('/channel-management/direct-channel', { memberIds });
+    const { data } = await axios.post('/channel-management/direct-channel', {
+      memberIds,
+      workspaceId,
+    });
 
     stores.notificationStore.addNotification({
       title: 'Channel created',

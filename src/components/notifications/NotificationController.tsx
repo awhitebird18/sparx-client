@@ -17,7 +17,7 @@ const NotificationController = observer(() => {
       });
   }, [notifications, toast, dismissNotification]);
 
-  return <Toaster duration={3000} />;
+  return <Toaster duration={2000} />;
 });
 
 export default NotificationController;

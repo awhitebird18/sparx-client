@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 import { Resizable, ResizeHandle } from 'react-resizable';
 
 import 'react-resizable/css/styles.css';
@@ -19,15 +17,15 @@ const ResizableSidebar = () => {
 
   const onResize = (_event: unknown, { size }: { size: { width: number } }) => {
     // If the new size is smaller than some value, hide the sidebar
-    if (size.width < 100) {
-      setSidebarWidth(0);
+    if (size.width < 75) {
+      setSidebarWidth(65);
     } else {
       setSidebarWidth(size.width);
     }
   };
 
   const closeSidebar = () => {
-    setSidebarWidth(0);
+    setSidebarWidth(65);
   };
 
   useEffect(() => {
@@ -47,8 +45,8 @@ const ResizableSidebar = () => {
         height={Infinity} // Height is not resizable
         onResize={onResize}
         resizeHandles={resizeHandles}
-        minConstraints={[0, Infinity]} // Minimum width of 0
-        maxConstraints={[400, Infinity]} // Maximum width of 600
+        minConstraints={[65, Infinity]} // Minimum width of 0
+        maxConstraints={[300, Infinity]} // Maximum width of 600
       >
         <div
           style={{
@@ -57,7 +55,7 @@ const ResizableSidebar = () => {
             overflow: 'hidden',
             ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
           }}
-          className="border-r border-border z-50"
+          className="transition-all duration-150 flex-shrink-0"
         >
           {/* Glass Blur Background with Image */}
           <div
@@ -65,10 +63,7 @@ const ResizableSidebar = () => {
             // style={{ backgroundImage: `url(${bgBlueImage})` }}
           />
 
-          {/* Existing Sidebar Content */}
-          <DndProvider backend={HTML5Backend}>
-            <Sidebar />
-          </DndProvider>
+          <Sidebar />
         </div>
       </Resizable>
     </>

@@ -3,7 +3,6 @@ import { useStore } from '@/stores/RootStore';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const AvatarGroup = () => {
   const { currentChannel, channelUserIds } = useStore('channelStore');
@@ -37,7 +36,7 @@ const AvatarGroup = () => {
       >
         <AvatarFallback
           children={userCount}
-          className={`w-full h-full text-base font-medium rounded-sm bg-secondary text-main pl-0.5`}
+          className={`w-full h-full text-base font-medium rounded-sm bg-card text-main pl-0.5`}
         />
       </Avatar>
       {userCount ? (
@@ -45,15 +44,13 @@ const AvatarGroup = () => {
           const user = findUserByUuid(userId);
           if (!user) return;
 
-          const transformedImage = transformCloudinaryUrl(user.profileImage, 60, 60);
-
           return (
             <Avatar
               key={user.uuid}
               className={`absolute w-7 h-7 rounded-md border-2 border-border bg-background`}
               style={{ left: `${index * avatarSize}px` }}
             >
-              <AvatarImage src={transformedImage} />
+              <AvatarImage src={user.profileImage} />
               <AvatarFallback
                 children={user.firstName.charAt(0).toUpperCase()}
                 className={`w-full h-full text-sm font-light rounded-sm bg-primary dark:bg-primary-dark text-white`}

@@ -8,10 +8,11 @@ import { observer } from 'mobx-react-lite';
 
 const AppRoutes = () => {
   const { currentUser } = useStore('userStore');
+  const { workspaces } = useStore('workspaceStore');
 
   const commonRoutes = [{ path: '*', element: <Navigate to="/" /> }];
 
-  const routes = currentUser ? protectedRoutes : publicRoutes;
+  const routes = currentUser && workspaces ? protectedRoutes : publicRoutes;
 
   return useRoutes([...routes, ...commonRoutes]);
 };

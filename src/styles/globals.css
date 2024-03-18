@@ -1,0 +1,454 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  .light {
+    /* --background: 220 10% 96%; */
+    --background: 226 16% 98%;
+    /* --background: var(--color-primary-50); */
+    --foreground: 226 23% 94%;
+
+    --scrollbarThumb: 230.2 10% 83%;
+    --scrollbarTrack: 230.2 10% 88%;
+
+    --hover: 214 0% 94%;
+
+    --muted: 210 10% 96.1%;
+    --muted-foreground: 220 10% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 84% 4.9%;
+
+    /* --card: 220 10% 100%; */
+    --card: 0 0% 100%;
+    --card-disabled: 0 0% 80%;
+    --card-foreground: 220 20% 93%;
+    --card-hover: 224 20% 93%;
+
+    --border: 226 13% 90%;
+    --border-light: 220 30.8% 93%;
+
+    --input: 220 10% 91.4%;
+
+    --primary: 220 10% 11.2%;
+    --primary-foreground: 210 10% 98%;
+
+    /* --secondary: 220 10% 85%; */
+    --secondary: 0 0% 100%;
+    --secondary-hover: 220 28% 94.1%;
+    --secondary-foreground: 220 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 220 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 220 40% 98%;
+
+    --ring: 220 23.2% 85.1%;
+
+    --radius: 0.5rem;
+
+    --primary-shadow: var(--color-primary-300);
+    --primary-lightest: var(--color-primary-200);
+    --primary-lighter: var(--color-primary-300);
+    --primary-light: var(--color-primary-400);
+    --primary: var(--color-primary-500);
+    --primary-dark: var(--color-primary-700);
+    --primary-darkest: var(--color-primary-800);
+    --primary-transparent: var(--color-primary-100);
+    --primary-highlight: var(--color-primary-600);
+
+    --primary-text: var(--color-primary-700);
+    --primary-hover: var(--color-primary-100);
+    --primary-active: var(--color-primary-200);
+
+    --primary-border: var(--color-primary-300);
+
+    --primary-flashcards: theme('colors.rose.400');
+    --border-flashcards: theme('colors.rose.500');
+
+    --primary-members: theme('colors.blue.400');
+    --border-members: theme('colors.blue.500');
+
+    --primary-discussions: theme('colors.yellow.400');
+    --border-discussions: theme('colors.yellow.500');
+
+    --text-neutral: 220 20% 30%;
+
+    --secondary-text: 0 0% 30%;
+
+    --text-main: 226 4% 13%;
+    --text-secondary: 222 11% 38%;
+    --text-muted: 226 15% 60%;
+
+    --border-neutral: 220 35% 80%;
+
+    --complete: theme('colors.yellow.400');
+    --complete-dark: theme('colors.yellow.500');
+    --complete-darker: theme('colors.yellow.800');
+
+    --progress: theme('colors.purple.400');
+  }
+
+  .card {
+    --border: 226 10% 90%;
+    --border-input: 226 10% 76%;
+    --hover: 225 10% 96%;
+  }
+  .dark {
+    --background: 226 13% 12%;
+    --foreground: 226 14% 22%;
+
+    --scrollbarThumb: 226 20%, 29%;
+    --scrollbarTrack: 232 25% 16%;
+
+    --hover: 226 14% 16%;
+
+    --muted: 226.2 32.6% 17.5%;
+    --muted-foreground: 220 20.2% 65.1%;
+
+    --popover: 226.2 15% 15%;
+    --popover-foreground: 220 40% 98%;
+
+    /* --card: 226 30% 13%; */
+    --card: 225 14% 16%;
+    --card-disabled: 226 20% 16%;
+    --card-foreground: 224 20% 26%;
+    --card-hover: 224 20% 26%;
+
+    --border: 226 20% 17%;
+    --border-disabled: 226 25% 14%;
+    --border-light: 220 11% 30%;
+
+    --input: 226.2 32.6% 17.5%;
+
+    --primary: 226 9% 91%;
+    --primary-foreground: 220 47.4% 11.2%;
+
+    --primary-border: var(--color-primary-500);
+
+    /* 227, 21%, 17% */
+
+    --secondary: 232 20% 16%;
+    --secondary-hover: 229 20% 20%;
+    --secondary-foreground: 224 20% 26%;
+
+    --panel: 232 32% 11.5%;
+
+    --accent: 220.2 32.6% 17.5%;
+    --accent-foreground: 226 40% 98%;
+
+    --destructive: 350 60.8% 55.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+
+    --ring: 226 10.6% 65.5%;
+
+    --primary-shadow: var(--color-primary-950);
+    --primary-lightest: var(--color-primary-900);
+    --primary-lighter: var(--color-primary-400);
+    --primary-light: var(--color-primary-500);
+    --primary: var(--color-primary-500);
+    --primary-dark: var(--color-primary-700);
+    --primary-darker: var(--color-primary-800);
+    --primary-darkest: var(--color-primary-900);
+    --primary-transparent: var(--color-primary-1000);
+    --primary-highlight: var(--color-primary-300);
+
+    --primary-text: var(--color-primary-100);
+    --primary-active: var(--color-primary-950);
+    --primary-hover: var(--color-primary-900);
+
+    --primary-flashcards: theme('colors.rose.600');
+    --border-flashcards: theme('colors.rose.400');
+
+    --primary-members: theme('colors.blue.600');
+    --border-members: theme('colors.blue.400');
+
+    --primary-discussions: theme('colors.yellow.600');
+    --border-discussions: theme('colors.yellow.400');
+
+    --secondary-text: 0 0% 90%;
+
+    --text-main: 226 8% 95%;
+    --text-secondary: 226 8% 70%;
+    --text-muted: 226 8% 45%;
+
+    --text-neutral: 226 20% 80%;
+
+    --border-neutral: 226 35% 30%;
+    --border-darker: var(--color-primary-900);
+
+    --complete: theme('colors.yellow.400');
+    --complete-dark: theme('colors.yellow.500');
+
+    --progress: theme('colors.purple.400');
+  }
+
+  .dark .card {
+    --border: 226 16% 20%;
+    --hover: 226 15% 18%;
+    --border-input: 226 22% 30%;
+  }
+}
+
+@layer base {
+  .slate {
+    --color-primary-50: theme('colors.slate.50');
+    --color-primary-100: theme('colors.slate.100');
+    --color-primary-200: theme('colors.slate.200');
+    --color-primary-300: theme('colors.slate.300');
+    --color-primary-400: theme('colors.slate.400');
+    --color-primary-500: theme('colors.slate.500');
+    --color-primary-600: theme('colors.slate.600');
+    --color-primary-700: theme('colors.slate.700');
+    --color-primary-800: theme('colors.slate.800');
+    --color-primary-900: theme('colors.slate.900');
+    --color-primary-950: theme('colors.slate.950');
+    --color-primary-1000: #64748b18;
+  }
+  .red {
+    --color-primary-50: theme('colors.red.50');
+    --color-primary-100: theme('colors.red.100');
+    --color-primary-200: theme('colors.red.200');
+    --color-primary-300: theme('colors.red.300');
+    --color-primary-400: theme('colors.red.400');
+    --color-primary-500: theme('colors.red.500');
+    --color-primary-600: theme('colors.red.600');
+    --color-primary-700: theme('colors.red.700');
+    --color-primary-800: theme('colors.red.800');
+    --color-primary-900: theme('colors.red.900');
+    --color-primary-950: theme('colors.red.950');
+    --color-primary-1000: #ef444406;
+  }
+  .orange {
+    --color-primary-50: theme('colors.orange.50');
+    --color-primary-100: theme('colors.orange.100');
+    --color-primary-200: theme('colors.orange.200');
+    --color-primary-300: theme('colors.orange.300');
+    --color-primary-400: theme('colors.orange.400');
+    --color-primary-500: theme('colors.orange.500');
+    --color-primary-600: theme('colors.orange.600');
+    --color-primary-700: theme('colors.orange.700');
+    --color-primary-800: theme('colors.orange.800');
+    --color-primary-900: theme('colors.orange.900');
+    --color-primary-950: theme('colors.orange.950');
+    --color-primary-1000: #f9731608;
+  }
+  .amber {
+    --color-primary-50: theme('colors.amber.50');
+    --color-primary-100: theme('colors.amber.100');
+    --color-primary-200: theme('colors.amber.200');
+    --color-primary-300: theme('colors.amber.300');
+    --color-primary-400: theme('colors.amber.400');
+    --color-primary-500: theme('colors.amber.500');
+    --color-primary-600: theme('colors.amber.600');
+    --color-primary-700: theme('colors.amber.700');
+    --color-primary-800: theme('colors.amber.800');
+    --color-primary-900: theme('colors.amber.900');
+    --color-primary-950: theme('colors.amber.950');
+    --color-primary-1000: #f59e0b06;
+  }
+  .yellow {
+    --color-primary-50: theme('colors.yellow.50');
+    --color-primary-100: theme('colors.yellow.100');
+    --color-primary-200: theme('colors.yellow.200');
+    --color-primary-300: theme('colors.yellow.300');
+    --color-primary-400: theme('colors.yellow.400');
+    --color-primary-500: theme('colors.yellow.500');
+    --color-primary-600: theme('colors.yellow.600');
+    --color-primary-700: theme('colors.yellow.700');
+    --color-primary-800: theme('colors.yellow.800');
+    --color-primary-900: theme('colors.yellow.900');
+    --color-primary-950: theme('colors.yellow.950');
+    --color-primary-1000: #f59e0b06;
+  }
+  .lime {
+    --color-primary-50: theme('colors.lime.50');
+    --color-primary-100: theme('colors.lime.100');
+    --color-primary-200: theme('colors.lime.200');
+    --color-primary-300: theme('colors.lime.300');
+    --color-primary-400: theme('colors.lime.400');
+    --color-primary-500: theme('colors.lime.500');
+    --color-primary-600: theme('colors.lime.600');
+    --color-primary-700: theme('colors.lime.700');
+    --color-primary-800: theme('colors.lime.800');
+    --color-primary-900: theme('colors.lime.900');
+    --color-primary-950: theme('colors.lime.950');
+    --color-primary-1000: #eab30805;
+  }
+  .green {
+    --color-primary-50: theme('colors.green.50');
+    --color-primary-100: theme('colors.green.100');
+    --color-primary-200: theme('colors.green.200');
+    --color-primary-300: theme('colors.green.300');
+    --color-primary-400: theme('colors.green.400');
+    --color-primary-500: theme('colors.green.500');
+    --color-primary-600: theme('colors.green.600');
+    --color-primary-700: theme('colors.green.700');
+    --color-primary-800: theme('colors.green.800');
+    --color-primary-900: theme('colors.green.900');
+    --color-primary-950: theme('colors.green.950');
+    --color-primary-1000: #22c55e05;
+  }
+  .emerald {
+    --color-primary-50: theme('colors.emerald.50');
+    --color-primary-100: theme('colors.emerald.100');
+    --color-primary-200: theme('colors.emerald.200');
+    --color-primary-300: theme('colors.emerald.300');
+    --color-primary-400: theme('colors.emerald.400');
+    --color-primary-500: theme('colors.emerald.500');
+    --color-primary-600: theme('colors.emerald.600');
+    --color-primary-700: theme('colors.emerald.700');
+    --color-primary-800: theme('colors.emerald.800');
+    --color-primary-900: theme('colors.emerald.900');
+    --color-primary-950: theme('colors.emerald.950');
+    --color-primary-1000: #10b98105;
+  }
+  .teal {
+    --color-primary-50: theme('colors.teal.50');
+    --color-primary-100: theme('colors.teal.100');
+    --color-primary-200: theme('colors.teal.200');
+    --color-primary-300: theme('colors.teal.300');
+    --color-primary-400: theme('colors.teal.400');
+    --color-primary-500: theme('colors.teal.500');
+    --color-primary-600: theme('colors.teal.600');
+    --color-primary-700: theme('colors.teal.700');
+    --color-primary-800: theme('colors.teal.800');
+    --color-primary-900: theme('colors.teal.900');
+    --color-primary-950: theme('colors.teal.950');
+    --color-primary-1000: #14b8a605;
+  }
+  .cyan {
+    --color-primary-50: theme('colors.cyan.50');
+    --color-primary-100: theme('colors.cyan.100');
+    --color-primary-200: theme('colors.cyan.200');
+    --color-primary-300: theme('colors.cyan.300');
+    --color-primary-400: theme('colors.cyan.400');
+    --color-primary-500: theme('colors.cyan.500');
+    --color-primary-600: theme('colors.cyan.600');
+    --color-primary-700: theme('colors.cyan.700');
+    --color-primary-800: theme('colors.cyan.800');
+    --color-primary-900: theme('colors.cyan.900');
+    --color-primary-950: theme('colors.cyan.950');
+    --color-primary-1000: #06b6d405;
+  }
+  .sky {
+    --color-primary-50: theme('colors.sky.50');
+    --color-primary-100: theme('colors.sky.100');
+    --color-primary-200: theme('colors.sky.200');
+    --color-primary-300: theme('colors.sky.300');
+    --color-primary-400: theme('colors.sky.400');
+    --color-primary-500: theme('colors.sky.500');
+    --color-primary-600: theme('colors.sky.600');
+    --color-primary-700: theme('colors.sky.700');
+    --color-primary-800: theme('colors.sky.800');
+    --color-primary-900: theme('colors.sky.900');
+    --color-primary-950: theme('colors.sky.950');
+    --color-primary-1000: #0ea5e905;
+  }
+  .blue {
+    --color-primary-50: theme('colors.blue.50');
+    --color-primary-100: theme('colors.blue.100');
+    --color-primary-200: theme('colors.blue.200');
+    --color-primary-300: theme('colors.blue.300');
+    --color-primary-400: theme('colors.blue.400');
+    --color-primary-500: theme('colors.blue.500');
+    --color-primary-600: theme('colors.blue.600');
+    --color-primary-700: theme('colors.blue.700');
+    --color-primary-800: theme('colors.blue.800');
+    --color-primary-900: theme('colors.blue.900');
+    --color-primary-950: theme('colors.blue.950');
+    --color-primary-1000: #3b82f607;
+  }
+  .indigo {
+    --color-primary-50: theme('colors.indigo.50');
+    --color-primary-100: theme('colors.indigo.100');
+    --color-primary-200: theme('colors.indigo.200');
+    --color-primary-300: theme('colors.indigo.300');
+    --color-primary-400: theme('colors.indigo.400');
+    --color-primary-500: theme('colors.indigo.500');
+    --color-primary-600: theme('colors.indigo.600');
+    --color-primary-700: theme('colors.indigo.700');
+    --color-primary-800: theme('colors.indigo.800');
+    --color-primary-900: theme('colors.indigo.900');
+    --color-primary-950: theme('colors.indigo.950');
+    --color-primary-1000: #6366f110;
+  }
+  .violet {
+    --color-primary-50: theme('colors.violet.50');
+    --color-primary-100: theme('colors.violet.100');
+    --color-primary-200: theme('colors.violet.200');
+    --color-primary-300: theme('colors.violet.300');
+    --color-primary-400: theme('colors.violet.400');
+    --color-primary-500: theme('colors.violet.500');
+    --color-primary-600: theme('colors.violet.600');
+    --color-primary-700: theme('colors.violet.700');
+    --color-primary-800: theme('colors.violet.800');
+    --color-primary-900: theme('colors.violet.900');
+    --color-primary-950: theme('colors.violet.950');
+    --color-primary-1000: #8b5cf610;
+  }
+  .purple {
+    --color-primary-50: theme('colors.purple.50');
+    --color-primary-100: theme('colors.purple.100');
+    --color-primary-200: theme('colors.purple.200');
+    --color-primary-300: theme('colors.purple.300');
+    --color-primary-400: theme('colors.purple.400');
+    --color-primary-500: theme('colors.purple.500');
+    --color-primary-600: theme('colors.purple.600');
+    --color-primary-700: theme('colors.purple.700');
+    --color-primary-800: theme('colors.purple.800');
+    --color-primary-900: theme('colors.purple.900');
+    --color-primary-950: theme('colors.purple.950');
+    --color-primary-950: theme('colors.purple.950');
+    --color-primary-1000: #a855f709;
+  }
+  .fuchsia {
+    --color-primary-50: theme('colors.fuchsia.50');
+    --color-primary-100: theme('colors.fuchsia.100');
+    --color-primary-200: theme('colors.fuchsia.200');
+    --color-primary-300: theme('colors.fuchsia.300');
+    --color-primary-400: theme('colors.fuchsia.400');
+    --color-primary-500: theme('colors.fuchsia.500');
+    --color-primary-600: theme('colors.fuchsia.600');
+    --color-primary-700: theme('colors.fuchsia.700');
+    --color-primary-800: theme('colors.fuchsia.800');
+    --color-primary-900: theme('colors.fuchsia.900');
+    --color-primary-950: theme('colors.fuchsia.950');
+    --color-primary-1000: #d946ef08;
+  }
+  .pink {
+    --color-primary-50: theme('colors.pink.50');
+    --color-primary-100: theme('colors.pink.100');
+    --color-primary-200: theme('colors.pink.200');
+    --color-primary-300: theme('colors.pink.300');
+    --color-primary-400: theme('colors.pink.400');
+    --color-primary-500: theme('colors.pink.500');
+    --color-primary-600: theme('colors.pink.600');
+    --color-primary-700: theme('colors.pink.700');
+    --color-primary-800: theme('colors.pink.800');
+    --color-primary-900: theme('colors.pink.900');
+    --color-primary-950: theme('colors.pink.950');
+    --color-primary-1000: #ec489908;
+  }
+  .rose {
+    --color-primary-50: theme('colors.rose.50');
+    --color-primary-100: theme('colors.rose.100');
+    --color-primary-200: theme('colors.rose.200');
+    --color-primary-300: theme('colors.rose.300');
+    --color-primary-400: theme('colors.rose.400');
+    --color-primary-500: theme('colors.rose.500');
+    --color-primary-600: theme('colors.rose.600');
+    --color-primary-700: theme('colors.rose.700');
+    --color-primary-800: theme('colors.rose.800');
+    --color-primary-900: theme('colors.rose.900');
+    --color-primary-950: theme('colors.rose.950');
+    --color-primary-1000: #f43f5e09;
+  }
+
+  body {
+    @apply bg-background text-main;
+  }
+}

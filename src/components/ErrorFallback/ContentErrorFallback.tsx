@@ -8,8 +8,8 @@ function ContentErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-8">
-      <div className="flex flex-col items-center justify-center p-16 bg-background  space-y-4">
-        <Logo size={16} />
+      <div className="flex flex-col items-center justify-center p-16 bg-background space-y-2">
+        <Logo size={20} />
         <h1 className="text-2xl font-semibold text-primary">Oops! An error occurred.</h1>
         <p className="text-muted">{error.message}</p>
         <Button

@@ -1,0 +1,40 @@
+.celebration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.5s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-wrap: nowrap;
+  /* height: 100%;
+  width: 100%; */
+}
+
+.celebration-container.animate {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.star {
+  font-size: 13.125px; /* Adjust size as needed */
+
+  /* margin-right: 10px; */
+  animation: starAnimation 1.2s forwards; /* Adjust time as needed */
+}
+
+@keyframes starAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  85% {
+    transform: scale(2.5);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

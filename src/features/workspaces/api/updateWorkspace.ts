@@ -10,6 +10,7 @@ export const updateWorkspace = async (workspaceId: string, updateWorkspace: Upda
 
     stores.notificationStore.addNotification({
       title: 'Workspace updated',
+      description: 'This is a description',
       type: NotificationType.SUCCESS,
       show: true,
     });

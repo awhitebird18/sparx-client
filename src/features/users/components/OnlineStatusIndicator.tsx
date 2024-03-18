@@ -23,14 +23,14 @@ const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
       onlineStatusColor = 'bg-yellow-500';
       break;
     case UserStatus.ONLINE:
-      onlineStatusColor = 'bg-emerald-500';
+      onlineStatusColor = 'bg-emerald-400';
       break;
     default:
       onlineStatusColor = 'transparent';
       break;
   }
 
-  return <div className={`rounded-full ${onlineStatusColor} w-3.5 h-3.5 border-card border`} />;
+  return <div className={`rounded-full ${onlineStatusColor} w-4 h-4 border-background border-2`} />;
 };
 
 export default observer(OnlineStatusIndicator);

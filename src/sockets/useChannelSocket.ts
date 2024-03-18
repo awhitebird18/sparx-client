@@ -3,17 +3,18 @@ import { useEffect } from 'react';
 
 const useChannelSocket = () => {
   const { addChannelUuidToSection, removeChannelUuidFromSection } = useStore('sectionStore');
-  const { updateWorkspaceChannel } = useStore('workspaceChannelStore');
+  const { updateWorkspaceChannel, updateChannelUserCount } = useStore('workspaceChannelStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
   const { connectSocket, emitSocket } = useStore('socketStore');
-  const { addSubscribedChannel, removeSubscribedChannel, updateSubscribedChannel } =
+  const { addSubscribedChannel, updateSubscribedChannel, leaveChannel, removeSubscribedChannel } =
     useStore('channelStore');
 
   // Subscribes to workspace room
   useEffect(() => {
-    emitSocket('joinWorkspace', 'tempWorkspaceId');
+    emitSocket('joinWorkspace', currentWorkspaceId);
 
-    return () => emitSocket('leaveWorkspace', 'tempWorkspaceId');
-  }, [emitSocket]);
+    return () => emitSocket('leaveWorkspace', currentWorkspaceId);
+  }, [emitSocket, currentWorkspaceId]);
 
   // Join channel
   useEffect(() => {
@@ -28,12 +29,12 @@ const useChannelSocket = () => {
   // Leave channel
   useEffect(() => {
     return connectSocket(`leave-channel`, (data) => {
-      const { channelId } = data.payload;
+      leaveChannel(data.payload.uuid);
 
-      removeSubscribedChannel(channelId);
-      removeChannelUuidFromSection(channelId);
+      // removeSubscribedChannel(channelId);
+      // removeChannelUuidFromSection(channelId);
     });
-  }, [connectSocket, removeSubscribedChannel, removeChannelUuidFromSection]);
+  }, [connectSocket, leaveChannel]);
 
   // Update channel section
   useEffect(() => {
@@ -47,11 +48,20 @@ const useChannelSocket = () => {
 
   // Update channel
   useEffect(() => {
-    return connectSocket(`update-channel`, (data) => {
+    return connectSocket('update-channel', (data) => {
       updateWorkspaceChannel(data);
       updateSubscribedChannel(data);
     });
-  }, [connectSocket, updateWorkspaceChannel, updateSubscribedChannel]);
+  }, [connectSocket, updateWorkspaceChannel, updateSubscribedChannel, updateChannelUserCount]);
+
+  // Remove channel
+  useEffect(() => {
+    return connectSocket('remove-channel', (data) => {
+      const { channelId } = data.payload;
+      removeSubscribedChannel(channelId);
+    });
+  }, [connectSocket, removeSubscribedChannel]);
+
   return null;
 };
 

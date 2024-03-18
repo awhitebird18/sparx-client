@@ -11,6 +11,14 @@ import { removeUserFromChannel } from './removeUserFromChannel';
 import { updateChannel } from './updateChannel';
 import { updateUserChannel } from './updateUserChannel';
 import { getChannelUsers } from './getChannelUsers';
+import { updateNodePosition } from './updateNodePosition';
+import { removeChannel } from './removeChannel';
+import { createChannelConnector } from './createChannelConnector';
+import { getChannelConnectors } from './getChannelConnectors';
+import { removeChannelConnector } from './removeChannelConnector';
+import { removeChannelConnectors } from './removeChannelConnectors';
+import { getChannelUserCounts } from './getChannelUserCounts';
+import { updateLastRead } from './updateLastRead';
 
 export default {
   createChannel,
@@ -26,4 +34,12 @@ export default {
   updateChannel,
   updateUserChannel,
   getChannelUsers,
+  updateNodePosition,
+  removeChannel,
+  createChannelConnector,
+  getChannelConnectors,
+  removeChannelConnector,
+  removeChannelConnectors,
+  getChannelUserCounts,
+  updateLastRead,
 };

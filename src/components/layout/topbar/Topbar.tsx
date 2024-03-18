@@ -1,22 +1,31 @@
-import Search from '@/features/search/components/Search';
 import UserDropdown from './UserDropdown';
 import { observer } from 'mobx-react-lite';
-import HistoryDropdown from '@/features/history/components/HistoryDropdown';
-import Logo from '@/components/logo/Logo';
+import CurrentNode from './CurrentNode';
+import { Button } from '@/components/ui/Button';
+import { QuestionCircle } from 'react-bootstrap-icons';
+import { useStore } from '@/stores/RootStore';
 
 const Topbar = () => {
+  const { setActiveModal } = useStore('modalStore');
+
+  const showShortcutModal = () => {
+    setActiveModal({ type: 'ShortcutMenu', payload: null });
+  };
+
   return (
-    <div className="h-12 border-b border-border flex items-center justify-between px-6 gap-6 bg-neutral-800 dark:bg-hover">
-      <div className="flex gap-1.5 hover:bg-transparent h-12 cursor-pointer items-center pointer-events-none">
-        <Logo size={5} />
-        <h1 className="font-bold flex-grow-1 whitespace-nowrap text-xl text-white">SPARX</h1>
+    <div className="h-16 flex items-center justify-between px-6 gap-6 flex-shrink-0 border-b border-border">
+      <div className="flex items-center gap-4 hover:bg-transparent h-12 cursor-pointer prose">
+        <CurrentNode />
+        {/* <h3 className="text-main leading-none">Members</h3>
+        <p className="whitespace-nowrap text-secondary">Javascript / Arrays</p> */}
       </div>
 
-      <div className="flex items-center gap-1 max-w-xl w-full">
-        <HistoryDropdown />
-        <Search />
+      <div className="w-full flex justify-end items-center gap-2">
+        <Button variant="ghost" className="w-8 h-8 p-0" onClick={showShortcutModal}>
+          <QuestionCircle className="thick-icon" />
+        </Button>
+        <UserDropdown />
       </div>
-      <UserDropdown />
     </div>
   );
 };

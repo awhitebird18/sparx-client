@@ -31,10 +31,14 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-secondary dark:bg-popover">
-      <div className="p-8 shadow-lg rounded-2xl bg-background w-full max-w-md relative">
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background">
+      <div className="flex gap-2 items-center absolute top-4 left-5">
+        <span className="text-2xl font-bold">Navinotes</span>
+      </div>
+
+      <div className="card p-8 shadow-lg rounded-2xl bg-card w-full max-w-md relative border border-border">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-          <Logo size={20} />
+          <Logo size={28} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Sign in to your account</h2>
           <div className="flex items-center gap-1 text-sm mt-2">
             <p className="">or</p>
@@ -48,7 +52,7 @@ const Login: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md ">
           <div className="sm:rounded-lg">
             <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               <div>
@@ -105,10 +109,11 @@ const Login: React.FC = () => {
           </div>
         </div>
         <Button
-          className="absolute -top-4 -right-4 shadow-lg"
+          className="absolute -top-4 -right-4 shadow-lg backdrop-blur-md"
           onClick={loginAnanomously}
           name="anonymous-login-button"
-          aria-label="Log in anonymously to explore Sparx without creating an account"
+          variant="outline-primary"
+          aria-label="Log in anonymously to explore Navinotes without creating an account"
         >
           Sign in Anonymously
         </Button>

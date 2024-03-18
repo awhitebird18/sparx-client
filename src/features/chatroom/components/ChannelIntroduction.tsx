@@ -42,11 +42,9 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
           </span>
         </p>
 
-        <Button onClick={handleAddUser} className="gap-4 justify-between w-fit relative">
-          <Person size={18} />
-          Invite to channel
-          <Plus size={18} className="absolute top-1.5 left-7" />
-        </Button>
+        <p className="text-base font-medium">
+          Use this discussion board to discuss or ask questions
+        </p>
       </div>
     </div>
   );

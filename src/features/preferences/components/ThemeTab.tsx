@@ -1,4 +1,3 @@
-import { Moon, Sun } from 'react-bootstrap-icons';
 import { primaryColors } from '@/utils/primaryColors';
 import { Theme } from '../enums/Theme';
 
@@ -16,8 +15,13 @@ import { getValidPrimaryColor } from '@/utils/getValidPrimaryColor';
 import { getValidTheme } from '@/utils/getValidTheme';
 import { observer } from 'mobx-react-lite';
 import { Label } from '@/components/ui/Label';
+import { Switch } from '@/components/ui/Switch';
+
+import UserAvatar from '@/features/users/components/UserAvatar';
+import { Button } from '@/components/ui/Button';
 
 const ThemeTab = () => {
+  const { currentUser } = useStore('userStore');
   const { theme, updateThemeApi, primaryColor, updatePrimaryColorApi } =
     useStore('userPreferencesStore');
 
@@ -32,7 +36,7 @@ const ThemeTab = () => {
   const colorOptions = primaryColors.map((color: string) => (
     <SelectItem key={color} value={color}>
       <div className="flex items-center gap-4">
-        <div className={`w-8 h-8 rounded-lg ${`bg-${color}-500`}`} />
+        <div className={`w-6 h-6 rounded-lg ${`bg-${color}-500`}`} />
         {`${color.charAt(0).toUpperCase()}${color.substring(1).toLowerCase()}`}
       </div>
     </SelectItem>
@@ -40,50 +44,64 @@ const ThemeTab = () => {
 
   return (
     <ScrollArea>
-      <div className="flex flex-col flex-1 gap-6">
-        <p className="text-neutral">
-          Change the appearance of Sparx across all of your workspaces:
-        </p>
+      <div className="flex flex-col flex-1 gap-4">
+        <h2 className="text-main text-sm font-semibold">APPEARANCE</h2>
+        <div className="flex justify-between">
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold">Sync with OS setting</h3>
+            <p className="text-sm font-semibold text-muted">
+              Automatically switch between light and dark mode when your system does.
+            </p>
+          </div>
+          <Switch />
+        </div>
+        <div className="flex gap-4 items-center my-4">
+          <div className="w-full h-px border-b border-border" />
+          <div className="text-slate-500/80 font-semibold text-sm">OR</div>
+          <div className="w-full h-px border-b border-border" />
+        </div>
 
         <div>
-          <h2 className="text-lg text-neutral mb-2">App theme</h2>
           <RadioGroup
             defaultValue={theme}
             onValueChange={(value) => handleThemeSelect(value)}
-            className="flex gap-4 h-44"
+            className="flex gap-4 h-min"
           >
-            <div className="flex flex-col items-center border border-border rounded-lg overflow-hidden flex-1 w-full text-black/70">
-              <div
-                className={`bg-yellow-500/80 dark:bg-yellow-500/50 text-white text-2xl p-3 border-b border-border w-full flex justify-center flex-1 gap-4 items-center`}
-              >
-                {<Sun size={50} />}
+            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full text-black/70 dark:bg-white/5 p-3 gap-4">
+              <div className="flex gap-4">
+                {<UserAvatar profileImage={currentUser?.profileImage} userId="" />}
+
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-main font-semibold text-sm leading-normal">Jane Smith</p>
+                  <Label className="text-muted text-sm font-normal leading-tight" htmlFor="light">
+                    Light mode only
+                  </Label>
+                </div>
               </div>
-              <div className="flex gap-2 items-center justify-center p-4">
-                <RadioGroupItem value={Theme.LIGHT} id="light" />
-                <Label className="text-main text-lg" htmlFor="dark">
-                  Light
-                </Label>
-              </div>
+
+              <RadioGroupItem value={Theme.LIGHT} id="light" />
             </div>
-            <div className="flex flex-col items-center border border-border rounded-lg flex-1 overflow-hidden w-full text-black/70">
-              <div
-                className={`bg-indigo-500/80 dark:bg-indigo-500/50 text-white text-2xl  p-3 border-b border-border w-full flex justify-center flex-1 gap-4 items-center`}
-              >
-                {<Moon size={50} />}
+            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full dark:bg-black/30 bg-black/10 text-black/70 p-3 gap-4">
+              <div className="flex gap-4">
+                {<UserAvatar profileImage={currentUser?.profileImage} userId="" />}
+
+                <div className="flex flex-col gap-0.5">
+                  <p className="text-main font-semibold text-sm leading-normal">Jane Smith</p>
+                  <Label className="text-muted text-sm font-normal leading-tight" htmlFor="dark">
+                    Light mode only
+                  </Label>
+                </div>
               </div>
-              <div className="flex gap-2 items-center justify-center p-4">
-                <RadioGroupItem value={Theme.DARK} id="dark" />
-                <Label className="text-main text-lg" htmlFor="dark">
-                  Dark
-                </Label>
-              </div>
+
+              <RadioGroupItem value={Theme.DARK} id="dark" />
             </div>
           </RadioGroup>
         </div>
-        <div>
-          <p className="text-lg text-neutral mb-2">Primary Color</p>
+
+        <div className="flex flex-col gap-4">
+          <h2 className="text-main text-sm font-semibold">THEME</h2>
           <Select onValueChange={handlePrimaryColorSelect} defaultValue={primaryColor}>
-            <SelectTrigger className="h-14">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="Select primary color" />
             </SelectTrigger>
             <SelectContent className="max-h-48">{colorOptions}</SelectContent>

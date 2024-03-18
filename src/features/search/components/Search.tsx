@@ -1,33 +1,41 @@
-import { useState } from 'react';
-import { Clock } from 'react-bootstrap-icons';
-
 import { Button } from '@/components/ui/Button';
-import SearchInput from '@/components/ui/SearchInput';
+import { useNavigate } from 'react-router-dom';
 
 const Search = () => {
-  const [searchValue, setSearchValue] = useState('');
+  const navigate = useNavigate();
 
-  const handleSearch = (val: string) => {
-    setSearchValue(val);
+  const handleClickBack = () => {
+    navigate(-1);
   };
 
   return (
-    <div className="w-full max-w-xl relative">
-      <SearchInput value={searchValue} setValue={handleSearch} placeholder="Search" dark disabled />
-
-      {searchValue ? (
-        <div className="w-full max-h-72 border-border rounded-md absolute top-11 left-0 bg-background z-10 p-3 space-y-3 shadow">
-          <div className="flex flex-col gap-2">
-            <div className="text-sm text-muted-foreground">Recent Searchs</div>
-            {['Channel name 1', 'Channel name 2'].map((name: string) => (
-              <Button className="w-full justify-start flex gap-2" variant="ghost">
-                <Clock />
-                {name}
-              </Button>
-            ))}
+    <div className="flex flex-col h-full p-8">
+      <div className="flex items-start pt-4 gap-6">
+        {/* <Button className="card rounded-xl pointer-events-none opacity-70 h-18 w-18 bg-card border border-primary p-2 text-primary shadow-lg">
+            <Pencil size={50} />
+          </Button> */}
+        {/* <div className="flex flex-col gap-1.5">
+          <h2 className="text-main text-3xl font-medium">Search</h2>
+          <p className="text-secondary">See all of your notes for workspace and make changes</p>
+        </div> */}
+      </div>
+      {/* Main */}
+      <div className="h-full w-full flex justify-center">
+        <div className="flex flex-col gap-5 max-w-sm h-full pt-12 items-center mt-0">
+          <div className="flex flex-col gap-1.5 items-center pt-8 prose">
+            <h3 className="text-center text-main">Coming Soon.</h3>
+            <p className="text-center text-secondary">
+              Search to be implemented in a future release.
+            </p>
           </div>
+          <Button
+            className="gap-4 px-3 py-2 w-fit h-9 rounded-lg border border-primary-lighter"
+            onClick={handleClickBack}
+          >
+            Go back
+          </Button>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 };

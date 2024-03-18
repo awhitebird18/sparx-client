@@ -83,7 +83,7 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
               </TooltipTrigger>
               <TooltipContent className="rounded-xl">
                 <div className="items-center justify-center gap-2 flex flex-col w-52 p-2">
-                  <div className="border border-border rounded-xl p-2 bg-secondary">
+                  <div className="border border-border rounded-xl p-2 bg-card">
                     <Emoji id={reaction.emojiId} size={32} />
                   </div>
 

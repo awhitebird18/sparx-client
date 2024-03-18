@@ -68,7 +68,7 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
 
   return (
     <div
-      className={`options-panel flex absolute -top-5 right-5 rounded-md bg-background shadow-sm shadow-black/70 ${
+      className={`card options-panel flex absolute border border-border -top-5 right-5 rounded-md bg-card shadow ${
         !showEmojiPicker && 'hidden'
       }`}
     >

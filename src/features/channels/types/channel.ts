@@ -6,7 +6,13 @@ export interface Channel extends Base {
   topic?: string;
   description?: string;
   icon?: string;
+  isDefault?: boolean;
   isPrivate?: boolean;
   type: ChannelType;
   isTemp?: boolean;
+  x: number;
+  y: number;
+  status: string;
+  isSubscribed: boolean;
+  subscriptionDetails: any;
 }

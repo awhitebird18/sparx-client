@@ -7,7 +7,7 @@ const SetUserStatusButton = () => {
   const { activeUserStatus } = useStore('userStatusStore');
 
   return (
-    <Button className="w-full roudned-sm p-2 gap-2" variant="outline">
+    <Button className="w-full rounded-sm p-2 gap-2 bg-transparent" variant="outline">
       <div className="h-6 border-r border-border pr-2">
         <em-emoji
           id={activeUserStatus ? activeUserStatus.emoji : 'smiley'}

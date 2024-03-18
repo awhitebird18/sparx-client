@@ -19,10 +19,13 @@ import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndic
 import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
 import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
+import { ArrowReturnRight, Cup, EmojiSmile, Eye, Gear, Pencil } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
   const { userLogout } = useAuth();
@@ -40,53 +43,64 @@ const UserDropdown: React.FC = () => {
     emitSocket('change-status', { status: userStatus });
   };
 
+  const handleViewProfile = () => {
+    navigate(`/app/profile/${currentUser?.uuid}`);
+  };
+
   if (!currentUser) return;
 
   const transformedImage = transformCloudinaryUrl(currentUser.profileImage, 60, 60);
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <Tooltip>
-        <div className="gap-1 flex items-center">
-          {activeUserStatus && (
-            <div onClick={() => handleOpenModal({ type: 'UserStatusModal' })}>
-              <UserStatusDisplay status={activeUserStatus} />
+      <div className="flex items-center bg-card rounded-lg border-border border">
+        <div
+          onClick={() => handleOpenModal({ type: 'UserStatusModal' })}
+          className="w-8 h-8 mr-1 flex items-center justify-center"
+        >
+          {activeUserStatus ? (
+            <UserStatusDisplay status={activeUserStatus} />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center cursor-pointer ">
+              <EmojiSmile className="thick-icon" />
             </div>
           )}
+        </div>
+        <Tooltip>
           <TooltipTrigger asChild>
             <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
-                size={31}
+                size={31.5}
                 userId={currentUser.uuid}
                 profileImage={transformedImage}
                 showStatus
               />
             </DropdownMenuTrigger>
           </TooltipTrigger>
-        </div>
-        <TooltipContent asChild>
-          {(() => {
-            const formattedName = `${currentUser.firstName
-              .charAt(0)
-              .toUpperCase()}${currentUser.firstName
-              .substring(1)
-              .toLowerCase()} ${currentUser.lastName.charAt(0).toUpperCase()}${currentUser.lastName
-              .substring(1)
-              .toLowerCase()}`;
+          <TooltipContent asChild align="end">
+            {(() => {
+              const formattedName = `${currentUser.firstName
+                .charAt(0)
+                .toUpperCase()}${currentUser.firstName
+                .substring(1)
+                .toLowerCase()} ${currentUser.lastName
+                .charAt(0)
+                .toUpperCase()}${currentUser.lastName.substring(1).toLowerCase()}`;
 
-            return (
-              <p className="text-ellipsis whitespace-nowrap overflow-hidden font-medium">
-                {formattedName}
-              </p>
-            );
-          })()}
-        </TooltipContent>
-      </Tooltip>
+              return (
+                <p className="text-ellipsis whitespace-nowrap overflow-hidden font-medium">
+                  {formattedName}
+                </p>
+              );
+            })()}
+          </TooltipContent>
+        </Tooltip>
+      </div>
 
       <DropdownMenuContent
         align="end"
         sideOffset={5}
-        className="DropdownMenuContent w-80 p-4 space-y-4"
+        className=" w-80 p-4 space-y-4"
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
@@ -103,7 +117,7 @@ const UserDropdown: React.FC = () => {
             </div>
             <div className="flex items-center gap-1">
               <OnlineStatusIndicator userId={currentUser.uuid} />
-              <p className="text-sm text-secondary-foreground h-3 leading-3">
+              <p className="text-sm text-secondary h-3 leading-3">
                 {`${userOnlineStatus[0].toUpperCase()}${userOnlineStatus.substring(1)}`}
               </p>
             </div>
@@ -114,6 +128,23 @@ const UserDropdown: React.FC = () => {
           <SetUserStatusButton />
         </div>
         <div>
+          <DropdownMenuSeparator className="DropdownMenuSeparator dark:bg-slate-500/40 my-1" />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={handleViewProfile}
+              className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
+            >
+              <Pencil />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleOpenModal({ type: 'PreferencesModal' })}
+              className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
+            >
+              <Gear /> Account settings
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          {/* <DropdownMenuSeparator className="DropdownMenuSeparator" /> */}
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() =>
@@ -121,34 +152,34 @@ const UserDropdown: React.FC = () => {
                   userOnlineStatus === UserStatus.ONLINE ? UserStatus.AWAY : UserStatus.ONLINE,
                 )
               }
+              className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
             >
+              <Cup />
               {`Set yourself ${userOnlineStatus === UserStatus.ONLINE ? 'as away' : 'online'}`}
             </DropdownMenuItem>
-            <DropdownMenuItem disabled onClick={() => console.info('pauseNotifications')}>
-              Pause notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-
-          <DropdownMenuSeparator className="DropdownMenuSeparator" />
-
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() =>
-                handleOpenModal({ type: 'ProfileModal', payload: { userId: currentUser?.uuid } })
-              }
+            {/* <DropdownMenuItem
+              disabled
+              onClick={() => console.info('pauseNotifications')}
+              className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
             >
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleOpenModal({ type: 'PreferencesModal' })}>
-              Preferences
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}>
-              Change password
-            </DropdownMenuItem>
+              <Bell /> Pause notifications
+            </DropdownMenuItem> */}
           </DropdownMenuGroup>
 
-          <DropdownMenuSeparator className="DropdownMenuSeparator" />
-          <DropdownMenuItem onClick={userLogout}>Logout</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleOpenModal({ type: 'ChangePasswordModal' })}
+            className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
+          >
+            <Eye /> Change password
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator className="DropdownMenuSeparator dark:bg-slate-500/40 my-2" />
+          <DropdownMenuItem
+            onClick={userLogout}
+            className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
+          >
+            <ArrowReturnRight /> Sign out of Personal Workspace
+          </DropdownMenuItem>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

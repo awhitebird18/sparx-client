@@ -1,0 +1,8 @@
+<svg width="78" height="92" viewBox="0 0 78 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<path class='derp' d="M77 52.9684C77 73.9553 59.9868 90.9684 39 90.9684C18.0132 90.9684 1.00001 73.9553 1.00001 52.9684C1.00001 31.9816 18.0132 14.9684 39 14.9684C59.9868 14.9684 77 31.9816 77 52.9684Z" fill="hsl(var(--primary))"  stroke-width="2"/>
+<rect x="11.5263" y="1" width="38" height="52.4361" rx="5" fill="#11151C"/>
+<rect class='derp' x="11.5263" y="1" width="38" height="52.4361" rx="5" stroke-width="2" stroke='var(--color-primary-50)'/>
+<rect class='derp' x="24.6518" y="15.009" width="38" height="52.4361" rx="5" fill="#11151C"/>
+<rect class='derp' x="24.6518" y="15.009" width="38" height="52.4361" rx="5" stroke-width="2"/>
+</svg>

@@ -129,7 +129,7 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
               {inviteList.length ? (
                 inviteList.map((user: User) => (
                   <li
-                    className="flex justify-between p-0 h-10 px-2 rounded-lg hover:bg-secondary/50 items-center cursor-pointer gap-1"
+                    className="flex justify-between p-0 h-10 px-2 rounded-lg hover:bg-card/50 items-center cursor-pointer gap-1"
                     onClick={() => handleRemoveUserFromInviteList(user.uuid)}
                   >
                     <div className="flex items-center gap-2">

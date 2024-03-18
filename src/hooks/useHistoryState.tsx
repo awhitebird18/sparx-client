@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import useLocalStorage from './useLocalStorage';
+import { useStore } from '@/stores/RootStore';
 
 interface NavigationHistoryItem {
   timestamp: number;
   primaryView: string;
+  nodeId: string;
 }
 
 const useHistoryState = () => {
@@ -14,20 +16,23 @@ const useHistoryState = () => {
     'navigationHistory',
     [],
   );
+  const { currentChannelId } = useStore('channelStore');
 
   useEffect(() => {
     const lastItem = navigationHistory[navigationHistory.length - 1];
 
-    if (
-      location.pathname.replace('/app/', '') !== lastItem?.primaryView &&
-      location.pathname !== '/app'
-    ) {
-      setNavigationHistory((prev: NavigationHistoryItem[]) => [
-        ...prev,
-        { timestamp: new Date().getTime(), primaryView: location.pathname.replace('/app/', '') },
-      ]);
-    }
-  }, [location, navigationHistory, setNavigationHistory]);
+    if (!currentChannelId || currentChannelId === lastItem?.nodeId) return;
+
+    setNavigationHistory((prev: NavigationHistoryItem[]) => [
+      ...prev,
+      {
+        timestamp: new Date().getTime(),
+        primaryView: location.pathname.replace('/app/', ''),
+        nodeId: currentChannelId,
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChannelId]);
 
   return navigationHistory;
 };

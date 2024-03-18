@@ -20,4 +20,8 @@ export class ModalStore {
   setActiveModal = (activeModal: ActiveModal | null) => {
     this.activeModal = activeModal;
   };
+
+  closeModal = () => {
+    this.activeModal = null;
+  };
 }

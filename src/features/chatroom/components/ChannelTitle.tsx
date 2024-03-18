@@ -6,7 +6,6 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { useStore } from '@/stores/RootStore';
 import { ChannelType } from '@/features/channels/enums';
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 
 const ChannelTitle = () => {
   const { currentChannel } = useStore('channelStore');
@@ -29,10 +28,6 @@ const ChannelTitle = () => {
     if (!user) return;
     channelIcon = user.profileImage;
     userId = user.uuid;
-  }
-
-  if (channelIcon) {
-    channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);
   }
 
   return (

@@ -16,6 +16,10 @@ import { SocketStore } from '@/stores/SocketStore';
 import { SidebarStore } from '@/stores/SidebarStore';
 import { ThreadStore } from '@/features/threads/stores/threadStore';
 import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
+import { NotesStore } from '@/features/notes/stores/NotesStore';
+import { FlashcardStore } from '@/features/flashcards/stores/FlashcardStore';
+import { WorkspaceStore } from '@/features/workspaces/stores/workspaceStore';
+import { ChannelConnectorStore } from '@/features/workspaceChannels/stores/ChannelConnectorStore';
 
 interface RootStore {
   userStore: UserStore;
@@ -32,6 +36,10 @@ interface RootStore {
   socketStore: SocketStore;
   threadStore: ThreadStore;
   userStatusStore: UserStatusStore;
+  noteStore: NotesStore;
+  flashcardStore: FlashcardStore;
+  workspaceStore: WorkspaceStore;
+  channelConnectorStore: ChannelConnectorStore;
 }
 
 class RootStoreImpl implements RootStore {
@@ -49,6 +57,10 @@ class RootStoreImpl implements RootStore {
   modalStore = new ModalStore();
   threadStore = new ThreadStore();
   userStatusStore = new UserStatusStore();
+  noteStore = new NotesStore();
+  flashcardStore = new FlashcardStore();
+  workspaceStore = new WorkspaceStore();
+  channelConnectorStore = new ChannelConnectorStore();
 }
 
 export const stores = new RootStoreImpl();

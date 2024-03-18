@@ -4,4 +4,6 @@ export interface UpdateChannel {
   description?: string;
   icon?: string;
   isPrivate?: boolean;
+  x?: number;
+  y?: number;
 }

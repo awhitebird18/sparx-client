@@ -51,13 +51,8 @@ const WorkspaceChannels: React.FC = () => {
     channelUserCounts,
     resetWorkspaceChannelStore,
   } = useStore('workspaceChannelStore');
-  const {
-    findChannelByUuid,
-    addSubscribedChannel,
-    joinChannelApi,
-    leaveChannelApi,
-    subscribedChannels,
-  } = useStore('channelStore');
+  const { joinChannelApi, leaveChannelApi, subscribedChannels, setCurrentChannelUuid } =
+    useStore('channelStore');
   const { findSectionByChannelType, addChannelUuidToSection } = useStore('sectionStore');
   const { formatAutomatedMessage, createMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
@@ -97,12 +92,13 @@ const WorkspaceChannels: React.FC = () => {
   }, [resetWorkspaceChannelStore]);
 
   const handleViewChannel = (channel: Channel) => {
-    const subscribedChannel = findChannelByUuid(channel.uuid);
-    if (!subscribedChannel) {
-      addSubscribedChannel({ ...channel, isTemp: true });
-    }
+    // const subscribedChannel = findChannelByUuid(channel.uuid);
+    // if (!subscribedChannel) {
+    //   addSubscribedChannel({ ...channel, isTemp: true });
+    // }
+    setCurrentChannelUuid(channel.uuid);
 
-    navigate(`/app/${channel.uuid}`);
+    navigate(`/app/overview/${channel.uuid}`);
   };
 
   const handleClickCreateChannel = () => {

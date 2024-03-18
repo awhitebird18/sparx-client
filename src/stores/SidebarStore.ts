@@ -25,15 +25,22 @@ export class SidebarStore {
       handleResize: action,
       setSidebarWidth: action,
       loadSidebarWidthFromLocalStorage: action,
+      sidebarOpen: computed,
+      toggleSidebar: action,
     });
 
     this.channelStore = channelStore;
     this.sectionStore = sectionStore;
     this.selectedId = undefined;
-    this.sidebarWidth = 250;
+    this.sidebarWidth = 300;
     this.isSidebarAbsolute = false;
 
     this.loadSidebarWidthFromLocalStorage();
+  }
+
+  get sidebarOpen() {
+    if (this.sidebarWidth > 65) return true;
+    return false;
   }
 
   handleResize = () => {
@@ -44,6 +51,14 @@ export class SidebarStore {
       this.isSidebarAbsolute = true;
     } else {
       this.isSidebarAbsolute = false;
+    }
+  };
+
+  toggleSidebar = () => {
+    if (this.sidebarOpen) {
+      this.setSidebarWidth(65);
+    } else {
+      this.setSidebarWidth(300);
     }
   };
 

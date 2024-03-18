@@ -46,7 +46,7 @@ const UserStatusModal = () => {
     if (emojiButtonRef.current) {
       const rect = emojiButtonRef.current.getBoundingClientRect();
 
-      setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
+      setShowEmojiPicker({ top: 142, left: 40 });
     }
   };
 
@@ -116,14 +116,8 @@ const UserStatusModal = () => {
                 <Emoji id="smile" size={24} />
               )}
             </Button>
-            {showEmojiPicker && (
-              <EmojiPicker
-                onEmojiClick={handleAddReaction}
-                onClickAway={handleCloseEmojiPicker}
-                position={showEmojiPicker}
-              />
-            )}
           </div>
+
           <Input
             placeholder="What's your status?"
             className="pl-14 h-12 border-border"
@@ -136,6 +130,13 @@ const UserStatusModal = () => {
             }
             value={currentUserStatus ? currentUserStatus.text : ''}
           />
+          {showEmojiPicker && (
+            <EmojiPicker
+              onEmojiClick={handleAddReaction}
+              onClickAway={handleCloseEmojiPicker}
+              position={showEmojiPicker}
+            />
+          )}
           {currentUserStatus?.text && !activeUserStatus ? (
             <Button
               size="icon"
@@ -149,7 +150,7 @@ const UserStatusModal = () => {
             </Button>
           ) : null}
         </div>
-        {!currentUserStatus ? (
+        {!currentUserStatus && userStatuses.length ? (
           <div className="p-1 space-y-1 max-h-80 overflow-auto">
             <p className="">Recent</p>
             <div className="w-full">
@@ -196,7 +197,7 @@ const UserStatusModal = () => {
                 Cancel
               </Button>
               <Button className="ml-auto w-32" onClick={handleSubmit} disabled={!currentUserStatus}>
-                Submit
+                Set Status
               </Button>
             </>
           )}

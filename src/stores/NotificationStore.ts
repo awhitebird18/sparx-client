@@ -12,8 +12,8 @@ type Notification = {
   uuid?: string;
   title: string;
   description?: string;
-  type: NotificationType;
-  show: boolean;
+  type?: NotificationType;
+  show?: boolean;
 };
 
 export class NotificationStore {
@@ -52,10 +52,10 @@ export class NotificationStore {
         if (count > 0) {
           document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
             this.unreadsCount > 1 && 's'
-          } - Sparx`;
+          } - Navinotes`;
           this.audio?.play();
         } else {
-          document.title = `${this.originalTitle} - Sparx`;
+          document.title = `${this.originalTitle} - Navinotes`;
         }
       },
     );
@@ -97,7 +97,15 @@ export class NotificationStore {
   };
 
   addNotification = (notification: Notification) => {
-    this.notifications = [...this.notifications, { ...notification, uuid: uuidv4(), show: true }];
+    this.notifications = [
+      ...this.notifications,
+      {
+        ...notification,
+        uuid: uuidv4(),
+        show: true,
+        type: notification.type ?? NotificationType.SUCCESS,
+      },
+    ];
   };
 
   dismissNotification = (uuid: string) => {
@@ -108,7 +116,7 @@ export class NotificationStore {
 
   setTitle = (title: string) => {
     this.originalTitle = `${title}`;
-    document.title = `${title} - Sparx`;
+    document.title = `${title} - Navinotes`;
   };
 
   // method to set unreadsCount

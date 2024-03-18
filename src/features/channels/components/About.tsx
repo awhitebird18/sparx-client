@@ -113,6 +113,7 @@ const EditField = observer(
       [type]: z.string().max(200),
     });
     const { updateChannelApi } = useStore('channelStore');
+    const { currentWorkspaceId } = useStore('workspaceStore');
     const { setActiveModal } = useStore('modalStore');
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -122,7 +123,7 @@ const EditField = observer(
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-      await updateChannelApi(channelId, values);
+      await updateChannelApi(channelId, values, currentWorkspaceId);
 
       setActiveModal(null);
     }

@@ -50,7 +50,7 @@ const NotificationsTab = () => {
     <div>
       <div>
         <p className="text-sm text-muted-foreground mb-6">
-          Change the appearance of Sparx across all of your workspaces.
+          Change the appearance of Navinotes across all of your workspaces.
         </p>
 
         <RadioGroup

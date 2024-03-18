@@ -11,8 +11,9 @@ const ChangePassword = lazy(() => import('@/features/auth/components/ChangePassw
 
 const Auth = observer(() => {
   const { currentUser } = useStore('userStore');
+  const { workspaces } = useStore('workspaceStore');
 
-  if (currentUser) {
+  if (currentUser && workspaces.length) {
     return <Navigate to="/app" replace />;
   }
 

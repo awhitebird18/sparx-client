@@ -15,12 +15,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
 const formSchema = z.object({
   email: z.string().email(),
 });
 
 const InviteUserForm = () => {
+  const { currentWorkspace } = useStore('workspaceStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,8 +32,9 @@ const InviteUserForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!currentWorkspace) return;
     try {
-      await authApi.inviteUser({ email: values.email });
+      await authApi.inviteUser({ email: values.email, workspaceId: currentWorkspace.uuid });
       form.reset();
     } catch (err) {
       console.error(err);
@@ -38,7 +42,7 @@ const InviteUserForm = () => {
   };
 
   return (
-    <Modal title="Invite user to Sparx">
+    <Modal title={`Invite user to ${currentWorkspace?.name}`}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -67,4 +71,4 @@ const InviteUserForm = () => {
   );
 };
 
-export default InviteUserForm;
+export default observer(InviteUserForm);

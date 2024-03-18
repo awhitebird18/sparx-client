@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import ThemeTab from './ThemeTab';
 import NotificationsTab from './NotificationsTab';
 import Modal from '@/components/modal/Modal';
-
-const AccountTab: React.FC = () => <div>Account content...</div>;
+import AccountTab from './AccountTab';
+import { Bell, Gear, Heart } from 'react-bootstrap-icons';
 
 enum PreferenceTabs {
   THEMING = 'Theming',
@@ -27,33 +27,28 @@ const PreferencesModal: React.FC = () => {
     }
   };
 
-  const listItem = (tab: PreferenceTabs) => (
+  const listItem = (icon: any, tab: PreferenceTabs) => (
     <div
       onClick={() => setActiveTab(tab)}
-      className={`${
-        tab !== PreferenceTabs.THEMING && 'pointer-events-none opacity-20'
-      } h-8 rounded-sm p-0 px-3 w-full text-sm justify-between flex items-center cursor-pointer overflow-hidden font-medium ${
-        activeTab === tab
-          ? 'bg-active hover:bg-active text-active dark:text-active'
-          : 'text-main hover:bg-hover'
+      className={`card h-9 rounded-md p-0 px-3 w-full hover:bg-hover text-sm text-main flex items-center cursor-pointer overflow-hidden font-medium ${
+        activeTab === tab ? 'bg-hover' : ''
       }`}
     >
+      <span className="w-6 text-base ">{icon}</span>
       {tab}
     </div>
   );
 
   return (
-    <Modal title="Preferences">
+    <Modal title="Preferences" disablePadding>
       <div className="flex transform transition-all w-max">
-        <nav className="space-y-1 border-r border-border pr-4 w-52">
-          {listItem(PreferenceTabs.THEMING)}
-          {listItem(PreferenceTabs.NOTIFICATIONS)}
-          {listItem(PreferenceTabs.ACCOUNT)}
+        <nav className="space-y-2 border-r border-border p-6 w-64">
+          {listItem(<Heart />, PreferenceTabs.THEMING)}
+          {listItem(<Bell />, PreferenceTabs.NOTIFICATIONS)}
+          {listItem(<Gear />, PreferenceTabs.ACCOUNT)}
         </nav>
 
-        <div className="flex-1 pl-4 overflow-auto" style={{ width: '32rem', height: '30rem' }}>
-          {renderTabContent()}
-        </div>
+        <div className="flex-1 p-10 overflow-auto w-[40rem] h-[34rem]">{renderTabContent()}</div>
       </div>
     </Modal>
   );

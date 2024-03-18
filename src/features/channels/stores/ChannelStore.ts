@@ -1,10 +1,8 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action, computed, toJS, reaction } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
 import channelApi from '@/features/channels/api';
-
 import { Channel, CreateChannel, UpdateChannel } from '../types';
 import { User } from '@/features/users/types/user';
 
@@ -16,6 +14,12 @@ export class ChannelStore {
   currentChannelId: string | undefined;
   channelUserIds: string[] = [];
   isLoading = true;
+  userChannelData: any[] = [];
+  zoomLevel = 1.0;
+  isEditing = false;
+  isFullscreen = false;
+  isDraggingNode = false;
+  isControlPressed = false;
 
   constructor() {
     makeObservable(this, {
@@ -23,27 +27,37 @@ export class ChannelStore {
       currentChannelId: observable,
       channelUserIds: observable,
       isLoading: observable,
+      isControlPressed: observable,
+      isFullscreen: observable,
+      isEditing: observable,
+      isDraggingNode: observable,
+      zoomLevel: observable,
+      userChannelData: observable,
       currentChannel: computed,
       getChannelByUuid: computed,
       findChannelByUuid: action,
-      setChannelUsers: action,
       updateSubscribedChannel: action,
+      addUserChannelData: action,
       setCurrentChannelUuid: action,
       setSubscribedChannels: action,
       removeSubscribedChannel: action,
       addSubscribedChannel: action,
       setIsLoading: action,
+      setIsEditing: action,
+      setIsFullscreen: action,
+      setIsDraggingNode: action,
       createChannelApi: action,
       updateChannelApi: action,
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
       leaveChannelApi: action,
       filterTempChannels: action,
-      fetchChannelUserIdsApi: action,
       findTempChannel: action,
       inviteUsersToChannelApi: action,
       createDirectChannelApi: action,
+      setZoomLevel: action,
       removeUserFromChannelApi: action,
+      findUserChannelDataByChannelId: action,
     });
   }
 
@@ -56,6 +70,24 @@ export class ChannelStore {
 
     return channel;
   }
+
+  setZoomLevel = (value: number) => {
+    this.zoomLevel = value;
+  };
+
+  setIsEditing = (bool: boolean) => {
+    this.isEditing = bool;
+  };
+  setIsDraggingNode = (bool: boolean) => {
+    this.isDraggingNode = bool;
+  };
+
+  setIsFullscreen = (bool: boolean) => {
+    this.isFullscreen = bool;
+  };
+  setIsControlPressed = (bool: boolean) => {
+    this.isControlPressed = bool;
+  };
 
   get getChannelByUuid() {
     return (uuid: string) => {
@@ -75,7 +107,7 @@ export class ChannelStore {
   };
 
   setSubscribedChannels = (channels: Channel[]) => {
-    this.subscribedChannels = channels;
+    this.subscribedChannels = channels.filter((channel) => channel.type !== 'direct');
   };
 
   setCurrentChannelUuid = (channelUuid: string | undefined) => {
@@ -88,20 +120,42 @@ export class ChannelStore {
     this.subscribedChannels.push(channel);
   };
 
-  updateSubscribedChannel = (udpatedChannel: Channel) => {
+  updateSubscribedChannel = (updatedChannel: Partial<any>) => {
     const channelFound = this.subscribedChannels.find(
-      (channel) => channel.uuid === udpatedChannel.uuid,
+      (channel) => channel.uuid === updatedChannel.uuid,
     );
 
     if (!channelFound) return;
 
-    Object.assign(channelFound, udpatedChannel);
+    Object.assign(channelFound, updatedChannel);
+  };
+
+  updateUserChannelData = (userChannel: any) => {
+    const userChannelFound = this.userChannelData.find((el) => el.uuid === userChannel.uuid);
+
+    if (!userChannelFound) return;
+
+    Object.assign(userChannelFound, userChannel);
+  };
+
+  leaveChannel = (channelId: string) => {
+    const channelFound = this.subscribedChannels.find((channel) => channel.uuid === channelId);
+
+    if (!channelFound) return;
+
+    channelFound.isSubscribed = false;
   };
 
   removeSubscribedChannel = (uuid: string) => {
     this.subscribedChannels = this.subscribedChannels.filter(
       (channel: Channel) => channel.uuid !== uuid,
     );
+  };
+
+  removeChannelApi = async (channelId: string, workspaceId: string) => {
+    await channelApi.removeChannel(channelId, workspaceId);
+
+    this.removeSubscribedChannel(channelId);
   };
 
   setIsLoading = (bool: boolean) => {
@@ -113,54 +167,90 @@ export class ChannelStore {
     await channelApi.inviteUsersToChannel(channelUuid, userIds);
   };
 
-  createChannelApi = async (createChannel: CreateChannel, sectionId: string) => {
-    const channel = await channelApi.createChannel(createChannel, sectionId);
-    this.addSubscribedChannel(channel);
-    return channel;
-  };
-
-  createDirectChannelApi = async (channelUserIds: string[]) => {
-    const channel = await channelApi.createDirectChannel(channelUserIds);
+  createChannelApi = async (
+    createChannel: CreateChannel,
+    sectionId: string | undefined,
+    currentWorkspaceId: string,
+  ) => {
+    const channel = await channelApi.createChannel(createChannel, sectionId, currentWorkspaceId);
 
     this.addSubscribedChannel(channel);
     return channel;
   };
 
-  joinChannelApi = async ({ channelId, sectionId }: { channelId: string; sectionId: string }) => {
-    const channel = await channelApi.joinChannel({ channelId, sectionId });
+  createDirectChannelApi = async (channelUserIds: string[], workspaceId: string) => {
+    const channel = await channelApi.createDirectChannel(channelUserIds, workspaceId);
 
     this.addSubscribedChannel(channel);
+    return channel;
+  };
+
+  joinChannelApi = async ({
+    channelId,
+    sectionId,
+  }: {
+    channelId: string;
+    sectionId: string | undefined;
+  }) => {
+    const userChannel = await channelApi.joinChannel({ channelId, sectionId });
+
+    const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
+
+    if (userChannelDataFound) {
+      this.updateUserChannelData(userChannel);
+    } else {
+      this.addUserChannelData(userChannel);
+    }
   };
 
   leaveChannelApi = async (channelUuid: string) => {
-    await channelApi.leaveChannel(channelUuid);
-    this.removeSubscribedChannel(channelUuid);
+    const res = await channelApi.leaveChannel(channelUuid);
+
+    if (res) {
+      this.updateUserChannelData(res.subscriptionDetails);
+    }
   };
 
   removeUserFromChannelApi = async (channelUuid: string, userUuid: string) => {
     await channelApi.removeUserFromChannel(channelUuid, userUuid);
   };
 
-  updateChannelApi = async (uuid: string, updateChannel: UpdateChannel) => {
-    const updatedChannel = await channelApi.updateChannel(uuid, updateChannel);
+  updateChannelApi = async (uuid: string, updateChannel: UpdateChannel, workspaceId?: string) => {
+    if (!workspaceId) return;
+    const updatedChannel = await channelApi.updateChannel(uuid, updateChannel, workspaceId);
     this.updateSubscribedChannel(updatedChannel);
   };
 
-  setChannelUsers = (channelUserIds: string[]) => {
+  setChannelUserIds = (channelUserIds: string[]) => {
     this.channelUserIds = channelUserIds;
   };
 
-  fetchChannelUserIdsApi = async (channelId: string) => {
-    const userIds = await channelApi.getChannelUsers(channelId);
-
-    this.setChannelUsers(userIds);
+  setUserChannelData = (userChannels: any[]) => {
+    this.userChannelData = userChannels;
   };
 
-  fetchSubscribedChannelsApi = async () => {
+  fetchUserChannelData = async (workspaceId: string) => {
+    const userChannels = await channelApi.getUserChannels(workspaceId);
+
+    this.setUserChannelData(userChannels);
+  };
+
+  findUserChannelDataByChannelId = (channelId: string) => {
+    const channelData = this.userChannelData.find((el: any) => el.channel.uuid === channelId);
+
+    return channelData;
+  };
+
+  addUserChannelData = (userData: any) => {
+    this.userChannelData.push(userData);
+  };
+
+  // Gets workspace channels but is not used at the moment
+  fetchSubscribedChannelsApi = async (workspaceId: string) => {
     this.setIsLoading(true);
 
     try {
-      const channels = await channelApi.getSubscribedChannels();
+      const channels = await channelApi.getSubscribedChannels(workspaceId);
 
       this.setSubscribedChannels([
         ...channels.map((channel: Channel) => ({
@@ -173,5 +263,9 @@ export class ChannelStore {
       console.error(error);
     }
     this.setIsLoading(false);
+  };
+
+  moveNode = async (channelId: string, position: { x: number; y: number }) => {
+    return await channelApi.updateNodePosition(channelId, position);
   };
 }

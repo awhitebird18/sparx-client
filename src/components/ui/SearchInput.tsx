@@ -33,7 +33,7 @@ const SearchInput = ({
       />
 
       <div className="absolute left-3.5 top-auto text-base text-neutral">
-        <Search />
+        <Search size={14} />
       </div>
       {value ? (
         <Button

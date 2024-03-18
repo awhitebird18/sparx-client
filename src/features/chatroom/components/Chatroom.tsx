@@ -30,17 +30,19 @@ const ChatRoom: React.FC = () => {
     fetchMessagesApi,
     setPage,
     createMessageApi,
-    hasMore,
     thread,
   } = useStore('messageStore');
-  const { setCurrentChannelUuid, currentChannelId, currentChannel, fetchChannelUserIdsApi } =
-    useStore('channelStore');
+  const { setCurrentChannelUuid, currentChannelId, currentChannel } = useStore('channelStore');
+  const { fetchChannelUserIdsApi } = useStore('userStore');
+
   const { clearUsersTyping } = useStore('userTypingStore');
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
   const { currentUser } = useStore('userStore');
+  const { updateUnreadCountApi, clearChannelUnreads } = useStore('channelUnreadStore');
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
   const { channelId } = useParams();
 
   const handleSubmit = async (messageContent: string) => {
@@ -74,11 +76,10 @@ const ChatRoom: React.FC = () => {
   );
 
   useLayoutEffect(() => {
-    if (!channelId || channelId === currentChannelId) return;
+    if (!currentChannelId) return;
 
     setPage(1);
-    setCurrentChannelUuid(channelId);
-    fetchMessagesApi(channelId);
+    fetchMessagesApi(currentChannelId);
   }, [fetchMessagesApi, channelId, setPage, setCurrentChannelUuid, currentChannelId]);
 
   useEffect(() => {
@@ -86,6 +87,13 @@ const ChatRoom: React.FC = () => {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [groupedMessagesWithUser]);
+
+  useEffect(() => {
+    if (!currentChannelId) return;
+    updateUnreadCountApi(currentChannelId);
+    clearChannelUnreads(currentChannelId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChannelId]);
 
   useEffect(() => {
     if (!currentChannelId) return;
@@ -148,9 +156,7 @@ const ChatRoom: React.FC = () => {
                     </div>
                   ))}
 
-                  {!hasMore && currentChannel?.type !== ChannelType.DIRECT && (
-                    <ChannelIntroduction channelId={channelId} />
-                  )}
+                  <ChannelIntroduction channelId={currentChannelId} />
                 </>
               )}
             </div>

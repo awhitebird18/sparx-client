@@ -34,6 +34,7 @@ interface ListHeaderProps {
 
 const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeaderProps) => {
   const { setActiveModal } = useStore('modalStore');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { updateSectionApi } = useStore('sectionStore');
   const [hasOpenDialog] = useState(false);
 
@@ -65,15 +66,15 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu data-state={dropdownOpen} onOpenChange={setDropdownOpen}>
       <div
         ref={dragRef}
-        className="h-8 p-0 px-3 w-100 flex items-center gap-2 hover:bg-hover cursor-pointer rounded-sm overflow-hidden text-main"
+        className="h-8 p-0 w-100 flex items-center gap-2 cursor-pointer rounded-sm overflow-hidden text-muted"
       >
-        <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">{icon}</div>
+        <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">{icon}</div>
         <ContextMenuTrigger>
           <div
-            className="font-medium whitespace-nowrap text-ellipsis overflow-hidden text-sm"
+            className="whitespace-nowrap text-ellipsis overflow-hidden text-muted font-medium text-sm"
             ref={ref}
           >
             {title}
