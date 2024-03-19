@@ -6,6 +6,7 @@ import { getUserChannels } from './getUserChannels';
 import { getWorkspaceChannels } from './getWorkspaceChannels';
 import { inviteUsersToChannel } from './inviteUsersToChannel';
 import { joinChannel } from './joinChannel';
+import { joinDefaultChannel } from './joinDefaultChannel';
 import { leaveChannel } from './leaveChannel';
 import { removeUserFromChannel } from './removeUserFromChannel';
 import { updateChannel } from './updateChannel';
@@ -29,6 +30,7 @@ export default {
   getWorkspaceChannels,
   inviteUsersToChannel,
   joinChannel,
+  joinDefaultChannel,
   leaveChannel,
   removeUserFromChannel,
   updateChannel,

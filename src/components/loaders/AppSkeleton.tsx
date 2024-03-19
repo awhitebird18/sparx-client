@@ -26,7 +26,7 @@ const AppSkeleton = ({ setAnimationComplete }: any) => {
   const [progress, setProgress] = useState(0);
 
   const sidebarWidth = storage.getSidebarWidth() || 250;
-  const appTheme = storage.getTheme() || 'light';
+  const appTheme = storage.getTheme() || 'dark';
 
   const isLight = appTheme === 'light';
 

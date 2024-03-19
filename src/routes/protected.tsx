@@ -27,7 +27,7 @@ const App = observer(() => {
   const location = useLocation();
   const { currentUser } = useStore('userStore');
   const { workspaces } = useStore('workspaceStore');
-  const { setCurrentChannelUuid } = useStore('channelStore');
+  const { setCurrentChannelUuid, defaultChannel, subscribedChannels } = useStore('channelStore');
   const history = useHistoryState();
 
   if (!currentUser) {
@@ -52,6 +52,8 @@ const App = observer(() => {
   useEffect(() => {
     if (history && history[history.length - 1]?.nodeId) {
       setCurrentChannelUuid(history[history.length - 1]?.nodeId);
+    } else {
+      setCurrentChannelUuid(defaultChannel?.uuid);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -82,7 +84,7 @@ const Onboarding = observer(() => {
   }
 
   if (currentUser && workspaces.length) {
-    return <Navigate to="/app" replace />;
+    return <Navigate to="/app/home" replace />;
   }
 
   return <CreateWorkspaceOnboarding />;
@@ -105,7 +107,7 @@ export const protectedRoutes = [
       { path: 'flashcards/*', element: <FlashcardRoutes /> },
       { path: 'threads/*', element: <ThreadRoutes /> },
       { path: ':channelId/*', element: <ChatroomRoutes /> },
-      { path: '*', element: <Navigate to={navigateToLastPage()} /> },
+      // { path: '*', element: <Navigate to={navigateToLastPage()} /> },
     ],
   },
   {
@@ -114,6 +116,6 @@ export const protectedRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to={navigateToLastPage()} replace />,
+    element: <Navigate to={navigateToLastPage()} />,
   },
 ];

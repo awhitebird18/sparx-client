@@ -15,7 +15,7 @@ import { observer } from 'mobx-react-lite';
 interface AuthContextData {
   userLogin: (loginCredentials: LoginData) => Promise<void>;
   userLogout: () => void;
-  registerUser: (registrationData: RegistrationData) => Promise<void>;
+  registerUser: (registrationData: RegistrationData) => Promise<any>;
   verifyAndLoginUser: () => void;
 }
 
@@ -80,9 +80,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const registerUser = async (registrationData: RegistrationData) => {
+  const registerUser = async (registrationData: RegistrationData): Promise<any> => {
     try {
-      await authApi.register(registrationData);
+      const user = await authApi.register(registrationData);
+
+      return user;
     } catch (error) {
       console.error(error);
     }

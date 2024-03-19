@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/Input';
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/Button';
 import PasswordInput from '@/components/ui/PasswordInput';
+import VerifyEmail from './VerifyEmail';
 
 type FormData = {
   email: string;
@@ -60,12 +61,16 @@ const RegisterPage: React.FC = () => {
   const { registerUser } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [userIdToBeVerified, setUserIdToBeVerified] = useState(null);
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
 
     try {
-      await registerUser(data);
+      const user = await registerUser(data);
+      if (!user) throw new Error('No user');
+
+      setUserIdToBeVerified(user.uuid);
       reset();
     } catch (error) {
       console.error(error);
@@ -73,6 +78,10 @@ const RegisterPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  if (userIdToBeVerified) {
+    return <VerifyEmail userId={userIdToBeVerified} />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background">

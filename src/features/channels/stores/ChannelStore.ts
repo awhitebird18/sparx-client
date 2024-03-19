@@ -35,6 +35,7 @@ export class ChannelStore {
       userChannelData: observable,
       currentChannel: computed,
       getChannelByUuid: computed,
+      defaultChannel: computed,
       findChannelByUuid: action,
       updateSubscribedChannel: action,
       addUserChannelData: action,
@@ -50,6 +51,7 @@ export class ChannelStore {
       updateChannelApi: action,
       fetchSubscribedChannelsApi: action,
       joinChannelApi: action,
+      joinDefaultChannelApi: action,
       leaveChannelApi: action,
       filterTempChannels: action,
       findTempChannel: action,
@@ -69,6 +71,14 @@ export class ChannelStore {
     );
 
     return channel;
+  }
+
+  get defaultChannel(): Channel | undefined {
+    const channel = this.subscribedChannels.find((channel) => channel.isDefault);
+
+    if (channel) {
+      return channel;
+    }
   }
 
   setZoomLevel = (value: number) => {
@@ -201,6 +211,18 @@ export class ChannelStore {
     } else {
       this.addUserChannelData(userChannel);
     }
+  };
+
+  joinDefaultChannelApi = async ({ workspaceId }: { workspaceId: string }) => {
+    const userChannel = await channelApi.joinDefaultChannel({ workspaceId });
+
+    // const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
+
+    // if (userChannelDataFound) {
+    //   this.updateUserChannelData(userChannel);
+    // } else {
+    //   this.addUserChannelData(userChannel);
+    // }
   };
 
   leaveChannelApi = async (channelUuid: string) => {

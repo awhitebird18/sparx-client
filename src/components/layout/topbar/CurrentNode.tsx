@@ -22,7 +22,8 @@ type HistoryItem = {
 };
 
 const CurrentNode = () => {
-  const { currentChannel, setCurrentChannelUuid, findChannelByUuid } = useStore('channelStore');
+  const { currentChannel, setCurrentChannelUuid, findChannelByUuid, currentChannelId } =
+    useStore('channelStore');
   const history = useHistoryState();
 
   const { setTitle } = useStore('notificationStore');
@@ -36,7 +37,7 @@ const CurrentNode = () => {
   // Assuming 'array' is your input array of objects
   const sortedArray = history.sort((a: HistoryItem, b: HistoryItem) => b.timestamp - a.timestamp);
 
-  const uniqueNodes: HistoryItem[] = [];
+  const uniqueNodes: HistoryItem[] = useMemo(() => [], []);
   const seenNodeIds = new Set();
 
   sortedArray.forEach((item: HistoryItem) => {
@@ -59,13 +60,13 @@ const CurrentNode = () => {
       acc[dateKey].push(item);
       return acc;
     }, {});
-  }, [history]);
+  }, [uniqueNodes]);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <h3 className="leftSide flex gap-3 items-center text-main whitespace-nowrap">
-          {currentChannel ? currentChannel.name : 'Home'}
+          {currentChannel?.isDefault ? 'Home' : currentChannel?.name}
           <ChevronDown size={12} className="mt-1" />
         </h3>
       </DropdownMenuTrigger>

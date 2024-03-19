@@ -5,12 +5,16 @@ import { publicRoutes } from '@/routes/public';
 import { protectedRoutes } from '@/routes/protected';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import VerificationSuccessful from '@/features/auth/components/VerificationSuccessful';
 
 const AppRoutes = () => {
   const { currentUser } = useStore('userStore');
   const { workspaces } = useStore('workspaceStore');
 
-  const commonRoutes = [{ path: '*', element: <Navigate to="/" /> }];
+  const commonRoutes = [
+    { path: '/verified', element: <VerificationSuccessful /> },
+    { path: '*', element: <Navigate to="/" /> },
+  ];
 
   const routes = currentUser && workspaces ? protectedRoutes : publicRoutes;
 
