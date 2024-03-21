@@ -31,6 +31,8 @@ const storage = {
 
     if (theme) {
       return JSON.parse(theme);
+    } else {
+      return 'dark';
     }
   },
   setTheme: (theme: Theme) => {

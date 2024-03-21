@@ -93,7 +93,7 @@
   }
 
   .card {
-    --border: 226 10% 90%;
+    --border: 226 20% 88%;
     --border-input: 226 10% 76%;
     --hover: 225 10% 96%;
   }
@@ -118,7 +118,7 @@
     --card-foreground: 224 20% 26%;
     --card-hover: 224 20% 26%;
 
-    --border: 226 20% 17%;
+    --border: 226 20% 18%;
     --border-disabled: 226 25% 14%;
     --border-light: 220 11% 30%;
 
@@ -187,7 +187,7 @@
   }
 
   .dark .card {
-    --border: 226 16% 20%;
+    --border: 226 18% 24%;
     --hover: 226 15% 18%;
     --border-input: 226 22% 30%;
   }

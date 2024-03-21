@@ -263,7 +263,7 @@ const Profile = () => {
                 <div className=" flex flex-col h-full w-full">
                   <div className="grid grid-cols-3 gap-4 w-full">
                     {!isLoading ? (
-                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border-border p-6 rounded-lg">
+                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border border-border p-6 rounded-lg">
                         <StarFill className="text-yellow-400" size={48} />
                         <div>
                           <h3 className="text-main">
@@ -281,7 +281,7 @@ const Profile = () => {
                     )}
 
                     {!isLoading ? (
-                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border-border p-6 rounded-lg">
+                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border border-border p-6 rounded-lg">
                         <LightningFill className="text-emerald-400" size={48} />
                         <div>
                           <h3 className="text-main">{totalExp}</h3>
@@ -292,7 +292,7 @@ const Profile = () => {
                       <CardSkeleton />
                     )}
                     {!isLoading ? (
-                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border-border p-6 rounded-lg">
+                      <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border border-border p-6 rounded-lg">
                         <Fire className="text-rose-400" size={48} />
                         <div>
                           <h3 className="text-main">{currentUserWorkspaceData.streakCount}</h3>
@@ -316,7 +316,7 @@ const Profile = () => {
                   )}
                 </div>
                 {!isLoading ? (
-                  <div className="w-full h-96 flex-shrink-0 card bg-card rounded-xl">
+                  <div className="w-full h-96 flex-shrink-0 card bg-card rounded-xl border border-border p-6">
                     <ExperienceChart data={stats} />
                   </div>
                 ) : (

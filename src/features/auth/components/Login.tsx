@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background">
+    <div className="card min-h-screen flex flex-col justify-center items-center p-4 bg-background">
       <div className="flex gap-2 items-center absolute top-4 left-5">
         <span className="text-2xl font-bold">Navinotes</span>
       </div>

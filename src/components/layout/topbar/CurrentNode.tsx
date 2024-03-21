@@ -22,8 +22,7 @@ type HistoryItem = {
 };
 
 const CurrentNode = () => {
-  const { currentChannel, setCurrentChannelUuid, findChannelByUuid, currentChannelId } =
-    useStore('channelStore');
+  const { currentChannel, setCurrentChannelUuid, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
 
   const { setTitle } = useStore('notificationStore');
@@ -66,7 +65,7 @@ const CurrentNode = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <h3 className="leftSide flex gap-3 items-center text-main whitespace-nowrap">
-          {currentChannel?.isDefault ? 'Home' : currentChannel?.name}
+          {currentChannel?.name}
           <ChevronDown size={12} className="mt-1" />
         </h3>
       </DropdownMenuTrigger>

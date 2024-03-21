@@ -10,6 +10,8 @@ const WorkspaceActivity = ({ activity, isLoading }: { activity: any; isLoading: 
         <Skeleton className="h-[6.5rem] w-full rounded-xl" />
         <Skeleton className="h-[6.5rem] w-full rounded-xl" />
         <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
       </div>
     );
   }

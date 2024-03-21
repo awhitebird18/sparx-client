@@ -16,7 +16,8 @@ import useHistoryState from '@/hooks/useHistoryState';
 import Nodemap from '@/features/workspaceChannels/components/Nodemap';
 import Profile from '@/features/profile/components/Profile';
 import Search from '@/features/search/components/Search';
-import CreateWorkspaceOnboarding from '@/features/workspaces/components/CreateWorkspaceOnboarding';
+import Onboarding from '@/features/workspaces/components/Onboarding';
+import InviteUserOnboarding from '@/features/workspaces/components/InviteUserOnboarding';
 
 const Home = lazy(() => import('@/components/layout/Home'));
 const UserRoutes = lazy(() => import('@/features/users/routes'));
@@ -26,16 +27,20 @@ const ThreadRoutes = lazy(() => import('@/features/threads/routes'));
 const App = observer(() => {
   const location = useLocation();
   const { currentUser } = useStore('userStore');
-  const { workspaces } = useStore('workspaceStore');
-  const { setCurrentChannelUuid, defaultChannel, subscribedChannels } = useStore('channelStore');
+  const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
+  const { setCurrentChannelUuid, subscribedChannels, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
 
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  if (currentUser && !workspaces.length) {
+  if (!workspaces.length || !lastViewedWorkspace) {
     return <Navigate to="/onboarding" replace />;
+  }
+
+  if (lastViewedWorkspace?.isFirstLogin) {
+    return <Navigate to="/workspace-onboarding" replace />;
   }
 
   // Initializes emojis
@@ -50,13 +55,19 @@ const App = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (history && history[history.length - 1]?.nodeId) {
+    if (
+      history &&
+      history[history.length - 1]?.nodeId &&
+      findChannelByUuid(history[history.length - 1]?.nodeId)
+    ) {
       setCurrentChannelUuid(history[history.length - 1]?.nodeId);
     } else {
+      const defaultChannel = subscribedChannels.find((channel) => channel.isDefault);
+
       setCurrentChannelUuid(defaultChannel?.uuid);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [subscribedChannels]);
 
   return (
     <Suspense>
@@ -75,19 +86,23 @@ const App = observer(() => {
   );
 });
 
-const Onboarding = observer(() => {
+const OnboardingNav = observer(() => {
   const { currentUser } = useStore('userStore');
-  const { workspaces } = useStore('workspaceStore');
+  const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
 
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  if (currentUser && workspaces.length) {
+  if (workspaces.length) {
     return <Navigate to="/app/home" replace />;
   }
 
-  return <CreateWorkspaceOnboarding />;
+  if (lastViewedWorkspace?.isFirstLogin) {
+    return <Navigate to="/workspace-onboarding" replace />;
+  }
+
+  return <Onboarding />;
 });
 
 export const protectedRoutes = [
@@ -95,10 +110,9 @@ export const protectedRoutes = [
     path: '/app',
     element: <App />,
     children: [
-      { path: '', element: <Home /> },
+      { path: '', element: <OverviewRoutes /> },
       { path: 'members/*', element: <UserRoutes /> },
       { path: 'nodemap/*', element: <Nodemap /> },
-      { path: 'onboarding/*', element: <CreateWorkspaceOnboarding /> },
       { path: 'user/*', element: <Nodemap /> },
       { path: 'profile/:userId', element: <Profile /> },
       { path: 'notes/*', element: <NotesRoutes /> },
@@ -107,12 +121,16 @@ export const protectedRoutes = [
       { path: 'flashcards/*', element: <FlashcardRoutes /> },
       { path: 'threads/*', element: <ThreadRoutes /> },
       { path: ':channelId/*', element: <ChatroomRoutes /> },
-      // { path: '*', element: <Navigate to={navigateToLastPage()} /> },
+      { path: '*', element: <Navigate to={navigateToLastPage()} /> },
     ],
   },
   {
     path: '/onboarding',
-    element: <Onboarding />,
+    element: <OnboardingNav />,
+  },
+  {
+    path: '/workspace-onboarding',
+    element: <InviteUserOnboarding />,
   },
   {
     path: '*',

@@ -33,26 +33,19 @@ function Table<T extends object>({
 
   // Render the UI for your table
   return (
-    <div className="w-full border border-border card rounded-xl overflow-hidden">
-      <table {...getTableProps()} className="m-0 w-full">
+    <div className="w-full border border-border card rounded-xl bg-card shadow-sm">
+      <table {...getTableProps()} className="m-0 w-full border-collapse">
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="w-full">
-              <th
-                className={cn(
-                  'w-20 m-0 p-0 h-12 align-middle text-center bg-hover rounded-tl-xl',
-                  headerClasses,
-                )}
-              >
+              <th className={cn('w-20 m-0 p-0 h-12 align-middle text-center ', headerClasses)}>
                 <Checkbox className="bg-blue mt-1" />
               </th>
               {headerGroup.headers.map((column, index) => (
                 <th
                   {...column.getHeaderProps()}
                   className={cn(
-                    `p-0 h-12 text-left align-middle font-medium text-main bg-hover text-base ${
-                      index === headerGroup.headers.length - 1 && 'rounded-tr-xl'
-                    }`,
+                    `p-0 h-12 text-left align-middle font-medium text-main text-base `,
                     headerClasses,
                   )}
                 >

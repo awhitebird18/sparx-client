@@ -31,7 +31,7 @@ const UserAvatar = ({
         className={`${rounded}`}
       />
       <AvatarFallback
-        delayMs={2000}
+        delayMs={200}
         className={`h-full flex-1 w-full ${rounded} border border-background overflow-hidden bg-card`}
         children={
           <PersonFill

@@ -193,7 +193,7 @@ const TaskList: React.FC = () => {
         },
       },
     ],
-    [completeTask, dropdownOpen, handleClickAction, handleDeleteTask, handleUpdateTask],
+    [completeTask, dropdownOpen, handleDeleteTask, handleUpdateTask],
   );
 
   return (
@@ -205,25 +205,25 @@ const TaskList: React.FC = () => {
         </Button>
       </div>
 
-      <div className="space-y-8">
-        {/* {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            onDelete={deleteTask}
-            onComplete={completeTask}
-            dueDate={task.dueDate}
-          />
-        ))} */}
-
+      <div className="space-y-3">
         <Table
           columns={columns}
           data={tasks}
-          headerClasses="bg-card h-16"
-          rowClasses="h-16 overflow-hidden bg-card"
+          headerClasses="h-16"
+          rowClasses="h-16"
           isLoading={isLoading}
-          //   onRowClick={(row) => handleViewNote(row.uuid)}
         />
+        {!tasks.length && (
+          <div className="flex flex-col gap-3 w-full items-center bg-card card rounded-xl p-6 border border-border shadow">
+            <h3 className="text-main leading-none">No tasks to show.</h3>
+            <p className="text-secondary mb-3 leading-none">
+              Add tasks to keep track of your learning goals.
+            </p>
+            <Button size="sm" className="w-fit" onClick={createTask}>
+              Add a new task
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

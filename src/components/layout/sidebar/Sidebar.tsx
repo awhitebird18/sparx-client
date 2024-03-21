@@ -121,7 +121,7 @@ const Sidebar = () => {
         )}
       </div>
       <Button
-        className="mb-4 mr-3 self-end flex-shrink-0"
+        className="card mb-4 mr-3 self-end flex-shrink-0"
         variant="outline"
         size="icon"
         onClick={handleToggleSidebar}

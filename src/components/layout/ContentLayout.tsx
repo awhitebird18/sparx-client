@@ -8,7 +8,7 @@ type ContentLayoutProps = {
 };
 
 const ContentLayout = ({ children }: ContentLayoutProps) => {
-  return <div className="flex flex-col flex-1 overflow-hidden p-8">{children}</div>;
+  return <div className="flex flex-col flex-1 h-full gap-4 overflow-auto p-8">{children}</div>;
 };
 
 export default observer(ContentLayout);

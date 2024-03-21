@@ -33,7 +33,7 @@ const ChangePassword: React.FC = () => {
       <div className="flex gap-2 items-center absolute top-4 left-5">
         <span className="text-2xl font-bold">Navinotes</span>
       </div>
-      <div className="p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
+      <div className="card border border-border p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={28} />
           <h2 className="mt-6 text-center text-3xl font-extrabold">Change your password</h2>

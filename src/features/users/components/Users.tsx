@@ -152,7 +152,7 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-4 gap-3 justify-normal items-start grid-rows-[max-content_1fr] my-3">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] pr-3">
         {!isLoading ? (
           filteredUsers.map((userChannel: SubscriptionDetails) => {
             const user = findUserByUuid(userChannel.userId);

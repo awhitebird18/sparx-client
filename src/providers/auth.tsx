@@ -96,6 +96,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setAnimationComplete(false);
       const data = await authApi.verify();
 
+      console.log(data);
       setCurrentUserId(data.currentUser.uuid);
 
       // If user has not joined any workspaces this is currently neccessary.

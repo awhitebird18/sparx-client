@@ -5,6 +5,7 @@ import { joinWorkspace } from './joinWorkspace';
 import { getUserWorkspaces } from './getUserWorkspaces';
 import { switchWorkspace } from './switchWorkspace';
 import { uploadWorkspaceImage } from './uploadWorkspaceImage';
+import { markUserWorkspaceViewed } from './markUserWorkspaceViewed';
 
 export default {
   createWorkspace,
@@ -14,4 +15,5 @@ export default {
   getUserWorkspaces,
   switchWorkspace,
   uploadWorkspaceImage,
+  markUserWorkspaceViewed,
 };

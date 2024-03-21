@@ -136,7 +136,7 @@ const Overview = () => {
           {/* Quick Actions */}
           <div className="space-y-3  prose">
             <h3 className="text-main">Quick Actions</h3>
-            <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow-sm ">
+            <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow ">
               <Button
                 onClick={() => handleClickQuickAction('/app/nodemap')}
                 size="sm"
@@ -216,7 +216,9 @@ const Overview = () => {
               </Select>
             </div>
 
-            <WorkspaceActivity activity={filteredActivity} isLoading={activityLoading} />
+            <div className="h-full overflow-auto pr-2">
+              <WorkspaceActivity activity={filteredActivity} isLoading={activityLoading} />
+            </div>
           </div>
         </div>
       </div>
@@ -242,7 +244,7 @@ const LastViewedCard = ({ title, date, status }: any) => {
   };
 
   return (
-    <div className="w-1/3 relative h-36 rounded-xl flex flex-col shadow-sm p-5  justify-center text-main prose bg-card card border border-border">
+    <div className="w-1/3 relative h-36 rounded-xl flex flex-col shadow p-5  justify-center text-main prose bg-card card border border-border">
       <div className="flex justify-between items-start flex-1">
         <div className="flex flex-col flex-1 gap-3">
           <h3 className="text-main prose-lg leading-none">{title}</h3>

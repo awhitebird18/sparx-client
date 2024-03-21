@@ -38,20 +38,11 @@ const NodeStats = () => {
   if (!stats[CompletionStatus.Skip]) stats[CompletionStatus.Skip] = 0;
   if (!stats[CompletionStatus.InProgress]) stats[CompletionStatus.InProgress] = 0;
 
-  // Calculate completion percentage
-  const defaultNodeCount = 1;
-
   const completionPercentage =
-    channelCount === 0
-      ? 0
-      : Math.round((stats[CompletionStatus.Complete] / (channelCount - defaultNodeCount)) * 100);
-
-  // const handleValue = (value: number) => {
-  //   console.info(value);
-  // };
+    channelCount === 0 ? 0 : Math.round((stats[CompletionStatus.Complete] / channelCount) * 100);
 
   return (
-    <div className="card rounded-xl flex gap-2.5 p-2.5 shadow whitespace-nowrap items-center absolute bottom-2 left-2 bg-card pr-5">
+    <div className="card rounded-xl border border-border flex gap-2.5 p-2.5 shadow whitespace-nowrap items-center absolute bottom-2 left-2 bg-card pr-5">
       <div className="flex items-center gap-1.5 bg-primary border border-primary-lighter flex-shrink-0 h-full w-12 justify-center rounded-lg text-white">
         {`${completionPercentage}%`}
       </div>
@@ -77,7 +68,7 @@ const NodeStats = () => {
 
       <Button
         onClick={handleToggleOpen}
-        className="absolute border-none shadow -right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0.5 ml-auto bg-primary-transparent text-highlight"
+        className="card absolute shadow-md -right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0.5 ml-auto bg-card !border-border"
         variant="default"
       >
         <ChevronLeft
