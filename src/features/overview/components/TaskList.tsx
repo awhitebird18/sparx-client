@@ -205,7 +205,7 @@ const TaskList: React.FC = () => {
           columns={columns}
           data={tasks}
           headerClasses="h-16"
-          rowClasses="h-16"
+          rowClasses="h-16 border-0"
           isLoading={isLoading}
         />
         {!tasks.length && (

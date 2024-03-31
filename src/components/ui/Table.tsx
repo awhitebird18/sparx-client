@@ -54,7 +54,7 @@ function Table<T extends object>({
 
         <tbody {...getTableBodyProps()} className="divide-y">
           {!isLoading &&
-            rows.map((row, index) => {
+            rows.map((row) => {
               prepareRow(row);
 
               return (
@@ -62,9 +62,7 @@ function Table<T extends object>({
                   {...row.getRowProps()}
                   onDoubleClick={() => onRowClick && onRowClick(row.original)}
                   className={cn(
-                    `cursor-pointer text-main hover:bg-hover border-b border-border ${
-                      index !== rows.length && ''
-                    } h-16 not-prose`,
+                    'cursor-pointer text-main hover:bg-hover rounded-xl h-16 not-prose',
                     rowClasses,
                   )}
                 >
