@@ -44,7 +44,7 @@ const UserStatusModal = () => {
 
   const handleShowEmojiPicker = () => {
     if (emojiButtonRef.current) {
-      const rect = emojiButtonRef.current.getBoundingClientRect();
+      // const rect = emojiButtonRef.current.getBoundingClientRect();
 
       setShowEmojiPicker({ top: 142, left: 40 });
     }

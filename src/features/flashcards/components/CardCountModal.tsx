@@ -2,7 +2,7 @@ import Modal from '@/components/modal/Modal';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie } from 'recharts';
 
 const CardCountModal = () => {
   const { getCardMaturityStats } = useStore('flashcardStore');
@@ -34,9 +34,10 @@ const CardCountModal = () => {
                 fill="#8884d8"
                 dataKey="count"
               >
-                {stats.map((entry: any, index: number) => (
+                {/* Review */}
+                {/* {stats.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
+                ))} */}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
@@ -62,15 +63,7 @@ export default observer(CardCountModal);
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}: any) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);

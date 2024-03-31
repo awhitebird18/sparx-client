@@ -79,7 +79,7 @@ const UpdateTask = ({ task, onSubmit }: any) => {
             <FormField
               control={form.control}
               name="dueDate"
-              render={({ field, formState, fieldState }) => (
+              render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
                   <FormLabel>Due Date</FormLabel>
                   <Popover>

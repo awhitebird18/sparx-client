@@ -16,9 +16,7 @@ import { getValidTheme } from '@/utils/getValidTheme';
 import { observer } from 'mobx-react-lite';
 import { Label } from '@/components/ui/Label';
 import { Switch } from '@/components/ui/Switch';
-
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { Button } from '@/components/ui/Button';
 
 const ThemeTab = () => {
   const { currentUser } = useStore('userStore');

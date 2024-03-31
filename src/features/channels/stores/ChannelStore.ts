@@ -213,17 +213,17 @@ export class ChannelStore {
     }
   };
 
-  joinDefaultChannelApi = async ({ workspaceId }: { workspaceId: string }) => {
-    const userChannel = await channelApi.joinDefaultChannel({ workspaceId });
+  joinDefaultChannelApi = async () => console.log('Review');
 
-    // const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
-
-    // if (userChannelDataFound) {
-    //   this.updateUserChannelData(userChannel);
-    // } else {
-    //   this.addUserChannelData(userChannel);
-    // }
-  };
+  // joinDefaultChannelApi = async ({ workspaceId }: { workspaceId: string }) => {
+  // const userChannel = await channelApi.joinDefaultChannel({ workspaceId });
+  // const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
+  // if (userChannelDataFound) {
+  //   this.updateUserChannelData(userChannel);
+  // } else {
+  //   this.addUserChannelData(userChannel);
+  // }
+  // };
 
   leaveChannelApi = async (channelUuid: string) => {
     const res = await channelApi.leaveChannel(channelUuid);

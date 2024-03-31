@@ -19,7 +19,6 @@ import Search from '@/features/search/components/Search';
 import Onboarding from '@/features/workspaces/components/Onboarding';
 import InviteUserOnboarding from '@/features/workspaces/components/InviteUserOnboarding';
 
-const Home = lazy(() => import('@/components/layout/Home'));
 const UserRoutes = lazy(() => import('@/features/users/routes'));
 const ChatroomRoutes = lazy(() => import('@/features/chatroom/routes'));
 const ThreadRoutes = lazy(() => import('@/features/threads/routes'));

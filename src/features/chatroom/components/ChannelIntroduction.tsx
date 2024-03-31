@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { MegaphoneFill, Person, Plus } from 'react-bootstrap-icons';
+import { MegaphoneFill } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
-
-import { Button } from '@/components/ui/Button';
 
 import { Channel } from '@/features/channels/types';
 
@@ -12,16 +10,11 @@ type ChannelIntroductionProps = { channelId: string | undefined };
 const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
   const [channel, setChannel] = useState<Channel | undefined>(undefined);
   const { findChannelByUuid } = useStore('channelStore');
-  const { setActiveModal } = useStore('modalStore');
 
   useEffect(() => {
     if (!channelId) return;
     setChannel(findChannelByUuid(channelId) || undefined);
   }, [channelId, findChannelByUuid]);
-
-  const handleAddUser = () => {
-    setActiveModal({ type: 'AddUserModal', payload: { channel } });
-  };
 
   if (!channel) return;
   return (

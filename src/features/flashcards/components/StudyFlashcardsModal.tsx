@@ -3,7 +3,7 @@ import DisplayEditor from '@/features/textEditor/DisplayEditor';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowLeftCircle, ChevronLeft, EmojiSmile } from 'react-bootstrap-icons';
+import { ChevronLeft, EmojiSmile } from 'react-bootstrap-icons';
 import Confetti from 'react-confetti';
 import { useNavigate } from 'react-router-dom';
 import { PerformanceRating } from '../enums/performanceRating';
@@ -52,41 +52,41 @@ const calculateCurrentInterval = (nextReviewDate: any) => {
   return diffDays;
 };
 
-const formatDate = (date: any) => {
-  return date.toISOString().split('T')[0];
-};
+// const formatDate = (date: any) => {
+//   return date.toISOString().split('T')[0];
+// };
 
-function getNextReviewDate(interval: number, easeFactor: number, rating: string) {
-  let newInterval;
-  let newEaseFactor = easeFactor;
+// function getNextReviewDate(interval: number, easeFactor: number, rating: string) {
+//   let newInterval;
+//   let newEaseFactor = easeFactor;
 
-  switch (rating) {
-    case 'easy':
-      newInterval = Math.round(interval * (easeFactor + 0.1));
-      break;
-    case 'good':
-      newInterval = Math.round(interval * easeFactor);
-      break;
-    case 'hard':
-      newInterval = Math.round(interval * Math.max(easeFactor - 0.2, 1.3));
-      newEaseFactor = Math.max(easeFactor - 0.2, 1.3);
-      break;
-    case 'again':
-      newInterval = 1; // Reset interval if the card was forgotten
-      break;
-    default:
-      newInterval = interval; // Default case, should not be reached.
-  }
+//   switch (rating) {
+//     case 'easy':
+//       newInterval = Math.round(interval * (easeFactor + 0.1));
+//       break;
+//     case 'good':
+//       newInterval = Math.round(interval * easeFactor);
+//       break;
+//     case 'hard':
+//       newInterval = Math.round(interval * Math.max(easeFactor - 0.2, 1.3));
+//       newEaseFactor = Math.max(easeFactor - 0.2, 1.3);
+//       break;
+//     case 'again':
+//       newInterval = 1;
+//       break;
+//     default:
+//       newInterval = interval;
+//   }
 
-  const nextReviewDate = new Date();
-  nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
+//   const nextReviewDate = new Date();
+//   nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
 
-  return {
-    nextReviewDate: nextReviewDate.toISOString().split('T')[0],
-    newInterval,
-    newEaseFactor,
-  };
-}
+//   return {
+//     nextReviewDate: nextReviewDate.toISOString().split('T')[0],
+//     newInterval,
+//     newEaseFactor,
+//   };
+// }
 
 const StudyFlashcardsModal = () => {
   const { fetchFlashcardsApi, flashcards, submitReviewsApi } = useStore('flashcardStore');
@@ -157,21 +157,21 @@ const StudyFlashcardsModal = () => {
   const easeFactor = currentCard.easeFactor;
 
   const againInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'again'));
-  const hardInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'hard'));
-  const goodInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'good'));
+  // const hardInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'hard'));
+  // const goodInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'good'));
   const easyInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'easy'));
 
   // Calculate the next review date based on the performance rating
-  const displayNextReviewDate = (performanceRating: string) => {
-    const { newInterval } = getNextReviewDate(
-      currentInterval,
-      currentCard.easeFactor,
-      performanceRating,
-    );
-    const nextDate = new Date();
-    nextDate.setDate(nextDate.getDate() + newInterval);
-    return nextDate.toISOString().split('T')[0];
-  };
+  // const displayNextReviewDate = (performanceRating: string) => {
+  //   const { newInterval } = getNextReviewDate(
+  //     currentInterval,
+  //     currentCard.easeFactor,
+  //     performanceRating,
+  //   );
+  //   const nextDate = new Date();
+  //   nextDate.setDate(nextDate.getDate() + newInterval);
+  //   return nextDate.toISOString().split('T')[0];
+  // };
 
   const handleClickBack = () => {
     navigate(-1);

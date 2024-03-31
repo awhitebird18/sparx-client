@@ -24,7 +24,6 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
   const { createChannelApi, joinChannelApi } = useStore('channelStore');
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [workspaceImage, setWorkspaceImage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

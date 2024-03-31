@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { useNavigate } from 'react-router-dom';
 import Table from '@/components/ui/Table';
 import taskApi from '@/features/overview/api';
 import { Badge } from '@/components/ui/Badge';
@@ -25,10 +24,8 @@ interface TaskType {
 
 const TaskList: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
-  const { setCurrentChannelUuid } = useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -111,13 +108,13 @@ const TaskList: React.FC = () => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleClickAction = async (task: TaskType) => {
-    setCurrentChannelUuid(task.channelId);
+  // const handleClickAction = async (task: TaskType) => {
+  //   setCurrentChannelUuid(task.channelId);
 
-    if (task.actionUrl) {
-      navigate(task.actionUrl);
-    }
-  };
+  //   if (task.actionUrl) {
+  //     navigate(task.actionUrl);
+  //   }
+  // };
 
   const columns: any = React.useMemo(
     () => [
@@ -139,8 +136,6 @@ const TaskList: React.FC = () => {
         Header: 'Updated on',
         accessor: 'updatedAt',
         Cell: ({ row, value }: { value: Date; row: any }) => {
-          const { dueDate } = row.original;
-
           return <span className="">{dayjs(value ? value : row.createdAt).format('MMMM D')}</span>;
         },
       },

@@ -3,11 +3,9 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
-import Spinner from '@/components/ui/Spinner';
 import SearchInput from '@/components/ui/SearchInput';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
-import NoUsersFallback from './NoUsersFallback';
 import ContentLayout from '@/components/layout/ContentLayout';
 import {
   ThreeDotsVertical,
@@ -68,6 +66,7 @@ const Users = () => {
     } catch (err) {
       console.error(err);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchChannelUserIdsApi, currentChannelId]);
 
   const handleViewUserProfile = async (userId: string) => {

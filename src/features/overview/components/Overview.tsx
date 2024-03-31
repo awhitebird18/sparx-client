@@ -5,25 +5,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { Progress } from '@/components/ui/Progress';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import useHistoryState from '@/hooks/useHistoryState';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import {
-  CardHeading,
-  ChatLeftDots,
-  CupHotFill,
-  Diagram2,
-  FastForwardCircleFill,
-  FileText,
-  Fire,
-  PencilFill,
-  PlayBtnFill,
-  StarFill,
-  ThreeDots,
-} from 'react-bootstrap-icons';
+import { Fire, PlayBtnFill, StarFill, ThreeDots } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TaskList from './TaskList';
 import { useEffect, useState } from 'react';

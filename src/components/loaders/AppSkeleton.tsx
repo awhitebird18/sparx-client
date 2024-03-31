@@ -9,7 +9,7 @@ const quotes = [
   'The secret of getting ahead is getting started. - Mark Twain',
   'Success is the sum of small efforts, repeated. - R. Collier',
   'Knowledge is power. - Francis Bacon',
-  'Don’t wish it were easier. Wish you were better. - Jim Rohn',
+  'Don`t wish it were easier. Wish you were better. - Jim Rohn',
   'Push yourself, because no one else is going to do it for you.',
   'Failure is the opportunity to begin again more intelligently. - Henry Ford',
   "Believe you can and you're halfway there. - Theodore Roosevelt",
@@ -25,12 +25,12 @@ const selectedQuote = quotes[Math.floor(Math.random() * quotes.length)];
 const AppSkeleton = ({ setAnimationComplete }: any) => {
   const [progress, setProgress] = useState(0);
 
-  const sidebarWidth = storage.getSidebarWidth() || 250;
+  // const sidebarWidth = storage.getSidebarWidth() || 250;
   const appTheme = storage.getTheme() || 'dark';
 
   const isLight = appTheme === 'light';
 
-  const borderColor = isLight ? 'border-gray-300' : 'border-gray-800';
+  // const borderColor = isLight ? 'border-gray-300' : 'border-gray-800';
   const bgColor = isLight ? 'bg-white' : 'bg-background';
 
   useEffect(() => {

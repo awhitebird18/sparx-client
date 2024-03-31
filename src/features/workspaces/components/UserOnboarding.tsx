@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { ChangeEvent, useRef, useState } from 'react';
 import { ArrowRight, Camera } from 'react-bootstrap-icons';
 
-const UserOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
+const UserOnboarding = () => {
   const { uploadProfileImageApi, currentUser } = useStore('userStore');
   const { updatePrimaryColorApi } = useStore('userPreferencesStore');
   const { markUserWorkspaceViewedApi, lastViewedWorkspace } = useStore('workspaceStore');

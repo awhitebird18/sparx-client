@@ -1,5 +1,5 @@
 // useScrollToMiddle.ts
-import { RefObject, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const useScrollToMiddle = (ref: any, width = 8000, height = 8000) => {
   useEffect(() => {

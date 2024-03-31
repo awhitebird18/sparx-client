@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import {
-  CardHeading,
-  CaretDownFill,
-  ChevronLeft,
-  PencilSquare,
-  Plus,
-  Search,
-  Stack,
-} from 'react-bootstrap-icons';
-import { Column } from 'react-table';
+import { CardHeading, CaretDownFill, ChevronLeft, Plus, Search } from 'react-bootstrap-icons';
+// import { Column } from 'react-table';
 import { useStore } from '@/stores/RootStore';
 import { Flashcard } from '../types/card';
 import Table from '@/components/ui/Table';
@@ -21,7 +13,7 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { useNavigate } from 'react-router-dom';
 
-type FlashcardColumn = Column<Flashcard>;
+// type FlashcardColumn = Column<Flashcard>;
 
 const Browse: React.FC = () => {
   const { fetchFlashcard, getChannelCards } = useStore('flashcardStore');

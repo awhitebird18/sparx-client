@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Tabs, TabsContent } from '@/components/ui/Tabs';
 import Overview from './Overview';
 import Browse from './Browse';
 import Stats from './Stats';

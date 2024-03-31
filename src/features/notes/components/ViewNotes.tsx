@@ -7,10 +7,7 @@ import {
   Eye,
   FileEarmarkTextFill,
   GlobeAmericas,
-  JournalText,
   Lock,
-  Pencil,
-  PencilFill,
   PencilSquare,
   Person,
   Plus,
@@ -190,6 +187,7 @@ const ViewNotes: React.FC = () => {
         },
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [findUserByUuid, handleClickDelete, handleMoveNote, handleUpdateNote, handleViewNote],
   );
 

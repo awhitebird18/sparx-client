@@ -1,11 +1,10 @@
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { CardText, GripVertical, X } from 'react-bootstrap-icons';
-import { DropTargetMonitor, useDrag, useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { Field } from '../types/Field';
 import { Button } from '@/components/ui/Button';
-import flashcardsApi from '@/features/flashcards/api';
 
 const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
   const { selectedVariant, addVariantField, removeVariantFieldApi } = useStore('flashcardStore');
@@ -114,14 +113,14 @@ const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
 
 export default observer(TemplateCard);
 
-interface DraggedItem {
-  type: string;
-  id: string;
-  index: number;
-  sectionId: string;
-}
+// interface DraggedItem {
+//   type: string;
+//   id: string;
+//   index: number;
+//   sectionId: string;
+// }
 
-const Field = ({ field, onRemove, index }: any) => {
+const Field = ({ field, onRemove }: any) => {
   // const [isOverTopHalf, setIsOverTopHalf] = useState(false);
   // const [isOverBottomHalf, setIsOverBottomHalf] = useState(false);
 

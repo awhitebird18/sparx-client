@@ -228,7 +228,7 @@ const Profile = () => {
                       Upload profile picture
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={(e) =>
+                      onClick={() =>
                         handleOpenModal({
                           type: 'UserDetails',
                           payload: { userId: currentUser?.uuid },

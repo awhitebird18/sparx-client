@@ -52,13 +52,12 @@ const Node = ({
     setIsDraggingNode,
     setIsFullscreen,
   } = useStore('channelStore');
-  const { setChannelConnectors } = useStore('channelConnectorStore');
+  // const { setChannelConnectors } = useStore('channelConnectorStore');
   const { findChannelUnreads } = useStore('channelUnreadStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { directChannelSectionId } = useStore('sectionStore');
   const { channelUserCounts, nodemapSettings } = useStore('workspaceChannelStore');
-  const { updateChannelApi, updateSubscribedChannel, leaveChannelApi, isEditing } =
-    useStore('channelStore');
+  const { leaveChannelApi, isEditing } = useStore('channelStore');
   const [isHovered, setIsHovered] = useState(false);
   const { setActiveModal } = useStore('modalStore');
   const [flashcardsDueCount] = useState(1);
@@ -108,15 +107,15 @@ const Node = ({
     updateUserChannelData({ uuid: channel.uuid, status: channel.status });
   };
 
-  const handleMoveNode = async (uuid: string, x: number, y: number) => {
-    updateSubscribedChannel({ uuid, x, y });
+  // const handleMoveNode = async (uuid: string, x: number, y: number) => {
+  //   updateSubscribedChannel({ uuid, x, y });
 
-    await updateChannelApi(uuid, { x, y }, currentWorkspaceId);
-  };
+  //   await updateChannelApi(uuid, { x, y }, currentWorkspaceId);
+  // };
 
-  const handleRemoveNode = (nodeId: string) => {
-    setActiveModal({ type: 'RemoveChannelModal', payload: { uuid: nodeId, setChannelConnectors } });
-  };
+  // const handleRemoveNode = (nodeId: string) => {
+  //   setActiveModal({ type: 'RemoveChannelModal', payload: { uuid: nodeId, setChannelConnectors } });
+  // };
 
   const handleJoin = async (channelId: string) => {
     // if (!directChannelSectionId) return;

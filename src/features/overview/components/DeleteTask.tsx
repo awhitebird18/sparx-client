@@ -1,7 +1,7 @@
 import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
 
-const DeleteTask = ({ task, onDelete }: { task: any; onDelete: any }) => {
+const DeleteTask = ({ onDelete }: { onDelete: any }) => {
   return (
     <Modal title={`Delete task?`}>
       <div className="flex flex-col space-y-8 w-80">

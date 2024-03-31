@@ -32,7 +32,8 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   } = useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  // Review
+  const [, setDragStart] = useState({ x: 0, y: 0 });
   const [gridSize] = useState({ width: 8000, height: 8000 });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hideUnstarted] = useState(false);
@@ -58,6 +59,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -121,7 +123,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
     setSelectedLineId(uuid);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = () => {
     // if (isDragging && dragStart.x !== 0 && dragStart.y !== 0 && ref.current) {
     //   const dx = e.clientX - dragStart.x;
     //   const dy = e.clientY - dragStart.y;
@@ -141,7 +143,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
 
   const [, drop] = useDrop({
     accept: 'node',
-    canDrop: (item) => {
+    canDrop: () => {
       return true;
     },
     drop: (item: NodeData | undefined, monitor: DropTargetMonitor) => {

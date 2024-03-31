@@ -1,3 +1,4 @@
+import { Section, SectionIndex } from '@/features/sections/types';
 import { axios } from '@/lib/axios';
 
 import { handleApiError } from '@/utils/handleApiError';

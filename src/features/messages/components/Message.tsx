@@ -2,9 +2,7 @@ import { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import dayjs from 'dayjs';
 import { ChatDots, ChevronRight, EmojiLaughing } from 'react-bootstrap-icons';
-
 import { useStore } from '@/stores/RootStore';
-
 import MessageDisplay from '@/features/messageInput/MessageDisplay';
 import OptionsPanel from './OptionsPanel';
 import MessageEditor from '@/features/messageInput/MessageEditor';
@@ -22,9 +20,9 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/ContextMenu';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
-
 import { Message } from '../types';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
+import { useNavigate } from 'react-router-dom';
 
 const Message = ({
   message,
@@ -47,9 +45,10 @@ const Message = ({
   );
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
+  const navigate = useNavigate();
 
-  const handleViewUserProfile = () => {
-    setActiveModal({ type: 'ProfileModal', payload: { userId: message.userId } });
+  const handleViewUserProfile = (userId: string) => {
+    navigate(`/app/profile/${userId}`);
   };
 
   const user = findUserByUuid(message.userId);
@@ -125,7 +124,10 @@ const Message = ({
                           <p className="text-muted">Software Developer</p>
                         </div>
                       </div>
-                      <Button className="w-full" onClick={handleViewUserProfile}>
+                      <Button
+                        className="w-full"
+                        onClick={() => handleViewUserProfile(message.userId)}
+                      >
                         View Profile
                       </Button>
                     </div>
