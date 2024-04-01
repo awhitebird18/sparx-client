@@ -41,7 +41,7 @@ const ActivityRow = ({ activity }: any) => {
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 py-5">
+    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 py-5 z-10">
       <div className="flex gap-4">
         <div className="relative h-full">
           <UserAvatar userId={user.uuid} profileImage={user.profileImage} showStatus />

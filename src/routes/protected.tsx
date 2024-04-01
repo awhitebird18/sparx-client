@@ -109,7 +109,7 @@ export const protectedRoutes = [
     path: '/app',
     element: <App />,
     children: [
-      { path: '', element: <OverviewRoutes /> },
+      { path: '', element: <Navigate to="home" /> },
       { path: 'members/*', element: <UserRoutes /> },
       { path: 'nodemap/*', element: <Nodemap /> },
       { path: 'user/*', element: <Nodemap /> },

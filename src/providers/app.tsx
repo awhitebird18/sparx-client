@@ -9,7 +9,7 @@ import AuthProvider from '@/providers/auth';
 import NotificationController from '@/components/notifications/NotificationController';
 import AppErrorFallback from '@/components/ErrorFallback/AppErrorFallback';
 
-import('@/config/sentry.ts');
+import '@/config/sentry.ts';
 import '@/styles/app.css';
 import '@/styles/chatroom.css';
 import '@/styles/index.css';

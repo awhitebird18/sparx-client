@@ -32,6 +32,7 @@ const UserDropdown: React.FC = () => {
   const { currentUser, setUserOnlineStatus, userOnlineStatus } = useStore('userStore');
   const { emitSocket } = useStore('socketStore');
   const { activeUserStatus } = useStore('userStatusStore');
+  const { currentWorkspace } = useStore('workspaceStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
     setDropdownOpen(false);
@@ -176,9 +177,9 @@ const UserDropdown: React.FC = () => {
           <DropdownMenuSeparator className="DropdownMenuSeparator dark:bg-slate-500/40 my-2" />
           <DropdownMenuItem
             onClick={userLogout}
-            className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
+            className="flex items-center gap-4 h-9 px-3 hover:bg-hover card truncate"
           >
-            <ArrowReturnRight /> Sign out of Personal Workspace
+            <ArrowReturnRight className="mt-0.5" /> {`Sign out of ${currentWorkspace?.name}`}
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

@@ -69,14 +69,13 @@ const ListHeader = ({ id, icon, title, isSystem, ref, sortBy, index }: ListHeade
     <ContextMenu data-state={dropdownOpen} onOpenChange={setDropdownOpen}>
       <div
         ref={dragRef}
-        className="h-8 p-0 w-100 flex items-center gap-2 cursor-pointer rounded-sm overflow-hidden text-muted"
+        className="h-9 p-0 w-100 flex items-center gap-2 cursor-pointer rounded-sm text-muted"
       >
-        <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">{icon}</div>
-        <ContextMenuTrigger>
-          <div
-            className="whitespace-nowrap text-ellipsis overflow-hidden text-muted font-medium text-sm"
-            ref={ref}
-          >
+        <div className="w-9 h-9 flex items-center justify-center flex-shrink-0 overflow-hidden">
+          {icon}
+        </div>
+        <ContextMenuTrigger asChild>
+          <div className="truncate text-muted font-medium text-sm" ref={ref}>
             {title}
           </div>
         </ContextMenuTrigger>

@@ -39,7 +39,7 @@ const ResizableSidebar = () => {
 
   return (
     <>
-      {isSidebarAbsolute && sidebarWidth > 0 && <Backdrop onClick={closeSidebar} />}
+      {isSidebarAbsolute && sidebarWidth > 65 && <Backdrop onClick={closeSidebar} />}
       <Resizable
         width={sidebarWidth}
         height={Infinity} // Height is not resizable
@@ -55,7 +55,7 @@ const ResizableSidebar = () => {
             overflow: 'hidden',
             ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
           }}
-          className="transition-all duration-150 flex-shrink-0"
+          className="transition-all duration-150 flex-shrink-0 z-50"
         >
           {/* Glass Blur Background with Image */}
           <div

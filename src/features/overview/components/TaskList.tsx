@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/Button';
 import { Plus, ThreeDots } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
@@ -25,9 +25,9 @@ interface TaskType {
 const TaskList: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeDropdownId, setActiveDropdownId] = useState(null);
 
   useEffect(() => {
     if (!currentWorkspaceId) return;
@@ -65,10 +65,16 @@ const TaskList: React.FC = () => {
 
   const createTask = () => {
     const onSubmit = async (task: any) => {
+      console.log('derp', currentWorkspaceId);
       if (!currentWorkspaceId) return;
 
-      const updatedTask = await taskApi.createTask({ ...task, workspaceId: currentWorkspaceId });
-      setTasks(tasks.map((task) => (task.uuid === updatedTask.uuid ? updatedTask : task)));
+      const newTask = await taskApi.createTask({ ...task, workspaceId: currentWorkspaceId });
+
+      setTasks((prev) => {
+        const copy = [...prev];
+        copy.push(newTask);
+        return copy;
+      });
     };
 
     setActiveModal({
@@ -89,7 +95,8 @@ const TaskList: React.FC = () => {
       type: 'UpdateTask',
       payload: { task: { ...task, dueDate: '03/08/2024' }, onSubmit },
     });
-    setDropdownOpen(false);
+
+    setActiveDropdownId(null);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +111,8 @@ const TaskList: React.FC = () => {
         },
       },
     });
-    setDropdownOpen(false);
+
+    setActiveDropdownId(null);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,11 +176,20 @@ const TaskList: React.FC = () => {
           const { uuid } = row.original;
 
           return (
-            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-              <DropdownMenuTrigger className="w-6">
+            <DropdownMenu
+              open={activeDropdownId === uuid}
+              onOpenChange={() => setActiveDropdownId(activeDropdownId ? null : uuid)}
+            >
+              <DropdownMenuTrigger className="w-6" onClick={(e) => e.stopPropagation()}>
                 <ThreeDots />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuContent
+                align="end"
+                className="w-40 z-50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <DropdownMenuItem onClick={() => completeTask(uuid)}>
                   Toggle Complete
                 </DropdownMenuItem>
@@ -188,7 +205,7 @@ const TaskList: React.FC = () => {
         },
       },
     ],
-    [completeTask, dropdownOpen, handleDeleteTask, handleUpdateTask],
+    [activeDropdownId, completeTask, handleDeleteTask, handleUpdateTask],
   );
 
   return (
@@ -201,13 +218,7 @@ const TaskList: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        <Table
-          columns={columns}
-          data={tasks}
-          headerClasses="h-16"
-          rowClasses="h-16"
-          isLoading={isLoading}
-        />
+        <Table columns={columns} data={tasks} isLoading={isLoading} />
         {!tasks.length && (
           <div className="flex flex-col gap-3 w-full items-center bg-card card rounded-xl p-6 border border-border shadow">
             <h3 className="text-main leading-none">No tasks to show.</h3>

@@ -42,7 +42,7 @@ const Overview = () => {
     };
 
     fn();
-  }, [currentChannelId, getCardCountDueForChannel]);
+  }, [currentChannelId, getCardCountDueForChannel, setIsLoading]);
 
   return (
     <div className="w-full h-full overflow-auto flex flex-col p-8">
@@ -58,9 +58,9 @@ const Overview = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-10 h-full">
+        <div className="flex flex-col 2xl:flex-row gap-10 h-full">
           {!isLoading ? (
-            <div className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl w-2/3 h-full prose p-6">
+            <div className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl h-full w-full prose p-6">
               <div className="flex gap-6 h-full items-center">
                 <div className="flex flex-col items-center justify-center w-full gap-8">
                   <h2 className="text-6xl leading-tight spacing- text-center font-black bg-gradient-to-b from-indigo-600 to-fuchsia-500 bg-clip-text text-transparent">
@@ -89,9 +89,9 @@ const Overview = () => {
               </div>
             </div>
           ) : (
-            <Skeleton className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl w-2/3 h-full prose p-6" />
+            <Skeleton className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl w-full h-full prose p-6" />
           )}
-          <div className="flex flex-col items-center gap-6 max-w-5xl flex-1 h-full">
+          <div className="flex flex-col items-center gap-6 w-full">
             <Button
               variant="secondary"
               className="card h-full flex justify-start gap-6 items-center card py-8 px-10 flex-1 w-full prose shadow-md ring-1 ring-border/50"

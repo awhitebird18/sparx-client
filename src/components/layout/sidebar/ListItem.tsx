@@ -138,7 +138,7 @@ const ListItem = ({
             <div className="w-9 h-9 min-w-fit flex items-center justify-center flex-shrink-0">
               {icon}
             </div>
-            {sidebarOpen && <div>{title}</div>}
+            {sidebarOpen && <div className="truncate">{title}</div>}
             {isPrivate && <Lock />}
             <div className="overflow-hidden">
               {status?.isActive && <UserStatusDisplay status={status} />}

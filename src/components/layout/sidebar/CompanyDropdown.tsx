@@ -98,7 +98,7 @@ const CompanyDropdown = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger className="w-full">
-        <div className="flex gap-3 hover:bg-transparent h-16 cursor-pointer items-center p-3.5 whitespace-nowrap">
+        <div className="flex gap-3 hover:bg-transparent h-16 cursor-pointer items-center p-3.5">
           <div className="w-9 h-9 flex-shrink-0 rounded-md border border-border overflow-hidden bg-primary whitespace-nowrap">
             <img
               src={currentWorkspace?.imgUrl ?? getCurrentWorkspaceImage()}
@@ -107,11 +107,11 @@ const CompanyDropdown = () => {
           </div>
 
           {sidebarOpen && (
-            <div className="w-full flex items-center gap-1.5">
-              <span className="whitespace-nowrap text-xl font-bold leading-tight tracking-wide">
+            <div className="w-full flex items-center gap-2.5 overflow-hidden">
+              <span className="text-lg font-semibold tracking leading-tight text-ellipsis whitespace-nowrap overflow-hidden">
                 {currentWorkspace?.name}
               </span>
-              <ChevronDown size={13} className="thick-icon mt-1 flex-shrink-0" />
+              <ChevronDown size={14} className="flex-shrink-0 mt-0.5" />
             </div>
           )}
         </div>
@@ -179,13 +179,15 @@ const CompanyDropdown = () => {
             onClick={handleCreateWorkspace}
             className="flex items-center gap-4 h-9 px-3 hover:bg-card-foreground"
           >
-            <Plus size={16} className="w-5 h-5 p-0.5" /> Create a new workspace
+            <Plus className="w-5 h-5" /> Create a new workspace
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleLeaveWorkspace}
-            className="flex items-center gap-4 h-9 px-3 hover:bg-card-foreground text-rose-500"
+            className="flex items-center gap-4 h-9 px-3 hover:bg-card-foreground text-rose-500 truncate"
           >
-            <ArrowReturnRight className="w-5 h-5 p-0.5" />
+            <div className="w-5 h-5">
+              <ArrowReturnRight className="flex-shrink-0 ml-1 mt-0.5" />
+            </div>
             {`Leave ${currentWorkspace?.name}`}
           </DropdownMenuItem>
         </DropdownMenuGroup>

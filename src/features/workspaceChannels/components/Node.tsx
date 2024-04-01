@@ -174,12 +174,14 @@ const Node = ({
               // transform: `translate(-50%, -50%) scale(${zoomLevel})`,
               // transformOrigin: 'center', // Change to 'center'
             }}
-            className={`cursor-pointer -translate-x-1/2 -translate-y-1/2 items-center flex flex-col transition-colors duration-400 gap-1 absolute w-[150px] h-[75px] p-0 justify-center border-1 shadow-sm border-border rounded-lg bg-card text-main ${
+            className={`cursor-pointer -translate-x-1/2 -translate-y-1/2 items-center flex flex-col transition-colors duration-400 gap-1 absolute p-0 justify-center border-1 shadow-sm border-border rounded-2xl bg-card text-main ${
               currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
             } ${isDragging ? 'opacity-0' : ''} ${
               isSubscribed ? 'border-primary dark:border-primary border' : 'opacity-60'
             } ${hideUnstarted && !isSubscribed && 'hidden'} ${
-              isDefault && '!rounded-full !p-24 text-3xl bg-primary text-white'
+              isDefault
+                ? 'w-[325px] h-[130px] p-6 !rounded-full bg-primary text-white'
+                : 'w-[200px] h-[85px]'
             }`}
             onClick={() => {
               if (!isSubscribed || isEditing || isDefault) return;
@@ -242,11 +244,17 @@ const Node = ({
               </div>
 
               <div
-                className={`text-center gap-1 flex flex-col items-center relative ${
+                className={`text-center gap-1 flex w-full overflow-hidden flex-col items-center relative ${
                   isEditing && 'pointer-events-none'
                 }`}
               >
-                <span className="font-semibold leading-tight">{label}</span>
+                <span
+                  className={`font-semibold truncate leading-tight w-full px-2 ${
+                    isDefault ? 'max-w-[300px] !text-2xl' : 'max-w-[175px] text-sm'
+                  }  `}
+                >
+                  {label}
+                </span>
                 {!isDefault && isSubscribed && (
                   <NodeStatus
                     uuid={uuid}

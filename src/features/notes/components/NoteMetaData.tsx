@@ -21,7 +21,7 @@ const NoteMetadata = () => {
   if (!noteOwner) return <div />;
 
   return (
-    <div className="card w-[32rem] h-full">
+    <div className="card w-[32rem] h-full hidden xl:block">
       <div className="h-full border-l border-border p-6 space-y-8">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-sm">Is private</p>
