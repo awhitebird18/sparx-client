@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://spa-rx.ca" target="_blank"><img src="./.github/assets/SparxBannerApi.png" width="100%" /></a>
+  <a href="http://spa-rx.ca" target="_blank"><img src="./.github/assets/SparxBannerClient.png" width="100%" /></a>
 </p>
 
 ## Introduction
