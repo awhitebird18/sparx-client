@@ -46,12 +46,12 @@ const Overview = () => {
 
   const [activity, setActivity] = useState([]);
 
-  const sortedArray = history.sort((a: HistoryItem, b: HistoryItem) => b.timestamp - a.timestamp);
+  const sortedArray = history.sort((a: any, b: any) => b.timestamp - a.timestamp);
 
   const uniqueNodes: HistoryItem[] = [];
   const seenNodeIds = new Set();
 
-  sortedArray.forEach((item: HistoryItem) => {
+  sortedArray.forEach((item: any) => {
     if (!seenNodeIds.has(item.nodeId)) {
       const channel = findChannelByUuid(item.nodeId);
 
