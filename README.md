@@ -8,7 +8,7 @@ Welcome to `Sparx` – a unique platform designed to revolutionize the way indiv
 
 <br />
 
-#### Features
+### Features
 
 <p align="center">
     <img src="./.github/assets/SparxMembers.png" width="49%" />
@@ -22,6 +22,15 @@ Welcome to `Sparx` – a unique platform designed to revolutionize the way indiv
     <img src="./.github/assets/SparxProgress.png" width="49%" /> 
 </p>
 <br />
+
+### Tech Stack
+Here is a breif high-level overview of the tech stack used by the Sparx api:
+
+#### Nest js
+Built with Nest js for it's streamlined development experience and structure.
+
+#### PostgreSql
+For persist data storage, PostgreSql is used alongside TypeORM for its tight integration with Nest js.
 
 ## Usage
 To get started with Sparx, the hosted version of the product can be used. You can get started immediately at [spa-rx.ca](https://spa-rx.ca). To demo the application, click the `Signin Anonymously` button. The website provides an overview of the application and a guided tour.
