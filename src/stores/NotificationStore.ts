@@ -52,10 +52,10 @@ export class NotificationStore {
         if (count > 0) {
           document.title = `! ${this.originalTitle} - ${this.unreadsCount} new item${
             this.unreadsCount > 1 && 's'
-          } - Navinotes`;
+          } - Sparx`;
           this.audio?.play();
         } else {
-          document.title = `${this.originalTitle} - Navinotes`;
+          document.title = `${this.originalTitle} - Sparx`;
         }
       },
     );
@@ -116,7 +116,7 @@ export class NotificationStore {
 
   setTitle = (title: string) => {
     this.originalTitle = `${title}`;
-    document.title = `${title} - Navinotes`;
+    document.title = `${title} - Sparx`;
   };
 
   // method to set unreadsCount

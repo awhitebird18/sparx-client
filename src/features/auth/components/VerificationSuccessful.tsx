@@ -13,7 +13,7 @@ const VerificationSuccessful = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background relative">
       <div className="flex gap-2 items-center absolute top-4 left-5">
-        <span className="text-2xl font-bold">Navinotes</span>
+        <span className="text-2xl font-bold">Sparx</span>
       </div>
       <div className="card bg-card flex flex-col items-center gap-0 rounded-xl border border-border p-8 prose">
         {/* <Logo size={44} /> */}
