@@ -26,11 +26,13 @@ Welcome to `Sparx` – a unique platform designed to revolutionize the way indiv
 ## Tech Stack
 Here is a breif high-level overview of the tech stack used by the Sparx api:
 
-#### Nest js
-Built with Nest js for it's streamlined development experience and structure.
+- The framework chosen for this project is `React (Vite)` for its quick load and streamlined feature and development cycle.
 
-#### PostgreSql
-For persist data storage, PostgreSql is used alongside TypeORM for its tight integration with Nest js.
+- `Mobx` is used for state management.
+  
+- `Tailwind CSS` along side `Shadcn` components was chosen for easy of styling and a beautiful base component set.
+  
+- All client code utilizes `Typescript`.
 
 <br />
 
