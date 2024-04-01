@@ -139,14 +139,14 @@
 }
 .fade-enter-active {
   opacity: 1;
-  transition: opacity 300ms; /* Adjust duration as needed */
+  transition: opacity 500ms; /* Adjust duration as needed */
 }
 .fade-exit {
   opacity: 1;
 }
 .fade-exit-active {
   opacity: 0;
-  transition: opacity 300ms; /* Adjust duration as needed */
+  transition: opacity 500ms; /* Adjust duration as needed */
 }
 
 /* Target the first and last cell of the last row for bottom rounded corners */

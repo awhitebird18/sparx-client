@@ -45,6 +45,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [fadeClass, setFadeClass] = useState('fade-enter');
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   useEffect(() => {
     if (!loading && animationComplete) {
@@ -62,6 +63,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const userLogin = async (loginCredentials: LoginData) => {
     try {
+      console.log('login');
+      setIsLoginLoading(true);
       await authApi.login(loginCredentials);
 
       await verifyAndLoginUser();
@@ -92,11 +95,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
-      setLoading(true);
-      setAnimationComplete(false);
       const data = await authApi.verify();
 
-      console.log(data);
       setCurrentUserId(data.currentUser.uuid);
 
       // If user has not joined any workspaces this is currently neccessary.
@@ -119,6 +119,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error(error);
     } finally {
       setLoading(false);
+      setAnimationComplete(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -143,12 +144,18 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     verifyAndLoginUser,
   };
 
-  if (loading || !animationComplete) {
+  if (isLoginLoading) {
     return (
       <div>
-        <AppSkeleton setAnimationComplete={setAnimationComplete} />
+        <AppSkeleton
+          setAnimationComplete={setAnimationComplete}
+          setIsLoginLoading={setIsLoginLoading}
+        />
       </div>
     );
+  }
+  if (loading) {
+    return <div />;
   }
 
   return (

@@ -22,7 +22,7 @@ const quotes = [
 
 const selectedQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-const AppSkeleton = ({ setAnimationComplete }: any) => {
+const AppSkeleton = ({ setAnimationComplete, setIsLoginLoading }: any) => {
   const [progress, setProgress] = useState(0);
 
   // const sidebarWidth = storage.getSidebarWidth() || 250;
@@ -34,14 +34,15 @@ const AppSkeleton = ({ setAnimationComplete }: any) => {
   const bgColor = isLight ? 'bg-white' : 'bg-background';
 
   useEffect(() => {
-    if (progress >= 120) {
+    if (progress >= 140) {
       setAnimationComplete(true);
+      setIsLoginLoading(false);
     }
     const intervalId = setInterval(() => {
       setProgress((prev) => {
         return prev + 1;
       });
-    }, 10);
+    }, 13);
 
     return () => {
       clearInterval(intervalId);
