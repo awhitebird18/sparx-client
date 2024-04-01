@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   return (
     <div className="card min-h-screen flex flex-col justify-center items-center p-4 bg-background">
       <div className="flex gap-2 items-center absolute top-4 left-5">
-        <span className="text-2xl font-bold">Navinotes</span>
+        <span className="text-2xl font-bold">Sparx</span>
       </div>
 
       <div className="card p-8 shadow-lg rounded-2xl bg-card w-full max-w-md relative border border-border">
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
           onClick={loginAnanomously}
           name="anonymous-login-button"
           variant="outline-primary"
-          aria-label="Log in anonymously to explore Navinotes without creating an account"
+          aria-label="Log in anonymously to explore Sparx without creating an account"
         >
           Sign in Anonymously
         </Button>

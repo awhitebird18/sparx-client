@@ -53,7 +53,7 @@ const AppSkeleton = ({ setAnimationComplete, setIsLoginLoading }: any) => {
   return (
     <div className={`h-screen w-screen flex overflow-hidden bg-background prose ${bgColor}`}>
       <div className="flex gap-2 items-center absolute top-4 left-5 text-main">
-        <span className="text-2xl font-bold">Navinotes</span>
+        <span className="text-2xl font-bold">Sparx</span>
       </div>
       {/* <div className={`h-full border-r ${borderColor}`} style={{ width: `${sidebarWidth}px` }} /> */}
       <div className="flex flex-col flex-1 overflow-hidden">
