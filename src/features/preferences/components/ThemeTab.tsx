@@ -42,7 +42,7 @@ const ThemeTab = () => {
 
   return (
     <ScrollArea>
-      <div className="flex flex-col flex-1 gap-4">
+      <div className="flex flex-col flex-1 gap-4 pr-1">
         <h2 className="text-main text-sm font-semibold">APPEARANCE</h2>
         <div className="flex justify-between">
           <div className="space-y-2">

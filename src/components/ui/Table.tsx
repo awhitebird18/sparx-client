@@ -34,14 +34,19 @@ function Table<T extends object>({
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="w-full">
-              <th className={cn('w-20 m-0 p-0 h-12 align-middle text-center ', headerClasses)}>
+              <th
+                className={cn(
+                  'w-20 m-0 p-0 h-12 align-middle border-b border-border text-center ',
+                  headerClasses,
+                )}
+              >
                 <Checkbox className="bg-blue mt-1" />
               </th>
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
                   className={cn(
-                    `p-0 h-12 text-left align-middle font-medium text-main text-base `,
+                    `p-0 h-12 text-left align-middle font-medium text-main text-base border-b border-border`,
                     headerClasses,
                   )}
                 >
@@ -54,7 +59,7 @@ function Table<T extends object>({
 
         <tbody {...getTableBodyProps()} className="divide-y">
           {!isLoading &&
-            rows.map((row) => {
+            rows.map((row, index) => {
               prepareRow(row);
 
               return (
@@ -62,7 +67,9 @@ function Table<T extends object>({
                   {...row.getRowProps()}
                   onDoubleClick={() => onRowClick && onRowClick(row.original)}
                   className={cn(
-                    'cursor-pointer text-main hover:bg-hover rounded-xl h-16 not-prose',
+                    `cursor-pointer text-main hover:bg-hover border-border rounded-xl ${
+                      index === rows.length && 'border-none'
+                    } h-16 not-prose`,
                     rowClasses,
                   )}
                 >

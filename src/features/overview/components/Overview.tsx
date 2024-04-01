@@ -134,7 +134,7 @@ const Overview = () => {
                 View Nodemap
               </Button>
               <Button
-                onClick={() => handleClickQuickAction('/app/flashcards/study')}
+                onClick={() => handleClickQuickAction('/app/flashcards')}
                 size="sm"
                 variant="outline-primary"
                 className="gap-2 rounded-2xl px-4"

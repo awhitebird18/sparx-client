@@ -71,27 +71,28 @@ const CurrentNode = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-64 border border-border rounded-md bg-card p-0"
+        className="w-80 border border-border rounded-md bg-card p-0"
       >
         <div>
-          <DropdownMenuLabel className="leading-none border-b border-border flex gap-4 bg-card font-medium h-12 px-4 items-center">
+          <DropdownMenuLabel className="leading-none border-b border-border flex gap-4 bg-card font-normal h-12 px-4 items-center">
+            <Clock size={15} />
             Recently visited
           </DropdownMenuLabel>
-          <div className="flex flex-col p-2 overflow-auto max-h-72">
+          <div className="flex flex-col overflow-auto max-h-96 p-2 py-4 gap-5">
             {Object.entries(populatedHistory).map(([date, items]: any) => (
               <div key={date}>
-                <div className="h-9 flex items-center px-4 bg-background/50 font-medium text-xs rounded-sm">
-                  {dayjs(date).format('MMMM D').toUpperCase()}
+                <div className="card bg-card flex items-center justify-center px-4 py-0.5 rounded-2xl tracking-wide text-sm text-card-border mx-auto border border-border w-fit mb-2">
+                  {dayjs(date).format('ddd MMMM D')}
                 </div>
 
                 <div className="overflow-auto max-h-96">
                   {items.map((item: any) => (
                     <DropdownMenuItem
                       key={item.nodeId}
-                      className="flex items-center gap-4 h-10 px-4 hover:bg-card-foreground"
+                      className="flex items-center gap-4 h-11 px-4 hover:bg-hover rounded-lg truncate text-sm"
                       onClick={() => handleNavigate(item)}
                     >
-                      <Clock />
+                      <Clock size={15} />
                       {item.name}
                     </DropdownMenuItem>
                   ))}

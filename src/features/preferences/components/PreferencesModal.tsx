@@ -32,7 +32,7 @@ const PreferencesModal: React.FC = () => {
       onClick={() => setActiveTab(tab)}
       className={`card h-9 rounded-md p-0 px-3 w-full hover:bg-hover text-sm text-main flex items-center cursor-pointer overflow-hidden font-medium ${
         activeTab === tab ? 'bg-hover' : ''
-      }`}
+      } ${tab !== PreferenceTabs.THEMING && 'pointer-events-none opacity-30'} `}
     >
       <span className="w-6 text-base ">{icon}</span>
       {tab}
