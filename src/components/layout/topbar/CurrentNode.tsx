@@ -63,10 +63,10 @@ const CurrentNode = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <h3 className="leftSide flex gap-3 items-center text-main whitespace-nowrap">
-          {currentChannel?.name}
-          <ChevronDown size={12} className="mt-1" />
+      <DropdownMenuTrigger asChild>
+        <h3 className="leftSide flex gap-3 items-center text-main overflow-hidden w-min max-w-sm">
+          <span className="truncate">{currentChannel?.name}</span>
+          <ChevronDown size={12} className="mt-1 flex-shrink-0" />
         </h3>
       </DropdownMenuTrigger>
       <DropdownMenuContent

@@ -18,6 +18,7 @@ type MainLayoutProps = {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const { currentUser } = useStore('userStore');
   const { isFullscreen } = useStore('channelStore');
+  const { isSidebarAbsolute } = useStore('sidebarStore');
 
   if (!currentUser) {
     return <Navigate to="/login" />;
@@ -26,8 +27,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <Suspense fallback={<div />}>
       <DndProvider backend={HTML5Backend}>
-        <div className="h-full w-full flex overflow-hidden">
+        <div className="h-full w-full flex overflow-hidden relative">
           <ResizableSidebar />
+          {isSidebarAbsolute && <div className="h-full w-16" />}
           <div className="flex flex-col h-full w-full bg-background overflow-hidden">
             <Topbar />
             <div

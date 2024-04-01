@@ -47,7 +47,7 @@ export class SidebarStore {
     const windowWidth = window.innerWidth;
 
     if (windowWidth < 700) {
-      this.setSidebarWidth(0);
+      this.setSidebarWidth(65);
       this.isSidebarAbsolute = true;
     } else {
       this.isSidebarAbsolute = false;

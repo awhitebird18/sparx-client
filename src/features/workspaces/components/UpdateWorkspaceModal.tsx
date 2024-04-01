@@ -42,7 +42,7 @@ const UpdateWorkspaceModal = () => {
   return (
     <Modal title="Workspace settings" disablePadding>
       <div className="card flex transform transition-all w-max h-[36rem]">
-        <nav className="space-y-2 border-r border-border py-6 w-64">
+        <nav className="space-y-2 border-r border-border py-6 w-44 lg:w-64">
           {listItem(<Heart />, PreferenceTabs.GENERAL)}
           {listItem(<Bell />, PreferenceTabs.NOTIFICATIONS, true)}
           {listItem(<Gear />, PreferenceTabs.ACCOUNT, true)}

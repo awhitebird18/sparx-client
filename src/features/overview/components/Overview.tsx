@@ -92,7 +92,7 @@ const Overview = () => {
     activityFilter === 'all' ? activity : activity.filter((a: any) => a.type === activityFilter);
 
   return (
-    <div className="flex flex-col gap-5 w-full text-main prose p-8 h-full">
+    <div className="flex flex-col gap-5 w-full text-main prose p-8 h-full overflow-hidden">
       {/* Header */}
       <div className="flex justify-between w-full pt-4">
         {/* Welcome Message */}
@@ -117,9 +117,9 @@ const Overview = () => {
       </div>
 
       {/* Main */}
-      <div className="flex gap-10 flex-1">
+      <div className="flex flex-col 2xl:flex-row gap-10 flex-1 overflow-hidden w-full">
         {/* Left */}
-        <div className="flex flex-col gap-10 w-full z-10 h-full">
+        <div className="flex flex-col gap-10 z-10 w-full">
           {/* Quick Actions */}
           <div className="space-y-3  prose">
             <h3 className="text-main">Quick Actions</h3>
@@ -177,8 +177,8 @@ const Overview = () => {
         </div>
 
         {/* Right */}
-        <div className="flex flex-col gap-6 flex-shrink-0 relative w-[26rem]">
-          <div className="absolute top-0 right-0 flex flex-col w-full card prose space-y-3 rounded-xl z-50 h-full">
+        <div className="flex flex-col gap-6 relative h-full overflow-hidden w-full 2xl:w-[26rem] flex-shrink-0">
+          <div className="absolute top-0 right-0 flex flex-col w-full card prose space-y-3 rounded-xl h-full">
             <div className="flex justify-between items-center">
               <h3 className="text-main">Activity</h3>
 
@@ -233,8 +233,8 @@ const LastViewedCard = ({ title, date, status }: any) => {
   return (
     <div className="w-1/3 relative h-36 rounded-xl flex flex-col shadow p-5  justify-center text-main prose bg-card card border border-border">
       <div className="flex justify-between items-start flex-1">
-        <div className="flex flex-col flex-1 gap-3">
-          <h3 className="text-main prose-lg leading-none">{title}</h3>
+        <div className="flex flex-col flex-1 gap-3 overflow-hidden">
+          <h3 className="text-main prose-lg leading-none truncate">{title}</h3>
           <div className="flex items-center gap-2">
             {statusIcon}
             <p

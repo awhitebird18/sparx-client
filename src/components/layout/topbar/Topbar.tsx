@@ -14,13 +14,13 @@ const Topbar = () => {
 
   return (
     <div className="h-16 flex items-center justify-between px-6 gap-6 flex-shrink-0 border-b border-border">
-      <div className="flex items-center gap-4 hover:bg-transparent h-12 cursor-pointer prose">
+      <div className="flex items-center gap-4 hover:bg-transparent h-12 cursor-pointer prose w-1/2">
         <CurrentNode />
         {/* <h3 className="text-main leading-none">Members</h3>
         <p className="whitespace-nowrap text-secondary">Javascript / Arrays</p> */}
       </div>
 
-      <div className="w-full flex justify-end items-center gap-2">
+      <div className="flex justify-end items-center gap-2 w-1/2">
         <Button variant="ghost" className="w-8 h-8 p-0" onClick={showShortcutModal}>
           <QuestionCircle className="thick-icon" />
         </Button>
