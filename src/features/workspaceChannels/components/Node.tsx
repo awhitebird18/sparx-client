@@ -61,6 +61,7 @@ const Node = ({
   const [isHovered, setIsHovered] = useState(false);
   const { setActiveModal } = useStore('modalStore');
   const [flashcardsDueCount] = useState(1);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { addNotification } = useStore('notificationStore');
 
@@ -142,6 +143,7 @@ const Node = ({
   };
 
   const handleApplyToFavorites = (channelId: string) => {
+    setContextMenuOpen(false);
     setActiveModal({ type: 'AddChannelToSectionModal', payload: { channelId } });
   };
 
@@ -157,8 +159,14 @@ const Node = ({
 
   return (
     <>
-      <ContextMenu>
-        <ContextMenuTrigger disabled={isDefault}>
+      <ContextMenu
+        onOpenChange={(val) => {
+          if (val) {
+            setContextMenuOpen(val);
+          }
+        }}
+      >
+        <ContextMenuTrigger disabled={isDefault} asChild>
           <div
             id={uuid}
             onMouseDown={(e: MouseEvent) => {
@@ -273,92 +281,96 @@ const Node = ({
             )}
           </div>
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-52">
-          {isEditing && (
-            <>
-              <ContextMenuItem className="flex items-center gap-2" onClick={handleUpdateNode}>
-                <PencilSquare /> Update Node
-              </ContextMenuItem>
-              <ContextMenuItem
-                className="flex items-center gap-3"
-                onClick={() => onRemoveNode?.(uuid)}
-              >
-                <XSquare /> Delete node
-              </ContextMenuItem>
-            </>
-          )}
+        {contextMenuOpen && (
+          <ContextMenuContent className="w-52">
+            {isEditing && (
+              <>
+                <ContextMenuItem className="flex items-center gap-2" onClick={handleUpdateNode}>
+                  <PencilSquare /> Update Node
+                </ContextMenuItem>
+                <ContextMenuItem
+                  className="flex items-center gap-3"
+                  onClick={() => onRemoveNode?.(uuid)}
+                >
+                  <XSquare /> Delete node
+                </ContextMenuItem>
+              </>
+            )}
 
-          {isSubscribed && !isEditing && (
-            <>
-              <ContextMenuLabel>Set Status</ContextMenuLabel>
+            {isSubscribed && !isEditing && (
+              <>
+                <ContextMenuLabel>Set Status</ContextMenuLabel>
 
-              <ContextMenuItem
-                className={`flex items-center gap-3 ${
-                  userChannelDetails.status === CompletionStatus.Skip &&
-                  'bg-primary hover:!bg-primary !text-white'
-                }`}
-                onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.Skip, e)}
-              >
-                <ChevronDoubleRight /> Skip
-              </ContextMenuItem>
-              <ContextMenuItem
-                className={`flex items-center gap-3 ${
-                  userChannelDetails.status === CompletionStatus.InProgress &&
-                  'bg-primary hover:!bg-primary !text-white'
-                }`}
-                onClick={(e: MouseEvent) =>
-                  handleUpdateChannelStatus(CompletionStatus.InProgress, e)
-                }
-              >
-                <PlayCircle /> In progress
-              </ContextMenuItem>
-              <ContextMenuItem
-                className={`flex items-center gap-3 ${
-                  userChannelDetails.status === CompletionStatus.OnHold &&
-                  'bg-primary hover:!bg-primary !text-white'
-                }`}
-                onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.OnHold, e)}
-              >
-                <Alarm /> On hold
-              </ContextMenuItem>
-              <ContextMenuItem
-                className={`flex items-center gap-3 ${
-                  userChannelDetails.status === CompletionStatus.Complete &&
-                  'bg-primary hover:!bg-primary !text-white'
-                }`}
-                onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.Complete, e)}
-              >
-                <StarFill className="text-yellow-400" />
-                Complete
-              </ContextMenuItem>
-              <ContextMenuSeparator />
+                <ContextMenuItem
+                  className={`flex items-center gap-3 ${
+                    userChannelDetails.status === CompletionStatus.Skip &&
+                    'bg-primary hover:!bg-primary !text-white'
+                  }`}
+                  onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.Skip, e)}
+                >
+                  <ChevronDoubleRight /> Skip
+                </ContextMenuItem>
+                <ContextMenuItem
+                  className={`flex items-center gap-3 ${
+                    userChannelDetails.status === CompletionStatus.InProgress &&
+                    'bg-primary hover:!bg-primary !text-white'
+                  }`}
+                  onClick={(e: MouseEvent) =>
+                    handleUpdateChannelStatus(CompletionStatus.InProgress, e)
+                  }
+                >
+                  <PlayCircle /> In progress
+                </ContextMenuItem>
+                <ContextMenuItem
+                  className={`flex items-center gap-3 ${
+                    userChannelDetails.status === CompletionStatus.OnHold &&
+                    'bg-primary hover:!bg-primary !text-white'
+                  }`}
+                  onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.OnHold, e)}
+                >
+                  <Alarm /> On hold
+                </ContextMenuItem>
+                <ContextMenuItem
+                  className={`flex items-center gap-3 ${
+                    userChannelDetails.status === CompletionStatus.Complete &&
+                    'bg-primary hover:!bg-primary !text-white'
+                  }`}
+                  onClick={(e: MouseEvent) =>
+                    handleUpdateChannelStatus(CompletionStatus.Complete, e)
+                  }
+                >
+                  <StarFill className="text-yellow-400" />
+                  Complete
+                </ContextMenuItem>
+                <ContextMenuSeparator />
 
-              <ContextMenuItem
-                className="flex items-center gap-3"
-                onClick={() => handleApplyToFavorites(uuid)}
-              >
-                <Bookmark />
-                Assign to favorites
+                <ContextMenuItem
+                  className="flex items-center gap-3"
+                  onClick={() => handleApplyToFavorites(uuid)}
+                >
+                  <Bookmark />
+                  Assign to favorites
+                </ContextMenuItem>
+
+                <ContextMenuSeparator />
+
+                <ContextMenuItem
+                  className="flex items-center gap-3 text-rose-400"
+                  onClick={() => handleLeaveChannel(uuid)}
+                >
+                  <XCircle />
+                  Leave node
+                </ContextMenuItem>
+              </>
+            )}
+
+            {!isSubscribed && !isEditing && (
+              <ContextMenuItem className="flex items-center gap-3" onClick={() => handleJoin(uuid)}>
+                <AlignStart /> Start node
               </ContextMenuItem>
-
-              <ContextMenuSeparator />
-
-              <ContextMenuItem
-                className="flex items-center gap-3 text-rose-400"
-                onClick={() => handleLeaveChannel(uuid)}
-              >
-                <XCircle />
-                Leave node
-              </ContextMenuItem>
-            </>
-          )}
-
-          {!isSubscribed && !isEditing && (
-            <ContextMenuItem className="flex items-center gap-3" onClick={() => handleJoin(uuid)}>
-              <AlignStart /> Start node
-            </ContextMenuItem>
-          )}
-        </ContextMenuContent>
+            )}
+          </ContextMenuContent>
+        )}
       </ContextMenu>
     </>
   );
