@@ -18,7 +18,7 @@ const NoteMetadata = () => {
 
   const noteOwner = user ? user : currentUser;
 
-  if (!noteOwner) return <div />;
+  if (!noteOwner || !selectedNote) return <div className="card w-[32rem] h-full hidden xl:block" />;
 
   return (
     <div className="card w-[32rem] h-full hidden xl:block">
@@ -26,7 +26,7 @@ const NoteMetadata = () => {
         <div className="flex items-center justify-between">
           <p className="font-semibold text-sm">Is private</p>
           <Switch
-            checked={selectedNote?.isPrivate}
+            checked={selectedNote.isPrivate}
             onCheckedChange={(val) => handleUpdateNote({ isPrivate: val })}
           />
         </div>
@@ -34,7 +34,7 @@ const NoteMetadata = () => {
           <p className="font-semibold mb-2 text-sm">Created by</p>
           <div className="flex gap-2 items-center">
             <UserAvatar size={28} userId={noteOwner.uuid} profileImage={noteOwner.profileImage} />
-            <span className="text-muted">
+            <span className="text-secondary">
               {selectedNote && `${noteOwner?.firstName} ${noteOwner?.lastName}`}
             </span>
           </div>
@@ -43,17 +43,17 @@ const NoteMetadata = () => {
         <div>
           <p className="font-semibold mb-2 text-sm">Created On</p>
           <div className="flex gap-2 items-center">
-            <span className="text-muted">
-              {dayjs(selectedNote?.createdAt).format('MMM D, YYYY hh:mm a')}
+            <span className="text-secondary">
+              {dayjs(selectedNote.createdAt).format('MMM D, YYYY hh:mm a')}
             </span>
           </div>
         </div>
 
         <div>
-          <p className="font-semibold mb-2 text-sm">Last accessed</p>
+          <p className="font-semibold mb-2 text-sm">Updated On</p>
           <div className="flex gap-2 items-center">
-            <span className="text-muted">
-              {dayjs(selectedNote?.updatedAt).format('MMM D, YYYY hh:mm a')}
+            <span className="text-secondary">
+              {dayjs(selectedNote.updatedAt).format('MMM D, YYYY hh:mm a')}
             </span>
           </div>
         </div>
