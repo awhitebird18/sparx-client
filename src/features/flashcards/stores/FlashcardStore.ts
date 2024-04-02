@@ -27,6 +27,7 @@ export class FlashcardStore {
     reaction(
       () => this.selectedTemplate, // This is the data function - what to react to
       (current, prev) => {
+        console.log(current, prev);
         if (current && current.uuid !== prev?.uuid) {
           this.fetchFieldsApi(current.uuid);
           this.fetchVariantsApi(current.uuid);
@@ -67,9 +68,9 @@ export class FlashcardStore {
       },
     );
 
-    autorun(() => {
-      this.fetchTemplatesApi();
-    });
+    // autorun(() => {
+    //   this.fetchTemplatesApi();
+    // });
   }
 
   setSelectedFlashcard = (flashcard: Flashcard | undefined) => {

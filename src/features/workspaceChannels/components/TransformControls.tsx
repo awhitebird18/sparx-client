@@ -24,6 +24,7 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
     isFullscreen,
     setIsFullscreen,
   } = useStore('channelStore');
+  const { lastViewedWorkspace } = useStore('workspaceStore');
   const [, setShowIndicators] = useState(true);
 
   const handleViewFullscreen = () => {
@@ -60,7 +61,7 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
       >
         <Bullseye size={18} />
       </Button>
-      {currentUser?.isAdmin && (
+      {lastViewedWorkspace?.isAdmin && (
         <Button
           className="w-12 h-12 p-0 rounded-full bg-background"
           variant={isEditing ? 'outline-primary' : 'outline'}
