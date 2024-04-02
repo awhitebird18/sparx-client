@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -58,7 +58,8 @@ const RegisterPage: React.FC = () => {
   } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
   });
-  const { registerUser } = useAuth();
+  const { registerUser, verifyAndLoginUser } = useAuth();
+  // const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
   const [userIdToBeVerified, setUserIdToBeVerified] = useState(null);
@@ -68,9 +69,12 @@ const RegisterPage: React.FC = () => {
 
     try {
       const user = await registerUser(data);
+      console.log(user);
       if (!user) throw new Error('No user');
 
-      setUserIdToBeVerified(user.uuid);
+      verifyAndLoginUser();
+
+      // setUserIdToBeVerified(user.uuid);
       reset();
     } catch (error) {
       console.error(error);
