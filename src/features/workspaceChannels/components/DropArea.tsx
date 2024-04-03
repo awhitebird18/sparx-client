@@ -14,8 +14,8 @@ import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   const ref = useRef<HTMLDivElement>(null);
   const { setActiveModal } = useStore('modalStore');
+
   const {
-    fetchWorkspaceChannelConnectorsApi,
     channelConnectors,
     removeChannelConnectorApi,
     selectedLineId,
@@ -42,6 +42,23 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   // Set up global event listeners for keydown and keyup
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      console.log(event.key, currentLine);
+      if (event.key === 'Escape' && currentLine) {
+        setCurrentLine(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLine]);
+
+  // Set up global event listeners for keydown and keyup
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Control') {
         setIsControlPressed(true);
       }
@@ -63,8 +80,27 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   }, []);
 
   useEffect(() => {
-    if (!currentWorkspaceId) return;
-  }, [fetchWorkspaceChannelConnectorsApi, currentWorkspaceId]);
+    const handleClick = (event: MouseEvent) => {
+      // Assert event.target as an Element to access classList
+      const target = event.target as Element;
+      if (!target.classList.contains('connector') && currentLine) {
+        setCurrentLine(null);
+      }
+    };
+
+    window.addEventListener('click', handleClick);
+
+    // Remove event listener on cleanup to prevent memory leaks
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, [currentLine]);
+
+  useEffect(() => {
+    if (currentLine && !isEditing) {
+      setCurrentLine(null);
+    }
+  }, [isEditing, currentLine]);
 
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent) => {
@@ -217,6 +253,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   }, []);
 
   const handleCreateLine = async (uuid: string, side: ConnectionSide) => {
+    console.log('creating line!');
     if (!currentLine) {
       setCurrentLine({
         start: { nodeId: uuid, side },

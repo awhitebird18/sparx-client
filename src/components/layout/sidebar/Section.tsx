@@ -191,7 +191,7 @@ const Section = ({ section, index }: SectionProps) => {
 
   return (
     <div
-      className={`relative px-3.5 mb-3 ${isOpen && channelIds.length && 'flex-0'}`}
+      className={`relative mb-3 ${isOpen && channelIds.length && 'flex-0'}`}
       // style={{ maxHeight: '70%' }}
     >
       {isOverTopHalf && sectionIsOver && (

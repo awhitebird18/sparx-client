@@ -163,3 +163,19 @@ tr th {
   padding-left: 24px !important;
   padding-right: 24px !important;
 }
+
+.activeListItem {
+  position: relative;
+}
+
+.activeListItem::after {
+  content: '';
+  position: absolute;
+  width: 0.2rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: var(--primary);
+}

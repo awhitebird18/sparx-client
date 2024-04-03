@@ -18,12 +18,10 @@ import { ChannelType } from '../enums';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/components/modal/Modal';
-import { Checkbox } from '@/components/ui/Checkbox';
 import { useMemo } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
-  isPrivate: z.boolean().default(false),
 });
 
 const CreateChannelForm = ({
@@ -66,7 +64,6 @@ const CreateChannelForm = ({
       const channelData = {
         name: values.name,
         type: ChannelType.CHANNEL,
-        isPrivate: values.isPrivate,
         x,
         y,
       };
@@ -111,33 +108,6 @@ const CreateChannelForm = ({
                 </FormControl>
                 <FormDescription>This is your publicly displayed channel name</FormDescription>
                 <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="isPrivate"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center gap-2">
-                  <FormControl>
-                    <Checkbox
-                      className="h-5 w-5 border border-primary"
-                      checked={field.value}
-                      onCheckedChange={(checked) => {
-                        if (typeof checked === 'boolean') {
-                          field.onChange(checked);
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormLabel htmlFor="make-private" className="text-primary">
-                    Set Channel Private
-                  </FormLabel>
-                </div>
-                <FormDescription>
-                  Private channels can only be viewed or joined by invitation
-                </FormDescription>
               </FormItem>
             )}
           />

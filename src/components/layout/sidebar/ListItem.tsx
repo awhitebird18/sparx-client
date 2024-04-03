@@ -127,10 +127,13 @@ const ListItem = ({
           ref={conditionalDragRef}
           onClick={handleClick}
           className={`h-9 ${
-            !sidebarOpen && 'w-9'
-          } p-0 rounded-md justify-between flex items-center cursor-pointer overflow-hidden hover:bg-hover ${
+            !sidebarOpen && 'w-full'
+          } p-0 px-3.5 relative justify-between flex items-center cursor-pointer overflow-hidden hover:bg-hover ${
             isChannel ? '!text-secondary' : 'text-secondary'
-          } ${isSelected && '!bg-primary !text-white'} ${disabled ? 'text-muted' : 'font-normal'}`}
+          } ${
+            isSelected &&
+            'activeListItem !bg-primary-transparent border-primary text-black dark:text-white'
+          } ${disabled ? 'text-muted' : 'font-normal'}`}
         >
           <div
             className={`whitespace-nowrap font-medium text-ellipsis overflow-hidden flex gap-2 items-center w-full h-full text-sm`}

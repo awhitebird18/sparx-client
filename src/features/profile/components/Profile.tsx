@@ -47,7 +47,6 @@ interface Accumulator {
 
 const Profile = () => {
   const [stats, setStats] = useState<any>([]);
-  const [activity, setActivity] = useState([]);
   const [totalExp, setTotalExp] = useState(0);
   const { currentWorkspaceId, currentUserWorkspaceData } = useStore('workspaceStore');
   const navigate = useNavigate();
@@ -83,22 +82,22 @@ const Profile = () => {
     if (!userId || !currentWorkspaceId) return;
 
     const fetchData = async () => {
-      const activityPromise = taskApi.getUserActivity(userId, currentWorkspaceId);
+      // const activityPromise = taskApi.getUserActivity(userId, currentWorkspaceId);
       const experiencePromise = taskApi.getExperience(userId, currentWorkspaceId);
 
-      const [activity, experience] = await Promise.all([activityPromise, experiencePromise]);
-      return { activity, experience };
+      const [experience] = await Promise.all([experiencePromise]);
+      return { experience };
     };
 
     const fn = async () => {
-      const { activity, experience } = await fetchData();
+      const { experience } = await fetchData();
 
       const { totalPoints, experienceGroupedByDate } =
         groupExperienceByDayAndGetTotalExp(experience);
 
       setTotalExp(totalPoints);
       setStats(experienceGroupedByDate);
-      setActivity(activity);
+      // setActivity(activity);
 
       setIsLoading(false);
     };
@@ -328,7 +327,9 @@ const Profile = () => {
               <div className="h-full w-full flex flex-col prose gap-4">
                 <h2 className="text-main font-medium">Activity</h2>
 
-                <WorkspaceActivity activity={activity} isLoading={isLoading} />
+                <WorkspaceActivity
+                  endpoint={`activity/user/${currentWorkspaceId}/${currentUser?.uuid}`}
+                />
               </div>
             </div>
           </div>

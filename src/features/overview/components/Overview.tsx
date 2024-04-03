@@ -13,9 +13,9 @@ import { observer } from 'mobx-react-lite';
 import { Fire, PlayBtnFill, StarFill, ThreeDots } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TaskList from './TaskList';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import WorkspaceActivity from './WorkspaceActivity';
-import homeApi from '@/features/overview/api';
+
 import {
   Select,
   SelectContent,
@@ -40,11 +40,8 @@ const Overview = () => {
   const navigate = useNavigate();
   const { findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
-  const [activityLoading, setActivityLoading] = useState(true);
 
   const [activityFilter, setActivityFiler] = useState('all');
-
-  const [activity, setActivity] = useState([]);
 
   const sortedArray = history.sort((a: any, b: any) => b.timestamp - a.timestamp);
 
@@ -71,25 +68,25 @@ const Overview = () => {
   const sortedUniqueNodes = uniqueNodes.sort((a, b) => b.timestamp - a.timestamp);
   const top3UniqueNodes = sortedUniqueNodes.slice(0, 3);
 
-  useEffect(() => {
-    if (!currentWorkspaceId) return;
+  // useEffect(() => {
+  //   if (!currentWorkspaceId) return;
 
-    const fn = async () => {
-      const data = await homeApi.getRecentWorkspaceActivity(currentWorkspaceId);
+  //   const fn = async () => {
+  //     const data = await homeApi.getRecentWorkspaceActivity(currentWorkspaceId);
 
-      setActivity(data);
-      setActivityLoading(false);
-    };
+  //     setActivity(data);
+  //     setActivityLoading(false);
+  //   };
 
-    fn();
-  }, [currentWorkspaceId]);
+  //   fn();
+  // }, [currentWorkspaceId]);
 
   const handleClickQuickAction = (path: string) => {
     navigate(path);
   };
 
-  const filteredActivity =
-    activityFilter === 'all' ? activity : activity.filter((a: any) => a.type === activityFilter);
+  // const filteredActivity =
+  //   activityFilter === 'all' ? activity : activity.filter((a: any) => a.type === activityFilter);
 
   return (
     <div className="flex flex-col gap-5 w-full text-main prose p-8 h-full overflow-hidden">
@@ -209,7 +206,7 @@ const Overview = () => {
             </div>
 
             <div className="h-full overflow-auto pr-2">
-              <WorkspaceActivity activity={filteredActivity} isLoading={activityLoading} />
+              <WorkspaceActivity endpoint={`/activity/workspace/${currentWorkspaceId}`} />
             </div>
           </div>
         </div>

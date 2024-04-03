@@ -16,14 +16,8 @@ import Spinner from '@/components/ui/Spinner';
 const NodeMap: React.FC = () => {
   // const ref = useRef<HTMLDivElement>(null);
   // useScrollToMiddle(ref, gridDimensions.width, gridDimensions.height);
-  const {
-    fetchUserChannelData,
-    setIsLoading,
-    isLoading,
-    isEditing,
-    setIsEditing,
-    isControlPressed,
-  } = useStore('channelStore');
+  const { fetchUserChannelData, setIsLoading, isLoading, isEditing, setIsEditing } =
+    useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { fetchChannelUserCounts, fetchNodemapSettingsApi } = useStore('workspaceChannelStore');
   const { fetchWorkspaceChannelConnectorsApi } = useStore('channelConnectorStore');
@@ -88,14 +82,8 @@ const NodeMap: React.FC = () => {
         wheel={{ activationKeys: ['Control'] }}
       >
         {({ zoomIn, zoomOut, resetTransform, zoomToElement, instance }) => (
-          <div className="flex flex-col flex-1">
-            <TransformControls
-              onZoomIn={zoomIn}
-              onZoomOut={zoomOut}
-              onReset={resetTransform}
-              zoomToElement={zoomToElement}
-            />
-            <div className="h-full">
+          <div className="flex h-full">
+            <div className="h-full w-full">
               <TransformComponent
                 wrapperStyle={{
                   width: '100%',
@@ -114,15 +102,13 @@ const NodeMap: React.FC = () => {
                   Editing mode <XCircle />
                 </Button>
               )}
-              {isControlPressed && (
-                <div
-                  className="absolute bottom-16 right-8 text-white text-xl"
-                  style={{ zIndex: 1000 }}
-                >
-                  Ctrl pressed
-                </div>
-              )}
             </div>
+            <TransformControls
+              onZoomIn={zoomIn}
+              onZoomOut={zoomOut}
+              onReset={resetTransform}
+              zoomToElement={zoomToElement}
+            />
 
             <NodeStats />
           </div>

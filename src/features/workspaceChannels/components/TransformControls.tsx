@@ -45,25 +45,17 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
     }
   };
   return (
-    <div className="flex flex-col gap-2 items-center absolute top-3 right-3 z-10">
-      <Button
-        className="w-12 h-12 p-0 rounded-full bg-background"
-        variant="outline"
-        onClick={() => onReset()}
-      >
+    <div className="flex flex-col gap-3.5 items-center z-10 h-full border-l border-border p-2  bg-background/70 backdrop-blur-lg absolute top-0 right-0">
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => onReset()}>
         <House size={18} />
       </Button>
-      <Button
-        className="w-12 h-12 p-0 rounded-full bg-background"
-        variant="outline"
-        onClick={scrollToActiveNode}
-      >
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={scrollToActiveNode}>
         <Bullseye size={18} />
       </Button>
       {lastViewedWorkspace?.isAdmin && (
         <Button
-          className="w-12 h-12 p-0 rounded-full bg-background"
-          variant={isEditing ? 'outline-primary' : 'outline'}
+          className="w-8 h-8 p-0 "
+          variant={isEditing ? 'outline-primary' : 'ghost'}
           onClick={() => setIsEditing(!isEditing)}
         >
           <PencilSquare size={18} />
@@ -71,32 +63,20 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
       )}
       <SettingsDropdown>
         <Button
-          className="w-12 h-12 p-0 border rounded-full bg-background"
-          variant="outline"
+          className="w-8 h-8 p-0 "
+          variant="ghost"
           onClick={() => setShowIndicators((prev) => !prev)}
         >
           <Funnel size={18} />
         </Button>
       </SettingsDropdown>
-      <Button
-        className="w-12 h-12 p-0 border rounded-full bg-background"
-        variant="outline"
-        onClick={handleViewFullscreen}
-      >
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={handleViewFullscreen}>
         {isFullscreen ? <FullscreenExit size={18} /> : <Fullscreen size={18} />}
       </Button>
-      <Button
-        className="w-12 h-12 p-0 border rounded-full bg-background"
-        variant="outline"
-        onClick={() => onZoomIn()}
-      >
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => onZoomIn()}>
         <ZoomIn />
       </Button>
-      <Button
-        className="w-12 h-12 p-0 border rounded-full bg-background"
-        variant="outline"
-        onClick={() => onZoomOut()}
-      >
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => onZoomOut()}>
         <ZoomOut />
       </Button>
     </div>
