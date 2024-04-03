@@ -85,29 +85,29 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom */}
-      <div className="pt-2.5 flex flex-col gap-1.5 px-3.5">
-        <Button
-          className={`h-9 ${
-            !sidebarOpen && 'w-9'
-          } mb-4 rounded-md px-2.5 gap-2.5 justify-start bg-transparent card text-muted border-border prose overflow-hidden whitespace-nowrap flex-shrink-0`}
-          variant="outline"
-          onClick={handleSearch}
-        >
-          <div className="items-center gap-3">
-            <Search size={15} className="flex-shrink-0 text-muted mt-0.5 hover:text-secondary" />
-          </div>
-          {sidebarOpen && (
-            <div className="flex items-center justify-between w-full">
-              <div>Search</div>
-              <Badge
-                variant="outline"
-                className="text-xs text-secondary opacity-30 rounded-lg bg-hover dark:bg-hover"
-              >
-                Ctrl K
-              </Badge>
+      <div className="pt-2.5 flex flex-col gap-1.5">
+        <div className="px-3.5">
+          <Button
+            className={`h-9 px-2.5 w-full mb-4 rounded-md gap-2.5 justify-start card text-muted border-border prose overflow-hidden whitespace-nowrap flex-shrink-0`}
+            variant="outline"
+            onClick={handleSearch}
+          >
+            <div className="items-center gap-3">
+              <Search size={15} className="flex-shrink-0 text-muted mt-0.5 hover:text-secondary" />
             </div>
-          )}
-        </Button>
+            {sidebarOpen && (
+              <div className="flex items-center justify-between w-full">
+                <div>Search</div>
+                <Badge
+                  variant="outline"
+                  className="text-xs text-secondary opacity-30 rounded-lg bg-hover dark:bg-hover"
+                >
+                  Ctrl K
+                </Badge>
+              </div>
+            )}
+          </Button>
+        </div>
         {workspaceListItems.map((listItem) => (
           <ListItem key={listItem.id} id={listItem.id} title={listItem.name} icon={listItem.icon} />
         ))}

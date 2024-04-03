@@ -1,35 +1,81 @@
 import dayjs from 'dayjs';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { Skeleton } from '@/components/ui/Skeleton';
 
-const WorkspaceActivity = ({ activity, isLoading }: { activity: any; isLoading: boolean }) => {
-  if (isLoading) {
-    return (
-      <div className="space-y-4 card rounded-2xl opacity-90 h-full">
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-        <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-      </div>
-    );
-  }
+import { useEffect, useRef, useState } from 'react';
+import { axios } from '@/lib/axios';
+
+const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
+  const [activities, setActivities] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  // Correctly typed IntersectionObserver ref
+  const observer = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // if (isLoading) return;
+    const callback = (entries: any) => {
+      if (entries[0].isIntersecting && hasMore) {
+        // Load more data here
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    console.log('derp');
+
+    observer.current = new IntersectionObserver(callback);
+    const currentObserver = observer.current;
+    if (sentinelRef.current) currentObserver.observe(sentinelRef.current);
+
+    return () => currentObserver.disconnect();
+  }, [hasMore, isLoading]);
+
+  useEffect(() => {
+    const fetchMoreActivities = async () => {
+      console.log('derp');
+      // Placeholder for your fetch logic
+
+      const { data } = await axios.get(`${endpoint}?page=${page}`);
+      console.log(data);
+      if (data.length < 10) {
+        setIsLoading(false);
+        setHasMore(false);
+      }
+      setActivities((prevActivities) => [...prevActivities, ...data]);
+    };
+
+    if (page > 1) fetchMoreActivities();
+  }, [page]);
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="space-y-4 card rounded-2xl opacity-90 h-full">
+  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
+  //       <div
+  //         ref={sentinelRef}
+  //         style={{ height: '5px', backgroundColor: 'red', width: '100%' }}
+  //       ></div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
-      {activity.length ? (
-        <div className="space-y-4 card rounded-2xl opacity-90 h-full">
-          {activity.map((activity: any) => (
-            <ActivityRow key={activity.id} activity={activity} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2 items-center pt-8">
-          <h3 className="text-center text-secondary text-xl">No recent activity.</h3>
-          <p className="text-center text-muted">All workspace events will be posted here.</p>
-        </div>
-      )}
+      {/* {activities.length ? ( */}
+      <div className="space-y-4 card rounded-2xl opacity-90 h-full">
+        {activities.map((activity) => (
+          <ActivityRow key={activity.id} activity={activity} />
+        ))}
+        {/* Sentinel element for Intersection Observer */}
+        {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
+      </div>
+      {/* ) : (
+        <div className="flex flex-col gap-2 items-center pt-8"></div>
+      )} */}
     </>
   );
 };
