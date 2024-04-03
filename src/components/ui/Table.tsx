@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import { useTable, Column, TableOptions } from 'react-table';
-import { Checkbox } from './Checkbox';
 import { cn } from '@/utils/utils';
 import { Skeleton } from './Skeleton';
 
@@ -10,6 +9,7 @@ interface TableProps<T extends object> {
   onRowClick?: (row: T) => void;
   activeId?: string;
   isLoading?: boolean;
+  tableClasses?: string | undefined;
   headerClasses?: string;
   rowClasses?: string;
 }
@@ -19,6 +19,7 @@ function Table<T extends object>({
   data,
   onRowClick,
   isLoading = false,
+  tableClasses = '',
   headerClasses = '',
   rowClasses = '',
 }: TableProps<T>): JSX.Element {
@@ -29,24 +30,26 @@ function Table<T extends object>({
   } as TableOptions<T>);
 
   return (
-    <div className="w-full border border-border card rounded-xl bg-card shadow-sm">
+    <div
+      className={`w-full border border-border card rounded-xl bg-card shadow-sm overflow-auto ${tableClasses}`}
+    >
       <table {...getTableProps()} className="m-0 w-full border-collapse">
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="w-full">
-              <th
+              {/* <th
                 className={cn(
                   'w-20 m-0 p-0 h-12 align-middle border-b border-border text-center ',
                   headerClasses,
                 )}
               >
                 <Checkbox className="bg-blue mt-1" />
-              </th>
+              </th> */}
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
                   className={cn(
-                    `p-0 h-12 text-left align-middle font-medium text-main text-base border-b border-border`,
+                    `py-0 h-12 text-left align-middle font-medium text-main text-base border-b border-border truncate`,
                     headerClasses,
                   )}
                 >
@@ -73,12 +76,15 @@ function Table<T extends object>({
                     rowClasses,
                   )}
                 >
-                  <td className="w-20 h-full text-center">
+                  {/* <td className="w-20 h-full text-center">
                     <Checkbox />
-                  </td>
+                  </td> */}
                   {row.cells.map((cell) => {
                     return (
-                      <td {...cell.getCellProps()} className="h-full text-base text-secondary">
+                      <td
+                        {...cell.getCellProps()}
+                        className="py-0 h-full text-base text-secondary truncate"
+                      >
                         {cell.render('Cell')}
                       </td>
                     );

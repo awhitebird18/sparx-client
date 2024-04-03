@@ -29,8 +29,8 @@ type HistoryItem = {
   nodeId: string;
   primaryView: string;
   timestamp: number;
-  name?: string;
-  status?: string;
+  name: string;
+  status: string;
   lastViewed: string;
 };
 
@@ -123,12 +123,12 @@ const Overview = () => {
           {/* Quick Actions */}
           <div className="space-y-3  prose">
             <h3 className="text-main">Quick Actions</h3>
-            <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow ">
+            <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow overflow-auto">
               <Button
                 onClick={() => handleClickQuickAction('/app/nodemap')}
                 size="sm"
                 variant="outline-primary"
-                className="gap-2 rounded-2xl px-4"
+                className="gap-2 rounded-2xl px-4 whitespace-nowrap"
               >
                 {/* <Diagram2 size={20} /> */}
                 View Nodemap
@@ -137,7 +137,7 @@ const Overview = () => {
                 onClick={() => handleClickQuickAction('/app/flashcards')}
                 size="sm"
                 variant="outline-primary"
-                className="gap-2 rounded-2xl px-4"
+                className="gap-2 rounded-2xl px-4 whitespace-nowrap"
               >
                 {/* <CardHeading size={18} /> */}
                 Study Flashcards
@@ -146,7 +146,7 @@ const Overview = () => {
                 onClick={() => handleClickQuickAction('/app/notes')}
                 size="sm"
                 variant="outline-primary"
-                className="gap-2 rounded-2xl px-4"
+                className="gap-2 rounded-2xl px-4 whitespace-nowrap"
               >
                 View Notes
                 {/* <PencilFill size={14} /> */}
@@ -155,7 +155,7 @@ const Overview = () => {
                 onClick={() => handleClickQuickAction('/app/discussions')}
                 size="sm"
                 variant="outline-primary"
-                className="gap-2 rounded-2xl px-4"
+                className="gap-2 rounded-2xl px-4 whitespace-nowrap"
               >
                 {/* <ChatLeftDots size={18} /> */}
                 View Discussions
@@ -166,8 +166,13 @@ const Overview = () => {
           <div className="prose space-y-3 rounded-xl">
             <h3 className="text-main">Recent Nodes</h3>
             <div className="flex w-full gap-4">
-              {top3UniqueNodes.map((item: any) => (
-                <LastViewedCard title={item.name} date={item.lastRead} status={item.status} />
+              {top3UniqueNodes.map((item: HistoryItem) => (
+                <LastViewedCard
+                  title={item.name}
+                  date={item.lastViewed}
+                  status={item.status}
+                  channelId={item.nodeId}
+                />
               ))}
             </div>
           </div>
@@ -215,7 +220,18 @@ const Overview = () => {
 
 export default observer(Overview);
 
-const LastViewedCard = ({ title, date, status }: any) => {
+const LastViewedCard = ({
+  title,
+  date,
+  status,
+  channelId,
+}: {
+  title: string;
+  date: string;
+  status: string;
+  channelId: string;
+}) => {
+  const { setCurrentChannelUuid } = useStore('channelStore');
   const navigate = useNavigate();
   const statusColor = status === CompletionStatus.Complete ? 'text-complete' : 'text-progress';
 
@@ -226,7 +242,8 @@ const LastViewedCard = ({ title, date, status }: any) => {
       <PlayBtnFill className={`${statusColor}`} size={14} />
     );
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = async (path: string) => {
+    await setCurrentChannelUuid(channelId);
     navigate(path);
   };
 
@@ -252,7 +269,7 @@ const LastViewedCard = ({ title, date, status }: any) => {
             <DropdownMenuItem onClick={() => handleNavigation('/app/notes')}>
               View Notes
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNavigation('/app/flashcards/study')}>
+            <DropdownMenuItem onClick={() => handleNavigation('/app/flashcards')}>
               Study Flashcards
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleNavigation('/app/discussions')}>
