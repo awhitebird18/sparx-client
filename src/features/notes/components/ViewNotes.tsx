@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import SearchInput from '@/components/ui/SearchInput';
 import {
   ArrowReturnRight,
   CaretDownFill,
@@ -129,7 +130,7 @@ const ViewNotes: React.FC = () => {
           <span className="flex items-center gap-2">
             {value ? (
               <>
-                <Person className="mt-0.5" /> Private
+                <Lock className="mt-0.5" /> Private
               </>
             ) : (
               <>
@@ -216,13 +217,11 @@ const ViewNotes: React.FC = () => {
             <div className="flex justify-between items-center w-full py-0">
               {/* <p className="">{`${filteredNotes.length} results`}</p> */}
               <div className="flex gap-3 items-center">
-                <div className="h-10 border-border rounded-lg border overflow-hidden flex items-center gap-0 px-3 text-secondary ml-auto bg-background">
-                  <Search className="thick-icon" />
-                  <Input
-                    placeholder="Search title"
-                    className="max-w-sm w-full ml-auto border-none text-main"
+                <div className="w-72">
+                  <SearchInput
+                    placeholder="Search users"
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    setValue={setSearchValue}
                   />
                 </div>
                 <Button variant="secondary" className="flex gap-3 w-fit items-center" size="sm">
@@ -269,11 +268,14 @@ const EmptyFallback = ({
 
     <div className="flex flex-col gap-2 items-center">
       <h3 className="text-center text-main text-xl">No Notes Found.</h3>
-      <p className="text-center text-secondary">{`All of your ${channelName} notes will appear here.`}</p>
+      <p className="text-center text-secondary flex-items-center">
+        All of your <span className="text-primary px-0.5">{channelName}</span> notes will appear
+        here.
+      </p>
     </div>
 
-    <Button size="sm" className=" items-center gap-1" onClick={onCreateNote}>
-      <Plus size={18} className="thick-icon" />
+    <Button className="items-center gap-1" onClick={onCreateNote}>
+      <Plus size={20} />
       Start a new note
     </Button>
   </div>
