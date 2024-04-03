@@ -95,8 +95,6 @@ const ViewNotes: React.FC = () => {
         Header: 'Updated on',
         accessor: 'updatedAt',
         Cell: ({ value, row }: { value: Date; row: any }) => {
-          console.log(value, row);
-
           return (
             <span className="">
               {dayjs(value ?? row.values.createdAt).format('MMM D, YYYY hh:mm a')}
@@ -109,8 +107,6 @@ const ViewNotes: React.FC = () => {
         accessor: 'createdBy',
         Cell: ({ value }: { value: string }) => {
           const user = findUserByUuid(value);
-
-          console.log(value);
 
           return (
             <div className="flex items-center gap-2">
@@ -202,7 +198,6 @@ const ViewNotes: React.FC = () => {
   const filteredNotes = notes.filter((note) =>
     searchValue ? note.title?.toLowerCase().includes(searchValue) : note,
   );
-  console.log(filteredNotes);
 
   return (
     <div className="flex-1 flex flex-col h-full prose">

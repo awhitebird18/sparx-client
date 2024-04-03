@@ -4,6 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import OnlineStatusIndicator from './OnlineStatusIndicator';
 import { UserStatus } from '../enums';
 
+import { twMerge } from 'tailwind-merge';
+import { useStore } from '@/stores/RootStore';
+
 type UserAvatarProps = {
   size?: number;
   showStatus?: boolean;
@@ -11,20 +14,31 @@ type UserAvatarProps = {
   profileImage?: string;
   onlineStatus?: UserStatus;
   rounded?: string;
+  color?: string;
 };
 
 const UserAvatar = ({
   size = 44,
   profileImage,
+  color,
   userId,
   showStatus,
-  rounded = 'rounded-lg',
+  rounded = 'rounded-md',
 }: UserAvatarProps) => {
+  const { findUserByUuid } = useStore('userStore');
+  const user = findUserByUuid(userId);
+
+  const bgColorClass = color
+    ? `from-primary to-${user?.preferences.primaryColor}-500`
+    : 'bg-primary';
+
+  const avatarClass = twMerge(
+    `relative ${rounded} overflow-visible bg-gradient-to-tr`,
+    bgColorClass,
+  );
+
   return (
-    <Avatar
-      className={`relative overflow-visible ${rounded}`}
-      style={{ height: `${size}px`, width: `${size}px` }}
-    >
+    <Avatar className={avatarClass} style={{ height: `${size}px`, width: `${size}px` }}>
       <AvatarImage
         src={profileImage}
         style={{ height: `${size}px`, width: `${size}px` }}
@@ -32,10 +46,10 @@ const UserAvatar = ({
       />
       <AvatarFallback
         delayMs={200}
-        className={`h-full flex-1 w-full ${rounded} border border-background overflow-hidden bg-card`}
+        className={`h-full flex-1 w-full ${rounded} overflow-hidden bg-transparent`}
         children={
           <PersonFill
-            className={`mt-2 text-primary-dark`}
+            className={`mt-3 text-white/40`}
             style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
           />
         }

@@ -1,5 +1,5 @@
 // stores/FlashcardStore.ts
-import { autorun, makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 import { Flashcard } from '../types/card';
 import flashcardsApi from '../api';
 
@@ -27,7 +27,6 @@ export class FlashcardStore {
     reaction(
       () => this.selectedTemplate, // This is the data function - what to react to
       (current, prev) => {
-        console.log(current, prev);
         if (current && current.uuid !== prev?.uuid) {
           this.fetchFieldsApi(current.uuid);
           this.fetchVariantsApi(current.uuid);

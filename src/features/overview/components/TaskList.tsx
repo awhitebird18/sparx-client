@@ -65,7 +65,6 @@ const TaskList: React.FC = () => {
 
   const createTask = () => {
     const onSubmit = async (task: any) => {
-      console.log('derp', currentWorkspaceId);
       if (!currentWorkspaceId) return;
 
       const newTask = await taskApi.createTask({ ...task, workspaceId: currentWorkspaceId });

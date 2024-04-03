@@ -25,6 +25,7 @@ export class UserPreferencesStore {
       updatePrimaryColorApi: action,
       updateNotificationTypeApi: action,
       setInitialPreferences: action,
+      resetPreferences: action,
     });
 
     reaction(
@@ -88,6 +89,12 @@ export class UserPreferencesStore {
     this.notificationType = notificationType;
   };
 
+  resetPreferences = () => {
+    this.setTheme(Theme.DARK);
+    this.setPrimaryColor(PrimaryColors.BLUE);
+    this.setNotificationType(NotificationType.DIRECT);
+  };
+
   setInitialPreferences = ({
     theme,
     primaryColor,
@@ -97,8 +104,14 @@ export class UserPreferencesStore {
     primaryColor: PrimaryColors;
     notificationType: NotificationType;
   }) => {
-    if (theme) this.setTheme(theme);
-    if (primaryColor) this.setPrimaryColor(primaryColor);
+    if (theme) {
+      this.setTheme(theme);
+      storage.setTheme(theme);
+    }
+    if (primaryColor) {
+      this.setPrimaryColor(primaryColor);
+      storage.setPrimaryColor(primaryColor);
+    }
     if (notificationType) this.setNotificationType(notificationType);
   };
 }

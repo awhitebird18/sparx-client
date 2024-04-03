@@ -47,6 +47,7 @@ const ResizableSidebar = () => {
         resizeHandles={resizeHandles}
         minConstraints={[65, Infinity]} // Minimum width of 0
         maxConstraints={[300, Infinity]} // Maximum width of 600
+        transformScale={0.6}
       >
         <div
           style={{
@@ -55,7 +56,7 @@ const ResizableSidebar = () => {
             overflow: 'hidden',
             ...(isSidebarAbsolute && { position: 'absolute', top: 0, left: 0, bottom: 0 }),
           }}
-          className="transition-all duration-150 flex-shrink-0 z-50"
+          className="transition-all duration-150 flex-shrink-0 z-40"
         >
           {/* Glass Blur Background with Image */}
           <div
