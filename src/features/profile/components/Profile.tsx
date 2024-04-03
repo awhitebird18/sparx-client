@@ -169,7 +169,7 @@ const Profile = () => {
             {/* Real header */}
             <div className="mt-24 flex gap-12 items-end px-16 justify-center w-full max-w-5xl">
               {/* Avatar */}
-              <div className="card relative flex-shrink-0 shadow border border-border overflow-hidden rounded-xl">
+              <div className="card relative flex-shrink-0 shadow overflow-hidden rounded-xl">
                 <UserAvatar size={160} userId={user.uuid} profileImage={transformedImage} />
                 {user.uuid === currentUser?.uuid && (
                   <Button

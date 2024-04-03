@@ -3,6 +3,15 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
+  purge: {
+    // Your other purge configurations...
+    options: {
+      safelist: [
+        { pattern: /^from-/, variants: ['500'] },
+        { pattern: /^to-/, variants: ['500'] },
+      ],
+    },
+  },
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',

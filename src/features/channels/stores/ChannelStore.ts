@@ -213,7 +213,7 @@ export class ChannelStore {
     }
   };
 
-  joinDefaultChannelApi = async () => console.log('Review');
+  joinDefaultChannelApi = async () => console.error('Review');
 
   // joinDefaultChannelApi = async ({ workspaceId }: { workspaceId: string }) => {
   // const userChannel = await channelApi.joinDefaultChannel({ workspaceId });

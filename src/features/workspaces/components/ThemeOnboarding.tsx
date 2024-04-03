@@ -1,12 +1,14 @@
 import { Button } from '@/components/ui/Button';
+import Spinner from '@/components/ui/Spinner';
 import { NotificationType, PrimaryColors, Theme } from '@/features/preferences/enums';
 import { useStore } from '@/stores/RootStore';
 import { useEffect, useState } from 'react';
-import { ArrowRight } from 'react-bootstrap-icons';
+import { ArrowRightCircle } from 'react-bootstrap-icons';
 
 const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
   const { updateThemeApi, setInitialPreferences } = useStore('userPreferencesStore');
   const [selectedTheme, setSelectedTheme] = useState<Theme | undefined>(Theme.DARK);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setInitialPreferences({
@@ -18,7 +20,9 @@ const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
 
   const handleSubmit = async () => {
     if (selectedTheme) {
+      setIsLoading(true);
       await updateThemeApi(selectedTheme);
+      setIsLoading(false);
     }
 
     setStep(3);
@@ -63,9 +67,19 @@ const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
         </div>
       </div>
 
-      <Button size="lg" onClick={handleSubmit} className="gap-2">
-        Continue <ArrowRight className="mt-0.5" />
+      <Button
+        size="lg"
+        onClick={handleSubmit}
+        className={`font-medium gap-2 ${isLoading && 'opacity-50'}`}
+      >
+        {isLoading ? 'Saving theme...' : 'Continue'}
+        {isLoading ? <Spinner size={6} /> : <ArrowRightCircle size={18} />}
       </Button>
+
+      {/* <Button className="font-medium gap-4" type="submit" disabled={isLoading}>
+        {isLoading ? 'Continue' : 'Saving theme...'}
+        {isLoading && <Spinner />}
+      </Button> */}
     </div>
   );
 };

@@ -169,6 +169,7 @@ const Users = () => {
                     userId={user.uuid}
                     profileImage={user.profileImage}
                     showStatus
+                    color={user.preferences.primaryColor}
                   />
                   <div className="flex flex-col flex-1">
                     <div className="flex text-main gap-2 items-center">

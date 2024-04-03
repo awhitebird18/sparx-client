@@ -35,7 +35,7 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setSections } = useStore('sectionStore');
-  const { setInitialPreferences } = useStore('userPreferencesStore');
+  const { setInitialPreferences, resetPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
   const { setUsers, setCurrentUserId } = useStore('userStore');
@@ -63,8 +63,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const userLogin = async (loginCredentials: LoginData) => {
     try {
-      console.log('login');
-      setIsLoginLoading(true);
       await authApi.login(loginCredentials);
 
       await verifyAndLoginUser();
@@ -76,6 +74,15 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogout = async () => {
     try {
       await authApi.logout();
+
+      localStorage.removeItem('navigationHistory');
+      localStorage.removeItem('primaryColor');
+      localStorage.removeItem('sidebarWidth');
+      localStorage.removeItem('theme');
+      localStorage.removeItem('emoji-mart.last');
+      localStorage.removeItem('emoji-mart.frequently');
+
+      resetPreferences();
 
       setCurrentUserId(undefined);
     } catch (error) {
