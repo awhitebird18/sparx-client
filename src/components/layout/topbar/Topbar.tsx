@@ -2,11 +2,12 @@ import UserDropdown from './UserDropdown';
 import { observer } from 'mobx-react-lite';
 import CurrentNode from './CurrentNode';
 import { Button } from '@/components/ui/Button';
-import { QuestionCircle } from 'react-bootstrap-icons';
+import { LayoutTextSidebarReverse, QuestionCircle } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 
 const Topbar = () => {
   const { setActiveModal } = useStore('modalStore');
+  const { sidebarOpen, toggleSidebar } = useStore('sidebarStore');
 
   const showShortcutModal = () => {
     setActiveModal({ type: 'ShortcutMenu', payload: null });
@@ -14,7 +15,17 @@ const Topbar = () => {
 
   return (
     <div className="h-16 flex items-center justify-between px-6 gap-6 flex-shrink-0 border-b border-border">
-      <div className="flex items-center gap-4 hover:bg-transparent h-12 cursor-pointer prose w-1/2">
+      <div className="flex items-center gap-2 hover:bg-transparent h-12 cursor-pointer prose w-1/2">
+        {!sidebarOpen && (
+          <Button
+            className="card flex-shrink-0 p-0.5"
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+          >
+            <LayoutTextSidebarReverse size={18} />
+          </Button>
+        )}
         <CurrentNode />
         {/* <h3 className="text-main leading-none">Members</h3>
         <p className="whitespace-nowrap text-secondary">Javascript / Arrays</p> */}
