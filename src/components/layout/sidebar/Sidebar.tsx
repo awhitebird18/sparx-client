@@ -65,75 +65,67 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between w-full overflow-hidden h-full bg-background border-r border-border">
-      <div className="w-full">
-        <div className="flex items-center justify-between overflow-hidden w-full h-16 pl-3.5 gap-4 relative">
+    <div className="flex flex-col w-full h-full bg-background border-r border-border">
+      {/* Top */}
+      <div className="flex items-center h-16 px-3.5">
+        <div className="overflow-hidden min-w-[2.25rem]">
           <CompanyDropdown />
-
-          {sidebarOpen && (
-            <Button
-              className="card overflow-hidden flex-shrink-0 absolute top-1/2 right-1 -translate-y-1/2"
-              variant="ghost"
-              size="icon"
-              onClick={handleToggleSidebar}
-            >
-              <ChevronDoubleLeft size={20} className="text-primary" />
-            </Button>
-          )}
         </div>
 
-        <div className="pt-2.5 flex flex-col gap-1.5 px-3.5">
-          <Button
-            className={`h-9 ${
-              !sidebarOpen && 'w-9'
-            } mb-4 rounded-md px-2.5 gap-2.5 justify-start bg-transparent card text-muted border-border prose overflow-hidden whitespace-nowrap flex-shrink-0`}
-            variant="outline"
-            onClick={handleSearch}
-          >
-            <div className="items-center gap-3">
-              <Search size={15} className="flex-shrink-0 text-muted mt-0.5 hover:text-secondary" />
-            </div>
-            {sidebarOpen && (
-              <div className="flex items-center justify-between w-full">
-                <div>Search</div>
-                <Badge
-                  variant="outline"
-                  className="text-xs text-secondary opacity-30 rounded-lg bg-hover dark:bg-hover"
-                >
-                  Ctrl K
-                </Badge>
-              </div>
-            )}
-          </Button>
-          {workspaceListItems.map((listItem) => (
-            <ListItem
-              key={listItem.id}
-              id={listItem.id}
-              title={listItem.name}
-              icon={listItem.icon}
-            />
-          ))}
-          <Divider />
-          {nodeListItems.map((listItem) => (
-            <ListItem
-              key={listItem.id}
-              id={listItem.id}
-              title={listItem.name}
-              icon={listItem.icon}
-            />
-          ))}
-        </div>
         {sidebarOpen && (
-          <div className="flex-1 overflow-hidden h-full">
-            <Divider />
-            <div className=" flex flex-col h-full">
-              {sections.map((section: ChannelType) => (
-                <Section key={section.uuid} section={section} index={section.orderIndex} />
-              ))}
-            </div>
-          </div>
+          <Button
+            className="card ml-auto"
+            variant="ghost"
+            size="icon"
+            onClick={handleToggleSidebar}
+          >
+            <ChevronDoubleLeft size={20} className="text-primary" />
+          </Button>
         )}
       </div>
+
+      {/* Bottom */}
+      <div className="pt-2.5 flex flex-col gap-1.5 px-3.5">
+        <Button
+          className={`h-9 ${
+            !sidebarOpen && 'w-9'
+          } mb-4 rounded-md px-2.5 gap-2.5 justify-start bg-transparent card text-muted border-border prose overflow-hidden whitespace-nowrap flex-shrink-0`}
+          variant="outline"
+          onClick={handleSearch}
+        >
+          <div className="items-center gap-3">
+            <Search size={15} className="flex-shrink-0 text-muted mt-0.5 hover:text-secondary" />
+          </div>
+          {sidebarOpen && (
+            <div className="flex items-center justify-between w-full">
+              <div>Search</div>
+              <Badge
+                variant="outline"
+                className="text-xs text-secondary opacity-30 rounded-lg bg-hover dark:bg-hover"
+              >
+                Ctrl K
+              </Badge>
+            </div>
+          )}
+        </Button>
+        {workspaceListItems.map((listItem) => (
+          <ListItem key={listItem.id} id={listItem.id} title={listItem.name} icon={listItem.icon} />
+        ))}
+        <Divider />
+        {nodeListItems.map((listItem) => (
+          <ListItem key={listItem.id} id={listItem.id} title={listItem.name} icon={listItem.icon} />
+        ))}
+      </div>
+      {sidebarOpen && (
+        <div className="flex-1 overflow-hidden h-full">
+          <Divider />
+          <div className=" flex flex-col h-full">
+            {sections.map((section: ChannelType) => (
+              <Section key={section.uuid} section={section} index={section.orderIndex} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
