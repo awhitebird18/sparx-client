@@ -3,6 +3,7 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 
 import { useEffect, useRef, useState } from 'react';
 import { axios } from '@/lib/axios';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
   const [activities, setActivities] = useState<any[]>([]);
@@ -22,8 +23,6 @@ const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
       }
     };
 
-    console.log('derp');
-
     observer.current = new IntersectionObserver(callback);
     const currentObserver = observer.current;
     if (sentinelRef.current) currentObserver.observe(sentinelRef.current);
@@ -33,50 +32,44 @@ const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
 
   useEffect(() => {
     const fetchMoreActivities = async () => {
-      console.log('derp');
-      // Placeholder for your fetch logic
+      setIsLoading(true);
 
-      const { data } = await axios.get(`${endpoint}?page=${page}`);
-      console.log(data);
+      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
+
+      const [{ data }] = await Promise.all([
+        axios.get(`${endpoint}?page=${page}`),
+        minimumLoadingTimePromise,
+      ]);
+
       if (data.length < 10) {
         setIsLoading(false);
         setHasMore(false);
       }
       setActivities((prevActivities) => [...prevActivities, ...data]);
+      setIsLoading(false);
     };
 
-    if (page > 1) fetchMoreActivities();
+    fetchMoreActivities();
   }, [page]);
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="space-y-4 card rounded-2xl opacity-90 h-full">
-  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-  //       <Skeleton className="h-[6.5rem] w-full rounded-xl" />
-  //       <div
-  //         ref={sentinelRef}
-  //         style={{ height: '5px', backgroundColor: 'red', width: '100%' }}
-  //       ></div>
-  //     </div>
-  //   );
-  // }
-
   return (
-    <>
-      {/* {activities.length ? ( */}
-      <div className="space-y-4 card rounded-2xl opacity-90 h-full">
-        {activities.map((activity) => (
-          <ActivityRow key={activity.id} activity={activity} />
-        ))}
-        {/* Sentinel element for Intersection Observer */}
-        {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
-      </div>
-      {/* ) : (
-        <div className="flex flex-col gap-2 items-center pt-8"></div>
-      )} */}
-    </>
+    <div className="card rounded-2xl opacity-90 h-full">
+      {activities.map((activity) => (
+        <ActivityRow key={activity.id} activity={activity} />
+      ))}
+
+      {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
+      {isLoading && (
+        <div className="card rounded-2xl opacity-90 h-full">
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -87,7 +80,7 @@ const ActivityRow = ({ activity }: any) => {
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 py-5 z-10">
+    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 h-24 z-10 mb-4">
       <div className="flex gap-4">
         <div className="relative h-full">
           <UserAvatar userId={user.uuid} profileImage={user.profileImage} showStatus />

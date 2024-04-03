@@ -7,7 +7,7 @@ import { UpdateNote } from '../types/UpdateNote';
 export class NotesStore {
   notes: Note[] = [];
   selectedNoteId: string | undefined = undefined;
-  isLoading = false;
+  isLoading = true;
 
   constructor() {
     makeAutoObservable(this);
@@ -142,8 +142,12 @@ export class NotesStore {
   fetchNotes = async (nodeId: string) => {
     try {
       this.setIsLoading(true);
+      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
 
-      const notes = await notesApi.getChannelNotes(nodeId);
+      const [notes] = await Promise.all([
+        notesApi.getChannelNotes(nodeId),
+        minimumLoadingTimePromise,
+      ]);
 
       this.setNotes(notes);
     } catch (error) {

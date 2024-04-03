@@ -9,7 +9,6 @@ import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import { useStore } from '@/stores/RootStore';
 
 import { Badge } from '@/components/ui/Badge';
-import Spinner from '@/components/ui/Spinner';
 import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
@@ -22,6 +21,7 @@ import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
 import { Message as MessageType } from '@/features/messages/types';
 import { ChannelType } from '@/features/channels/enums';
 import ContentLayout from '@/components/layout/ContentLayout';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 const ChatRoom: React.FC = () => {
   const {
@@ -31,6 +31,8 @@ const ChatRoom: React.FC = () => {
     setPage,
     createMessageApi,
     thread,
+    setIsLoading,
+    setMessages,
   } = useStore('messageStore');
   const { setCurrentChannelUuid, currentChannelId, currentChannel } = useStore('channelStore');
   const { fetchChannelUserIdsApi } = useStore('userStore');
@@ -103,60 +105,70 @@ const ChatRoom: React.FC = () => {
     return () => {
       leaveRoom(currentChannelId);
       clearUsersTyping();
+      setMessages([]);
     };
   }, [clearUsersTyping, currentChannelId, fetchChannelUserIdsApi, joinRoom, leaveRoom]);
+
+  useEffect(() => {
+    return () => setIsLoading(true);
+  }, []);
 
   const headerComponent = currentChannel?.type === ChannelType.CHANNEL ? <AvatarGroup /> : null;
 
   return (
     <div className="flex h-full">
       <ContentLayout title={<ChannelTitle />} headerComponent={headerComponent} disablePadding>
-        <div className="relative flex flex-1 rounded-xl pb-5 overflow-hidden">
-          <div className="flex flex-col flex-1 overflow-hidden w-full p-3">
+        <div className="relative flex flex-1 rounded-xl overflow-hidden">
+          <div className="flex flex-col flex-1 overflow-hidden w-full">
             <div
               className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
               ref={scrollRef}
             >
               <div ref={bottomRef} />
-              {isLoading ? (
-                <Spinner />
-              ) : (
-                <>
-                  {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
-                    <div key={index}>
-                      <div key={date} className="relative">
-                        <div className="w-full flex my-2 sticky top-2">
-                          <Badge
-                            variant="outline"
-                            className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10 border border-border"
-                          >
-                            {formatDate(date)}
-                          </Badge>
-                          <div className="bg-border h-px absolute top-[50%] left-0 w-full" />
-                        </div>
 
-                        {messages
-                          .filter((message: MessageType) => !message.parentId)
-                          .map((message: MessageType, index: number) => {
-                            const displayUser =
-                              index === 0 ||
-                              messages[index - 1].userId !== message.userId ||
-                              !!message.isSystem;
-
-                            return (
-                              <Message
-                                key={message.uuid}
-                                message={message}
-                                showUser={displayUser}
-                                disabled={message.isSystem}
-                              />
-                            );
-                          })}
+              <>
+                {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
+                  <div key={index}>
+                    <div key={date} className="relative">
+                      <div className="w-full flex my-2 sticky top-2">
+                        <Badge
+                          variant="outline"
+                          className="py-1.5 px-4 rounded-xl mx-auto w-fit bg-background z-10 border border-border"
+                        >
+                          {formatDate(date)}
+                        </Badge>
+                        <div className="bg-border h-px absolute top-[50%] left-0 w-full" />
                       </div>
-                    </div>
-                  ))}
 
-                  <ChannelIntroduction channelId={currentChannelId} />
+                      {messages
+                        .filter((message: MessageType) => !message.parentId)
+                        .map((message: MessageType, index: number) => {
+                          const displayUser =
+                            index === 0 ||
+                            messages[index - 1].userId !== message.userId ||
+                            !!message.isSystem;
+
+                          return (
+                            <Message
+                              key={message.uuid}
+                              message={message}
+                              showUser={displayUser}
+                              disabled={message.isSystem}
+                            />
+                          );
+                        })}
+                    </div>
+                  </div>
+                ))}
+
+                {!isLoading && <ChannelIntroduction channelId={currentChannelId} />}
+              </>
+
+              {isLoading && (
+                <>
+                  <MessageSkeleton />
+                  <MessageSkeleton />
+                  <MessageSkeleton />
                 </>
               )}
             </div>
@@ -181,3 +193,10 @@ const ChatRoom: React.FC = () => {
 };
 
 export default observer(ChatRoom);
+
+const MessageSkeleton = () => (
+  <div className="flex gap-3 w-1/2 items-center mx-2 mb-4">
+    <Skeleton className="w-10 h-10 rounded-md" />
+    <Skeleton className="w-full h-10 rounded-md" />
+  </div>
+);

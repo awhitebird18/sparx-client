@@ -55,17 +55,20 @@ const Users = () => {
     if (!currentChannelId) return;
 
     const fn = async () => {
-      await fetchChannelUserIdsApi(currentChannelId);
+      try {
+        setIsLoading(true);
+        const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
+
+        await Promise.all([fetchChannelUserIdsApi(currentChannelId), minimumLoadingTimePromise]);
+      } catch (err) {
+        console.error(err);
+      }
       setIsLoading(false);
     };
 
-    try {
-      setIsLoading(true);
+    fn();
 
-      fn();
-    } catch (err) {
-      console.error(err);
-    }
+    return () => setIsLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchChannelUserIdsApi, currentChannelId]);
 
@@ -86,9 +89,6 @@ const Users = () => {
     <ContentLayout title="Users">
       <div className="flex flex-col gap-6 justify-between">
         <div className="flex items-start pt-4">
-          {/* <Button className="card rounded-xl pointer-events-none opacity-70 h-18 w-18 bg-card border border-primary p-2 text-primary shadow-lg">
-            <Pencil size={50} />
-          </Button> */}
           <div className="flex flex-col gap-1.5">
             <h2 className="text-main text-3xl font-medium">Members</h2>
             <p className="text-secondary">See all of your notes for workspace and make changes</p>
@@ -161,7 +161,7 @@ const Users = () => {
             return (
               <Card
                 key={user.uuid}
-                className="p-4 rounded-lg relative cursor-pointer h- shadow-sm !bg-card !border-border border card"
+                className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card !border-border border card"
               >
                 <CardContent className="flex gap-4 p-0">
                   <UserAvatar
@@ -227,10 +227,10 @@ const Users = () => {
           })
         ) : (
           <>
-            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
-            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
-            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
-            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
+            <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
           </>
         )}
       </div>

@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import SearchInput from '@/components/ui/SearchInput';
 import {
   ArrowReturnRight,
@@ -10,9 +9,6 @@ import {
   GlobeAmericas,
   Lock,
   PencilSquare,
-  Person,
-  Plus,
-  Search,
   ThreeDots,
   Unlock,
 } from 'react-bootstrap-icons';
@@ -34,11 +30,30 @@ import { UpdateNote } from '../types/UpdateNote';
 type NoteColumn = Column<Note>;
 
 const ViewNotes: React.FC = () => {
-  const { notes, createNote, selectNote, updateNoteApi, isLoading } = useStore('noteStore');
-  const { currentChannelId, currentChannel } = useStore('channelStore');
+  const {
+    notes,
+    createNote,
+    selectNote,
+    updateNoteApi,
+    isLoading,
+    setIsLoading,
+    fetchNotes,
+    setSelectedNoteId,
+  } = useStore('noteStore');
+  const { currentChannelId } = useStore('channelStore');
   const { findUserByUuid, currentUser } = useStore('userStore');
   const { setActiveModal } = useStore('modalStore');
   const [searchValue, setSearchValue] = useState('');
+
+  useEffect(() => {
+    if (!currentChannelId) return;
+
+    fetchNotes(currentChannelId);
+
+    return () => {
+      setIsLoading(true);
+    };
+  }, [fetchNotes, currentChannelId, setSelectedNoteId, setIsLoading]);
 
   const handleCreateNote = async () => {
     if (!currentChannelId) return;
@@ -212,42 +227,52 @@ const ViewNotes: React.FC = () => {
             <p className="text-secondary">See all of your notes for workspace and make changes</p>
           </div>
         </div>
-        {notes.length ? (
-          <div className="rounded-xl flex flex-col items-center text-main gap-4">
-            <div className="flex justify-between items-center w-full py-0">
-              {/* <p className="">{`${filteredNotes.length} results`}</p> */}
-              <div className="flex gap-3 items-center">
-                <div className="w-72">
-                  <SearchInput
-                    placeholder="Search users"
-                    value={searchValue}
-                    setValue={setSearchValue}
-                  />
-                </div>
-                <Button variant="secondary" className="flex gap-3 w-fit items-center" size="sm">
-                  People
-                  <CaretDownFill size={11} className="mt-0.5 text-secondary" />
-                </Button>
-                <Button variant="secondary" className="flex gap-3 w-fit items-center" size="sm">
-                  Modified
-                  <CaretDownFill size={11} className="mt-0.5 text-secondary" />
-                </Button>
+
+        <div className="rounded-xl flex flex-col items-center text-main gap-4">
+          <div className="flex justify-between items-center w-full py-0">
+            {/* <p className="">{`${filteredNotes.length} results`}</p> */}
+            <div className="flex gap-3 items-center">
+              <div className="w-72">
+                <SearchInput
+                  placeholder="Search users"
+                  value={searchValue}
+                  setValue={setSearchValue}
+                  disabled={isLoading}
+                />
               </div>
-              <Button className="gap-3 ml-auto" onClick={handleCreateNote}>
-                <PencilSquare /> Add Note
+              <Button
+                variant="secondary"
+                className="flex gap-3 w-fit items-center"
+                size="sm"
+                disabled={isLoading}
+              >
+                People
+                <CaretDownFill size={11} className="mt-0.5 text-secondary" />
+              </Button>
+              <Button
+                variant="secondary"
+                className="flex gap-3 w-fit items-center"
+                size="sm"
+                disabled={isLoading}
+              >
+                Modified
+                <CaretDownFill size={11} className="mt-0.5 text-secondary" />
               </Button>
             </div>
-
-            <Table
-              columns={columns}
-              data={filteredNotes}
-              onRowClick={(row) => handleViewNote(row.uuid)}
-              isLoading={isLoading}
-            />
+            <Button className="gap-3 ml-auto" onClick={handleCreateNote} disabled={isLoading}>
+              <PencilSquare /> Add Note
+            </Button>
           </div>
-        ) : (
-          <EmptyFallback channelName={currentChannel?.name ?? ''} onCreateNote={handleCreateNote} />
-        )}
+
+          <Table
+            columns={columns}
+            data={filteredNotes}
+            onRowClick={(row) => handleViewNote(row.uuid)}
+            isLoading={isLoading}
+          />
+        </div>
+
+        {/* <EmptyFallback channelName={currentChannel?.name ?? ''} onCreateNote={handleCreateNote} /> */}
       </div>
     </div>
   );
@@ -255,28 +280,25 @@ const ViewNotes: React.FC = () => {
 
 export default observer(ViewNotes);
 
-const EmptyFallback = ({
-  channelName,
-  onCreateNote,
-}: {
-  channelName?: string;
-  onCreateNote: () => void;
-}) => (
-  <div className="flex flex-col gap-5 max-w-sm h-full pt-12 items-center prose">
-    {/* <div className="gap-2 flex flex-col items-center text-main ">
-    </div> */}
+// const EmptyFallback = ({
+//   channelName,
+//   onCreateNote,
+// }: {
+//   channelName?: string;
+//   onCreateNote: () => void;
+// }) => (
+//   <div className="flex flex-col gap-5 max-w-sm h-full pt-12 items-center prose">
+//     <div className="flex flex-col gap-2 items-center">
+//       <h3 className="text-center text-main text-xl">No Notes Found.</h3>
+//       <p className="text-center text-secondary flex-items-center">
+//         All of your <span className="text-primary px-0.5">{channelName}</span> notes will appear
+//         here.
+//       </p>
+//     </div>
 
-    <div className="flex flex-col gap-2 items-center">
-      <h3 className="text-center text-main text-xl">No Notes Found.</h3>
-      <p className="text-center text-secondary flex-items-center">
-        All of your <span className="text-primary px-0.5">{channelName}</span> notes will appear
-        here.
-      </p>
-    </div>
-
-    <Button className="items-center gap-1" onClick={onCreateNote}>
-      <Plus size={20} />
-      Start a new note
-    </Button>
-  </div>
-);
+//     <Button className="items-center gap-1" onClick={onCreateNote}>
+//       <Plus size={20} />
+//       Start a new note
+//     </Button>
+//   </div>
+// );

@@ -18,7 +18,7 @@ function Table<T extends object>({
   columns,
   data,
   onRowClick,
-  isLoading = false,
+  isLoading = true,
   tableClasses = '',
   headerClasses = '',
   rowClasses = '',
@@ -61,7 +61,7 @@ function Table<T extends object>({
         </thead>
 
         <tbody {...getTableBodyProps()} className="divide-y">
-          {!isLoading &&
+          {!isLoading ? (
             rows.map((row, index) => {
               prepareRow(row);
 
@@ -91,11 +91,12 @@ function Table<T extends object>({
                   })}
                 </tr>
               );
-            })}
+            })
+          ) : (
+            <Skeleton className="w-full h-16 rounded-none" />
+          )}
         </tbody>
       </table>
-
-      {isLoading && <Skeleton className="w-full h-16 rounded-none" />}
     </div>
   );
 }
