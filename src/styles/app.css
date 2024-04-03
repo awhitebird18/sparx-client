@@ -157,3 +157,9 @@ tr:last-child td:first-child {
 tr:last-child td:last-child {
   border-bottom-right-radius: 12px;
 }
+
+tr td,
+tr th {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}

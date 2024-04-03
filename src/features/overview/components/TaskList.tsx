@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Plus, ThreeDots } from 'react-bootstrap-icons';
+import {
+  ArrowLeftCircle,
+  Back,
+  BackspaceReverse,
+  Check2Circle,
+  Pencil,
+  Plus,
+  ThreeDots,
+  Trash,
+  Trash2,
+} from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import Table from '@/components/ui/Table';
@@ -164,7 +175,7 @@ const TaskList: React.FC = () => {
         Header: 'Status',
         accessor: 'isComplete',
         Cell: ({ value }: { value: any }) => (
-          <Badge variant={`${value ? 'default' : 'outline'}`} className="w-24 h-6 items-center">
+          <Badge variant={`${value ? 'success' : 'default'}`} className="w-24 h-6 items-center">
             {value ? 'Complete' : 'In progress'}
           </Badge>
         ),
@@ -172,7 +183,7 @@ const TaskList: React.FC = () => {
       {
         id: 'actions', // It's a good practice to give an ID for reference
         Cell: ({ row }: { row: any }) => {
-          const { uuid } = row.original;
+          const { uuid, isComplete } = row.original;
 
           return (
             <DropdownMenu
@@ -184,19 +195,36 @@ const TaskList: React.FC = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-40 z-50"
+                className="w-fit"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
               >
-                <DropdownMenuItem onClick={() => completeTask(uuid)}>
-                  Toggle Complete
+                <DropdownMenuItem
+                  onClick={() => completeTask(uuid)}
+                  className={`gap-3 h-9 pr-6 text-emerald-500 ${
+                    isComplete ? 'text-primary' : 'text-emerald-500'
+                  }`}
+                >
+                  {isComplete ? (
+                    <>
+                      <ArrowLeftCircle size={16} /> Set as in progress
+                    </>
+                  ) : (
+                    <>
+                      <Check2Circle className="text-emerald-500" size={16} /> Set as Complete
+                    </>
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleUpdateTask(row.original)}>
-                  Update Task
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => handleUpdateTask(row.original)}
+                  className="gap-3 h-9 pr-6"
+                >
+                  <Pencil size={15} className="text-secondary" /> Update Task
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDeleteTask(uuid)}>
-                  Delete Task
+                <DropdownMenuItem onClick={() => handleDeleteTask(uuid)} className="gap-3 h-9 pr-6">
+                  <Trash size={15} className="text-secondary" /> Delete Task
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -208,18 +236,23 @@ const TaskList: React.FC = () => {
   );
 
   return (
-    <div className="card w-full space-y-3">
+    <div className="card w-full space-y-3 ">
       <div className="flex justify-between items-center">
         <h3 className="text-main">Tasks</h3>
-        <Button onClick={createTask} size="icon" className="w-7 h-7">
+        <Button onClick={createTask} size="icon" className="w-7 h-7 rounded-md">
           <Plus className="text-3xl" />
         </Button>
       </div>
 
-      <div className="space-y-3">
-        <Table columns={columns} data={tasks} isLoading={isLoading} />
+      <div>
+        <Table
+          columns={columns}
+          data={tasks}
+          isLoading={isLoading}
+          tableClasses={tasks.length === 0 ? 'rounded-bl-none rounded-br-none border-b-0' : ''}
+        />
         {!tasks.length && (
-          <div className="flex flex-col gap-3 w-full items-center bg-card card rounded-xl p-6 border border-border shadow">
+          <div className="flex flex-col gap-3 w-full items-center bg-card card rounded-bl-xl rounded-br-xl p-6 border border-border border-t-0 shadow">
             <h3 className="text-main leading-none">No tasks to show.</h3>
             <p className="text-secondary mb-3 leading-none">
               Add tasks to keep track of your learning goals.

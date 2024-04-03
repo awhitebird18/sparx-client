@@ -304,7 +304,7 @@
     --color-primary-800: theme('colors.emerald.800');
     --color-primary-900: theme('colors.emerald.900');
     --color-primary-950: theme('colors.emerald.950');
-    --color-primary-1000: #10b98105;
+    --color-primary-1000: #36554b;
   }
   .teal {
     --color-primary-50: theme('colors.teal.50');

@@ -18,7 +18,7 @@ const MainPage = () => {
     return () => {
       setSelectedNoteId(undefined);
     };
-  }, [fetchNotes, currentChannelId, setSelectedNoteId]);
+  }, [fetchNotes, currentChannelId, setSelectedNoteId, setIsLoading]);
 
   return (
     <div className="h-full p-8">

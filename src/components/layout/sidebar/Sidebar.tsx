@@ -16,6 +16,7 @@ import {
   CardHeading,
   Pencil,
   Search,
+  ChevronDoubleLeft,
 } from 'react-bootstrap-icons';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -66,7 +67,20 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col justify-between w-full overflow-hidden h-full bg-background border-r border-border">
       <div className="w-full">
-        <CompanyDropdown />
+        <div className="flex items-center justify-between overflow-hidden w-full h-16 pl-3.5 gap-4 relative">
+          <CompanyDropdown />
+
+          {sidebarOpen && (
+            <Button
+              className="card overflow-hidden flex-shrink-0 absolute top-1/2 right-1 -translate-y-1/2"
+              variant="ghost"
+              size="icon"
+              onClick={handleToggleSidebar}
+            >
+              <ChevronDoubleLeft size={20} className="text-primary" />
+            </Button>
+          )}
+        </div>
 
         <div className="pt-2.5 flex flex-col gap-1.5 px-3.5">
           <Button
@@ -120,16 +134,6 @@ const Sidebar = () => {
           </div>
         )}
       </div>
-      <Button
-        className="card mb-4 mr-3 self-end flex-shrink-0"
-        variant="outline"
-        size="icon"
-        onClick={handleToggleSidebar}
-      >
-        <ChevronRight
-          className={`thick-icon transition-all duration-250 ${sidebarOpen && '-rotate-180'}`}
-        />
-      </Button>
     </div>
   );
 };

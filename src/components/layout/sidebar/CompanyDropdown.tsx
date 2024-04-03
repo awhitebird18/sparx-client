@@ -97,18 +97,18 @@ const CompanyDropdown = () => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger className="w-full">
-        <div className="flex gap-3 hover:bg-transparent h-16 cursor-pointer items-center p-3.5">
-          <div className="w-9 h-9 flex-shrink-0 rounded-md border border-border overflow-hidden bg-primary whitespace-nowrap">
+      <DropdownMenuTrigger className="pr-24 overflow-hidden">
+        <div className="flex gap-3 hover:bg-transparent h-16 cursor-pointer items-center  whitespace-nowrap justify-between flex-shrink-0 w-full">
+          <div className="w-9 h-9 flex-shrink-0 rounded-md border border-border overflow-hidden bg-primary whitespace-nowrap min-w-[2.25rem]">
             <img
               src={currentWorkspace?.imgUrl ?? getCurrentWorkspaceImage()}
-              className="w-full h-full"
+              className="w-9 h-9 flex-shrink-0 min-w-[2.25rem]"
             />
           </div>
 
           {sidebarOpen && (
-            <div className="w-full flex items-center gap-2.5 overflow-hidden">
-              <span className="text-lg font-semibold tracking leading-tight text-ellipsis whitespace-nowrap overflow-hidden">
+            <div className="w-full flex items-center gap-2.5 ">
+              <span className="text-lg font-semibold tracking leading-tight truncate w-full">
                 {currentWorkspace?.name}
               </span>
               <ChevronDown size={14} className="flex-shrink-0 mt-0.5" />
