@@ -12,7 +12,6 @@ import {
   Person,
   Map,
   House,
-  ChevronRight,
   CardHeading,
   Pencil,
   Search,

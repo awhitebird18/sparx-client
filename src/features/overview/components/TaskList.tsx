@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import {
   ArrowLeftCircle,
-  Back,
-  BackspaceReverse,
   Check2Circle,
   Pencil,
   Plus,
   ThreeDots,
   Trash,
-  Trash2,
 } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
@@ -23,6 +20,7 @@ import {
 import Table from '@/components/ui/Table';
 import taskApi from '@/features/overview/api';
 import { Badge } from '@/components/ui/Badge';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface TaskType {
   uuid: string;
@@ -44,7 +42,12 @@ const TaskList: React.FC = () => {
     if (!currentWorkspaceId) return;
 
     const fn = async () => {
-      const tasks = await taskApi.getTasks(currentWorkspaceId);
+      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
+
+      const [tasks] = await Promise.all([
+        taskApi.getTasks(currentWorkspaceId),
+        minimumLoadingTimePromise,
+      ]);
 
       setTasks(tasks);
       setIsLoading(false);
@@ -125,15 +128,6 @@ const TaskList: React.FC = () => {
     setActiveDropdownId(null);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // const handleClickAction = async (task: TaskType) => {
-  //   setCurrentChannelUuid(task.channelId);
-
-  //   if (task.actionUrl) {
-  //     navigate(task.actionUrl);
-  //   }
-  // };
-
   const columns: any = React.useMemo(
     () => [
       {
@@ -157,20 +151,7 @@ const TaskList: React.FC = () => {
           return <span className="">{dayjs(value ? value : row.createdAt).format('MMMM D')}</span>;
         },
       },
-      // {
-      //   Header: 'Action',
-      //   id: 'action',
-      //   Cell: ({ row }: { row: any }) => (
-      //     <Button
-      //       onClick={() => handleClickAction(row.original)}
-      //       variant="outline-primary"
-      //       className="bg-card"
-      //       size="sm"
-      //     >
-      //       Start Task
-      //     </Button>
-      //   ),
-      // },
+
       {
         Header: 'Status',
         accessor: 'isComplete',
@@ -236,33 +217,46 @@ const TaskList: React.FC = () => {
   );
 
   return (
-    <div className="card w-full space-y-3 ">
+    <div className="card w-full space-y-3">
       <div className="flex justify-between items-center">
         <h3 className="text-main">Tasks</h3>
-        <Button onClick={createTask} size="icon" className="w-7 h-7 rounded-md">
+
+        <Button
+          onClick={createTask}
+          size="icon"
+          className={`w-7 h-7 rounded-md`}
+          disabled={isLoading}
+        >
           <Plus className="text-3xl" />
         </Button>
       </div>
 
-      <div>
-        <Table
-          columns={columns}
-          data={tasks}
-          isLoading={isLoading}
-          tableClasses={tasks.length === 0 ? 'rounded-bl-none rounded-br-none border-b-0' : ''}
-        />
-        {!tasks.length && (
-          <div className="flex flex-col gap-3 w-full items-center bg-card card rounded-bl-xl rounded-br-xl p-6 border border-border border-t-0 shadow">
-            <h3 className="text-main leading-none">No tasks to show.</h3>
-            <p className="text-secondary mb-3 leading-none">
-              Add tasks to keep track of your learning goals.
-            </p>
-            <Button size="sm" className="w-fit" onClick={createTask}>
-              Add a new task
-            </Button>
-          </div>
-        )}
-      </div>
+      {!isLoading ? (
+        <div>
+          <Table
+            columns={columns}
+            data={tasks}
+            isLoading={isLoading}
+            tableClasses={tasks.length === 0 ? 'rounded-bl-none rounded-br-none border-b-0' : ''}
+          />
+
+          {!tasks.length && (
+            <div className="flex w-full items-center justify-center bg-card card rounded-bl-xl rounded-br-xl p-6 border border-border border-t-0 shadow h-44">
+              <div className="flex flex-col gap-2 items-center">
+                <h3 className="text-main leading-none">No tasks to show.</h3>
+                <p className="text-secondary mb-3 leading-none">
+                  Add tasks to keep track of your learning goals.
+                </p>
+                <Button size="sm" className="w-fit" onClick={createTask}>
+                  Add a new task
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <Skeleton className="w-full rounded-xl border border-border shadow h-[224px]" />
+      )}
     </div>
   );
 };

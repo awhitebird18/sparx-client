@@ -5,20 +5,13 @@ import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
 const MainPage = () => {
-  const { selectedNote, setSelectedNoteId, fetchNotes, setIsLoading } = useStore('noteStore');
-  const { currentChannelId } = useStore('channelStore');
+  const { selectedNote, setSelectedNoteId } = useStore('noteStore');
 
   useEffect(() => {
-    if (!currentChannelId) return;
-    setIsLoading(true);
-
-    fetchNotes(currentChannelId);
-    setIsLoading(false);
-
     return () => {
       setSelectedNoteId(undefined);
     };
-  }, [fetchNotes, currentChannelId, setSelectedNoteId, setIsLoading]);
+  }, []);
 
   return (
     <div className="h-full p-8">

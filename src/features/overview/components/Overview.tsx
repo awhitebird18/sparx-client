@@ -41,7 +41,7 @@ const Overview = () => {
   const { findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
 
-  const [activityFilter, setActivityFiler] = useState('all');
+  const [, setActivityFiler] = useState('all');
 
   const sortedArray = history.sort((a: any, b: any) => b.timestamp - a.timestamp);
 
@@ -68,25 +68,9 @@ const Overview = () => {
   const sortedUniqueNodes = uniqueNodes.sort((a, b) => b.timestamp - a.timestamp);
   const top3UniqueNodes = sortedUniqueNodes.slice(0, 3);
 
-  // useEffect(() => {
-  //   if (!currentWorkspaceId) return;
-
-  //   const fn = async () => {
-  //     const data = await homeApi.getRecentWorkspaceActivity(currentWorkspaceId);
-
-  //     setActivity(data);
-  //     setActivityLoading(false);
-  //   };
-
-  //   fn();
-  // }, [currentWorkspaceId]);
-
   const handleClickQuickAction = (path: string) => {
     navigate(path);
   };
-
-  // const filteredActivity =
-  //   activityFilter === 'all' ? activity : activity.filter((a: any) => a.type === activityFilter);
 
   return (
     <div className="flex flex-col gap-5 w-full text-main prose p-8 h-full overflow-hidden">

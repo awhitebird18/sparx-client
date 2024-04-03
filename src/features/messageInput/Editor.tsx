@@ -34,7 +34,7 @@ export default function Editor({ placeholder, config, onSubmit, onChange }: Edit
     <LexicalComposer initialConfig={config}>
       <div
         id="focus-ring"
-        className="transition-colors border border-border shadow-sm mx-1 my-3 p-2 rounded-lg"
+        className="transition-colors border border-border shadow-sm mt-3 mb-1 p-2 rounded-lg mx-2"
       >
         <div id="editor-container" className="editor-container rounded-md">
           <TopToolbarPlugin />

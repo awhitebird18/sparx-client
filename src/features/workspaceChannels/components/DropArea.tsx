@@ -42,7 +42,6 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   // Set up global event listeners for keydown and keyup
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log(event.key, currentLine);
       if (event.key === 'Escape' && currentLine) {
         setCurrentLine(null);
       }
@@ -253,7 +252,6 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   }, []);
 
   const handleCreateLine = async (uuid: string, side: ConnectionSide) => {
-    console.log('creating line!');
     if (!currentLine) {
       setCurrentLine({
         start: { nodeId: uuid, side },

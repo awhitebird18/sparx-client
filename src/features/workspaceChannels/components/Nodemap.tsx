@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DropArea from './DropArea';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -9,28 +9,38 @@ import TransformControls from './TransformControls';
 // import useScrollToMiddle from './useScrollToMiddle';
 import { Button } from '@/components/ui/Button';
 import { XCircle } from 'react-bootstrap-icons';
-import Spinner from '@/components/ui/Spinner';
+import { Skeleton } from '@/components/ui/Skeleton';
+import useScrollToMiddle from './useScrollToMiddle';
 
-// const gridDimensions = { width: 8000, height: 8000 };
+const gridDimensions = { width: 8000, height: 8000 };
 
 const NodeMap: React.FC = () => {
-  // const ref = useRef<HTMLDivElement>(null);
-  // useScrollToMiddle(ref, gridDimensions.width, gridDimensions.height);
-  const { fetchUserChannelData, setIsLoading, isLoading, isEditing, setIsEditing } =
-    useStore('channelStore');
+  const ref = useRef<HTMLDivElement>(null);
+  useScrollToMiddle(ref, gridDimensions.width, gridDimensions.height);
+  const { fetchUserChannelData, isEditing, setIsEditing } = useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { fetchChannelUserCounts, fetchNodemapSettingsApi } = useStore('workspaceChannelStore');
   const { fetchWorkspaceChannelConnectorsApi } = useStore('channelConnectorStore');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!currentWorkspaceId) return;
 
     const fn = async () => {
-      setIsLoading(true);
-      await fetchChannelUserCounts(currentWorkspaceId);
-      await fetchUserChannelData(currentWorkspaceId);
-      await fetchNodemapSettingsApi(currentWorkspaceId);
-      await fetchWorkspaceChannelConnectorsApi(currentWorkspaceId);
+      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 500));
+      try {
+        setIsLoading(true);
+
+        await Promise.all([
+          fetchChannelUserCounts(currentWorkspaceId),
+          fetchUserChannelData(currentWorkspaceId),
+          fetchNodemapSettingsApi(currentWorkspaceId),
+          fetchWorkspaceChannelConnectorsApi(currentWorkspaceId),
+          minimumLoadingTimePromise,
+        ]);
+      } catch (error) {
+        console.error('An error occurred fetching nodemap data');
+      }
 
       setIsLoading(false);
     };
@@ -40,50 +50,42 @@ const NodeMap: React.FC = () => {
   }, [currentWorkspaceId]);
 
   const scrollToMiddle = () => {
-    // if (ref.current) {
-    //   const container = ref.current;
-    //   const containerRect = container.getBoundingClientRect();
-    //   // Calculate center position
-    //   const scrollLeft = (gridDimensions.width - containerRect.width) / 2;
-    //   const scrollTop = (gridDimensions.height - containerRect.height) / 2;
-    //   ref.current.scrollTo({
-    //     left: scrollLeft,
-    //     top: scrollTop,
-    //     // behavior: 'smooth',
-    //   });
-    // }
+    if (ref.current) {
+      const container = ref.current;
+      const containerRect = container.getBoundingClientRect();
+      // Calculate center position
+      const scrollLeft = (gridDimensions.width - containerRect.width) / 2;
+      const scrollTop = (gridDimensions.height - containerRect.height) / 2;
+      ref.current.scrollTo({
+        left: scrollLeft,
+        top: scrollTop,
+        // behavior: 'smooth',
+      });
+    }
   };
-
-  if (isLoading)
-    return (
-      <div className="h-full flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
 
   return (
     <div className="relative flex flex-col h-full">
-      <TransformWrapper
-        // disabled={true}
-        limitToBounds={false}
-        initialScale={1}
-        initialPositionX={-3300}
-        initialPositionY={-3600}
-        minScale={0.1}
-        doubleClick={{ disabled: true }}
-        zoomAnimation={{ disabled: true }}
-        maxScale={4}
-        // centerOnInit
-        onWheel={(_, event) => {
-          if (!event.ctrlKey) {
-            event.preventDefault();
-          }
-        }}
-        wheel={{ activationKeys: ['Control'] }}
-      >
-        {({ zoomIn, zoomOut, resetTransform, zoomToElement, instance }) => (
-          <div className="flex h-full">
-            <div className="h-full w-full">
+      {!isLoading ? (
+        <TransformWrapper
+          // disabled={true}
+          limitToBounds={false}
+          initialScale={1}
+          initialPositionX={-3200}
+          initialPositionY={-3584}
+          minScale={0.1}
+          doubleClick={{ disabled: true }}
+          zoomAnimation={{ disabled: true }}
+          maxScale={4}
+          onWheel={(_, event) => {
+            if (!event.ctrlKey) {
+              event.preventDefault();
+            }
+          }}
+          wheel={{ activationKeys: ['Control'] }}
+        >
+          {({ zoomIn, zoomOut, resetTransform, zoomToElement, instance }) => (
+            <div ref={ref} className="flex h-full w-full">
               <TransformComponent
                 wrapperStyle={{
                   width: '100%',
@@ -102,20 +104,49 @@ const NodeMap: React.FC = () => {
                   Editing mode <XCircle />
                 </Button>
               )}
-            </div>
-            <TransformControls
-              onZoomIn={zoomIn}
-              onZoomOut={zoomOut}
-              onReset={resetTransform}
-              zoomToElement={zoomToElement}
-            />
 
-            <NodeStats />
-          </div>
-        )}
-      </TransformWrapper>
+              <TransformControls
+                onZoomIn={zoomIn}
+                onZoomOut={zoomOut}
+                onReset={resetTransform}
+                zoomToElement={zoomToElement}
+              />
+            </div>
+          )}
+        </TransformWrapper>
+      ) : (
+        <NodemapSkeleton />
+      )}
+      {!isLoading ? <NodeStats /> : <NodeStatsSkeleton />}
     </div>
   );
 };
 
 export default observer(NodeMap);
+
+const NodemapSkeleton = () => (
+  <div className="flex w-full h-full">
+    <div className="flex items-center justify-center w-full">
+      <Skeleton className="w-[325px] h-[130px] rounded-full" />
+    </div>
+    <div className="flex flex-col gap-3.5 items-center h-full border-l border-border bg-background p-2 w-14">
+      <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
+    </div>
+  </div>
+);
+
+const NodeStatsSkeleton = () => (
+  <div className="card rounded-xl bg-slate-700/20 border border-border flex gap-2.5 p-2.5 shadow whitespace-nowrap items-center absolute bottom-2 left-2  pr-5">
+    <Skeleton className="h-7 w-12 rounded-lg" />
+    <Skeleton className="h-7 w-12 rounded-lg" />
+    <Skeleton className="h-7 w-12 rounded-lg" />
+    <Skeleton className="h-7 w-12 rounded-lg" />
+
+    <div className="card absolute rounded-md shadow-md border border-border -right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0.5 ml-auto bg-card" />
+  </div>
+);

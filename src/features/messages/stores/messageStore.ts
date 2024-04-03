@@ -206,7 +206,13 @@ export class MessageStore {
 
   fetchMessagesApi = async (channelId: string) => {
     this.setIsLoading(true);
-    const messages = await messageApi.getMessages(this.page, channelId);
+
+    const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const [messages] = await Promise.all([
+      messageApi.getMessages(this.page, channelId),
+      minimumLoadingTimePromise,
+    ]);
 
     const formattedMessages = messages.map((message: Message) => ({
       ...message,
