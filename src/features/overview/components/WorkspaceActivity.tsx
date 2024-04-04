@@ -53,7 +53,7 @@ const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
   }, [page]);
 
   return (
-    <div className="card rounded-2xl opacity-90 h-full">
+    <div className="card rounded-2xl opacity-90 h-full pr-2 overflow-auto">
       {activities.map((activity) => (
         <ActivityRow key={activity.id} activity={activity} />
       ))}
@@ -80,7 +80,7 @@ const ActivityRow = ({ activity }: any) => {
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 h-24 z-10 mb-4">
+    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 h-24 z-10 mb-4 ">
       <div className="flex gap-4">
         <div className="relative h-full">
           <UserAvatar userId={user.uuid} profileImage={user.profileImage} showStatus />

@@ -48,7 +48,7 @@ const Users = () => {
     setIsLoading,
   } = useStore('userStore');
   const navigate = useNavigate();
-  const { currentChannelId } = useStore('channelStore');
+  const { currentChannelId, currentChannel } = useStore('channelStore');
   const { leaveWorkspaceApi, currentWorkspaceId } = useStore('workspaceStore');
 
   useEffect(() => {
@@ -68,7 +68,10 @@ const Users = () => {
 
     fn();
 
-    return () => setIsLoading(true);
+    return () => {
+      setIsLoading(true);
+      handleResetFilter();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchChannelUserIdsApi, currentChannelId]);
 
@@ -83,6 +86,12 @@ const Users = () => {
   const handleRemoveFromWorkspace = (userId: string) => {
     if (!currentWorkspaceId) return;
     leaveWorkspaceApi(userId, currentWorkspaceId);
+  };
+
+  const handleResetFilter = () => {
+    // setCompletionFilter(CompletionStatus.);
+    setPrivilegesFilter(Privileges.ALL);
+    setSearchValue('');
   };
 
   return (
@@ -143,99 +152,118 @@ const Users = () => {
             </SelectContent>
           </Select>
 
-          {searchValue && (
+          {/* {searchValue && (
             <Button size="sm" variant="secondary">
               Clear Filters
             </Button>
-          )}
+          )} */}
         </div>
       </div>
+      {!isLoading && !filteredUsers.length ? (
+        <EmptyFallback channelName={currentChannel?.name} onClick={handleResetFilter} />
+      ) : null}
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] pr-3">
-        {!isLoading ? (
-          filteredUsers.map((userChannel: SubscriptionDetails) => {
-            const user = findUserByUuid(userChannel.userId);
+        {!isLoading && filteredUsers.length
+          ? filteredUsers.map((userChannel: SubscriptionDetails) => {
+              const user = findUserByUuid(userChannel.userId);
 
-            if (!user) return null;
+              if (!user) return null;
 
-            return (
-              <Card
-                key={user.uuid}
-                className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card !border-border border card"
-              >
-                <CardContent className="flex gap-4 p-0">
-                  <UserAvatar
-                    size={40}
-                    userId={user.uuid}
-                    profileImage={user.profileImage}
-                    showStatus
-                    color={user.preferences.primaryColor}
-                  />
-                  <div className="flex flex-col flex-1">
-                    <div className="flex text-main gap-2 items-center">
-                      <Username firstName={user.firstName} lastName={user.lastName} />
-                      {user.isAdmin && <Badge variant="outline">Admin</Badge>}
+              return (
+                <Card
+                  key={user.uuid}
+                  className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card !border-border border card"
+                >
+                  <CardContent className="flex gap-4 p-0">
+                    <UserAvatar
+                      size={40}
+                      userId={user.uuid}
+                      profileImage={user.profileImage}
+                      showStatus
+                      color={user.preferences.primaryColor}
+                    />
+                    <div className="flex flex-col flex-1">
+                      <div className="flex text-main gap-2 items-center">
+                        <Username firstName={user.firstName} lastName={user.lastName} />
+                        {user.isAdmin && <Badge variant="outline">Admin</Badge>}
+                      </div>
+
+                      <p className="text-sm text-secondary text-ellipsis overflow-hidden whitespace-nowrap mb-1">
+                        Software Engineer
+                      </p>
+                      <p
+                        className={`text-sm font-medium ${
+                          userChannel.status === CompletionStatus.Complete
+                            ? 'text-yellow-400'
+                            : 'text-violet-500'
+                        }`}
+                      >
+                        {userChannel.status}
+                      </p>
                     </div>
 
-                    <p className="text-sm text-secondary text-ellipsis overflow-hidden whitespace-nowrap mb-1">
-                      Software Engineer
-                    </p>
-                    <p
-                      className={`text-sm font-medium ${
-                        userChannel.status === CompletionStatus.Complete
-                          ? 'text-yellow-400'
-                          : 'text-violet-500'
-                      }`}
-                    >
-                      {userChannel.status}
-                    </p>
-                  </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <ThreeDotsVertical size={20} className="text-main" />
+                      </DropdownMenuTrigger>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <ThreeDotsVertical size={20} className="text-main" />
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent className="w-50" align="end" alignOffset={-10}>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          handleViewUserProfile(user.uuid);
-                        }}
-                      >
-                        View profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          handleSetAdmin(user.uuid, { isAdmin: !user.isAdmin });
-                        }}
-                      >
-                        {user.isAdmin ? 'Set as member' : 'Set as admin'}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          handleRemoveFromWorkspace(user.uuid);
-                        }}
-                        className="text-rose-500"
-                      >
-                        Remove from workspace
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </CardContent>
-              </Card>
-            );
-          })
-        ) : (
+                      <DropdownMenuContent className="w-50" align="end" alignOffset={-10}>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleViewUserProfile(user.uuid);
+                          }}
+                        >
+                          View profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleSetAdmin(user.uuid, { isAdmin: !user.isAdmin });
+                          }}
+                        >
+                          {user.isAdmin ? 'Set as member' : 'Set as admin'}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleRemoveFromWorkspace(user.uuid);
+                          }}
+                          className="text-rose-500"
+                        >
+                          Remove from workspace
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </CardContent>
+                </Card>
+              );
+            })
+          : null}
+        {isLoading ? (
           <>
             <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
             <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
             <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
             <Skeleton className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card card border-border border" />
           </>
-        )}
+        ) : null}
       </div>
     </ContentLayout>
   );
 };
 
 export default observer(Users);
+
+const EmptyFallback = ({ channelName, onClick }: { channelName?: string; onClick: () => void }) => (
+  <div className="flex flex-col gap-5 max-w-sm items-center prose pt-12">
+    <div className="flex flex-col gap-2 items-center">
+      <h3 className="text-center text-main text-xl">No Members Found.</h3>
+      <p className="text-center text-secondary flex-items-center">
+        All of your notes will appear here.
+      </p>
+    </div>
+
+    <Button className="items-center gap-1" onClick={onClick}>
+      Reset Filters
+    </Button>
+  </div>
+);

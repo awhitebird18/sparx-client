@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite';
 import { useTable, Column, TableOptions } from 'react-table';
-import { cn } from '@/utils/utils';
 import { Skeleton } from './Skeleton';
 
 interface TableProps<T extends object> {
@@ -12,6 +11,7 @@ interface TableProps<T extends object> {
   tableClasses?: string | undefined;
   headerClasses?: string;
   rowClasses?: string;
+  emptyElement?: any;
 }
 
 function Table<T extends object>({
@@ -22,6 +22,7 @@ function Table<T extends object>({
   tableClasses = '',
   headerClasses = '',
   rowClasses = '',
+  emptyElement,
 }: TableProps<T>): JSX.Element {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<T>({
     columns,
@@ -31,27 +32,17 @@ function Table<T extends object>({
 
   return (
     <div
-      className={`w-full border border-border card rounded-xl bg-card shadow-sm overflow-auto ${tableClasses}`}
+      className={`w-full border border-border bg-card card rounded-xl h-fit shadow-sm overflow-hidden ${tableClasses}`}
     >
+      {/* Table for header */}
       <table {...getTableProps()} className="m-0 w-full border-collapse">
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="w-full">
-              {/* <th
-                className={cn(
-                  'w-20 m-0 p-0 h-12 align-middle border-b border-border text-center ',
-                  headerClasses,
-                )}
-              >
-                <Checkbox className="bg-blue mt-1" />
-              </th> */}
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps()}
-                  className={cn(
-                    `py-0 h-12 text-left align-middle font-medium text-main text-base border-b border-border truncate`,
-                    headerClasses,
-                  )}
+                  className={`py-3 h-12 text-left align-middle font-medium text-main text-base border-b border-border truncate ${headerClasses}`}
                 >
                   {column.render('Header')}
                 </th>
@@ -59,44 +50,46 @@ function Table<T extends object>({
             </tr>
           ))}
         </thead>
-
-        <tbody {...getTableBodyProps()} className="divide-y">
-          {!isLoading ? (
-            rows.map((row, index) => {
-              prepareRow(row);
-
-              return (
-                <tr
-                  {...row.getRowProps()}
-                  onDoubleClick={() => onRowClick && onRowClick(row.original)}
-                  className={cn(
-                    `cursor-pointer text-main hover:bg-hover border-border rounded-xl ${
-                      index === rows.length && 'border-none'
-                    } h-16 not-prose`,
-                    rowClasses,
-                  )}
-                >
-                  {/* <td className="w-20 h-full text-center">
-                    <Checkbox />
-                  </td> */}
-                  {row.cells.map((cell) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        className="py-0 h-full text-base text-secondary truncate"
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })
-          ) : (
-            <Skeleton className="w-full h-16 rounded-none" />
-          )}
-        </tbody>
       </table>
+
+      {/* Scrollable body */}
+      {!isLoading && rows.length ? (
+        <div className="overflow-auto h-full">
+          <table {...getTableProps()} className="m-0 w-full border-collapse">
+            <tbody {...getTableBodyProps()} className="divide-y">
+              {rows.map((row, index) => {
+                prepareRow(row);
+
+                return (
+                  <tr
+                    {...row.getRowProps()}
+                    onDoubleClick={() => onRowClick && onRowClick(row.original)}
+                    className={`cursor-pointer text-main hover:bg-hover border-border rounded-xl ${
+                      index === rows.length && 'border-none'
+                    } h-16 overflow-hidden not-prose ${rowClasses}`}
+                  >
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          className="py-3 h-full text-base text-secondary truncate"
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {isLoading ? <Skeleton className="w-full h-16 rounded-none !bg-slate-500/5" /> : null}
+      {!isLoading && !rows.length ? (
+        <div className="w-full flex items-center justify-center">{emptyElement}</div>
+      ) : null}
     </div>
   );
 }

@@ -30,12 +30,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         <div className="h-full w-full flex overflow-hidden relative">
           <ResizableSidebar />
           {isSidebarAbsolute && <div className="h-full w-16" />}
-          <div className="flex flex-col h-full w-full bg-background overflow-hidden">
+          <div className="flex flex-col h-full w-full bg-background">
             <Topbar />
             <div
-              className={`h-full w-full overflow-hidden ${
-                isFullscreen && '!z-50 bg-background h-screen w-screen fixed left-0 top-0'
-              }`}
+              className={`main-layout h-full overflow-hidden w-full ${
+                isFullscreen ? '!z-50 bg-background h-screen w-screen fixed left-0 top-0' : ''
+              }:`}
             >
               {children}
             </div>
