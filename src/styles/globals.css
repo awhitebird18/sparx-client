@@ -10,8 +10,8 @@
     /* --background: var(--color-primary-50); */
     --foreground: 226 23% 94%;
 
-    --scrollbarThumb: 230.2 10% 83%;
-    --scrollbarTrack: 230.2 10% 88%;
+    --scrollbarThumb: 230.2 10% 89%;
+    --scrollbarTrack: 230.2 10% 89%;
 
     --hover: 214 0% 94%;
 
@@ -57,7 +57,7 @@
     --primary: var(--color-primary-500);
     --primary-dark: var(--color-primary-700);
     --primary-darkest: var(--color-primary-800);
-    --primary-transparent: var(--color-primary-100);
+    --primary-transparent: var(--color-primary-50);
     --primary-highlight: var(--color-primary-600);
 
     --primary-text: var(--color-primary-700);
@@ -79,9 +79,9 @@
 
     --secondary-text: 0 0% 30%;
 
-    --text-main: 226 4% 13%;
-    --text-secondary: 222 11% 38%;
-    --text-muted: 226 15% 60%;
+    --text-main: 226 4% 16%;
+    --text-secondary: 222 11% 34%;
+    --text-muted: 226 11% 60%;
 
     --border-neutral: 220 35% 80%;
 
@@ -101,7 +101,7 @@
     --background: 226 13% 12%;
     --foreground: 226 14% 22%;
 
-    --scrollbarThumb: 226 20%, 29%;
+    --scrollbarThumb: 226 20%, 19%;
     --scrollbarTrack: 232 25% 16%;
 
     --hover: 226 14% 16%;

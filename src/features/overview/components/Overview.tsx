@@ -70,7 +70,7 @@ const Overview = () => {
 
   return (
     <div className="overview-component p-8 w-full h-full overflow-hidden">
-      <div className="flex flex-col gap-5 w-full text-main overflow-hidden h-full">
+      <div className="flex flex-col gap-5 w-full text-main h-full ">
         {/* Header */}
         <div className="flex justify-between w-full pt-4">
           {/* Welcome Message */}
@@ -95,13 +95,13 @@ const Overview = () => {
         </div>
 
         {/* Main */}
-        <div className="flex flex-col 2xl:flex-row gap-10 w-full h-full overflow-hidden">
+        <div className="flex flex-col 2xl:flex-row gap-8 w-full h-full overflow-hidden">
           {/* Left */}
-          <div className="flex flex-col gap-10 z-10 w-full h-full overflow-hidden">
+          <div className="flex flex-col gap-10 z-10 w-full h-full">
             {/* Quick Actions */}
             <div className="space-y-3 prose">
               <h3 className="text-main">Quick Actions</h3>
-              <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow overflow-auto">
+              <div className="flex gap-3 card border border-border bg-card rounded-xl px-5 py-6 shadow-sm overflow-auto">
                 <Button
                   onClick={() => handleClickQuickAction('/app/nodemap')}
                   size="sm"
@@ -161,9 +161,9 @@ const Overview = () => {
           </div>
 
           {/* Right */}
-          <div className="flex flex-col gap-6 relative w-full 2xl:w-[26rem] flex-shrink-0">
+          <div className="flex flex-col gap-6 relative w-full 2xl:w-[28rem] flex-shrink-0">
             <div className="absolute top-0 right-0 flex flex-col w-full card prose gap-3 rounded-xl h-full">
-              <div className="flex justify-between items-center prose">
+              <div className="flex justify-between items-center prose px-2">
                 <h3 className="text-main">Activity</h3>
               </div>
 
@@ -206,7 +206,7 @@ const LastViewedCard = ({
   };
 
   return (
-    <div className="w-1/3 relative h-36 rounded-xl flex flex-col shadow p-5  justify-center text-main prose bg-card card border border-border">
+    <div className="w-1/3 relative h-36 rounded-xl flex flex-col shadow-sm p-5 justify-center text-main prose bg-card card border border-border">
       <div className="flex justify-between items-start flex-1">
         <div className="flex flex-col flex-1 gap-3 overflow-hidden">
           <h3 className="text-main prose-lg leading-none truncate">{title}</h3>

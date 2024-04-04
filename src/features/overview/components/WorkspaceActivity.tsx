@@ -4,6 +4,7 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { useEffect, useRef, useState } from 'react';
 import { axios } from '@/lib/axios';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { observer } from 'mobx-react-lite';
 
 const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
   const [activities, setActivities] = useState<any[]>([]);
@@ -53,10 +54,10 @@ const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
   }, [page]);
 
   return (
-    <div className="card rounded-2xl opacity-90 h-full pr-2 overflow-auto">
-      {activities.map((activity) => (
-        <ActivityRow key={activity.id} activity={activity} />
-      ))}
+    <div className="h-full px-2 overflow-auto">
+      {activities.map((activity) => {
+        return <ActivityRow key={activity.id} activity={activity} />;
+      })}
 
       {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
       {isLoading && (
@@ -80,10 +81,10 @@ const ActivityRow = ({ activity }: any) => {
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow p-4 h-24 z-10 mb-4 ">
+    <div className="card border border-border flex gap-6 w-full rounded-xl items-start bg-card card shadow-sm p-4 h-24 z-10 mb-4">
       <div className="flex gap-4">
         <div className="relative h-full">
-          <UserAvatar userId={user.uuid} profileImage={user.profileImage} showStatus />
+          <UserAvatar size={36} userId={user.uuid} profileImage={user.profileImage} showStatus />
         </div>
         <div className={`flex flex-col w-full gap-1`}>
           <div className="flex gap-2 items-center">

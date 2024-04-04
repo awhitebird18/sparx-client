@@ -110,7 +110,7 @@ const CompanyDropdown = () => {
             <span className="text-lg font-semibold tracking leading-tight truncate w-full">
               {currentWorkspace?.name}
             </span>
-            <ChevronDown size={14} className="flex-shrink-0 mt-0.5" />
+            <ChevronDown size={13} className="flex-shrink-0 mt-0.5 text-secondary" />
           </div>
         )}
       </DropdownMenuTrigger>

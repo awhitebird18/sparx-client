@@ -29,8 +29,8 @@ const UserAvatar = ({
   const user = findUserByUuid(userId);
 
   const bgColorClass = color
-    ? `from-primary to-${user?.preferences.primaryColor}-500`
-    : 'bg-primary';
+    ? `from-primary-lighter to-${user?.preferences.primaryColor}-400`
+    : 'bg-primary-lightest border-primary-lighter border dark:border-primary-dark';
 
   const avatarClass = twMerge(
     `relative ${rounded} overflow-visible bg-gradient-to-tr`,
@@ -50,7 +50,7 @@ const UserAvatar = ({
           className={`h-full flex-1 w-full ${rounded} overflow-hidden bg-transparent`}
           children={
             <PersonFill
-              className={`mt-3 text-white/40`}
+              className={`mt-3 ${color ? 'text-white/70' : 'text-primary'}`}
               style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
             />
           }

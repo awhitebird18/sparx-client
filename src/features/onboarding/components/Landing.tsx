@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/Button";
-import "@/styles/landing.css";
+import { Button } from '@/components/ui/Button';
+import '@/styles/landing.css';
 
 const Landing = () => {
   return (
