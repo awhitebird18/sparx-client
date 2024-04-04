@@ -34,10 +34,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <Topbar />
             <div
               className={`h-full w-full overflow-hidden ${
-                isFullscreen && 'h-screen w-screen fixed left-0 top-0'
+                isFullscreen && '!z-50 bg-background h-screen w-screen fixed left-0 top-0'
               }`}
             >
-              {children} {/* This is where Nodemap gets rendered */}
+              {children}
             </div>
           </div>
           <SocketController />
