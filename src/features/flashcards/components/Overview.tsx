@@ -56,9 +56,10 @@ const Overview = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col 2xl:flex-row gap-10 h-full">
+
+        <div className="flex gap-10 h-full">
           {!isLoading ? (
-            <div className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl h-full w-full prose p-6">
+            <div className="flex flex-col gap-6 prose p-6 w-full bg-card h-full rounded-2xl border border-border card">
               <div className="flex gap-6 h-full items-center">
                 <div className="flex flex-col items-center justify-center w-full gap-8">
                   <h2 className="text-6xl leading-tight spacing- text-center font-black bg-gradient-to-b from-indigo-600 to-fuchsia-500 bg-clip-text text-transparent">
@@ -87,42 +88,41 @@ const Overview = () => {
               </div>
             </div>
           ) : (
-            <Skeleton className="flex flex-col gap-6 card bg-card border-border shadow-md ring-1 ring-border/50 rounded-xl w-full h-full prose p-6" />
+            <Skeleton className="flex flex-col gap-6 card bg-card border-border rounded-xl w-full h-full prose p-6" />
           )}
-          <div className="flex flex-col items-center gap-6 w-full">
+
+          <div className="flex flex-col items-center gap-4 w-fit h-min flex-wrap mx-auto">
             <Button
               variant="secondary"
-              className="card h-full flex justify-start gap-6 items-center card py-8 px-10 flex-1 w-full prose shadow-md ring-1 ring-border/50"
+              className="card flex items-start justify-center gap-6 card p-6 flex-1 w-full prose rounded-2xl"
               onClick={handleCreateFlashcard}
             >
-              <div className="flex items-start gap-8">
-                <div className="w-8 h-8">
-                  <PlusCircleFill size={40} className="text-secondary" />
-                </div>
+              <div className="w-8 h-8">
+                <PlusCircleFill size={36} className="text-muted" />
+              </div>
 
-                <div className="items-start text-left space-y-2">
-                  <h3 className="text-secondary leading-none">
-                    <span className="text-highlight">Add</span> Flashcards
-                  </h3>
-                  <p className="text-secondary">
-                    Flashcards will be added to the spaced-repetition system
-                  </p>
-                </div>
+              <div className="items-start text-left space-y-2">
+                <h3 className="text-secondary leading-none">
+                  <span className="text-purple-400">Add</span> Flashcards
+                </h3>
+                <p className="text-secondary">
+                  Flashcards will be added to the spaced-repetition system
+                </p>
               </div>
             </Button>
             <Button
               variant="secondary"
-              className="card h-full flex justify-start gap-6 items-center card py-8 px-10 flex-1 w-full prose shadow-md ring-1 ring-border/50"
+              className="card flex items-start justify-center gap-6 card p-6 flex-1 w-full prose rounded-2xl"
               onClick={() => handleNavigate('templates')}
             >
               <div className="flex items-start gap-8">
                 <div className="w-8 h-8">
-                  <ClipboardCheckFill size={40} className="text-secondary" />
+                  <ClipboardCheckFill size={40} className="text-muted" />
                 </div>
 
-                <div className="items-start text-left space-y-2">
+                <div className="text-left space-y-2">
                   <h3 className="text-secondary leading-none">
-                    <span className="text-red-300">Create</span> Template
+                    <span className="text-red-400">Create</span> Template
                   </h3>
                   <p className="text-secondary">
                     Templates make creating flashcards more efficient
@@ -132,17 +132,17 @@ const Overview = () => {
             </Button>
             <Button
               variant="secondary"
-              className="card h-full gap-6 flex justify-start items-center card py-8 px-10 flex-1 w-full prose shadow-md ring-1 ring-border/50"
+              className="card flex items-start justify-center gap-6 card p-6 flex-1 w-full prose rounded-2xl"
               onClick={() => handleNavigate('browse')}
             >
               <div className="flex items-start gap-8">
                 <div className="w-8 h-8">
-                  <SearchHeartFill size={40} className="text-secondary" />
+                  <SearchHeartFill size={40} className="text-muted" />
                 </div>
 
                 <div className="text-left space-y-2">
                   <h3 className="text-secondary leading-none">
-                    <span className="text-green-300">Browse</span> Flashcards
+                    <span className="text-green-400">Browse</span> Flashcards
                   </h3>
                   <p className="text-secondary">Review and update your list of flashcards</p>
                 </div>
@@ -150,16 +150,16 @@ const Overview = () => {
             </Button>
             <Button
               variant="secondary"
-              className="card h-full flex justify-start gap-6 items-center card py-8 px-10 flex-1 w-full prose shadow-md ring-1 ring-border/50"
+              className="card flex items-start justify-center gap-6 card p-6 flex-1 w-full prose rounded-2xl"
               onClick={() => handleNavigate('stats')}
             >
               <div className="flex items-start gap-8">
                 <div className="w-8 h-8">
-                  <BarChartFill size={40} className="text-secondary" />
+                  <BarChartFill size={40} className="text-muted" />
                 </div>
                 <div className="text-left space-y-2">
                   <h3 className="text-secondary leading-none">
-                    <span className="text-teal-300">View</span> Stats
+                    <span className="text-teal-400">View</span> Stats
                   </h3>
                   <p className="text-secondary">
                     Gain insights into how you are doing with detailed stats

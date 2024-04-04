@@ -20,7 +20,6 @@ import {
 import Table from '@/components/ui/Table';
 import taskApi from '@/features/overview/api';
 import { Badge } from '@/components/ui/Badge';
-import { Skeleton } from '@/components/ui/Skeleton';
 
 interface TaskType {
   uuid: string;
