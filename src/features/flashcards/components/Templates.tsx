@@ -40,6 +40,7 @@ const Templates = () => {
     selectedTemplate,
     selectedVariant,
     handleSelectVariant,
+    isLoading,
   } = useStore('flashcardStore');
   const navigate = useNavigate();
 
@@ -303,6 +304,7 @@ const Templates = () => {
               data={variants}
               activeId={selectedVariant?.uuid}
               onRowClick={(row) => handleSelectVariant(row.uuid)}
+              isLoading={isLoading}
             />
           </div>
         </div>

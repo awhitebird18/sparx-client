@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   BarChartFill,
   ClipboardCheckFill,
@@ -12,11 +12,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const Overview = () => {
-  const { getCardCountDueForChannel, isLoading, setIsLoading } = useStore('flashcardStore');
+  const { getCardCountDueForChannel, isLoading, setIsLoading, cardsDue } =
+    useStore('flashcardStore');
   const { currentChannelId } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const navigate = useNavigate();
-  const [cardCountDue, setCardCountDue] = useState<number>(0);
 
   const handleCreateFlashcard = () => {
     setActiveModal({ type: 'AddFlashcardModal', payload: null });
@@ -34,9 +34,7 @@ const Overview = () => {
     if (!currentChannelId) return;
     const fn = async () => {
       setIsLoading(true);
-      const count = await getCardCountDueForChannel(currentChannelId);
-
-      setCardCountDue(count);
+      await getCardCountDueForChannel(currentChannelId);
 
       setIsLoading(false);
     };
@@ -64,11 +62,11 @@ const Overview = () => {
               <div className="flex gap-6 h-full items-center">
                 <div className="flex flex-col items-center justify-center w-full gap-8">
                   <h2 className="text-6xl leading-tight spacing- text-center font-black bg-gradient-to-b from-indigo-600 to-fuchsia-500 bg-clip-text text-transparent">
-                    {`${cardCountDue ? `${cardCountDue} Flashcards Due` : 'No flashcards due'}`}
-                    {cardCountDue ? <span className="leading-normal block">today</span> : null}
+                    {`${cardsDue ? `${cardsDue} Flashcards Due` : 'No flashcards due'}`}
+                    {cardsDue ? <span className="leading-normal block">today</span> : null}
                   </h2>
 
-                  {cardCountDue ? (
+                  {cardsDue ? (
                     <Button
                       size="lg"
                       className="text-xl font-medium"

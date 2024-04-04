@@ -1,5 +1,5 @@
 // stores/FlashcardStore.ts
-import { makeAutoObservable, reaction } from 'mobx';
+import { autorun, makeAutoObservable, reaction } from 'mobx';
 import { Flashcard } from '../types/card';
 import flashcardsApi from '../api';
 
@@ -10,6 +10,7 @@ import { CreateVariant } from '../types/CreateVariant';
 
 export class FlashcardStore {
   flashcards: Flashcard[] = [];
+  cardsDue = 0;
   selectedFlashcard?: Flashcard = undefined;
   isLoading = false;
 
@@ -67,9 +68,9 @@ export class FlashcardStore {
       },
     );
 
-    // autorun(() => {
-    //   this.fetchTemplatesApi();
-    // });
+    autorun(() => {
+      this.fetchTemplatesApi();
+    });
   }
 
   setSelectedFlashcard = (flashcard: Flashcard | undefined) => {
@@ -345,6 +346,8 @@ export class FlashcardStore {
   // Flashcards
   createCardNoteApi = async (templateId: string, fieldValues: any, currentChannelId: string) => {
     await flashcardsApi.createCardNote(templateId, fieldValues, currentChannelId);
+
+    await this.getCardCountDueForChannel(currentChannelId);
   };
 
   // Review
@@ -353,7 +356,9 @@ export class FlashcardStore {
   };
 
   getCardCountDueForChannel = async (channelId: string) => {
-    return await flashcardsApi.getCardCountDueForChannel(channelId);
+    const count = await flashcardsApi.getCardCountDueForChannel(channelId);
+
+    this.cardsDue = count;
   };
 
   // Stats
