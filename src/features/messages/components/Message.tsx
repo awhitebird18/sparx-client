@@ -93,11 +93,11 @@ const Message = ({
       <ContextMenu>
         <ContextMenuTrigger disabled={disabled}>
           <div
-            className={`message ${showEmojiPicker ? 'hovered' : ''} rounded-lg ${
-              !disabled ? 'hover:bg-hover hover:dark:hover' : ''
-            } relative`}
+            className={`message ${showEmojiPicker ? 'hovered' : ''} ${
+              showUser && 'mt-3'
+            } rounded-lg ${!disabled ? 'hover:bg-hover hover:dark:hover' : ''} relative`}
           >
-            <div className="flex gap-3 p-1.5 h-min">
+            <div className="flex gap-4 p-1.5 h-min">
               {showUser ? (
                 <HoverCard>
                   <HoverCardTrigger>

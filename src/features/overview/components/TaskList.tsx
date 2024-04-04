@@ -217,46 +217,35 @@ const TaskList: React.FC = () => {
   );
 
   return (
-    <div className="card w-full space-y-3">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col card w-full gap-3 h-full overflow-hidden">
+      <div className="flex justify-between items-center prose">
         <h3 className="text-main">Tasks</h3>
-
         <Button
           onClick={createTask}
           size="icon"
-          className={`w-7 h-7 rounded-md`}
+          className="w-7 h-7 rounded-md"
           disabled={isLoading}
         >
           <Plus className="text-3xl" />
         </Button>
       </div>
 
-      {!isLoading ? (
-        <div>
-          <Table
-            columns={columns}
-            data={tasks}
-            isLoading={isLoading}
-            tableClasses={tasks.length === 0 ? 'rounded-bl-none rounded-br-none border-b-0' : ''}
-          />
-
-          {!tasks.length && (
-            <div className="flex w-full items-center justify-center bg-card card rounded-bl-xl rounded-br-xl p-6 border border-border border-t-0 shadow h-44">
-              <div className="flex flex-col gap-2 items-center">
-                <h3 className="text-main leading-none">No tasks to show.</h3>
-                <p className="text-secondary mb-3 leading-none">
-                  Add tasks to keep track of your learning goals.
-                </p>
-                <Button size="sm" className="w-fit" onClick={createTask}>
-                  Add a new task
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <Skeleton className="w-full rounded-xl border border-border shadow h-[224px]" />
-      )}
+      <Table
+        columns={columns}
+        data={tasks}
+        isLoading={isLoading}
+        emptyElement={
+          <div className="flex flex-col gap-5 max-w-sm items-center justify-center prose py-6">
+            <h3 className="text-center text-main text-xl">No tasks to show.</h3>
+            <p className="text-center text-secondary flex-items-center">
+              Add tasks to keep track of your learning goals.
+            </p>
+            <Button size="sm" className="w-fit" onClick={createTask}>
+              Add a new task
+            </Button>
+          </div>
+        }
+      />
     </div>
   );
 };
