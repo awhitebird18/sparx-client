@@ -10,7 +10,15 @@ import useHistoryState from '@/hooks/useHistoryState';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { Fire, PlayBtnFill, StarFill, ThreeDots } from 'react-bootstrap-icons';
+import {
+  CardHeading,
+  ChatLeftDots,
+  Fire,
+  Pencil,
+  PlayBtnFill,
+  StarFill,
+  ThreeDots,
+} from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TaskList from './TaskList';
 import { useState } from 'react';
@@ -266,15 +274,24 @@ const LastViewedCard = ({
           <DropdownMenuTrigger>
             <ThreeDots />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleNavigation('/app/notes')}>
-              View Notes
+          <DropdownMenuContent align="end" className="space-y-1 w-48 p-2">
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/notes')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <Pencil /> View Notes
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNavigation('/app/flashcards')}>
-              Study Flashcards
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/flashcards')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <CardHeading /> Study Flashcards
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNavigation('/app/discussions')}>
-              View Discussions
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/discussions')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <ChatLeftDots /> View Discussions
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

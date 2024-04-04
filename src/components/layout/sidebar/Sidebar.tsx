@@ -55,8 +55,8 @@ const Sidebar = () => {
   const workspaceListItems = [
     { id: 'home', name: 'Home', icon: <House size={15} /> },
     { id: 'nodemap', name: 'Nodemap', icon: <Map size={15} /> },
-    // { id: 'goals', name: 'Goals', icon: <Trophy size={14}  /> },
-    // { id: 'feed', name: 'Feed', icon: <People size={14}  /> },
+    // { id: 'goals', name: 'Goals', icon: <Trophy size={14} /> },
+    // { id: 'feed', name: 'Feed', icon: <People size={14} /> },
   ];
 
   const handleToggleSidebar = () => {

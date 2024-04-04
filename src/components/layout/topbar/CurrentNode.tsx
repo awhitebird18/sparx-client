@@ -95,19 +95,17 @@ const CurrentNode = () => {
                       return (
                         <DropdownMenuItem
                           key={item.nodeId}
-                          className="flex items-center gap-12 h-11 px-4 w-full justify-between hover:bg-hover rounded-lg truncate text-secondary text-base"
+                          className="flex items-center gap-12 h-11 px-4 w-full justify-between hover:bg-hover rounded-lg truncate text-secondary text-sm"
                           onClick={() => handleNavigate(item)}
                         >
                           <div className="flex items-center gap-3 ">
                             <Clock size={15} />
                             <div className="flex items-center gap-2">
                               Visited
-                              <span className="text-highlight text-base font-semibold">
-                                {item.name}
-                              </span>
+                              <span className="text-highlight font-semibold">{item.name}</span>
                             </div>
                           </div>
-                          <span className="text-sm">{timeString}</span>
+                          {timeString}
                         </DropdownMenuItem>
                       );
                     })}
