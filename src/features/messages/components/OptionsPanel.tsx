@@ -68,7 +68,7 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
 
   return (
     <div
-      className={`card options-panel flex absolute border border-border -top-5 right-5 rounded-md bg-card shadow ${
+      className={`card options-panel flex absolute border border-border -top-5 right-5 rounded-xl bg-card shadow-md ${
         !showEmojiPicker && 'hidden'
       }`}
     >
@@ -80,7 +80,7 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
           className="p-0 w-10 h-10 relative"
           onClick={handleShowEmojiPicker}
         >
-          <EmojiSmile />
+          <EmojiSmile size={13} />
           <Plus className="absolute top-0.5 right-0.5" />
         </Button>
         {showEmojiPicker && (
@@ -93,13 +93,13 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
       </div>
       {!isThread && (
         <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleReply}>
-          <ChatDots />
+          <ChatDots size={13} />
         </Button>
       )}
       {message.userId === currentUser?.uuid && (
         <>
           <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleEditMessage}>
-            <Pencil />
+            <Pencil size={13} />
           </Button>
           <Button
             size="icon"
@@ -107,7 +107,7 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
             className="p-0 w-10 h-10 text-rose-500"
             onClick={() => handleOpenModal({ type: 'DeleteMessageModal', payload: { message } })}
           >
-            <Trash />
+            <Trash size={13} />
           </Button>
         </>
       )}

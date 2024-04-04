@@ -10,19 +10,18 @@ import useHistoryState from '@/hooks/useHistoryState';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { Fire, PlayBtnFill, StarFill, ThreeDots } from 'react-bootstrap-icons';
+import {
+  CardHeading,
+  ChatLeftDots,
+  Fire,
+  Pencil,
+  PlayBtnFill,
+  StarFill,
+  ThreeDots,
+} from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import TaskList from './TaskList';
-import { useState } from 'react';
 import WorkspaceActivity from './WorkspaceActivity';
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/Select';
 
 // Duplicated from CurrentNode
 type HistoryItem = {
@@ -40,8 +39,6 @@ const Overview = () => {
   const navigate = useNavigate();
   const { findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
-
-  const [activityFilter, setActivityFiler] = useState('all');
 
   const sortedArray = history.sort((a: any, b: any) => b.timestamp - a.timestamp);
 
@@ -64,29 +61,12 @@ const Overview = () => {
     }
   });
 
-  // Now, let's get the top 3 unique items from uniqueNodes.
   const sortedUniqueNodes = uniqueNodes.sort((a, b) => b.timestamp - a.timestamp);
   const top3UniqueNodes = sortedUniqueNodes.slice(0, 3);
-
-  // useEffect(() => {
-  //   if (!currentWorkspaceId) return;
-
-  //   const fn = async () => {
-  //     const data = await homeApi.getRecentWorkspaceActivity(currentWorkspaceId);
-
-  //     setActivity(data);
-  //     setActivityLoading(false);
-  //   };
-
-  //   fn();
-  // }, [currentWorkspaceId]);
 
   const handleClickQuickAction = (path: string) => {
     navigate(path);
   };
-
-  // const filteredActivity =
-  //   activityFilter === 'all' ? activity : activity.filter((a: any) => a.type === activityFilter);
 
   return (
     <div className="overview-component p-8 w-full h-full overflow-hidden">
@@ -185,29 +165,6 @@ const Overview = () => {
             <div className="absolute top-0 right-0 flex flex-col w-full card prose gap-3 rounded-xl h-full">
               <div className="flex justify-between items-center prose">
                 <h3 className="text-main">Activity</h3>
-
-                <Select
-                  onValueChange={(value: string) => setActivityFiler(value)}
-                  defaultValue="all"
-                >
-                  <SelectTrigger className="w-min gap-2 h-8 rounded-lg prose text-secondary text-sm whitespace-nowrap">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent align="end">
-                    <SelectItem key="all" value="all">
-                      All
-                    </SelectItem>
-                    <SelectItem key="content" value="content">
-                      Content
-                    </SelectItem>
-                    <SelectItem key="user" value="user">
-                      New users
-                    </SelectItem>
-                    <SelectItem key="Node Completed" value="Node Completed">
-                      Completions
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               <WorkspaceActivity endpoint={`/activity/workspace/${currentWorkspaceId}`} />
@@ -266,15 +223,24 @@ const LastViewedCard = ({
           <DropdownMenuTrigger>
             <ThreeDots />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleNavigation('/app/notes')}>
-              View Notes
+          <DropdownMenuContent align="end" className="space-y-1 w-48 p-2">
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/notes')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <Pencil /> View Notes
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNavigation('/app/flashcards')}>
-              Study Flashcards
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/flashcards')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <CardHeading /> Study Flashcards
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNavigation('/app/discussions')}>
-              View Discussions
+            <DropdownMenuItem
+              onClick={() => handleNavigation('/app/discussions')}
+              className="gap-3 h-9 px-4 rounded-lg"
+            >
+              <ChatLeftDots /> View Discussions
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -46,7 +46,7 @@ const AddFlashcardModal = () => {
   // Handle submit
   const handleSubmit = async () => {
     if (selectedTemplate && fieldValues.length > 0 && currentChannelId) {
-      createCardNoteApi(selectedTemplate.uuid, fieldValues, currentChannelId);
+      await createCardNoteApi(selectedTemplate.uuid, fieldValues, currentChannelId);
 
       handleCancel();
     } else {

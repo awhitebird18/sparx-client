@@ -29,6 +29,8 @@ const General = () => {
   const { currentWorkspace, updateWorkspaceApi, uploadWorkspaceImageApi } =
     useStore('workspaceStore');
 
+  const [tempImg, setTempImg] = useState<any>(null);
+
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -71,8 +73,10 @@ const General = () => {
 
     reader.onloadend = async () => {
       const imageBase64 = reader.result as string;
+      setTempImg(imageBase64);
 
       await uploadWorkspaceImageApi(currentWorkspace.uuid, imageBase64);
+      setTempImg(null);
     };
 
     reader.readAsDataURL(file);
@@ -104,21 +108,20 @@ const General = () => {
             className="flex flex-col w-max space-y-4"
           >
             <div className="flex flex-col flex-1 space-y-4 w-80">
-              {/* <div className="space-y-2">
-                <div className="text-2xl flex items-center gap-4 relative">
-                  {!isEditing && (
-                    <Button
-                      className="absolute top-0 right-0 h-7 py-0 gap-2 text-base text-muted-foreground"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleEditForm}
-                      type="button"
-                    >
-                      <Pencil className="text-sm" /> Edit
-                    </Button>
-                  )}
-                </div>
+              {/* <div className="text-2xl flex items-center gap-4 relative">
+                {!isEditing && (
+                  <Button
+                    className="absolute top-0 right-0 h-7 py-0 gap-2 text-base text-muted-foreground"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleEditForm}
+                    type="button"
+                  >
+                    <Pencil className="text-sm" /> Edit
+                  </Button>
+                )}
               </div> */}
+
               <FormField
                 control={form.control}
                 name="name"
@@ -128,7 +131,7 @@ const General = () => {
                     <FormControl>
                       <Input
                         disabled={!isEditing}
-                        className="text-base !cursor-pointer"
+                        className="text-base !cursor-pointer border-none"
                         placeholder="Enter workspace name"
                         {...field}
                       />
@@ -143,7 +146,7 @@ const General = () => {
             </div>
           </form>
           <div className="w-28 h-28 relative flex flex-col items-center gap-4 rounded-lg overflow-hidden border-b border-border">
-            <img className="w-full h-full" src={transformedImage} />
+            <img className="w-full h-full" src={tempImg ?? transformedImage} />
 
             <Button
               variant="secondary"
