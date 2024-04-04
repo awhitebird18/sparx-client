@@ -61,6 +61,8 @@ const CurrentNode = () => {
     }, {});
   }, [uniqueNodes]);
 
+  const historyArr = Object.entries(populatedHistory);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -71,34 +73,50 @@ const CurrentNode = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-80 border border-border rounded-md bg-card p-0"
+        className="max-w-[28rem] border border-border rounded-md bg-card p-0"
       >
         <div>
-          <DropdownMenuLabel className="leading-none border-b border-border flex gap-4 bg-card font-normal h-12 px-4 items-center">
+          <DropdownMenuLabel className="border-b border-border flex gap-3 bg-card font-semibold h-12 px-6 items-center">
             <Clock size={15} />
             Recently visited
           </DropdownMenuLabel>
-          <div className="flex flex-col overflow-auto max-h-96 p-2 py-4 gap-5">
-            {Object.entries(populatedHistory).map(([date, items]: any) => (
-              <div key={date}>
-                <div className="card bg-card flex items-center justify-center px-4 py-0.5 rounded-2xl tracking-wide text-sm text-card-border mx-auto border border-border w-fit mb-2">
-                  {dayjs(date).format('ddd MMMM D')}
-                </div>
+          <div className="flex flex-col overflow-auto max-h-96 p-2 py-2">
+            {historyArr.length ? (
+              historyArr.map(([date, items]: any) => (
+                <div key={date}>
+                  <div className="card bg-card flex px-4 items-center h-8 text-sm tracking-wide">
+                    {dayjs(date).format('MMMM Ddd')}
+                  </div>
 
-                <div className="overflow-auto max-h-96">
-                  {items.map((item: any) => (
-                    <DropdownMenuItem
-                      key={item.nodeId}
-                      className="flex items-center gap-4 h-11 px-4 hover:bg-hover rounded-lg truncate text-sm"
-                      onClick={() => handleNavigate(item)}
-                    >
-                      <Clock size={15} />
-                      {item.name}
-                    </DropdownMenuItem>
-                  ))}
+                  <div className="overflow-auto max-h-96">
+                    {items.map((item: any) => {
+                      const timeString = dayjs(item.timestamp).format('h:mm a');
+
+                      return (
+                        <DropdownMenuItem
+                          key={item.nodeId}
+                          className="flex items-center gap-12 h-11 px-4 w-full justify-between hover:bg-hover rounded-lg truncate text-secondary text-base"
+                          onClick={() => handleNavigate(item)}
+                        >
+                          <div className="flex items-center gap-3 ">
+                            <Clock size={15} />
+                            <div className="flex items-center gap-2">
+                              Visited
+                              <span className="text-highlight text-base font-semibold">
+                                {item.name}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-sm">{timeString}</span>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="px-5 py-3 text-secondary">No recent channels to show.</div>
+            )}
           </div>
         </div>
       </DropdownMenuContent>
