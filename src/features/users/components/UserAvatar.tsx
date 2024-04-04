@@ -44,16 +44,18 @@ const UserAvatar = ({
         style={{ height: `${size}px`, width: `${size}px` }}
         className={`${rounded}`}
       />
-      <AvatarFallback
-        delayMs={200}
-        className={`h-full flex-1 w-full ${rounded} overflow-hidden bg-transparent`}
-        children={
-          <PersonFill
-            className={`mt-3 text-white/40`}
-            style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
-          />
-        }
-      />
+      {!profileImage && (
+        <AvatarFallback
+          // delayMs={00}
+          className={`h-full flex-1 w-full ${rounded} overflow-hidden bg-transparent`}
+          children={
+            <PersonFill
+              className={`mt-3 text-white/40`}
+              style={{ height: `${size * 5}px`, width: `${size * 5}px` }}
+            />
+          }
+        />
+      )}
 
       {showStatus && (
         <div className="rounded-full absolute -bottom-1.5 -right-1.5 flex justify-center items-center">
