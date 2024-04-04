@@ -4,7 +4,6 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { useEffect, useRef, useState } from 'react';
 import { axios } from '@/lib/axios';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { observer } from 'mobx-react-lite';
 
 const WorkspaceActivity = ({ endpoint }: { endpoint: string }) => {
   const [activities, setActivities] = useState<any[]>([]);
