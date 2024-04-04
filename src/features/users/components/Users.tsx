@@ -173,7 +173,7 @@ const Users = () => {
               return (
                 <Card
                   key={user.uuid}
-                  className="p-4 rounded-lg relative cursor-pointer h-28 shadow-sm !bg-card !border-border border card"
+                  className="p-4 rounded-lg relative cursor-pointer h-28 !shadow-sm !bg-card !border-border border card"
                 >
                   <CardContent className="flex gap-4 p-0">
                     <UserAvatar

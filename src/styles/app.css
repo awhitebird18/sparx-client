@@ -52,10 +52,8 @@
   z-index: -1; /* Place it behind the sidebar content */
 }
 
-/* Scrollbar */
-/* This will style the corner of the scrollbar (where horizontal and vertical scrollbars meet) */
 ::-webkit-scrollbar-corner {
-  background: transparent; /* color of the corner of the scrollbar */
+  background: transparent;
 }
 
 .thick-icon {

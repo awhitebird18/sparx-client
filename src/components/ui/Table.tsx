@@ -86,7 +86,9 @@ function Table<T extends object>({
         </div>
       ) : null}
 
-      {isLoading ? <Skeleton className="w-full h-16 rounded-none !bg-slate-500/5" /> : null}
+      {isLoading ? (
+        <Skeleton className="w-full h-16 rounded-none bg-card dark:bg-slate-500/5" />
+      ) : null}
       {!isLoading && !rows.length ? (
         <div className="w-full flex items-center justify-center">{emptyElement}</div>
       ) : null}

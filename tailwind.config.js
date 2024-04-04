@@ -52,10 +52,6 @@ module.exports = {
         7: 'repeat(7, 2rem)',
       },
       colors: {
-        'scrollbar-bg': '#cfcfcf',
-        'scrollbar-thumb': '#f78',
-        'scrollbar-thumb-hover': '#555',
-        // border: 'hsl(var(--border))',
         borderDisabled: 'hsl(var(--border-disabled))',
         borderLight: 'hsl(var(--border-light))',
         input: 'hsl(var(--input))',
@@ -225,6 +221,9 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         spin: 'spin 1s linear infinite',
       },
+      // boxShadow: {
+      //   md: '0 3px 4px 0px rgba(0, 0, 0, 0.04)',
+      // },
       textColor: {
         main: 'hsl(var(--text-main))',
         primary: 'var(--primary)',

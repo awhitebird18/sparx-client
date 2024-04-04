@@ -300,9 +300,13 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
         <path
           d={pathD}
           fill="none"
-          className={`${isLineActivated ? 'stroke-primary' : 'stroke-border opacity-60'} ${
-            hideUnstarted && !isLineActivated && 'stroke-transparent'
-          } ${line.uuid === selectedLineId && 'stroke-ring'}`}
+          className={`${
+            isLineActivated
+              ? 'stroke-primary-light dark:stroke-primary'
+              : 'stroke-border opacity-60'
+          } ${hideUnstarted && !isLineActivated && 'stroke-transparent'} ${
+            line.uuid === selectedLineId && 'stroke-ring'
+          }`}
           strokeWidth="4"
           strokeDasharray={isEditing ? '8 12' : '0'}
         >

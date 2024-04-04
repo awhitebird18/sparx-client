@@ -65,7 +65,7 @@ const ThemeTab = () => {
             onValueChange={(value) => handleThemeSelect(value)}
             className="flex gap-4 h-min"
           >
-            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full text-black/70 dark:bg-white/5 p-3 gap-4">
+            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full card dark:bg-transparent bg-card-hover text-black/70 p-3 gap-4">
               <div className="flex gap-4">
                 {<UserAvatar profileImage={currentUser?.profileImage} userId="" />}
 
@@ -79,14 +79,14 @@ const ThemeTab = () => {
 
               <RadioGroupItem value={Theme.LIGHT} id="light" />
             </div>
-            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full dark:bg-black/30 bg-black/10 text-black/70 p-3 gap-4">
+            <div className="flex justify-between items-center border border-slate-500/40 rounded-lg overflow-hidden flex-1 w-full card dark:bg-card-hover bg-transparent text-black/70 p-3 gap-4">
               <div className="flex gap-4">
                 {<UserAvatar profileImage={currentUser?.profileImage} userId="" />}
 
                 <div className="flex flex-col gap-0.5">
                   <p className="text-main font-semibold text-sm leading-normal">Jane Smith</p>
                   <Label className="text-muted text-sm font-normal leading-tight" htmlFor="dark">
-                    Light mode only
+                    Dark mode only
                   </Label>
                 </div>
               </div>

@@ -18,7 +18,7 @@ export const buttonVariants = cva(
         ghost: 'text-main hover:bg-hover',
         link: 'text-primary underline-offset-4 hover:underline',
         'outline-primary':
-          'border border-primary-dark bg-primary-transparent dark:border-darkest card dark:bg-primary-transparent hover:bg-hover text-highlight font-medium',
+          'border border-primary-lighter bg-primary-transparent dark:border-primary-dark card dark:bg-primary-transparent text-highlight font-medium',
       },
       size: {
         default: 'rounded-lg h-10 px-4 py-2',
