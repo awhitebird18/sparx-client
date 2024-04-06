@@ -22,8 +22,8 @@ const MoveNote = ({ noteId, channelId }: { noteId: string; channelId: string }) 
 
   return (
     <Modal title="Move note to...">
-      <div className="flex flex-col max-w-lg w-72">
-        <ul className="space-y-1">
+      <div className="flex flex-col max-w-lg w-96 max-h-96 overflow-auto">
+        <ul className="space-y-1 pr-2">
           {subscribedChannels
             .filter((channel) => channel.type !== 'direct' && channel.uuid !== channelId)
             .map((channel) => (
