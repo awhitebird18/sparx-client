@@ -40,6 +40,7 @@ import { getYearlyStats } from './getYearlyStats';
 
 import { createDefaultTemplate } from './createDefaultTemplate';
 import { getCardCountReviewedToday } from './getCardCountReviewedToday';
+import { getDueToday } from './getDueToday';
 import { browseChannelCards } from './browseChannelCards';
 
 export default {
@@ -58,6 +59,7 @@ export default {
   removeField,
   createField,
   getVariants,
+  getDueToday,
   createVariant,
   updateVariant,
   removeVariant,

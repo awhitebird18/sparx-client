@@ -18,6 +18,7 @@ const AddFlashcardModal = () => {
   const { closeModal } = useStore('modalStore');
   const { templates, handleSelectTemplate, createCardNoteApi, fields, selectedTemplate } =
     useStore('flashcardStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
   const { currentChannelId } = useStore('channelStore');
 
   const [fieldValues, setFieldValues] = useState<any>([]); // This will hold the updated field values as an array
@@ -45,8 +46,13 @@ const AddFlashcardModal = () => {
 
   // Handle submit
   const handleSubmit = async () => {
-    if (selectedTemplate && fieldValues.length > 0 && currentChannelId) {
-      await createCardNoteApi(selectedTemplate.uuid, fieldValues, currentChannelId);
+    if (selectedTemplate && fieldValues.length > 0 && currentChannelId && currentWorkspaceId) {
+      await createCardNoteApi(
+        selectedTemplate.uuid,
+        fieldValues,
+        currentChannelId,
+        currentWorkspaceId,
+      );
 
       handleCancel();
     } else {

@@ -21,6 +21,7 @@ const NodeMap: React.FC = () => {
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { fetchChannelUserCounts, fetchNodemapSettingsApi } = useStore('workspaceChannelStore');
   const { fetchWorkspaceChannelConnectorsApi } = useStore('channelConnectorStore');
+  const { getFlashcardsDueToday } = useStore('flashcardStore');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const NodeMap: React.FC = () => {
           fetchUserChannelData(currentWorkspaceId),
           fetchNodemapSettingsApi(currentWorkspaceId),
           fetchWorkspaceChannelConnectorsApi(currentWorkspaceId),
+          getFlashcardsDueToday({ workspaceId: currentWorkspaceId }),
           minimumLoadingTimePromise,
         ]);
       } catch (error) {

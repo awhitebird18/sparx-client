@@ -55,12 +55,13 @@ const Node = ({
   // const { setChannelConnectors } = useStore('channelConnectorStore');
   const { findChannelUnreads } = useStore('channelUnreadStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
+  const { flashcardsDueCounts } = useStore('flashcardStore');
   const { directChannelSectionId } = useStore('sectionStore');
   const { channelUserCounts, nodemapSettings } = useStore('workspaceChannelStore');
   const { leaveChannelApi, isEditing } = useStore('channelStore');
   const [isHovered, setIsHovered] = useState(false);
   const { setActiveModal } = useStore('modalStore');
-  const [flashcardsDueCount] = useState(1);
+  // const [flashcardsDueCount] = useState(1);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { addNotification } = useStore('notificationStore');
@@ -157,6 +158,10 @@ const Node = ({
     navigate(`/app/${module}`);
   };
 
+  const flashcardsDueCount = flashcardsDueCounts.find(
+    (flashcard: any) => flashcard.channelId === uuid,
+  );
+
   return (
     <>
       <ContextMenu
@@ -182,17 +187,13 @@ const Node = ({
               // transform: `translate(-50%, -50%) scale(${zoomLevel})`,
               // transformOrigin: 'center', // Change to 'center'
             }}
-            className={`cursor-pointer -translate-x-1/2 -translate-y-1/2 shadow-md items-center flex flex-col transition-colors duration-400 gap-1 absolute p-0 justify-center border-1 border-border rounded-2xl bg-card text-main ${
+            className={`cursor-pointer -translate-x-1/2 -translate-y-1/2 shadow-md items-center flex flex-col transition-colors duration-400 gap-1 absolute p-0 justify-center border-1 border-border rounded-3xl bg-card text-main ${
               currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
             } ${isDragging ? 'opacity-0' : ''} ${isSubscribed ? '' : 'opacity-60'} ${
               hideUnstarted && !isSubscribed && 'hidden'
-            } ${
-              isDefault
-                ? 'w-[325px] h-[130px] p-6 !rounded-full bg-primary text-white'
-                : 'w-[200px] h-[85px]'
-            }`}
+            } ${isDefault ? 'w-[325px] h-[130px] p-6 !rounded-full' : 'w-[200px] h-[100px]'}`}
             onClick={() => {
-              if (!isSubscribed || isEditing || isDefault) return;
+              if (!isSubscribed || isEditing) return;
 
               setCurrentChannelUuid(uuid);
 
@@ -245,7 +246,7 @@ const Node = ({
                     onClick={() => handleQuickIconClick(uuid, 'flashcards')}
                     className="card flex gap-1 items-center text-white font-semibold bg-primary-flashcards border border-border-flashcards shadow py-1 px-2 rounded-xl text-xs relative"
                   >
-                    {flashcardsDueCount}
+                    {flashcardsDueCount.count}
                     <Stack className="thick-icon" />
                   </div>
                 ) : null}

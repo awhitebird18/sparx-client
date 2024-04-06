@@ -12,6 +12,7 @@ export class FlashcardStore {
   flashcards: Flashcard[] = [];
   cardsDue = 0;
   selectedFlashcard?: Flashcard = undefined;
+  flashcardsDueCounts: { channelId: string; count: number }[] = [];
   isLoading = false;
 
   templates: Template[] = [];
@@ -344,8 +345,13 @@ export class FlashcardStore {
   };
 
   // Flashcards
-  createCardNoteApi = async (templateId: string, fieldValues: any, currentChannelId: string) => {
-    await flashcardsApi.createCardNote(templateId, fieldValues, currentChannelId);
+  createCardNoteApi = async (
+    templateId: string,
+    fieldValues: any,
+    currentChannelId: string,
+    workspaceId: string,
+  ) => {
+    await flashcardsApi.createCardNote(templateId, fieldValues, currentChannelId, workspaceId);
 
     await this.getCardCountDueForChannel(currentChannelId);
   };
@@ -372,6 +378,11 @@ export class FlashcardStore {
 
   getCardsAddedStats = async () => {
     return await flashcardsApi.getCardsAddedStats();
+  };
+
+  getFlashcardsDueToday = async ({ workspaceId }: { workspaceId: string }) => {
+    const data = await flashcardsApi.getDueToday({ workspaceId });
+    this.flashcardsDueCounts = data;
   };
 
   getCardMaturityStats = async () => {
