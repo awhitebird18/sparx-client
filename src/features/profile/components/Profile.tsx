@@ -25,6 +25,7 @@ import ExperienceChart from './ExperienceChart';
 import taskApi from '@/features/overview/api';
 import WorkspaceActivity from '@/features/overview/components/WorkspaceActivity';
 import { Skeleton } from '@/components/ui/Skeleton';
+import UserAvatar from '@/features/users/components/UserAvatar';
 
 interface Experience {
   date: string;
@@ -147,7 +148,11 @@ const Profile = () => {
 
   if (!user) return;
 
-  const transformedImage = transformCloudinaryUrl(user.profileImage, 160, 160);
+  const transformedImage = user.profileImage ? (
+    transformCloudinaryUrl(user.profileImage, 160, 160)
+  ) : (
+    <Person />
+  );
 
   return (
     <div className="h-full overflow-auto flex relative">
@@ -170,12 +175,24 @@ const Profile = () => {
             {/* Real header */}
             <div className="mt-24 flex gap-12 items-end px-16 justify-center w-full max-w-5xl">
               {/* Avatar */}
-              <div className="card relative flex-shrink-0 shadow overflow-hidden rounded-xl">
-                <img
-                  src={tempImage ?? transformedImage}
-                  style={{ width: '160px', height: '160px' }}
-                  className="rounded-xl"
-                />
+              <div
+                className={`card relative flex-shrink-0 shadow rounded-xl bg-gradient-to-tr from-primary to-${user.preferences.primaryColor}-400`}
+              >
+                {tempImage ? (
+                  <img
+                    src={tempImage ?? transformedImage}
+                    style={{ width: '160px', height: '160px' }}
+                    className="rounded-xl"
+                  />
+                ) : (
+                  <UserAvatar
+                    userId={user.uuid}
+                    color={user.preferences.primaryColor}
+                    showStatus
+                    size={160}
+                    profileImage={user.profileImage}
+                  />
+                )}
 
                 {user.uuid === currentUser?.uuid && (
                   <Button
