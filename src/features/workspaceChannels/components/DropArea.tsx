@@ -383,7 +383,6 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
                 })}
 
                 {/* Current Line */}
-
                 {currentLine && renderLine(currentLine, 100, false)}
               </svg>
               <div className="w-1 h-1 absolute bg-white" style={{ top: 4000, left: 4000 }} />

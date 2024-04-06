@@ -138,6 +138,7 @@ const NodemapSkeleton = () => (
       <Skeleton className="w-8 h-8" />
       <Skeleton className="w-8 h-8" />
       <Skeleton className="w-8 h-8" />
+      <Skeleton className="w-8 h-8" />
     </div>
   </div>
 );
