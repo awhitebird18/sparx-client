@@ -253,7 +253,7 @@ const Node = ({
               </div>
 
               <div
-                className={`text-center gap-1 flex w-full overflow-hidden flex-col items-center relative ${
+                className={`text-center gap-1 flex w-full flex-col items-center relative ${
                   isEditing && 'pointer-events-none'
                 }`}
               >
