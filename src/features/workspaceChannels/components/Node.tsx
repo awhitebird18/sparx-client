@@ -1,7 +1,7 @@
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { MouseEvent, useEffect, useState } from 'react';
-import { useDrag } from 'react-dnd';
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDrag, DragPreviewImage } from 'react-dnd';
 
 import NodeStatus from './NodeStatus';
 import HoverIndicators from './HoverIndicators';
@@ -33,6 +33,12 @@ import { ChannelUserCount } from '../types/channelUserCount';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useNavigate } from 'react-router-dom';
 
+const createTransparentImage = () => {
+  const img = new Image();
+  img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  return img;
+};
+
 const Node = ({
   uuid,
   label,
@@ -42,6 +48,7 @@ const Node = ({
   hideUnstarted,
   isDefault,
   handleCreateLine,
+  scale,
 }: any) => {
   const {
     currentChannelId,
@@ -74,24 +81,32 @@ const Node = ({
     setIsHovered(false);
   };
 
-  const [{ isDragging }, drag] = useDrag(
+  const handleDrag = useMemo(
     () => ({
       type: 'node',
-      item: { uuid, x: x, y: y },
+      item: { uuid, x: x, y: y, name: label },
 
-      collect: (monitor) => {
+      collect: (monitor: any) => {
         return {
           isDragging: monitor.isDragging(),
+          x: x,
+          y: y,
           // We'll now only get the drag state, not set the position here
         };
       },
     }),
-    [uuid, x, y],
+    [label, uuid, x, y],
   );
+
+  const [{ isDragging }, drag, preview] = useDrag(handleDrag, [uuid, x, y]);
 
   useEffect(() => {
     setIsDraggingNode(isDragging);
   }, [isDragging, setIsDraggingNode]);
+
+  useEffect(() => {
+    preview(createTransparentImage());
+  }, [preview]);
 
   if (!handleCreateLine) return null;
 
@@ -182,16 +197,20 @@ const Node = ({
             ref={conditionalDragRef}
             style={{
               // zIndex: 100,
-              left: x, // Center the node
-              top: y, // Center the node
-              // transform: `translate(-50%, -50%) scale(${zoomLevel})`,
-              // transformOrigin: 'center', // Change to 'center'
+              left: x,
+              top: y,
+
+              // transform: isDragging ? `scale(${scale})` : '',
+
+              // transformOrigin: 'center',
             }}
-            className={`cursor-pointer -translate-x-1/2 -translate-y-1/2 shadow-md items-center flex flex-col transition-colors duration-400 gap-1 absolute p-0 justify-center border-1 border-border rounded-3xl bg-card text-main ${
+            className={`card cursor-pointer z-50 delay-300 transition-colors -translate-x-1/2 -translate-y-1/2 px-4 shadow-md flex flex-col items-start duration-400 absolute justify-center border border-border min-w-[15rem] rounded-lg bg-card text-main ${
               currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
-            } ${isDragging ? 'opacity-0' : ''} ${isSubscribed ? '' : 'opacity-60'} ${
-              hideUnstarted && !isSubscribed && 'hidden'
-            } ${isDefault ? 'w-[325px] h-[130px] p-6 !rounded-full' : 'w-[200px] h-[100px]'}`}
+            } ${isDragging ? 'transition-opacity !opacity-0' : ''} ${
+              isSubscribed ? '' : 'opacity-60'
+            } ${hideUnstarted && !isSubscribed && 'hidden'} ${
+              isDefault ? 'w-[325px] h-[100px] p-6 !rounded-lg' : 'w-fit h-[75px]'
+            }`}
             onClick={() => {
               if (!isSubscribed || isEditing) return;
 
@@ -206,71 +225,67 @@ const Node = ({
           >
             <>
               <div
-                className={`${
-                  isDefault || !isSubscribed ? 'hidden' : 'flex'
-                } items-center gap-1.5 text-main rounded-lg text-xs`}
-                style={{
-                  position: 'absolute',
-                  left: 0, // Center the node
-                  top: 0, // Center the node
-                  // transform: `scale(${zoomLevel})`,
-                  transform: `translateY(-120%)`,
-                  transformOrigin: 'top left',
-                  // zIndex: 10,
-                }}
-              >
-                {nodemapSettings.userCountVisible && userCount && userCount > 0 && (
-                  <div
-                    onClick={() => handleQuickIconClick(uuid, 'members')}
-                    className="card flex gap-1 items-center text-white font-semibold bg-primary-members border border-border-members shadow py-1 px-2 rounded-xl text-xs"
-                  >
-                    {userCount} <People className="thick-icon" />
-                  </div>
-                )}
-                {nodemapSettings.unreadMessageCountVisible && unreadMessageCount ? (
-                  <div
-                    onClick={() => handleQuickIconClick(uuid, 'discussions')}
-                    className="card flex gap-1 items-center text-white font-semibold bg-primary-discussions border border-border-discussions shadow py-1 px-2 rounded-xl text-xs relative"
-                  >
-                    {unreadMessageCount}
-                    <ChatSquareDots className="thick-icon" />
-
-                    <Dot
-                      size={35}
-                      className="text-rose-500 absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
-                    />
-                  </div>
-                ) : null}
-                {nodemapSettings.flashcardsDueVisible && flashcardsDueCount ? (
-                  <div
-                    onClick={() => handleQuickIconClick(uuid, 'flashcards')}
-                    className="card flex gap-1 items-center text-white font-semibold bg-primary-flashcards border border-border-flashcards shadow py-1 px-2 rounded-xl text-xs relative"
-                  >
-                    {flashcardsDueCount.count}
-                    <Stack className="thick-icon" />
-                  </div>
-                ) : null}
-              </div>
-
-              <div
-                className={`text-center gap-1 flex w-full flex-col items-center relative ${
+                className={`node text-center gap-2 flex w-full flex-col ${
                   isEditing && 'pointer-events-none'
                 }`}
               >
                 <span
-                  className={`font-semibold truncate leading-tight w-full px-2 ${
-                    isDefault ? 'max-w-[300px] !text-2xl' : 'max-w-[175px] text-sm'
-                  }  `}
+                  className={`font-semibold flex truncate whitespace-nowrap leading-tight w-full ${
+                    isDefault ? 'max-w-[300px] !text-2xl' : 'max-w-[250px] text-lg'
+                  }`}
                 >
                   {label}
                 </span>
-                {!isDefault && isSubscribed && (
-                  <NodeStatus
-                    uuid={uuid}
-                    status={userChannelDetails.status}
-                    isActive={currentChannelId === uuid}
-                  />
-                )}
+
+                <div className="flex justify-between gap-8">
+                  {!isDefault && isSubscribed && (
+                    <NodeStatus
+                      uuid={uuid}
+                      status={userChannelDetails.status}
+                      isActive={currentChannelId === uuid}
+                    />
+                  )}
+
+                  <div
+                    className={`${
+                      isDefault || !isSubscribed ? 'hidden' : 'flex'
+                    } items-center gap-0.5 text-main text-xs`}
+                  >
+                    {nodemapSettings.userCountVisible && (
+                      <div
+                        onClick={() => handleQuickIconClick(uuid, 'members')}
+                        className="card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs"
+                      >
+                        {userCount} <People />
+                      </div>
+                    )}
+
+                    <div
+                      onClick={() => handleQuickIconClick(uuid, 'discussions')}
+                      className={`card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs ${nodemapSettings.unreadMessageCountVisible}`}
+                    >
+                      {unreadMessageCount}
+                      <ChatSquareDots />
+
+                      {unreadMessageCount ? (
+                        <Dot
+                          size={35}
+                          className="text-rose-500 absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+                        />
+                      ) : null}
+                    </div>
+
+                    <div
+                      onClick={() => handleQuickIconClick(uuid, 'flashcards')}
+                      className={`card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs ${
+                        !nodemapSettings.flashcardsDueVisible && 'opacity-0'
+                      }`}
+                    >
+                      {flashcardsDueCount?.count ?? 0}
+                      <Stack />
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
             {isHovered && isEditing && (

@@ -6,7 +6,7 @@
   transform: scale(0);
   transition: all 0.5s ease-in-out;
   position: absolute;
-  top: 0;
+  top: 4;
   left: 0;
   text-wrap: nowrap;
   /* height: 100%;
@@ -19,7 +19,7 @@
 }
 
 .star {
-  font-size: 13.125px; /* Adjust size as needed */
+  font-size: 12.5px; /* Adjust size as needed */
 
   /* margin-right: 10px; */
   animation: starAnimation 1.2s forwards; /* Adjust time as needed */

@@ -6,6 +6,7 @@ import {
   Funnel,
   House,
   PencilSquare,
+  Robot,
   ZoomIn,
   ZoomOut,
 } from 'react-bootstrap-icons';
@@ -25,6 +26,7 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
   } = useStore('channelStore');
   const { lastViewedWorkspace } = useStore('workspaceStore');
   const [, setShowIndicators] = useState(true);
+  const { setActiveModal } = useStore('modalStore');
 
   const handleViewFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -44,6 +46,11 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
       }
     }
   };
+
+  const handleGenerateRoadmap = () => {
+    setActiveModal({ type: 'GenerateRoadmap' });
+  };
+
   return (
     <div className="flex flex-col gap-3.5 items-center z-10 h-full border-l border-border p-2  bg-background/70 backdrop-blur-lg absolute top-0 right-0">
       <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => onReset()}>
@@ -78,6 +85,9 @@ const TransformControls = ({ onZoomIn, onZoomOut, onReset, zoomToElement }: any)
       </Button>
       <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => onZoomOut()}>
         <ZoomOut />
+      </Button>
+      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => handleGenerateRoadmap()}>
+        <Robot />
       </Button>
     </div>
   );
