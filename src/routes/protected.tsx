@@ -17,7 +17,6 @@ import Nodemap from '@/features/workspaceChannels/components/Nodemap';
 import Profile from '@/features/profile/components/Profile';
 import Search from '@/features/search/components/Search';
 import Onboarding from '@/features/workspaces/components/Onboarding';
-import InviteUserOnboarding from '@/features/workspaces/components/InviteUserOnboarding';
 
 const UserRoutes = lazy(() => import('@/features/users/routes'));
 const ChatroomRoutes = lazy(() => import('@/features/chatroom/routes'));
@@ -26,6 +25,7 @@ const ThreadRoutes = lazy(() => import('@/features/threads/routes'));
 const App = observer(() => {
   const location = useLocation();
   const { currentUser } = useStore('userStore');
+  // const { theme } = useStore('userPreferencesStore');
   const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
   const { setCurrentChannelUuid, subscribedChannels, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
@@ -34,12 +34,16 @@ const App = observer(() => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!workspaces.length || !lastViewedWorkspace) {
-    return <Navigate to="/onboarding" replace />;
-  }
+  // if (!workspaces.length || !lastViewedWorkspace) {
+  //   return <Navigate to="/workspace-onboarding?section=workspace" replace />;
+  // }
 
-  if (lastViewedWorkspace?.isFirstLogin) {
-    return <Navigate to="/workspace-onboarding" replace />;
+  // if (!theme) {
+  //   return <Navigate to="/workspace-onboarding?section=theme" replace />;
+  // }
+
+  if (workspaces.length === 0 || !lastViewedWorkspace || lastViewedWorkspace?.isFirstLogin) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   // Initializes emojis
@@ -85,24 +89,29 @@ const App = observer(() => {
   );
 });
 
-const OnboardingNav = observer(() => {
-  const { currentUser } = useStore('userStore');
-  const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
+// const OnboardingNav = observer(() => {
+//   const { currentUser } = useStore('userStore');
+//   const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
+//   const { theme } = useStore('userPreferencesStore');
 
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
-  }
+//   if (!currentUser) {
+//     return <Navigate to="/login" replace />;
+//   }
 
-  if (workspaces.length) {
-    return <Navigate to="/app/home" replace />;
-  }
+//   if (workspaces.length && theme && !lastViewedWorkspace.firstLogin) {
+//     return <Navigate to="/app/home" replace />;
+//   }
 
-  if (lastViewedWorkspace?.isFirstLogin) {
-    return <Navigate to="/workspace-onboarding" replace />;
-  }
+//   if (!theme) {
+//     return <Navigate to="/workspace-onboarding?section=theme" replace />;
+//   }
 
-  return <Onboarding />;
-});
+//   if (lastViewedWorkspace?.isFirstLogin) {
+//     return <Navigate to="/workspace-onboarding?section=workspace" replace />;
+//   }
+
+//   return <Onboarding />;
+// });
 
 export const protectedRoutes = [
   {
@@ -123,13 +132,13 @@ export const protectedRoutes = [
       { path: '*', element: <Navigate to={navigateToLastPage()} /> },
     ],
   },
+  // {
+  //   path: '/onboarding',
+  //   element: <OnboardingNav />,
+  // },
   {
     path: '/onboarding',
-    element: <OnboardingNav />,
-  },
-  {
-    path: '/workspace-onboarding',
-    element: <InviteUserOnboarding />,
+    element: <Onboarding />,
   },
   {
     path: '*',

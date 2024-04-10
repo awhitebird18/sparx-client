@@ -1,9 +1,6 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { NotificationType, PrimaryColors, Theme } from '../enums';
-import { getValidPrimaryColor } from '@/utils/getValidPrimaryColor';
-import { getValidTheme } from '@/utils/getValidTheme';
-
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
 import storage from '@/utils/storage';
@@ -34,7 +31,9 @@ export class UserPreferencesStore {
         if (newTheme === 'dark') {
           document.body.classList.add(Theme.DARK);
           document.body.classList.remove(Theme.LIGHT);
-        } else {
+        }
+
+        if (newTheme === 'light') {
           document.body.classList.add(Theme.LIGHT);
           document.body.classList.remove(Theme.DARK);
         }
@@ -54,9 +53,9 @@ export class UserPreferencesStore {
       },
     );
 
-    this.setNotificationType(NotificationType.DIRECT);
-    this.setPrimaryColor(getValidPrimaryColor(storage.getPrimaryColor()));
-    this.setTheme(getValidTheme(storage.getTheme()));
+    // this.setNotificationType(NotificationType.DIRECT);
+    // this.setPrimaryColor(getValidPrimaryColor(storage.getPrimaryColor()));
+    // this.setTheme(getValidTheme(storage.getTheme()));
   }
 
   setPrimaryColor = (color: PrimaryColors) => {
