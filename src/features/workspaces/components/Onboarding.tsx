@@ -2,9 +2,10 @@ import { useState } from 'react';
 import CreateWorkspaceOnboarding from './CreateWorkspaceOnboarding';
 import UserOnboarding from './UserOnboarding';
 import ThemeOnboarding from './ThemeOnboarding';
+import RoadmapOnboarding from './RoadmapOnboarding';
 
 const Onboarding = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background relative">
@@ -14,7 +15,8 @@ const Onboarding = () => {
 
       {step === 1 && <CreateWorkspaceOnboarding setStep={setStep} />}
       {step === 2 && <ThemeOnboarding setStep={setStep} />}
-      {step === 3 && <UserOnboarding />}
+      {step === 3 && <RoadmapOnboarding setStep={setStep} />}
+      {step === 4 && <UserOnboarding />}
     </div>
   );
 };

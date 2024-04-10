@@ -14,6 +14,7 @@ type Notification = {
   description?: string;
   type?: NotificationType;
   show?: boolean;
+  requireAttention?: boolean;
 };
 
 export class NotificationStore {
