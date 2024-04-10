@@ -4,6 +4,7 @@ import ThemeOnboarding from './ThemeOnboarding';
 import { useStore } from '@/stores/RootStore';
 import { Navigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import RoadmapOnboarding from './RoadmapOnboarding';
 
 const InviteUserOnboarding = () => {
   const [step, setStep] = useState(2);
@@ -21,7 +22,8 @@ const InviteUserOnboarding = () => {
       </div>
 
       {step === 2 && <ThemeOnboarding setStep={setStep} />}
-      {step === 3 && <UserOnboarding />}
+      {step === 3 && <RoadmapOnboarding setStep={setStep} />}
+      {step === 4 && <UserOnboarding />}
     </div>
   );
 };

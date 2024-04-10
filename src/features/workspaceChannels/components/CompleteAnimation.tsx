@@ -17,7 +17,7 @@ const CelebrationAnimation = () => {
 
   return (
     <div
-      className={`star flex gap-2 text-yellow-400 items-center celebration-container ${
+      className={`star flex gap-1.5 text-yellow-400 text-sm items-center celebration-container ${
         animate ? 'animate' : ''
       } z-50`}
     >

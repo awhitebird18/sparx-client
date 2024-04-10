@@ -49,6 +49,8 @@ import { Template } from '@/features/flashcards/types/template';
 import UpdateTask from '@/features/overview/components/UpdateTask';
 import DeleteTask from '@/features/overview/components/DeleteTask';
 
+import GenerateRoadmap from '@/features/workspaceChannels/components/GenerateRoadmap';
+
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
 const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
 const InviteUserModal = lazy(() => import('@/features/users/components/InviteUserModal'));
@@ -126,6 +128,7 @@ const modalList = {
   ShortcutMenu: () => <ShortcutMenu />,
   UpdateTask: (props: any) => <UpdateTask {...props} />,
   DeleteTask: (props: { task: any; onDelete: (id: string) => void }) => <DeleteTask {...props} />,
+  GenerateRoadmap: () => <GenerateRoadmap />,
 };
 
 export type ModalName = keyof typeof modalList;

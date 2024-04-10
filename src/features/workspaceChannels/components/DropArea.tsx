@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { NodeData } from '../types/nodeData';
 import { observer } from 'mobx-react-lite';
@@ -10,8 +10,14 @@ import { calculateCoordinates } from '../utils/calculateCoordinates';
 import { Line } from '../types/line';
 import Node from './Node';
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
+import { Channel } from '@/features/channels/types';
+import CustomDragLayer from './CustomDragLayer';
 
-const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
+const nodeHeight = 75;
+const nodeWidth = 275;
+const nodeGap = 20;
+
+const DropArea = ({ nodemapState }: any) => {
   const ref = useRef<HTMLDivElement>(null);
   const { setActiveModal } = useStore('modalStore');
 
@@ -34,10 +40,16 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
   const [isDragging, setIsDragging] = useState(false);
   // Review
   const [, setDragStart] = useState({ x: 0, y: 0 });
-  const [gridSize] = useState({ width: 8000, height: 8000 });
+  // const [gridSize] = useState({ width: 4000, height: 8000 });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hideUnstarted] = useState(false);
   const [currentLine, setCurrentLine] = useState<Line | null>(null);
+  const [snapState, setSnapState] = useState({
+    isSnapping: false,
+    xSnapped: false,
+    ySnapped: false,
+    snapPosition: { x: 0, y: 0 },
+  });
 
   // Set up global event listeners for keydown and keyup
   useEffect(() => {
@@ -128,11 +140,6 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
     setSelectedLineId,
   ]);
 
-  useLayoutEffect(() => {
-    scrollToMiddle();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gridSize.height, gridSize.width]);
-
   const handleRightMouseDown = (e: React.MouseEvent) => {
     if (e.button === 2 && ref.current) {
       setIsDragging(true);
@@ -158,30 +165,28 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
     setSelectedLineId(uuid);
   };
 
-  const handleMouseMove = () => {
-    // if (isDragging && dragStart.x !== 0 && dragStart.y !== 0 && ref.current) {
-    //   const dx = e.clientX - dragStart.x;
-    //   const dy = e.clientY - dragStart.y;
-    //   ref.current.scrollLeft -= dx;
-    //   ref.current.scrollTop -= dy;
-    //   setDragStart({ x: e.clientX, y: e.clientY });
-    // }
-  };
+  // const handleMouseMove = (event: any) => {
+  //   const containerRect = ref?.current?.getBoundingClientRect();
+
+  //   if (!containerRect) return;
+
+  //   const mouseX = (event.clientX - containerRect.left) / nodemapState.scale;
+  //   const mouseY = (event.clientY - containerRect.top) / nodemapState.scale;
+  // };
 
   const handleMouseUp = () => {
     setDragStart({ x: 0, y: 0 });
   };
 
-  const onDrop = async (uuid: string, x: number, y: number) => {
-    await updateChannelApi(uuid, { x, y }, currentWorkspaceId);
-  };
-
-  const [, drop] = useDrop({
-    accept: 'node',
-    canDrop: () => {
-      return true;
+  const onDrop = useCallback(
+    async (uuid: string, x: number, y: number) => {
+      await updateChannelApi(uuid, { x, y }, currentWorkspaceId);
     },
-    drop: (item: NodeData | undefined, monitor: DropTargetMonitor) => {
+    [currentWorkspaceId, updateChannelApi],
+  );
+
+  const handleDrop = useCallback(
+    (item: NodeData | undefined, monitor: DropTargetMonitor) => {
       if (item && ref.current) {
         const delta = monitor.getDifferenceFromInitialOffset();
         if (delta) {
@@ -192,7 +197,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
 
           // Snap to grid logic
           if (isControlPressed) {
-            const gridSize = 75; // Define your grid size
+            const gridSize = 150; // Define your grid size
             adjustedX = Math.round((item.x + adjustedX) / gridSize) * gridSize;
             adjustedY = Math.round((item.y + adjustedY) / gridSize) * gridSize;
           } else {
@@ -201,15 +206,165 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
           }
 
           // Updating the position of the node
-          onDrop(item.uuid, adjustedX, adjustedY);
+          onDrop(
+            item.uuid,
+            snapState.isSnapping ? snapState.snapPosition.x : adjustedX,
+            snapState.isSnapping ? snapState.snapPosition.y : adjustedY,
+          );
         }
       }
     },
+    [isControlPressed, nodemapState.scale, onDrop, snapState],
+  );
+
+  const findClosestChannelWithSimilarValue = (
+    channels: any,
+    hoveredItem: any,
+    direction: 'x' | 'y',
+  ) => {
+    const closeNodes = channels.filter((channel: Channel) => {
+      return (
+        channel.uuid !== hoveredItem.uuid &&
+        Math.abs(channel[direction] - hoveredItem[direction]) < 50
+      );
+    });
+
+    // Sort the filtered array based on the absolute difference
+    closeNodes.sort(
+      (a: any, b: any) =>
+        Math.abs(a[direction] - hoveredItem[direction]) -
+        Math.abs(b[direction] - hoveredItem[direction]),
+    );
+
+    // The first item in the sorted array will be the closest one
+    return closeNodes[0];
+  };
+
+  const handleHover = (item: NodeData, monitor: DropTargetMonitor<NodeData, void>) => {
+    const delta = monitor.getDifferenceFromInitialOffset();
+    if (!delta) return;
+
+    const hoveredItem = {
+      uuid: item.uuid,
+      x: Math.round(item.x + delta.x),
+      y: Math.round(item.y + delta.y),
+    };
+
+    // Snap to similar nodes
+    const channelWithSimilarX = findClosestChannelWithSimilarValue(
+      subscribedChannels,
+      hoveredItem,
+      'x',
+    );
+    const channelWithSimilarY = findClosestChannelWithSimilarValue(
+      subscribedChannels,
+      hoveredItem,
+      'y',
+    );
+
+    let xCoordinate = hoveredItem.x;
+    let yCoordinate = hoveredItem.y;
+
+    let xSnapped = false;
+    let ySnapped = false;
+
+    if (channelWithSimilarX) {
+      xCoordinate = channelWithSimilarX.x;
+      xSnapped = true;
+    } else {
+      xCoordinate = hoveredItem.x;
+      xSnapped = false;
+    }
+
+    if (channelWithSimilarY) {
+      yCoordinate = channelWithSimilarY.y;
+      ySnapped = true;
+    } else {
+      yCoordinate = hoveredItem.y;
+      ySnapped = false;
+    }
+
+    // Snaps to group
+    const closeNode = subscribedChannels.find((channel: Channel) => {
+      return (
+        channel.uuid !== item.uuid &&
+        Math.abs(channel.x + nodeWidth / 2 - hoveredItem.x) < 150 &&
+        Math.abs(channel.y + nodeHeight / 2 - hoveredItem.y) < 150
+      );
+    });
+
+    if (closeNode) {
+      const parentConnector = channelConnectors.find(
+        (connector: Line) => connector.end?.nodeId === closeNode.uuid,
+      );
+
+      if (!parentConnector) {
+        return setSnapState((prevState) => ({ ...prevState, isSnapping: false }));
+      }
+
+      const closeNodeElMidPoint = closeNode.y + 75 / 2;
+
+      const isAbove = closeNodeElMidPoint > hoveredItem.y;
+
+      if (isAbove) {
+        yCoordinate -= nodeHeight + 30;
+      } else {
+        yCoordinate += nodeHeight + 30;
+      }
+
+      switch (parentConnector.start.side) {
+        case ConnectionSide.LEFT: {
+          const closeNodeRightSide = closeNode.x + nodeWidth / 2;
+          xCoordinate = closeNodeRightSide - nodeWidth / 2;
+          break;
+        }
+        case ConnectionSide.RIGHT: {
+          const closeNodeLeftSide = closeNode.x - nodeWidth / 2;
+          xCoordinate = closeNodeLeftSide + nodeWidth / 2;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    if (!channelWithSimilarX && !channelWithSimilarY && !closeNode) {
+      setSnapState({
+        isSnapping: false,
+        xSnapped: false,
+        ySnapped: false,
+        snapPosition: {
+          x: hoveredItem.x,
+          y: hoveredItem.y,
+        },
+      });
+
+      return;
+    }
+
+    setSnapState({
+      isSnapping: true,
+      xSnapped,
+      ySnapped,
+      snapPosition: {
+        x: xCoordinate,
+        y: yCoordinate,
+      },
+    });
+  };
+
+  const [, drop] = useDrop({
+    accept: 'node',
+    canDrop: () => {
+      return true;
+    },
+    drop: handleDrop,
+    hover: handleHover,
   });
 
   const handleCreateChannel = (e: React.MouseEvent) => {
-    const nodeWidth = 135;
-    const nodeHeight = 60;
+    const nodeWidth = 175;
+    const nodeHeight = 75;
 
     const clickX = e.clientX;
     const clickY = e.clientY;
@@ -217,8 +372,8 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
     const rect = ref.current?.getBoundingClientRect();
     if (!rect || !ref.current) return;
 
-    const x = clickX - rect.left + ref.current.scrollLeft - nodeWidth / 2;
-    const y = clickY - rect.top + ref.current.scrollTop - nodeHeight / 2;
+    const x = (clickX - rect.left + ref.current.scrollLeft) / nodemapState.scale;
+    const y = (clickY - rect.top + ref.current.scrollTop) / nodemapState.scale;
 
     setActiveModal({
       type: 'CreateChannelModal',
@@ -286,11 +441,11 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
     return startActivated && endActivated;
   };
 
-  function renderLine(line: Line, index: number, isLineActivated: boolean) {
+  function renderLine(line: Line, index: number, isLineActivated: boolean, scale: number) {
     const pathD = createAngledPath(
-      calculateCoordinates(line.start.nodeId, line.start.side, subscribedChannels),
+      calculateCoordinates(line.start.nodeId, line.start.side, subscribedChannels, scale),
       line.end
-        ? calculateCoordinates(line.end.nodeId, line.end.side, subscribedChannels)
+        ? calculateCoordinates(line.end.nodeId, line.end.side, subscribedChannels, scale)
         : { x: mousePosition.x, y: mousePosition.y, side: ConnectionSide.TOP },
     );
 
@@ -343,7 +498,7 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
       onMouseDown={handleRightMouseDown}
       onMouseUp={handleRightMouseUp}
       onMouseLeave={handleMouseUp}
-      onMouseMove={handleMouseMove}
+      // onMouseMove={handleMouseMove}
       onClick={handleSvgClick}
       onContextMenu={handleContextMenu}
       onDoubleClick={isEditing ? handleCreateChannel : undefined}
@@ -351,10 +506,26 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
       <ContextMenu>
         <ContextMenuTrigger disabled={!isEditing}>
           <>
+            <div className="absolute left-1/2 top-[600px] gap-5 -translate-x-1/2 flex flex-col text-white prose dark:prose-invert">
+              <h1 className="text-7xl font-semibold">Start</h1>
+              <div className="h-72 w-1 bg-card mx-auto" />
+            </div>
+            {subscribedChannels.map((channel: any) => (
+              <Node
+                key={channel.uuid}
+                uuid={channel.uuid}
+                label={channel.name}
+                x={channel.x}
+                y={channel.y}
+                isDefault={channel.isDefault}
+                handleCreateLine={handleCreateLine}
+                scale={nodemapState.scale}
+              />
+            ))}
             <div
               className="relative flex-1 flex w-full h-full"
               style={{
-                width: '8000px',
+                width: '4000px',
                 height: '8000px',
                 position: 'absolute',
                 top: 0,
@@ -373,32 +544,22 @@ const DropArea = ({ scrollToMiddle, nodemapState }: any) => {
                 {channelConnectors.map((line, index) => {
                   if (isLineActivated(line)) return null; // Skip activated lines
 
-                  return renderLine(line, index, false);
+                  return renderLine(line, index, false, nodemapState.scale);
                 })}
 
                 {channelConnectors.map((line, index) => {
                   if (!isLineActivated(line)) return null; // Skip non-activated lines
 
-                  return renderLine(line, index, true);
+                  return renderLine(line, index, true, nodemapState.scale);
                 })}
 
                 {/* Current Line */}
-                {currentLine && renderLine(currentLine, 100, false)}
+                {currentLine && renderLine(currentLine, 100, false, nodemapState.scale)}
               </svg>
               <div className="w-1 h-1 absolute bg-white" style={{ top: 4000, left: 4000 }} />
             </div>
 
-            {subscribedChannels.map((channel: any) => (
-              <Node
-                key={channel.uuid}
-                uuid={channel.uuid}
-                label={channel.name}
-                x={channel.x}
-                y={channel.y}
-                isDefault={channel.isDefault}
-                handleCreateLine={handleCreateLine}
-              />
-            ))}
+            <CustomDragLayer scale={nodemapState.scale} snapState={snapState} />
           </>
         </ContextMenuTrigger>
       </ContextMenu>

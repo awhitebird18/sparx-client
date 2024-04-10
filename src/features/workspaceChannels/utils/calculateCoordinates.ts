@@ -2,11 +2,13 @@ import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 import { Channel } from '@/features/channels/types';
 
 export function calculateCoordinates(nodeId: string, side: ConnectionSide, nodesData: Channel[]) {
-  const unscaledWidth = 200;
-  const unscaledHeight = 100;
+  const unscaledWidth = 275;
+  const unscaledHeight = 75;
 
   const node = nodesData.find((n) => n.uuid === nodeId);
-  if (!node) {
+
+  // Review this. Not a good idea to include unscaled dimensions to this.
+  if (!node || !unscaledHeight || !unscaledWidth) {
     return { x: 0, y: 0, side: ConnectionSide.TOP };
   }
 

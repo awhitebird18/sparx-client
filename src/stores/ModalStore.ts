@@ -4,7 +4,7 @@ import { ModalName } from '@/components/modal/modalList';
 
 interface ActiveModal {
   type: ModalName;
-  payload: unknown | null;
+  payload?: unknown | null;
 }
 
 export class ModalStore {
