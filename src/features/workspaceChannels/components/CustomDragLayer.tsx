@@ -25,9 +25,8 @@ const CustomDragLayer = ({
     return null;
   }
 
-  const itemEl = document.getElementById(item.uuid);
-  const width = itemEl ? itemEl.offsetWidth : 300;
-  const height = itemEl ? itemEl.offsetHeight : 100;
+  const width = 275;
+  const height = 75;
 
   const { x, y } = {
     x: snapState.isSnapping ? snapState.snapPosition.x : item.x,
