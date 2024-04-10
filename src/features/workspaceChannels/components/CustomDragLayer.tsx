@@ -6,7 +6,12 @@ const CustomDragLayer = ({
   snapState,
 }: {
   scale: number;
-  snapState: { isSnapping: boolean; snapPosition: { x: number; y: number } };
+  snapState: {
+    isSnapping: boolean;
+    xSnapped: boolean;
+    ySnapped: boolean;
+    snapPosition: { x: number; y: number };
+  };
 }) => {
   const { itemType, isDragging, item, initialOffset, currentOffset } = useDragLayer((monitor) => ({
     item: monitor.getItem(),
@@ -53,12 +58,26 @@ const CustomDragLayer = ({
   } as CSSProperties;
   // Render your custom drag preview component
   return (
-    <div
-      style={layerStyles}
-      className="flex items-center justify-center whitespace-nowrap truncate text-lg font-semibold leading-tight rounded-lg bg-card card border border-border opacity-30"
-    >
-      {item.name}
-    </div>
+    <>
+      <div
+        style={layerStyles}
+        className="flex items-center justify-center whitespace-nowrap truncate text-lg font-semibold leading-tight rounded-lg bg-card card border border-border opacity-30 overflow-visible"
+      >
+        {item.name}
+      </div>
+      {snapState.xSnapped ? (
+        <div
+          className={`absolute h-full opacity-30 w-0  !border-dashed border-r-4 border-border`}
+          style={{ left: `${x}px`, top: 0 }}
+        />
+      ) : null}
+      {snapState.ySnapped ? (
+        <div
+          className="absolute w-full opacity-30 h-0  border-t-4 !border-dashed border-border"
+          style={{ left: 0, top: `${y}px` }}
+        />
+      ) : null}
+    </>
   );
 };
 

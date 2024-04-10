@@ -6,13 +6,16 @@ import { ContextMenu, ContextMenuTrigger } from '@/components/ui/ContextMenu';
 import { useStore } from '@/stores/RootStore';
 import { createAngledPath } from '../utils/createAngledPath';
 import { calculateCoordinates } from '../utils/calculateCoordinates';
-import { toJS } from 'mobx';
 
 import { Line } from '../types/line';
 import Node from './Node';
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 import { Channel } from '@/features/channels/types';
 import CustomDragLayer from './CustomDragLayer';
+
+const nodeHeight = 75;
+const nodeWidth = 275;
+const nodeGap = 20;
 
 const DropArea = ({ nodemapState }: any) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,6 +46,8 @@ const DropArea = ({ nodemapState }: any) => {
   const [currentLine, setCurrentLine] = useState<Line | null>(null);
   const [snapState, setSnapState] = useState({
     isSnapping: false,
+    xSnapped: false,
+    ySnapped: false,
     snapPosition: { x: 0, y: 0 },
   });
 
@@ -160,17 +165,14 @@ const DropArea = ({ nodemapState }: any) => {
     setSelectedLineId(uuid);
   };
 
-  // Handle mouse move event
-  const handleMouseMove = (event: any) => {
-    // Get the container's bounding rectangle
-    const containerRect = ref?.current?.getBoundingClientRect();
+  // const handleMouseMove = (event: any) => {
+  //   const containerRect = ref?.current?.getBoundingClientRect();
 
-    if (!containerRect) return;
+  //   if (!containerRect) return;
 
-    // Calculate mouse position relative to the container
-    const mouseX = (event.clientX - containerRect.left) / nodemapState.scale;
-    const mouseY = (event.clientY - containerRect.top) / nodemapState.scale;
-  };
+  //   const mouseX = (event.clientX - containerRect.left) / nodemapState.scale;
+  //   const mouseY = (event.clientY - containerRect.top) / nodemapState.scale;
+  // };
 
   const handleMouseUp = () => {
     setDragStart({ x: 0, y: 0 });
@@ -215,84 +217,142 @@ const DropArea = ({ nodemapState }: any) => {
     [isControlPressed, nodemapState.scale, onDrop, snapState],
   );
 
-  const handleHover = (item: NodeData, monitor: DropTargetMonitor<NodeData, void>) => {
-    const delta = monitor.getDifferenceFromInitialOffset();
-
-    if (!delta) return;
-
-    // Current hover position
-    const hoverX = Math.round(item.x + delta.x);
-    const hoverY = Math.round(item.y + delta.y);
-
-    const closeNode = subscribedChannels.find((channel: Channel) => {
+  const findClosestChannelWithSimilarValue = (
+    channels: any,
+    hoveredItem: any,
+    direction: 'x' | 'y',
+  ) => {
+    const closeNodes = channels.filter((channel: Channel) => {
       return (
-        channel.uuid !== item.uuid &&
-        Math.abs(channel.x - hoverX) < 100 &&
-        Math.abs(channel.y - hoverY) < 100
+        channel.uuid !== hoveredItem.uuid &&
+        Math.abs(channel[direction] - hoveredItem[direction]) < 50
       );
     });
 
-    if (!closeNode) {
-      return setSnapState((prevState) => ({ ...prevState, isSnapping: false }));
-    }
-
-    const parentConnector = channelConnectors.find(
-      (connector: Line) => connector.end?.nodeId === closeNode.uuid,
+    // Sort the filtered array based on the absolute difference
+    closeNodes.sort(
+      (a: any, b: any) =>
+        Math.abs(a[direction] - hoveredItem[direction]) -
+        Math.abs(b[direction] - hoveredItem[direction]),
     );
 
-    if (!parentConnector) {
-      return setSnapState((prevState) => ({ ...prevState, isSnapping: false }));
-    }
+    // The first item in the sorted array will be the closest one
+    return closeNodes[0];
+  };
 
-    let xCoordinate = hoverX;
-    let yCoordinate = closeNode.y;
-    const currentNodeEl = document.getElementById(item.uuid);
-    const closeNodeEl = document.getElementById(closeNode.uuid);
+  const handleHover = (item: NodeData, monitor: DropTargetMonitor<NodeData, void>) => {
+    const delta = monitor.getDifferenceFromInitialOffset();
+    if (!delta) return;
 
-    const nodeHeight = 75;
+    const hoveredItem = {
+      uuid: item.uuid,
+      x: Math.round(item.x + delta.x),
+      y: Math.round(item.y + delta.y),
+    };
 
-    const currentNodeWidth = currentNodeEl?.offsetWidth;
-    const closeNodeWidth = closeNodeEl?.offsetWidth;
-    if (!closeNodeWidth || !currentNodeWidth) {
-      return setSnapState((prevState) => ({ ...prevState, isSnapping: false }));
-    }
+    // Snap to similar nodes
+    const channelWithSimilarX = findClosestChannelWithSimilarValue(
+      subscribedChannels,
+      hoveredItem,
+      'x',
+    );
+    const channelWithSimilarY = findClosestChannelWithSimilarValue(
+      subscribedChannels,
+      hoveredItem,
+      'y',
+    );
 
-    // Determine is lower or higher
-    const closeNodeElMidPoint = closeNode.y + 75 / 2;
+    let xCoordinate = hoveredItem.x;
+    let yCoordinate = hoveredItem.y;
 
-    const isAbove = closeNodeElMidPoint > hoverY;
+    let xSnapped = false;
+    let ySnapped = false;
 
-    if (isAbove) {
-      yCoordinate -= nodeHeight + 30;
+    if (channelWithSimilarX) {
+      xCoordinate = channelWithSimilarX.x;
+      xSnapped = true;
     } else {
-      yCoordinate += nodeHeight + 30;
+      xCoordinate = hoveredItem.x;
+      xSnapped = false;
     }
 
-    // Determine if lower or higher
+    if (channelWithSimilarY) {
+      yCoordinate = channelWithSimilarY.y;
+      ySnapped = true;
+    } else {
+      yCoordinate = hoveredItem.y;
+      ySnapped = false;
+    }
 
-    switch (parentConnector.start.side) {
-      case ConnectionSide.LEFT: {
-        const closeNodeRightSide = closeNode.x + closeNodeWidth / 2;
-        xCoordinate = closeNodeRightSide - currentNodeWidth / 2;
-        break;
+    // Snaps to group
+    const closeNode = subscribedChannels.find((channel: Channel) => {
+      return (
+        channel.uuid !== item.uuid &&
+        Math.abs(channel.x + nodeWidth / 2 - hoveredItem.x) < 150 &&
+        Math.abs(channel.y + nodeHeight / 2 - hoveredItem.y) < 150
+      );
+    });
+
+    if (closeNode) {
+      const parentConnector = channelConnectors.find(
+        (connector: Line) => connector.end?.nodeId === closeNode.uuid,
+      );
+
+      if (!parentConnector) {
+        return setSnapState((prevState) => ({ ...prevState, isSnapping: false }));
       }
-      case ConnectionSide.RIGHT: {
-        const closeNodeLeftSide = closeNode.x - closeNodeWidth / 2;
-        xCoordinate = closeNodeLeftSide + currentNodeWidth / 2;
-        break;
+
+      const closeNodeElMidPoint = closeNode.y + 75 / 2;
+
+      const isAbove = closeNodeElMidPoint > hoveredItem.y;
+
+      if (isAbove) {
+        yCoordinate -= nodeHeight + 30;
+      } else {
+        yCoordinate += nodeHeight + 30;
       }
-      default:
-        break;
+
+      switch (parentConnector.start.side) {
+        case ConnectionSide.LEFT: {
+          const closeNodeRightSide = closeNode.x + nodeWidth / 2;
+          xCoordinate = closeNodeRightSide - nodeWidth / 2;
+          break;
+        }
+        case ConnectionSide.RIGHT: {
+          const closeNodeLeftSide = closeNode.x - nodeWidth / 2;
+          xCoordinate = closeNodeLeftSide + nodeWidth / 2;
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    if (!channelWithSimilarX && !channelWithSimilarY && !closeNode) {
+      setSnapState({
+        isSnapping: false,
+        xSnapped: false,
+        ySnapped: false,
+        snapPosition: {
+          x: hoveredItem.x,
+          y: hoveredItem.y,
+        },
+      });
+
+      return;
     }
 
     setSnapState({
       isSnapping: true,
+      xSnapped,
+      ySnapped,
       snapPosition: {
         x: xCoordinate,
         y: yCoordinate,
       },
     });
   };
+
   const [, drop] = useDrop({
     accept: 'node',
     canDrop: () => {
@@ -303,8 +363,8 @@ const DropArea = ({ nodemapState }: any) => {
   });
 
   const handleCreateChannel = (e: React.MouseEvent) => {
-    const nodeWidth = 135;
-    const nodeHeight = 60;
+    const nodeWidth = 175;
+    const nodeHeight = 75;
 
     const clickX = e.clientX;
     const clickY = e.clientY;
@@ -438,7 +498,7 @@ const DropArea = ({ nodemapState }: any) => {
       onMouseDown={handleRightMouseDown}
       onMouseUp={handleRightMouseUp}
       onMouseLeave={handleMouseUp}
-      onMouseMove={handleMouseMove}
+      // onMouseMove={handleMouseMove}
       onClick={handleSvgClick}
       onContextMenu={handleContextMenu}
       onDoubleClick={isEditing ? handleCreateChannel : undefined}

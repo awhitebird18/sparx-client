@@ -204,13 +204,11 @@ const Node = ({
 
               // transformOrigin: 'center',
             }}
-            className={`card cursor-pointer z-50 delay-300 transition-colors -translate-x-1/2 -translate-y-1/2 px-4 shadow-md flex flex-col items-start duration-400 absolute justify-center border border-border min-w-[15rem] rounded-lg bg-card text-main ${
+            className={`card cursor-pointer z-50 delay-300 transition-colors w-[275px] h-[75px] -translate-x-1/2 -translate-y-1/2 px-4 shadow-md flex flex-col items-start duration-400 absolute justify-center border border-border min-w-[15rem] rounded-lg bg-card text-main ${
               currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
             } ${isDragging ? 'transition-opacity !opacity-0' : ''} ${
               isSubscribed ? '' : 'opacity-60'
-            } ${hideUnstarted && !isSubscribed && 'hidden'} ${
-              isDefault ? 'w-[325px] h-[100px] p-6 !rounded-lg' : 'w-fit h-[75px]'
-            }`}
+            } ${hideUnstarted && !isSubscribed && 'hidden'}`}
             onClick={() => {
               if (!isSubscribed || isEditing) return;
 
@@ -230,9 +228,7 @@ const Node = ({
                 }`}
               >
                 <span
-                  className={`font-semibold flex truncate whitespace-nowrap leading-tight w-full ${
-                    isDefault ? 'max-w-[300px] !text-2xl' : 'max-w-[250px] text-lg'
-                  }`}
+                  className={`font-semibold flex truncate whitespace-nowrap max-w-[250px] text-lg leading-tight w-full`}
                 >
                   {label}
                 </span>
