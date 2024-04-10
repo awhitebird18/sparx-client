@@ -11,18 +11,21 @@ import { ArrowRight } from 'react-bootstrap-icons';
 
 const GenerateRoadmap = ({ setStep }: { setStep: any }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { currentWorkspaceId } = useStore('workspaceStore');
+  const { currentWorkspace } = useStore('workspaceStore');
   const { setSubscribedChannels } = useStore('channelStore');
 
   const handleGenerateRoadmap = useCallback(async () => {
-    if (!currentWorkspaceId) return;
+    if (!currentWorkspace) return;
     setIsLoading(true);
 
-    const channels = await workspaceApi.generateRoadmap('Backend Development', currentWorkspaceId);
+    const channels = await workspaceApi.generateRoadmap(
+      currentWorkspace.name,
+      currentWorkspace.uuid,
+    );
     setSubscribedChannels(channels);
 
     setIsLoading(false);
-  }, [currentWorkspaceId, setSubscribedChannels]);
+  }, [currentWorkspace, setSubscribedChannels]);
 
   useEffect(() => {
     handleGenerateRoadmap();
@@ -30,9 +33,9 @@ const GenerateRoadmap = ({ setStep }: { setStep: any }) => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-full p-8 flex items-center justify-center bg-card prose dark:prose-invert flex-col gap-12">
-        <Spinner size={36} />
-        <h1>Generating Roadmap...</h1>
+      <div className="w-screen h-screen p-8 flex items-center justify-center bg-background prose dark:prose-invert flex-col gap-12">
+        <Spinner size={28} />
+        <h1>{`Generate Roadmap for ${currentWorkspace?.name}...`}</h1>
       </div>
     );
   }

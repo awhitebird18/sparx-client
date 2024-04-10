@@ -10,6 +10,7 @@ import { ArrowRightCircle, Image } from 'react-bootstrap-icons';
 import { ChannelType } from '@/features/channels/enums';
 import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';
+import { useAuth } from '@/providers/auth';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -17,6 +18,7 @@ const formSchema = z.object({
 
 const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { userLogout } = useAuth();
   const {
     createWorkspaceApi,
     joinWorkspaceApi,
@@ -130,6 +132,9 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
           </form>
         </Form>
       </div>
+      <Button onClick={userLogout} variant="outline">
+        Logout
+      </Button>
     </div>
   );
 };

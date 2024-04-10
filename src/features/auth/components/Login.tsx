@@ -11,7 +11,7 @@ import PasswordInput from '@/components/ui/PasswordInput';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { userLogin } = useAuth();
+  const { userLogin, registerAnonymous } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -28,6 +28,10 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const createNewWorkspace = async () => {
+    await registerAnonymous();
   };
 
   return (
@@ -109,13 +113,22 @@ const Login: React.FC = () => {
           </div>
         </div>
         <Button
-          className="absolute -top-4 -right-4 shadow-lg backdrop-blur-md"
+          className="absolute -top-4 -right-4 shadow-lg backdrop-blur-md w-48"
           onClick={loginAnanomously}
           name="anonymous-login-button"
           variant="outline-primary"
           aria-label="Log in anonymously to explore Sparx without creating an account"
         >
           Sign in Anonymously
+        </Button>
+        <Button
+          className="absolute -top-16 -right-4 shadow-lg backdrop-blur-md w-48"
+          onClick={createNewWorkspace}
+          name="anonymous-login-button"
+          variant="outline-primary"
+          aria-label="Log in anonymously to explore Sparx without creating an account"
+        >
+          Start new workspace
         </Button>
       </div>
     </div>

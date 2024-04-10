@@ -17,6 +17,7 @@ interface AuthContextData {
   userLogout: () => void;
   registerUser: (registrationData: RegistrationData) => Promise<any>;
   verifyAndLoginUser: () => void;
+  registerAnonymous: () => void;
 }
 
 const AuthContext = createContext<AuthContextData | undefined>(undefined);
@@ -41,7 +42,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { setUsers, setCurrentUserId } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
-  const { setWorkspaces, setUserWorkspaceData, currentWorkspaceId } = useStore('workspaceStore');
+  const { setWorkspaces, setUserWorkspaceData, currentWorkspaceId, resetAll } =
+    useStore('workspaceStore');
   const [loading, setLoading] = useState(true);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [fadeClass, setFadeClass] = useState('fade-enter');
@@ -82,6 +84,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.removeItem('emoji-mart.last');
       localStorage.removeItem('emoji-mart.frequently');
 
+      resetAll();
+
       resetPreferences();
 
       setCurrentUserId(undefined);
@@ -99,9 +103,19 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error(error);
     }
   };
+  const registerAnonymous = async (): Promise<any> => {
+    try {
+      await authApi.registerAnonymous();
+
+      await verifyAndLoginUser();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
+      // await authApi.logout();
       const data = await authApi.verify();
 
       setCurrentUserId(data.currentUser.uuid);
@@ -149,6 +163,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     userLogout,
     registerUser,
     verifyAndLoginUser,
+    registerAnonymous,
   };
 
   if (isLoginLoading) {

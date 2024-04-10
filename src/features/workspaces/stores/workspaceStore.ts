@@ -1,4 +1,4 @@
-import { computed, makeAutoObservable, observable, reaction } from 'mobx';
+import { action, computed, makeAutoObservable, observable, reaction } from 'mobx';
 import workspaceSpaceApi from '@/features/workspaces/api';
 
 import { CreateWorkspace, UpdateWorkspace } from '../types';
@@ -15,6 +15,7 @@ export class WorkspaceStore {
       workspaces: observable,
       userWorkspaceData: observable,
       currentWorkspaceId: observable,
+      resetAll: action,
       currentUserWorkspaceData: computed,
     });
 
@@ -27,6 +28,13 @@ export class WorkspaceStore {
       },
     );
   }
+
+  resetAll = () => {
+    this.workspaces = [];
+    this.userWorkspaceData = [];
+    this.lastViewedWorkspace = null;
+    this.currentWorkspaceId = undefined;
+  };
 
   get currentUserWorkspaceData(): any {
     const userWorkspace = this.userWorkspaceData.find(
