@@ -21,6 +21,7 @@ import UserStatusDisplay from '@/features/userStatus/components/UserStatusDispla
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { ArrowReturnRight, Cup, EmojiSmile, Eye, Gear, Pencil } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -55,30 +56,30 @@ const UserDropdown: React.FC = () => {
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <div className="flex items-center bg-card rounded-lg border-border border">
-        <div
+        {/* <Button
+          className="w-10 h-9 p-0"
+          variant="ghost"
           onClick={() => handleOpenModal({ type: 'UserStatusModal' })}
-          className="w-8 h-8 mr-1 flex items-center justify-center"
         >
           {activeUserStatus ? (
             <UserStatusDisplay status={activeUserStatus} />
           ) : (
-            <div className="w-full h-full flex items-center justify-center cursor-pointer ">
-              <EmojiSmile className="thick-icon" />
-            </div>
+            <EmojiSmile className="text-xl" />
           )}
-        </div>
+        </Button> */}
+
         <Tooltip>
           <TooltipTrigger asChild>
             <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
-                size={31.5}
+                size={34.5}
                 userId={currentUser.uuid}
                 profileImage={transformedImage}
                 showStatus
               />
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent asChild align="end">
+          <TooltipContent asChild align="end" sideOffset={10}>
             {(() => {
               const formattedName = `${currentUser.firstName
                 .charAt(0)

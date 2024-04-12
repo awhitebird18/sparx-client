@@ -36,7 +36,7 @@ const DropArea = ({ nodemapState }: any) => {
     isControlPressed,
     userChannelData,
   } = useStore('channelStore');
-  const { currentWorkspaceId } = useStore('workspaceStore');
+  const { currentWorkspaceId, setNodemapState, currentWorkspace } = useStore('workspaceStore');
   const [isDragging, setIsDragging] = useState(false);
   // Review
   const [, setDragStart] = useState({ x: 0, y: 0 });
@@ -50,6 +50,12 @@ const DropArea = ({ nodemapState }: any) => {
     ySnapped: false,
     snapPosition: { x: 0, y: 0 },
   });
+
+  useEffect(() => {
+    return () => {
+      setNodemapState(nodemapState);
+    };
+  }, [nodemapState, setNodemapState]);
 
   // Set up global event listeners for keydown and keyup
   useEffect(() => {
@@ -443,9 +449,9 @@ const DropArea = ({ nodemapState }: any) => {
 
   function renderLine(line: Line, index: number, isLineActivated: boolean, scale: number) {
     const pathD = createAngledPath(
-      calculateCoordinates(line.start.nodeId, line.start.side, subscribedChannels, scale),
+      calculateCoordinates(line.start.nodeId, line.start.side, subscribedChannels),
       line.end
-        ? calculateCoordinates(line.end.nodeId, line.end.side, subscribedChannels, scale)
+        ? calculateCoordinates(line.end.nodeId, line.end.side, subscribedChannels)
         : { x: mousePosition.x, y: mousePosition.y, side: ConnectionSide.TOP },
     );
 
@@ -507,7 +513,7 @@ const DropArea = ({ nodemapState }: any) => {
         <ContextMenuTrigger disabled={!isEditing}>
           <>
             <div className="absolute left-1/2 top-[600px] gap-5 -translate-x-1/2 flex flex-col text-white prose dark:prose-invert">
-              <h1 className="text-7xl font-semibold">Start</h1>
+              <h1 className="text-5xl font-normal">{currentWorkspace?.name}</h1>
               <div className="h-72 w-1 bg-card mx-auto" />
             </div>
             {subscribedChannels.map((channel: any) => (

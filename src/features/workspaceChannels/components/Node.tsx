@@ -1,7 +1,7 @@
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDrag, DragPreviewImage } from 'react-dnd';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { useDrag } from 'react-dnd';
 
 import NodeStatus from './NodeStatus';
 import HoverIndicators from './HoverIndicators';
@@ -28,10 +28,12 @@ import {
   ChatSquareDots,
   Stack,
   Bookmark,
+  FileText,
 } from 'react-bootstrap-icons';
 import { ChannelUserCount } from '../types/channelUserCount';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useNavigate } from 'react-router-dom';
+import { ModalName } from '@/components/modal/modalList';
 
 const createTransparentImage = () => {
   const img = new Image();
@@ -167,10 +169,10 @@ const Node = ({
 
   const isSubscribed = userChannelDetails.isSubscribed || isDefault;
 
-  const handleQuickIconClick = (nodeId: string, module: string) => {
+  const handleQuickIconClick = (nodeId: string, module: ModalName) => {
     setCurrentChannelUuid(nodeId);
     setIsFullscreen(false);
-    navigate(`/app/${module}`);
+    setActiveModal({ type: module });
   };
 
   const flashcardsDueCount = flashcardsDueCounts.find(
@@ -214,7 +216,7 @@ const Node = ({
 
               setCurrentChannelUuid(uuid);
 
-              addNotification({ title: 'Node changed', description: `Now viewing ${label}` });
+              // addNotification({ title: 'Node changed', description: `Now viewing ${label}` });
             }}
             onDoubleClick={(e) => {
               if (isDefault || !isEditing) return;
@@ -247,7 +249,7 @@ const Node = ({
                       isDefault || !isSubscribed ? 'hidden' : 'flex'
                     } items-center gap-0.5 text-main text-xs`}
                   >
-                    {nodemapSettings.userCountVisible && (
+                    {/* {nodemapSettings.userCountVisible && (
                       <div
                         onClick={() => handleQuickIconClick(uuid, 'members')}
                         className="card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs"
@@ -257,19 +259,25 @@ const Node = ({
                     )}
 
                     <div
+                      onClick={() => handleQuickIconClick(uuid, 'notes')}
+                      className={`card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs ${nodemapSettings.unreadMessageCountVisible}`}
+                    >
+                      0
+                      <FileText />
+                    </div>
+                    <div
                       onClick={() => handleQuickIconClick(uuid, 'discussions')}
                       className={`card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs ${nodemapSettings.unreadMessageCountVisible}`}
                     >
                       {unreadMessageCount}
-                      <ChatSquareDots />
 
-                      {unreadMessageCount ? (
-                        <Dot
-                          size={35}
-                          className="text-rose-500 absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
-                        />
-                      ) : null}
+                      <ChatSquareDots />
                     </div>
+                    {unreadMessageCount ? (
+                      <div className="text-white absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-5 h-5  flex items-center justify-center rounded-full bg-rose-500">
+                        {unreadMessageCount}
+                      </div>
+                    ) : null}
 
                     <div
                       onClick={() => handleQuickIconClick(uuid, 'flashcards')}
@@ -279,7 +287,7 @@ const Node = ({
                     >
                       {flashcardsDueCount?.count ?? 0}
                       <Stack />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

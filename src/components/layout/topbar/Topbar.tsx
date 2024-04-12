@@ -1,40 +1,68 @@
 import UserDropdown from './UserDropdown';
 import { observer } from 'mobx-react-lite';
-import CurrentNode from './CurrentNode';
 import { Button } from '@/components/ui/Button';
-import { LayoutTextSidebarReverse, QuestionCircle } from 'react-bootstrap-icons';
+import { Bell, House, Map, QuestionCircle } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
+import CompanyDropdown from '../sidebar/CompanyDropdown';
+import { useNavigate } from 'react-router-dom';
+import CurrentNode from './CurrentNode';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 
 const Topbar = () => {
   const { setActiveModal } = useStore('modalStore');
-  const { sidebarOpen, toggleSidebar } = useStore('sidebarStore');
+  const { toggleFeedOpen, isFeedOpen } = useStore('sidebarStore');
+  const navigate = useNavigate();
 
   const showShortcutModal = () => {
     setActiveModal({ type: 'ShortcutMenu', payload: null });
   };
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
-    <div className="h-16 flex items-center justify-between px-6 gap-6 flex-shrink-0 border-b border-border">
-      <div className="flex items-center gap-2 hover:bg-transparent h-12 cursor-pointer prose w-1/2">
-        {!sidebarOpen && (
-          <Button
-            className="card flex-shrink-0 p-0.5"
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-          >
-            <LayoutTextSidebarReverse size={18} />
-          </Button>
-        )}
+    <div className="h-14 flex items-center bg-background justify-between px-4 gap-6 flex-shrink-0 border-b border-border w-full">
+      <div className="flex items-center h-16 w-1/3">
+        <div className="overflow-hidden min-w-[2.25rem]">
+          <CompanyDropdown />
+        </div>
+      </div>
+      <div className="flex items-center justify-center gap-5 hover:bg-transparent h-12 cursor-pointer prose w-1/3">
         <CurrentNode />
-        {/* <h3 className="text-main leading-none">Members</h3>
-        <p className="whitespace-nowrap text-secondary">Javascript / Arrays</p> */}
       </div>
 
-      <div className="flex justify-end items-center gap-2 w-1/2">
-        <Button variant="ghost" className="w-8 h-8 p-0" onClick={showShortcutModal}>
-          <QuestionCircle className="thick-icon" />
+      <div className="flex justify-end items-center gap-2.5 w-1/3">
+        <Button
+          onClick={() => handleNavigate('/app/home')}
+          variant="ghost"
+          className="w-9 h-9 p-0 rounded-md"
+        >
+          <House size={18} />
         </Button>
+        <Button
+          onClick={() => handleNavigate('/app/nodemap')}
+          variant="ghost"
+          className="w-9 h-9 p-0 rounded-md"
+        >
+          <Map size={17} />
+        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className={`w-9 h-9 p-0 rounded-md ${isFeedOpen ? 'bg-primary-transparent' : ''}`}
+              onClick={() => toggleFeedOpen()}
+            >
+              <Bell size={19} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={10}>Feed</TooltipContent>
+        </Tooltip>
+        <Button variant="ghost" className="w-9 h-9 p-0 rounded-md" onClick={showShortcutModal}>
+          <QuestionCircle size={19} />
+        </Button>
+
         <UserDropdown />
       </div>
     </div>

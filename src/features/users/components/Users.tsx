@@ -97,14 +97,14 @@ const Users = () => {
   return (
     <ContentLayout title="Users">
       <div className="flex flex-col gap-6 justify-between">
-        <div className="flex items-start pt-4">
+        {/* <div className="flex items-start pt-4">
           <div className="flex flex-col gap-1.5">
             <h2 className="text-main text-3xl font-medium">Members</h2>
             <p className="text-secondary">See all of your notes for workspace and make changes</p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex gap-2 my-2">
+        <div className="flex gap-2">
           <div className="w-72">
             <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
           </div>

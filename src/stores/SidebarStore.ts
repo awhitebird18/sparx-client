@@ -12,6 +12,8 @@ export class SidebarStore {
   debounceTimeout: ReturnType<typeof setTimeout> | undefined;
   resizeTimeout: ReturnType<typeof setTimeout> | undefined;
   isSidebarAbsolute: boolean;
+  isFeedOpen: boolean;
+  ref: any;
 
   constructor(channelStore: ChannelStore, sectionStore: SectionStore) {
     makeObservable(this, {
@@ -19,6 +21,9 @@ export class SidebarStore {
       sidebarWidth: observable,
       sectionStore: observable,
       isSidebarAbsolute: observable,
+      isFeedOpen: observable,
+      toggleFeedOpen: action,
+      enterFullScreen: action,
       selectedId: observable,
       organizedChannels: computed,
       setSelectedId: action,
@@ -27,6 +32,8 @@ export class SidebarStore {
       loadSidebarWidthFromLocalStorage: action,
       sidebarOpen: computed,
       toggleSidebar: action,
+      ref: observable,
+      setRef: action,
     });
 
     this.channelStore = channelStore;
@@ -34,6 +41,7 @@ export class SidebarStore {
     this.selectedId = undefined;
     this.sidebarWidth = 300;
     this.isSidebarAbsolute = false;
+    this.isFeedOpen = false;
 
     this.loadSidebarWidthFromLocalStorage();
   }
@@ -42,6 +50,31 @@ export class SidebarStore {
     if (this.sidebarWidth > 65) return true;
     return false;
   }
+
+  setRef = (ref: any) => {
+    this.ref = ref;
+  };
+
+  toggleFeedOpen = () => {
+    this.isFeedOpen = !this.isFeedOpen;
+  };
+
+  enterFullScreen = () => {
+    if (this.ref.current) {
+      if (this.ref.current.requestFullscreen) {
+        this.ref.current.requestFullscreen();
+      } else if (this.ref.current.mozRequestFullScreen) {
+        /* Firefox */
+        this.ref.current.mozRequestFullScreen();
+      } else if (this.ref.current.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        this.ref.current.webkitRequestFullscreen();
+      } else if (this.ref.current.msRequestFullscreen) {
+        /* IE/Edge */
+        this.ref.current.msRequestFullscreen();
+      }
+    }
+  };
 
   handleResize = () => {
     const windowWidth = window.innerWidth;
