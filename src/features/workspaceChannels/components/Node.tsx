@@ -1,6 +1,6 @@
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useDrag } from 'react-dnd';
 
 import NodeStatus from './NodeStatus';
@@ -34,6 +34,7 @@ import { ChannelUserCount } from '../types/channelUserCount';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useNavigate } from 'react-router-dom';
 import { ModalName } from '@/components/modal/modalList';
+import { nodeDimensions } from '../utils/nodeDimensions';
 
 const createTransparentImage = () => {
   const img = new Image();
@@ -50,7 +51,10 @@ const Node = ({
   hideUnstarted,
   isDefault,
   handleCreateLine,
-  scale,
+  isHighlighted,
+  onSelectNode,
+  onDragStart,
+  isHovering,
 }: any) => {
   const {
     currentChannelId,
@@ -66,7 +70,7 @@ const Node = ({
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { flashcardsDueCounts } = useStore('flashcardStore');
   const { directChannelSectionId } = useStore('sectionStore');
-  const { channelUserCounts, nodemapSettings } = useStore('workspaceChannelStore');
+  const { channelUserCounts } = useStore('workspaceChannelStore');
   const { leaveChannelApi, isEditing } = useStore('channelStore');
   const [isHovered, setIsHovered] = useState(false);
   const { setActiveModal } = useStore('modalStore');
@@ -83,24 +87,16 @@ const Node = ({
     setIsHovered(false);
   };
 
-  const handleDrag = useMemo(
+  const [{ isDragging }, drag, preview] = useDrag(
     () => ({
       type: 'node',
-      item: { uuid, x: x, y: y, name: label },
-
-      collect: (monitor: any) => {
-        return {
-          isDragging: monitor.isDragging(),
-          x: x,
-          y: y,
-          // We'll now only get the drag state, not set the position here
-        };
-      },
+      item: { uuid, x, y, name: label }, // Indicate if it's a multi-drag item
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
     }),
-    [label, uuid, x, y],
+    [uuid, x, y, label],
   );
-
-  const [{ isDragging }, drag, preview] = useDrag(handleDrag, [uuid, x, y]);
 
   useEffect(() => {
     setIsDraggingNode(isDragging);
@@ -112,7 +108,7 @@ const Node = ({
 
   if (!handleCreateLine) return null;
 
-  const conditionalDragRef = isEditing && !isDefault ? drag : null;
+  const conditionalDragRef = isEditing ? drag : null;
 
   const userCount = channelUserCounts.find(
     (el: ChannelUserCount) => el.channelUuid === uuid,
@@ -179,6 +175,8 @@ const Node = ({
     (flashcard: any) => flashcard.channelId === uuid,
   );
 
+  const isBeingDragged = isHovering && isHighlighted;
+
   return (
     <>
       <ContextMenu
@@ -198,26 +196,31 @@ const Node = ({
             onMouseEnter={handleMouseEnter}
             ref={conditionalDragRef}
             style={{
-              // zIndex: 100,
+              opacity: 1,
+              cursor: 'move',
+              position: 'absolute',
               left: x,
               top: y,
-
-              // transform: isDragging ? `scale(${scale})` : '',
-
-              // transformOrigin: 'center',
             }}
-            className={`card cursor-pointer z-50 delay-300 transition-colors w-[275px] h-[75px] -translate-x-1/2 -translate-y-1/2 px-4 shadow-md flex flex-col items-start duration-400 absolute justify-center border border-border min-w-[15rem] rounded-lg bg-card text-main ${
+            className={`card cursor-pointer z-50 transition-colors w-[${
+              nodeDimensions.width
+            }px] h-[${
+              nodeDimensions.height
+            }px] px-4 shadow-md flex flex-col items-start duration-400 overflow-visible absolute justify-center border border-border rounded-lg bg-card text-main ${
               currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
-            } ${isDragging ? 'transition-opacity !opacity-0' : ''} ${
+            } ${isBeingDragged ? 'transition-opacity !opacity-100' : ''} ${
               isSubscribed ? '' : 'opacity-60'
-            } ${hideUnstarted && !isSubscribed && 'hidden'}`}
+            } ${hideUnstarted && !isSubscribed && 'hidden'} ${
+              isHighlighted ? 'ring-2 ring-white' : ''
+            }`}
             onClick={() => {
               if (!isSubscribed || isEditing) return;
-
+              onSelectNode(uuid);
               setCurrentChannelUuid(uuid);
-
               // addNotification({ title: 'Node changed', description: `Now viewing ${label}` });
             }}
+            draggable
+            onDragStart={(e) => onDragStart(e, uuid)}
             onDoubleClick={(e) => {
               if (isDefault || !isEditing) return;
               handleUpdateNode(e);
@@ -225,7 +228,7 @@ const Node = ({
           >
             <>
               <div
-                className={`node text-center gap-2 flex w-full flex-col ${
+                className={`node text-center gap-2 flex  flex-col ${
                   isEditing && 'pointer-events-none'
                 }`}
               >
@@ -397,3 +400,5 @@ const Node = ({
 };
 
 export default observer(Node);
+
+// w-[280px] h-[80px]

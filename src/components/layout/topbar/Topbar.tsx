@@ -22,28 +22,31 @@ const Topbar = () => {
   };
 
   return (
-    <div className="h-14 flex items-center bg-background justify-between px-4 gap-6 flex-shrink-0 border-b border-border w-full">
-      <div className="flex items-center h-16 w-1/3">
-        <div className="overflow-hidden min-w-[2.25rem]">
-          <CompanyDropdown />
-        </div>
+    <>
+      {/* Left Side */}
+      <div className="fixed top-2 left-2 overflow-hidden card bg-card rounded-md items-center flex p-1 px-1.5 z-50">
+        <CompanyDropdown />
       </div>
-      <div className="flex items-center justify-center gap-5 hover:bg-transparent h-12 cursor-pointer prose w-1/3">
+
+      {/* Middle */}
+      <div className="flex items-center justify-center gap-5  cursor-pointer prose fixed top-2 left-1/2 -translate-x-1/2 h-11 z-50">
         <CurrentNode />
       </div>
 
-      <div className="flex justify-end items-center gap-2.5 w-1/3">
+      {/* Right */}
+
+      <div className="fixed right-2 top-2 overflow-hidden min-w-[2.25rem] card bg-card rounded-md  items-center flex gap-2 p-1 px-1.5 z-50">
         <Button
           onClick={() => handleNavigate('/app/home')}
           variant="ghost"
-          className="w-9 h-9 p-0 rounded-md"
+          className="w-10 h-10 p-0 hover:bg-hover card rounded-md"
         >
           <House size={18} />
         </Button>
         <Button
           onClick={() => handleNavigate('/app/nodemap')}
           variant="ghost"
-          className="w-9 h-9 p-0 rounded-md"
+          className="w-10 h-10 p-0 hover:bg-hover card rounded-md"
         >
           <Map size={17} />
         </Button>
@@ -51,7 +54,9 @@ const Topbar = () => {
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              className={`w-9 h-9 p-0 rounded-md ${isFeedOpen ? 'bg-primary-transparent' : ''}`}
+              className={`w-10 h-10 p-0 hover:bg-hover card rounded-md ${
+                isFeedOpen ? 'bg-primary-transparent' : ''
+              }`}
               onClick={() => toggleFeedOpen()}
             >
               <Bell size={19} />
@@ -59,13 +64,17 @@ const Topbar = () => {
           </TooltipTrigger>
           <TooltipContent sideOffset={10}>Feed</TooltipContent>
         </Tooltip>
-        <Button variant="ghost" className="w-9 h-9 p-0 rounded-md" onClick={showShortcutModal}>
+        <Button
+          variant="ghost"
+          className="w-10 h-10 p-0 hover:bg-hover card rounded-md"
+          onClick={showShortcutModal}
+        >
           <QuestionCircle size={19} />
         </Button>
 
         <UserDropdown />
       </div>
-    </div>
+    </>
   );
 };
 

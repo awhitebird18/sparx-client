@@ -1,9 +1,10 @@
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 import { Channel } from '@/features/channels/types';
+import { nodeDimensions } from './nodeDimensions';
 
 export function calculateCoordinates(nodeId: string, side: ConnectionSide, nodesData: Channel[]) {
-  const unscaledWidth = 275;
-  const unscaledHeight = 75;
+  const unscaledWidth = nodeDimensions.width;
+  const unscaledHeight = nodeDimensions.height;
 
   const node = nodesData.find((n) => n.uuid === nodeId);
 
@@ -22,13 +23,13 @@ export function calculateCoordinates(nodeId: string, side: ConnectionSide, nodes
   // Calculate the edge points based on the side
   switch (side) {
     case ConnectionSide.TOP:
-      return { x: x, y: y - scaledHeight / 2, side };
-    case ConnectionSide.BOTTOM:
-      return { x: x, y: y + scaledHeight / 2, side };
-    case ConnectionSide.LEFT:
-      return { x: x - scaledWidth / 2, y: y, side };
-    case ConnectionSide.RIGHT:
       return { x: x + scaledWidth / 2, y: y, side };
+    case ConnectionSide.BOTTOM:
+      return { x: x + scaledWidth / 2, y: y + scaledHeight, side };
+    case ConnectionSide.LEFT:
+      return { x: x, y: y + scaledHeight / 2, side };
+    case ConnectionSide.RIGHT:
+      return { x: x + scaledWidth, y: y + scaledHeight / 2, side };
     default:
       return { x: x, y: y, side: ConnectionSide.TOP };
   }

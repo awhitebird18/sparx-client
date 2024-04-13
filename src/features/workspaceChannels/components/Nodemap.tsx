@@ -12,7 +12,7 @@ import { XCircle } from 'react-bootstrap-icons';
 import { Skeleton } from '@/components/ui/Skeleton';
 import useScrollToMiddle from './useScrollToMiddle';
 
-const gridDimensions = { width: 1000, height: 4000 };
+const gridDimensions = { width: 8000, height: 8000 };
 
 const NodeMap: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -28,6 +28,30 @@ const NodeMap: React.FC = () => {
   const [defaultCoords, setDefaultCoods] = useState<{ x: number; y: number } | undefined>(
     undefined,
   );
+
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: any) => {
+      if (e.code === 'Space') {
+        setIsSpacePressed(true);
+      }
+    };
+
+    const handleKeyUp = (e: any) => {
+      if (e.code === 'Space') {
+        setIsSpacePressed(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   useEffect(() => {
     const defaultChannel = subscribedChannels.find((channel) => channel.isDefault);
@@ -80,12 +104,24 @@ const NodeMap: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWorkspaceId]);
 
+  const handleContextMenu = (event: any) => {
+    // Prevent right-click from affecting the cursor
+    event.preventDefault();
+  };
+
   return (
-    <div ref={containerRef} className="relative flex h-full w-full  overflow-hidden">
+    <div
+      ref={containerRef}
+      className={`relative flex h-full w-full  overflow-hidden ${
+        isSpacePressed ? 'cursor-grab' : ''
+      }`}
+      onContextMenu={handleContextMenu}
+    >
       {!isLoading && defaultCoords ? (
         <div className="h-full w-full">
           <TransformWrapper
             // disabled={true}
+
             limitToBounds={false}
             initialScale={nodemapState?.scale ?? 1}
             initialPositionX={defaultCoords.x}
@@ -93,8 +129,14 @@ const NodeMap: React.FC = () => {
             minScale={0.1}
             doubleClick={{ disabled: true }}
             zoomAnimation={{ disabled: true }}
+            panning={{
+              allowMiddleClickPan: false,
+              activationKeys: [' '],
+              allowRightClickPan: false,
+              allowLeftClickPan: true,
+            }}
             maxScale={4}
-            onWheel={(_, event) => {
+            onWheel={(_, event: any) => {
               if (!event.ctrlKey) {
                 event.preventDefault();
               }
@@ -103,15 +145,21 @@ const NodeMap: React.FC = () => {
           >
             {({ instance }) => {
               return (
-                <div ref={ref} className="flex h-full w-full overflow-hidden">
+                <div
+                  ref={ref}
+                  className="flex h-full w-full overflow-hidden"
+                  onContextMenu={handleContextMenu}
+                >
                   <TransformComponent
                     wrapperStyle={{
                       width: '100%',
                       height: '100%',
                       position: 'relative',
                     }}
-                    contentStyle={{ width: '4000px', height: '8000px' }}
-                    contentClass="bg-background rounded-lg"
+                    contentStyle={{
+                      width: '8000px',
+                      height: '8000px',
+                    }}
                   >
                     <DropArea nodemapState={instance.transformState} />
                   </TransformComponent>

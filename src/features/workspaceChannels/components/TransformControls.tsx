@@ -58,16 +58,16 @@ const TransformControls = () => {
   });
 
   return (
-    <div className="flex gap-1 items-center z-10 border border-border p-1 h-min rounded-xl bg-background/40 backdrop-blur-md absolute bottom-2 right-2">
-      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={() => resetTransform()}>
+    <div className="flex gap-1 items-center z-10 p-1 px-1.5 rounded-md bg-card absolute bottom-2 right-2">
+      <Button className="w-10 h-10 p-0 " variant="ghost" onClick={() => resetTransform()}>
         <House size={18} />
       </Button>
-      <Button className="w-8 h-8 p-0 " variant="ghost" onClick={scrollToActiveNode}>
+      <Button className="w-10 h-10 p-0 " variant="ghost" onClick={scrollToActiveNode}>
         <Bullseye size={18} />
       </Button>
       {lastViewedWorkspace?.isAdmin && (
         <Button
-          className="w-8 h-8 p-0 "
+          className="w-10 h-10 p-0 "
           variant={isEditing ? 'outline-primary' : 'ghost'}
           onClick={() => setIsEditing(!isEditing)}
         >

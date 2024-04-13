@@ -42,8 +42,8 @@ const NodeStats = () => {
     channelCount === 0 ? 0 : Math.round((stats[CompletionStatus.Complete] / channelCount) * 100);
 
   return (
-    <div className="card rounded-xl border border-border flex gap-2.5 p-2.5 shadow whitespace-nowrap items-center absolute bottom-2 left-2 bg-background/40 backdrop-blur-md pr-5">
-      <div className="flex items-center gap-1.5 bg-primary border border-primary-lighter flex-shrink-0 h-full w-12 justify-center rounded-lg text-white">
+    <div className="card rounded-md flex gap-2.5 shadow-md  whitespace-nowrap items-center fixed bottom-2 left-2 bg-card p-1 pr-5">
+      <div className="flex items-center gap-1.5 bg-primary-transparent border border-primary flex-shrink-0 h-9 w-14 justify-center rounded-md text-white">
         {`${completionPercentage}%`}
       </div>
 
@@ -52,15 +52,15 @@ const NodeStats = () => {
           isOpen ? 'max-w-lg' : 'max-w-0'
         } overflow-hidden`}
       >
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-7 w-12 justify-center rounded-lg">
+        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
           {`${stats[CompletionStatus.Complete]}`}
           <StarFill className="text-yellow-400" />
         </div>
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-7 w-12 justify-center rounded-lg">
+        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
           {`${stats[CompletionStatus.OnHold]}`}
           <CupHot />
         </div>
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-7 w-12 justify-center rounded-lg">
+        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
           {`${stats[CompletionStatus.InProgress]}`}
           <Play />
         </div>
@@ -68,7 +68,7 @@ const NodeStats = () => {
 
       <Button
         onClick={handleToggleOpen}
-        className="card absolute shadow-md -right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0.5 ml-auto bg-background/40 backdrop-blur-md !border-border"
+        className="card absolute -right-3 top-1/2 -translate-y-1/2 h-7 w-7 p-0.5 ml-auto bg-card !border-border"
         variant="default"
       >
         <ChevronLeft
