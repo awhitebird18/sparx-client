@@ -25,7 +25,7 @@ const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
       setIsLoading(false);
     }
 
-    setStep(3);
+    setStep(4);
   };
 
   const handleThemeSelect = (theme: Theme) => {

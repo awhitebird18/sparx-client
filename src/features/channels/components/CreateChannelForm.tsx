@@ -13,7 +13,6 @@ import { useForm } from 'react-hook-form';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from '@/stores/RootStore';
-import { ChannelType } from '../enums';
 
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -24,76 +23,41 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const CreateChannelForm = ({
-  uuid,
-  id: sectionId,
-  x,
-  y,
-}: {
-  uuid?: string;
-  id?: string;
-  x?: number;
-  y?: number;
-}) => {
-  const { createChannelApi, updateChannelApi, findChannelByUuid, joinChannelApi } =
-    useStore('channelStore');
-  const { currentWorkspaceId } = useStore('workspaceStore');
+const CreateChannelForm = ({ onSubmit, channelId }: { onSubmit: any; channelId?: string }) => {
   const { setActiveModal } = useStore('modalStore');
+  const { findChannelByUuid } = useStore('channelStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(() => {
-      if (!uuid)
+      if (!channelId)
         return {
           name: '',
           isPrivate: false,
         };
 
-      const existingChannel = findChannelByUuid(uuid);
+      const existingChannel = findChannelByUuid(channelId);
 
       return {
         name: existingChannel?.name,
         isPrivate: existingChannel?.isPrivate,
       };
-    }, [findChannelByUuid, uuid]),
+    }, [channelId, findChannelByUuid]),
   });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      if (!currentWorkspaceId) return;
-
-      const channelData = {
-        name: values.name,
-        type: ChannelType.CHANNEL,
-        x,
-        y,
-      };
-
-      if (uuid) {
-        await updateChannelApi(uuid, channelData, currentWorkspaceId);
-      } else {
-        const newChannel = await createChannelApi(channelData, sectionId, currentWorkspaceId);
-
-        await joinChannelApi({
-          channelId: newChannel.uuid,
-          sectionId: undefined,
-        });
-      }
-
-      handleCloseModal();
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
   const handleCloseModal = () => {
     setActiveModal(null);
   };
 
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    onSubmit(values.name);
+    handleCloseModal();
+  }
+
   return (
-    <Modal title={uuid ? 'Update Channel' : 'Create Channel'}>
+    <Modal title={'Create Channel'}>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className="mt-2 flex flex-col space-y-12"
           style={{ width: '28rem' }}
         >

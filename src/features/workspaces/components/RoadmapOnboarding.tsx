@@ -8,7 +8,7 @@ const RoadmapOnboarding = ({ setStep }: { setStep: (val: number) => void }) => {
   const [showRoadmap, setShowRoadmap] = useState(false);
 
   const handleSubmit = async () => {
-    setStep(4);
+    setStep(3);
   };
 
   const handleShowRoadmapModal = () => {

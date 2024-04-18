@@ -18,26 +18,22 @@ const ChannelIntroduction = ({ channelId }: ChannelIntroductionProps) => {
 
   if (!channel) return;
   return (
-    <div className="flex my-6 gap-5">
-      <div className="flex">
+    <div className="flex my-3">
+      {/* <div className="flex">
         <MegaphoneFill className="text-yellow-300 -rotate-45 text-3xl mt-1 ml-2" />
-      </div>
-      <div className="flex flex-col gap-3 overflow-hidden">
-        <p className="text-3xl font-bold space-y-3">
+      </div> */}
+      <div className="flex flex-col gap-3 overflow-hidden prose dark:prose-invert">
+        <h3 className="text-2xl font-medium space-y-3">
           You're looking at the{' '}
           <span className="text-primary">
-            #{channel.name.charAt(0).toUpperCase()}
+            {channel.name.charAt(0).toUpperCase()}
             {channel.name.substring(1).toLowerCase()}
           </span>{' '}
           channel
-          <span className="text-muted-foreground text-base block font-normal">
-            {channel.description}
-          </span>
-        </p>
+          <p>{channel.description}</p>
+        </h3>
 
-        <p className="text-base font-medium">
-          Use this discussion board to discuss or ask questions
-        </p>
+        <p className="text-secondary">Use this discussion board to discuss or ask questions</p>
       </div>
     </div>
   );

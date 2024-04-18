@@ -15,8 +15,8 @@ const BottomToolbarPLugin = () => {
 
   const buttonClasses = 'p-0 toolbar-item text-muted-foreground w-9 h-9';
   return (
-    <div className="toolbar">
-      <>
+    <div className="toolbar mt-8">
+      {/* <>
         <Button
           className={buttonClasses}
           onClick={handleClickFileUpload}
@@ -56,7 +56,7 @@ const BottomToolbarPLugin = () => {
         disabled
       >
         <At className="text-xl" />
-      </Button>
+      </Button> */}
     </div>
   );
 };

@@ -107,28 +107,14 @@ const Browse: React.FC = () => {
   const filteredCards = cards.filter((card: any) => card.content.includes(searchValue));
 
   return (
-    <div className="flex-1 flex flex-col h-full prose p-8 relative">
+    <div className="flex-1 flex flex-col h-full prose relative">
       <div className="flex flex-col gap-8">
-        <div className="flex items-start pt-4 gap-6">
-          {/* <Button className="card rounded-xl pointer-events-none opacity-70 h-18 w-18 bg-card border border-primary p-2 text-primary shadow-lg">
-          <Pencil size={50} />
-        </Button> */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex gap-2 items-center">
-              <Button className="w-fit gap-2 h-8" size="sm" onClick={handleClickBack}>
-                <ChevronLeft size={13} /> Go Back
-              </Button>
-              <h2 className="text-main text-3xl font-medium">Browse Flashcards</h2>
-            </div>
-            <p className="text-secondary">See all of your notes for workspace and make changes</p>
-          </div>
-        </div>
         {cards.length ? (
           <div className="rounded-xl flex flex-col items-center text-main gap-4">
             <div className="flex justify-between items-center w-full py-0">
               {/* <p className="">{`${filteredNotes.length} results`}</p> */}
               <div className="flex gap-3 items-center">
-                <div className="h-10 border-border rounded-lg border overflow-hidden flex items-center gap-0 px-3 text-secondary ml-auto bg-background">
+                <div className="h-9 border-border rounded-lg border overflow-hidden flex items-center gap-0 px-3 text-secondary ml-auto bg-card">
                   <Search className="thick-icon" />
                   <Input
                     placeholder="Search"
@@ -137,17 +123,25 @@ const Browse: React.FC = () => {
                     onChange={(e) => setSearchValue(e.target.value)}
                   />
                 </div>
-                <Button variant="secondary" className="flex gap-3 w-fit items-center" size="sm">
+                <Button
+                  variant="secondary"
+                  className="flex gap-3 w-fit items-center h-9 rounded-lg"
+                  size="sm"
+                >
                   Tags
                   <CaretDownFill size={11} className="mt-0.5 text-secondary" />
                 </Button>
-                <Button variant="secondary" className="flex gap-3 w-fit items-center" size="sm">
+                <Button
+                  variant="secondary"
+                  className="flex gap-3 w-fit items-center h-9 rounded-lg"
+                  size="sm"
+                >
                   Review Count
                   <CaretDownFill size={11} className="mt-0.5 text-secondary" />
                 </Button>
               </div>
-              <Button className="gap-2 ml-auto" onClick={handleAddFlashcard}>
-                <CardHeading size={18} /> Add Flashcard
+              <Button className="gap-2 ml-auto h-9 rounded-lg" onClick={handleAddFlashcard}>
+                Add Flashcard
               </Button>
             </div>
 

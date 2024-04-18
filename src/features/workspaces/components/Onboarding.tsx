@@ -29,8 +29,8 @@ const Onboarding = () => {
       </div>
 
       {step === 1 && <CreateWorkspaceOnboarding setStep={setStep} />}
-      {step === 2 && <ThemeOnboarding setStep={setStep} />}
-      {step === 3 && <RoadmapOnboarding setStep={setStep} />}
+      {step === 2 && <RoadmapOnboarding setStep={setStep} />}
+      {step === 3 && <ThemeOnboarding setStep={setStep} />}
       {step === 4 && <UserOnboarding />}
     </div>
   );

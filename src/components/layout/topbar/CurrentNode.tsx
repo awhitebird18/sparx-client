@@ -88,7 +88,7 @@ const CurrentNode = () => {
         </h3>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="start"
+        align="center"
         className="max-w-[28rem] border border-border rounded-md bg-card p-0"
       >
         <div>

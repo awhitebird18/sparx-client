@@ -66,22 +66,6 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col w-full h-full bg-background border-r border-border">
       {/* Top */}
-      <div className="flex items-center h-16 px-3.5">
-        <div className="overflow-hidden min-w-[2.25rem]">
-          <CompanyDropdown />
-        </div>
-
-        {sidebarOpen && (
-          <Button
-            className="card ml-auto"
-            variant="ghost"
-            size="icon"
-            onClick={handleToggleSidebar}
-          >
-            <ChevronDoubleLeft size={20} className="text-primary" />
-          </Button>
-        )}
-      </div>
 
       {/* Bottom */}
       <div className="pt-2.5 flex flex-col gap-1.5">

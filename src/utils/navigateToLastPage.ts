@@ -8,5 +8,5 @@ export const navigateToLastPage = () => {
     return `/app/${parsedHistory[parsedHistory.length - 1].primaryView}`;
   }
 
-  return '/app/home';
+  return '/app/nodemap';
 };

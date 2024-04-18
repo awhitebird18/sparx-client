@@ -1,29 +1,42 @@
-import Modal from '../modal/Modal';
-
 const ShortcutMenu = () => {
   return (
-    <Modal title="Keyboard shortcuts">
-      <div className="flex flex-col space-y-3 w-96">
-        <Title title="Nodemap actions" />
-        <div className="flex flex-col gap-2">
-          <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
-          <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
-          <ShortcutKeyItem label="Focus on active node" keys={['Ctrl', '.']} />
-        </div>
+    <div className="flex flex-col space-y-3 w-full h-full gap-4 prose dark:prose-invert">
+      <div className="space-y-2">
+        <h4>Nodemap</h4>
+
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
+        <ShortcutKeyItem label="Focus on active node" keys={['Ctrl', '.']} />
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
       </div>
-    </Modal>
+      <div className="space-y-2">
+        <h4>Members</h4>
+
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
+        <ShortcutKeyItem label="Focus on active node" keys={['Ctrl', '.']} />
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
+      </div>
+      <div className="space-y-2">
+        <h4>Notes</h4>
+
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
+        <ShortcutKeyItem label="Focus on active node" keys={['Ctrl', '.']} />
+        <ShortcutKeyItem label="Snap to grid" keys={['Ctrl', 'K']} />
+        <ShortcutKeyItem label="Search" keys={['Ctrl', 'F']} />
+      </div>
+    </div>
   );
 };
 
 export default ShortcutMenu;
 
-const Title = ({ title }: { title: string }) => (
-  <h4 className="font-medium text-sm text-muted">{title}</h4>
-);
-
 const ShortcutKeyItem = ({ label, keys }: { label: string; keys: string[] }) => (
   <div className="flex justify-between">
-    <span>{label}</span>
+    <p className="text-secondary">{label}</p>
     <div className="flex items-center gap-2">
       {keys.map((key) => (
         <KeyBadge label={key} />
@@ -33,7 +46,7 @@ const ShortcutKeyItem = ({ label, keys }: { label: string; keys: string[] }) => 
 );
 
 const KeyBadge = ({ label }: { label: string }) => (
-  <div className="bg-card border border-border p-0.5 px-2 min-w-[2rem] flex items-center justify-center rounded">
+  <div className="bg-card border border-border p-0.5 px-2 min-w-[2rem] flex items-center justify-center rounded text-secondary">
     {label}
   </div>
 );

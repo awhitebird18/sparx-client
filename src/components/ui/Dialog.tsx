@@ -98,3 +98,5 @@ export {
   DialogTitle,
   DialogDescription,
 };
+
+// data-[state=open]:slide-in-from-top-[43%]

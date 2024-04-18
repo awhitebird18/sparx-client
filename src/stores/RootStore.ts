@@ -20,6 +20,8 @@ import { NotesStore } from '@/features/notes/stores/NotesStore';
 import { FlashcardStore } from '@/features/flashcards/stores/FlashcardStore';
 import { WorkspaceStore } from '@/features/workspaces/stores/workspaceStore';
 import { ChannelConnectorStore } from '@/features/workspaceChannels/stores/ChannelConnectorStore';
+import { SidePanelStore } from '@/components/layout/SidePanel.tsx/SidePanelStore';
+import { MainPanelStore } from '@/components/layout/sheet/MainPanelStore';
 
 interface RootStore {
   userStore: UserStore;
@@ -40,6 +42,8 @@ interface RootStore {
   flashcardStore: FlashcardStore;
   workspaceStore: WorkspaceStore;
   channelConnectorStore: ChannelConnectorStore;
+  sidePanelStore: SidePanelStore;
+  mainPanelStore: MainPanelStore;
 }
 
 class RootStoreImpl implements RootStore {
@@ -61,6 +65,8 @@ class RootStoreImpl implements RootStore {
   flashcardStore = new FlashcardStore();
   workspaceStore = new WorkspaceStore();
   channelConnectorStore = new ChannelConnectorStore();
+  sidePanelStore = new SidePanelStore();
+  mainPanelStore = new MainPanelStore();
 }
 
 export const stores = new RootStoreImpl();

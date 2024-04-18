@@ -97,29 +97,27 @@ const CompanyDropdown = () => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger className="overflow-hidden flex-shrink-0 flex flex-1 items-center gap-3 w-full">
-        <div className="w-9 h-9 flex-shrink-0 rounded-md border border-border  bg-primary">
+      <DropdownMenuTrigger className=" flex-shrink-0 flex flex-1 items-center gap-3 w-fit h-10">
+        <div className="w-9 h-9 flex-shrink-0 rounded-md overflow-hidden border border-border bg-primary">
           <img
             src={currentWorkspace?.imgUrl ?? getCurrentWorkspaceImage()}
             className="w-full h-full flex-shrink-0"
           />
         </div>
 
-        {sidebarOpen && (
-          <div className="flex items-center gap-1 text-lg truncate pr-4">
-            <span className="text-lg font-semibold tracking leading-tight truncate w-full">
-              {currentWorkspace?.name}
-            </span>
-            <ChevronDown size={13} className="flex-shrink-0 mt-0.5 text-secondary" />
-          </div>
-        )}
+        <div className="flex items-center gap-3 text-lg truncate pr-3">
+          <span className="text-xl font-semibold tracking leading-tight truncate w-full">
+            {currentWorkspace?.name}
+          </span>
+          <ChevronDown size={15} className="flex-shrink-0 mt-0.5  text-secondary" />
+        </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-72 space-y-2"
+        className="w-72 space-y-2 z-50"
         align="start"
-        alignOffset={15}
-        sideOffset={0}
+        alignOffset={0}
+        sideOffset={5}
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();

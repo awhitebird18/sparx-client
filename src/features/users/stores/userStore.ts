@@ -22,6 +22,7 @@ export class UserStore {
   userOnlineStatus = UserStatus.ONLINE;
   currentUserId: string | undefined = undefined;
   channelUsers: SubscriptionDetails[] = [];
+  currentProfileUserId: string | undefined = undefined;
 
   constructor() {
     makeObservable(
@@ -36,6 +37,7 @@ export class UserStore {
         privilegesFilter: observable,
         userOnlineStatus: observable,
         channelUsers: observable,
+        currentProfileUserId: observable,
         currentUser: computed,
         filteredUsers: computed,
         setCurrentPage: action,
@@ -68,6 +70,10 @@ export class UserStore {
   get currentUser() {
     return this.users.find((user) => user.uuid === this.currentUserId);
   }
+
+  setCurrentUserProfileId = (userId?: string) => {
+    this.currentProfileUserId = userId;
+  };
 
   get filteredUsers() {
     return this.channelUsers.filter((userDetails: SubscriptionDetails) => {

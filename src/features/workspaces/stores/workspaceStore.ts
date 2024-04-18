@@ -4,11 +4,14 @@ import workspaceSpaceApi from '@/features/workspaces/api';
 import { CreateWorkspace, UpdateWorkspace } from '../types';
 import { Workspace } from '../types/workspace';
 
+type NodemapState = { scale: number; positionX: number; positionY: number };
+
 export class WorkspaceStore {
   workspaces: Workspace[] = [];
   currentWorkspaceId: string | undefined = undefined;
   userWorkspaceData: any[] = [];
   lastViewedWorkspace: any;
+  nodemapState?: NodemapState;
 
   constructor() {
     makeAutoObservable(this, {
@@ -49,6 +52,10 @@ export class WorkspaceStore {
 
     return channel;
   }
+
+  setNodemapState = (nodemapState: NodemapState) => {
+    this.nodemapState = nodemapState;
+  };
 
   addWorkspace = (workspace: Workspace) => {
     this.workspaces.push(workspace);

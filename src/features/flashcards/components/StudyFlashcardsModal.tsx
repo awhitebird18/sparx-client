@@ -173,21 +173,17 @@ const StudyFlashcardsModal = () => {
   //   return nextDate.toISOString().split('T')[0];
   // };
 
-  const handleClickBack = () => {
-    navigate(-1);
-  };
-
   return (
     <div
-      className={`fixed w-screen h-screen top-0 left-0 bg-background gap-6 pt-2 flex justify-center items-center flip-card ${
+      className={`gap-6 flex justify-center h-full relative pt-20 flip-card ${
         isFlipped ? 'flipped' : ''
       }`}
       id="card"
     >
       {isEnd ? (
-        <div className="celebration-screen">
-          <Confetti />
-          <div className="message space-y-10">
+        <div className="flex justify-center">
+          <Confetti className="top-0" />
+          <div className="message space-y-16 h-fit mt-32 flex flex-col items-center">
             <h1 className="text-5xl">
               Congratulations, you studied {flashcards.length} card
               {flashcards.length > 1 ? 's' : ''}!
@@ -203,16 +199,7 @@ const StudyFlashcardsModal = () => {
         </div>
       ) : (
         <>
-          <Button
-            className="absolute top-8 left-8 gap-2"
-            variant="outline"
-            size="lg"
-            onClick={handleClickBack}
-          >
-            <ChevronLeft className="thick-icon mt-0.5" size={12} />
-            Go Back
-          </Button>
-          <div className="card flex flex-col items-center w-1/2 h-[32rem] flip-card-inner rounded-2xl bg-card border border-border shadow-lg">
+          <div className="card flex flex-col items-center w-3/4 h-[32rem] flip-card-inner rounded-2xl bg-hover border border-border shadow-lg">
             <div className="text-xl text-center flex flex-col items-center prose">
               <h2
                 className={`flex w-min items-center m-0 h-16 mt-2 text-main ${

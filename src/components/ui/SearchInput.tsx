@@ -22,17 +22,17 @@ const SearchInput = ({
   };
 
   return (
-    <div className={`relative flex items-center h-9 rounded-md w-full`}>
+    <div className={`relative flex items-center h-9 rounded-lg w-full`}>
       <Input
         placeholder={placeholder}
-        className={`pl-10 h-9`}
+        className={`pl-9 h-9 rounded-lg`}
         onChange={(e) => setValue(e.target.value)}
         value={value}
         onFocus={onFocus}
         disabled={disabled}
       />
 
-      <div className="absolute left-3.5 top-auto text-base text-neutral">
+      <div className="absolute left-3 top-auto text-base text-neutral">
         <Search size={14} />
       </div>
       {value ? (

@@ -32,7 +32,7 @@ function Table<T extends object>({
 
   return (
     <div
-      className={`w-full border border-border bg-card card rounded-xl h-fit shadow-sm overflow-hidden ${tableClasses}`}
+      className={`w-full border border-border bg-card card rounded-xl h-fit shadow-sm overflow-auto ${tableClasses}`}
     >
       {/* Table for header */}
       <table {...getTableProps()} className="m-0 w-full border-collapse">
@@ -54,7 +54,7 @@ function Table<T extends object>({
 
       {/* Scrollable body */}
       {!isLoading && rows.length ? (
-        <div className="overflow-auto h-full">
+        <div className="h-full w-full">
           <table {...getTableProps()} className="m-0 w-full border-collapse">
             <tbody {...getTableBodyProps()} className="divide-y">
               {rows.map((row, index) => {
@@ -66,7 +66,7 @@ function Table<T extends object>({
                     onDoubleClick={() => onRowClick && onRowClick(row.original)}
                     className={`cursor-pointer text-main hover:bg-hover border-border rounded-xl ${
                       index === rows.length && 'border-none'
-                    } h-16 overflow-hidden not-prose ${rowClasses}`}
+                    } h-16 not-prose ${rowClasses}`}
                   >
                     {row.cells.map((cell) => {
                       return (

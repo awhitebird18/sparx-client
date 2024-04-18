@@ -6,7 +6,7 @@ const VerificationSuccessful = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigate('/app/home');
+      navigate('/app/nodemap');
     }, 3000);
   }, []);
 

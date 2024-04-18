@@ -71,6 +71,7 @@ export class NotesStore {
   updateNoteApi = async (noteId: string, updateFields: Partial<UpdateNote>) => {
     try {
       this.setIsLoading(true);
+
       const updatedNote = await notesApi.updateNote(noteId, updateFields);
 
       this.updateNote(noteId, updatedNote);

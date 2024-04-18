@@ -17,10 +17,11 @@ import Username from '@/features/users/components/Username';
 import { UserStatus } from '@/features/users/enums';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import SetUserStatusButton from '@/features/userStatus/components/UserStatusButton';
-import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { ArrowReturnRight, Cup, EmojiSmile, Eye, Gear, Pencil } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
+import UserStatusDisplay from '@/features/userStatus/components/UserStatusDisplay';
 
 const UserDropdown: React.FC = () => {
   const { setActiveModal } = useStore('modalStore');
@@ -33,6 +34,7 @@ const UserDropdown: React.FC = () => {
   const { emitSocket } = useStore('socketStore');
   const { activeUserStatus } = useStore('userStatusStore');
   const { currentWorkspace } = useStore('workspaceStore');
+  const { toggleMainPanel } = useStore('mainPanelStore');
 
   const handleOpenModal = ({ type, payload }: { type: ModalName; payload?: unknown }) => {
     setDropdownOpen(false);
@@ -52,33 +54,37 @@ const UserDropdown: React.FC = () => {
 
   const transformedImage = transformCloudinaryUrl(currentUser.profileImage, 60, 60);
 
+  const handleViewUserProfile = async (userId: string) => {
+    toggleMainPanel({ type: 'profile', payload: { userId } });
+  };
+
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <div className="flex items-center bg-card rounded-lg border-border border">
-        <div
+        {/* <Button
+          className="w-10 h-9 p-0"
+          variant="ghost"
           onClick={() => handleOpenModal({ type: 'UserStatusModal' })}
-          className="w-8 h-8 mr-1 flex items-center justify-center"
         >
           {activeUserStatus ? (
             <UserStatusDisplay status={activeUserStatus} />
           ) : (
-            <div className="w-full h-full flex items-center justify-center cursor-pointer ">
-              <EmojiSmile className="thick-icon" />
-            </div>
+            <EmojiSmile className="text-xl" />
           )}
-        </div>
+        </Button> */}
+
         <Tooltip>
           <TooltipTrigger asChild>
             <DropdownMenuTrigger className="flex items-center">
               <UserAvatar
-                size={31.5}
+                size={34.5}
                 userId={currentUser.uuid}
                 profileImage={transformedImage}
                 showStatus
               />
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent asChild align="end">
+          <TooltipContent asChild align="end" sideOffset={10}>
             {(() => {
               const formattedName = `${currentUser.firstName
                 .charAt(0)
@@ -132,7 +138,7 @@ const UserDropdown: React.FC = () => {
           <DropdownMenuSeparator className="DropdownMenuSeparator dark:bg-slate-500/40 my-1" />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onClick={handleViewProfile}
+              onClick={() => handleViewUserProfile(currentUser.uuid)}
               className="flex items-center gap-4 h-9 px-3 hover:bg-hover card"
             >
               <Pencil />

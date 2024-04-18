@@ -31,7 +31,6 @@ import {
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { Privileges } from '../enums/privileges';
 import { SubscriptionDetails } from '../types/subsciptionDetails';
-import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 const Users = () => {
@@ -47,9 +46,9 @@ const Users = () => {
     filteredUsers,
     setIsLoading,
   } = useStore('userStore');
-  const navigate = useNavigate();
   const { currentChannelId, currentChannel } = useStore('channelStore');
   const { leaveWorkspaceApi, currentWorkspaceId } = useStore('workspaceStore');
+  const { setMainPanel } = useStore('mainPanelStore');
 
   useEffect(() => {
     if (!currentChannelId) return;
@@ -76,7 +75,7 @@ const Users = () => {
   }, [fetchChannelUserIdsApi, currentChannelId]);
 
   const handleViewUserProfile = async (userId: string) => {
-    navigate(`/app/profile/${userId}`);
+    setMainPanel({ type: 'profile', payload: { userId } });
   };
 
   const handleSetAdmin = async (userId: string, data: { isAdmin: boolean }) => {
@@ -97,20 +96,20 @@ const Users = () => {
   return (
     <ContentLayout title="Users">
       <div className="flex flex-col gap-6 justify-between">
-        <div className="flex items-start pt-4">
+        {/* <div className="flex items-start pt-4">
           <div className="flex flex-col gap-1.5">
             <h2 className="text-main text-3xl font-medium">Members</h2>
             <p className="text-secondary">See all of your notes for workspace and make changes</p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex gap-2 my-2">
+        <div className="flex gap-2">
           <div className="w-72">
             <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
           </div>
           <Select onValueChange={setCompletionFilter}>
-            <SelectTrigger className="w-52">
-              <SelectValue placeholder="Completion status" />
+            <SelectTrigger className="w-52 h-9 rounded-lg">
+              <SelectValue placeholder="Completion" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="">
@@ -142,7 +141,7 @@ const Users = () => {
             </SelectContent>
           </Select>
           <Select onValueChange={setPrivilegesFilter}>
-            <SelectTrigger className="w-52">
+            <SelectTrigger className="w-52 rounded-lg h-9">
               <SelectValue placeholder="Privileges" />
             </SelectTrigger>
             <SelectContent>
@@ -163,7 +162,7 @@ const Users = () => {
         <EmptyFallback channelName={currentChannel?.name} onClick={handleResetFilter} />
       ) : null}
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-4 gap-4 justify-normal items-start grid-rows-[max-content_1fr] pr-3">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-1 4xl:grid-cols-2 gap-4 justify-normal items-start grid-rows-[max-content_1fr]">
         {!isLoading && filteredUsers.length
           ? filteredUsers.map((userChannel: SubscriptionDetails) => {
               const user = findUserByUuid(userChannel.userId);
@@ -173,17 +172,20 @@ const Users = () => {
               return (
                 <Card
                   key={user.uuid}
-                  className="p-4 rounded-lg relative cursor-pointer h-28 !shadow-sm !bg-card !border-border border card"
+                  className="p-4 rounded-lg relative cursor-pointer !shadow-sm !bg-card !border-border border card"
+                  onClick={() => {
+                    handleViewUserProfile(user.uuid);
+                  }}
                 >
-                  <CardContent className="flex gap-4 p-0">
+                  <CardContent className="flex flex-col items-center gap-2 p-0">
                     <UserAvatar
-                      size={40}
+                      size={80}
                       userId={user.uuid}
                       profileImage={user.profileImage}
                       showStatus
                       color={user.preferences.primaryColor}
                     />
-                    <div className="flex flex-col flex-1">
+                    <div className="flex flex-col flex-1 items-center">
                       <div className="flex text-main gap-2 items-center">
                         <Username firstName={user.firstName} lastName={user.lastName} />
                         {user.isAdmin && <Badge variant="outline">Admin</Badge>}
@@ -205,7 +207,7 @@ const Users = () => {
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <ThreeDotsVertical size={20} className="text-main" />
+                        <ThreeDotsVertical size={20} className="text-main absolute top-2 right-2" />
                       </DropdownMenuTrigger>
 
                       <DropdownMenuContent className="w-50" align="end" alignOffset={-10}>
