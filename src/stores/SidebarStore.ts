@@ -1,50 +1,82 @@
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, computed, action, runInAction } from 'mobx';
 
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
 import storage from '@/utils/storage';
+import React from 'react';
 
 export class SidebarStore {
   channelStore: ChannelStore;
   sectionStore: SectionStore;
   selectedId: string | undefined;
-  sidebarWidth: number;
   debounceTimeout: ReturnType<typeof setTimeout> | undefined;
   resizeTimeout: ReturnType<typeof setTimeout> | undefined;
+  sidebarWidth: number;
   isSidebarAbsolute: boolean;
   isFeedOpen: boolean;
+  isFlashcardsOpen: boolean;
+  isNotesOpen: boolean;
+  isViewNote: boolean;
+  isDiscussionOpen: boolean;
+  isShortcutKeysOpen: boolean;
+  isMembersOpen: boolean;
+  isFullscreen: boolean;
   ref: any;
 
   constructor(channelStore: ChannelStore, sectionStore: SectionStore) {
     makeObservable(this, {
       channelStore: observable,
-      sidebarWidth: observable,
       sectionStore: observable,
+      sidebarWidth: observable,
       isSidebarAbsolute: observable,
       isFeedOpen: observable,
-      toggleFeedOpen: action,
+      isNotesOpen: observable,
+      isViewNote: observable,
+      isFlashcardsOpen: observable,
+      isMembersOpen: observable,
+      isDiscussionOpen: observable,
+      isShortcutKeysOpen: observable,
+      isFullscreen: observable,
       enterFullScreen: action,
-      selectedId: observable,
-      organizedChannels: computed,
-      setSelectedId: action,
-      handleResize: action,
-      setSidebarWidth: action,
-      loadSidebarWidthFromLocalStorage: action,
-      sidebarOpen: computed,
-      toggleSidebar: action,
-      ref: observable,
+      exitFullScreen: action,
+      toggleFullScreen: action,
+      toggleFeedOpen: action,
+      toggleDiscussionsOpen: action,
+      toggleMembersOpen: action,
+      toggleShortcutKeys: action,
+      setViewNote: action,
       setRef: action,
+      sidebarOpen: computed,
     });
 
     this.channelStore = channelStore;
     this.sectionStore = sectionStore;
-    this.selectedId = undefined;
     this.sidebarWidth = 300;
     this.isSidebarAbsolute = false;
     this.isFeedOpen = false;
-
-    this.loadSidebarWidthFromLocalStorage();
+    this.isNotesOpen = false;
+    this.isViewNote = false;
+    this.isFlashcardsOpen = false;
+    this.isMembersOpen = false;
+    this.isShortcutKeysOpen = false;
+    this.isDiscussionOpen = false;
+    this.isFullscreen = false;
+    this.ref = React.createRef();
+    this.setupFullscreenListener();
   }
+
+  setupFullscreenListener = () => {
+    document.addEventListener('fullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', this.handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', this.handleFullscreenChange);
+  };
+
+  handleFullscreenChange = () => {
+    runInAction(() => {
+      this.isFullscreen = !!document.fullscreenElement;
+    });
+  };
 
   get sidebarOpen() {
     if (this.sidebarWidth > 65) return true;
@@ -56,23 +88,126 @@ export class SidebarStore {
   };
 
   toggleFeedOpen = () => {
-    this.isFeedOpen = !this.isFeedOpen;
+    const newFeedValue = !this.isFeedOpen;
+
+    if (newFeedValue) {
+      this.isMembersOpen = false;
+      this.isDiscussionOpen = false;
+      this.isShortcutKeysOpen = false;
+      this.isNotesOpen = false;
+      this.isFlashcardsOpen = false;
+    }
+    this.isFeedOpen = newFeedValue;
+  };
+
+  toggleShortcutKeys = () => {
+    const newFeedValue = !this.isShortcutKeysOpen;
+
+    if (newFeedValue) {
+      this.isMembersOpen = false;
+      this.isDiscussionOpen = false;
+      this.isFeedOpen = false;
+      this.isNotesOpen = false;
+      this.isFlashcardsOpen = false;
+    }
+    this.isShortcutKeysOpen = newFeedValue;
+  };
+
+  toggleMembersOpen = () => {
+    const newValue = !this.isMembersOpen;
+
+    if (newValue) {
+      this.isFeedOpen = false;
+      this.isDiscussionOpen = false;
+      this.isShortcutKeysOpen = false;
+      this.isNotesOpen = false;
+      this.isFlashcardsOpen = false;
+    }
+    this.isMembersOpen = newValue;
+  };
+
+  toggleDiscussionsOpen = () => {
+    const newValue = !this.isDiscussionOpen;
+
+    if (newValue) {
+      this.isFeedOpen = false;
+      this.isMembersOpen = false;
+      this.isShortcutKeysOpen = false;
+      this.isNotesOpen = false;
+      this.isFlashcardsOpen = false;
+    }
+    this.isDiscussionOpen = newValue;
+  };
+
+  toggleNotesOpen = () => {
+    const newValue = !this.isNotesOpen;
+
+    if (newValue) {
+      this.isFeedOpen = false;
+      this.isMembersOpen = false;
+      this.isShortcutKeysOpen = false;
+      this.isFlashcardsOpen = false;
+      this.isFlashcardsOpen = false;
+    }
+    this.isNotesOpen = newValue;
+  };
+
+  toggleFlashcardsOpen = () => {
+    const newValue = !this.isFlashcardsOpen;
+
+    if (newValue) {
+      this.isFeedOpen = false;
+      this.isMembersOpen = false;
+      this.isShortcutKeysOpen = false;
+      this.isNotesOpen = false;
+    }
+    this.isFlashcardsOpen = newValue;
+  };
+
+  setViewNote = (bool: boolean) => {
+    this.isViewNote = bool;
   };
 
   enterFullScreen = () => {
-    if (this.ref.current) {
-      if (this.ref.current.requestFullscreen) {
-        this.ref.current.requestFullscreen();
-      } else if (this.ref.current.mozRequestFullScreen) {
-        /* Firefox */
-        this.ref.current.mozRequestFullScreen();
-      } else if (this.ref.current.webkitRequestFullscreen) {
-        /* Chrome, Safari and Opera */
-        this.ref.current.webkitRequestFullscreen();
-      } else if (this.ref.current.msRequestFullscreen) {
-        /* IE/Edge */
-        this.ref.current.msRequestFullscreen();
+    const element = this.ref.current;
+    if (element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        // Firefox
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) {
+        // Chrome, Safari and Opera
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        // IE/Edge
+        element.msRequestFullscreen();
       }
+    }
+  };
+
+  exitFullScreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+
+    // else if (document.mozCancelFullScreen) {
+
+    //   document.mozCancelFullScreen();
+    // } else if (document.webkitExitFullscreen) {
+
+    //   document.webkitExitFullscreen();
+    // } else if (document.msExitFullscreen) {
+
+    //   document.msExitFullscreen();
+    // }
+  };
+
+  toggleFullScreen = () => {
+    if (this.isFullscreen) {
+      this.exitFullScreen();
+    } else {
+      this.enterFullScreen();
     }
   };
 
@@ -152,10 +287,17 @@ export class SidebarStore {
     this.selectedId = id;
   };
 
+  // dispose = () => {
+  //   window.removeEventListener('resize', this.debouncedHandleResize);
+  //   if (this.resizeTimeout) {
+  //     clearTimeout(this.resizeTimeout);
+  //   }
+  // };
+
   dispose = () => {
-    window.removeEventListener('resize', this.debouncedHandleResize);
-    if (this.resizeTimeout) {
-      clearTimeout(this.resizeTimeout);
-    }
+    document.removeEventListener('fullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('mozfullscreenchange', this.handleFullscreenChange);
+    document.removeEventListener('MSFullscreenChange', this.handleFullscreenChange);
   };
 }

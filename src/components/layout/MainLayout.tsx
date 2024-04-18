@@ -9,7 +9,8 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Feed from './sheet/Feed';
+import SidePanel from './SidePanel.tsx/SidePanel';
+import MainPanel from './sheet/MainPanel';
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -17,7 +18,6 @@ type MainLayoutProps = {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const { currentUser } = useStore('userStore');
-  const { isFullscreen } = useStore('channelStore');
   const { setRef } = useStore('sidebarStore');
   const ref = useRef<HTMLDivElement>(null);
 
@@ -37,13 +37,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         <div ref={ref} className="h-full w-full flex overflow-hidden relative">
           <div className="flex flex-col h-full w-full bg-background overflow-hidden">
             <Topbar />
-            <div
-              className={`main-layout relative h-full overflow-hidden w-full ${
-                isFullscreen ? '!z-50 bg-background h-screen w-screen fixed left-0 top-0' : ''
-              }:`}
-            >
+            <div className={`main-layout relative h-full overflow-hidden w-full `}>
               {children}
-              <Feed />
+
+              <MainPanel />
+              <SidePanel />
             </div>
           </div>
           <SocketController />

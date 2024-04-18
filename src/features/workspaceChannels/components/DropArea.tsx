@@ -59,6 +59,7 @@ const DropArea = ({ nodemapState }: any) => {
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const [renderKey, setRenderKey] = useState(0);
   const [hoverOffset, setHoverOffset] = useState({ x: 0, y: 0 });
+  const [focusedNode, setFocusedNode] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
@@ -107,8 +108,8 @@ const DropArea = ({ nodemapState }: any) => {
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
-      // Assert event.target as an Element to access classList
       const target = event.target as Element;
+
       if (!target.classList.contains('connector') && currentLine) {
         setCurrentLine(null);
       }
@@ -116,7 +117,6 @@ const DropArea = ({ nodemapState }: any) => {
 
     window.addEventListener('click', handleClick);
 
-    // Remove event listener on cleanup to prevent memory leaks
     return () => {
       window.removeEventListener('click', handleClick);
     };
@@ -220,7 +220,7 @@ const DropArea = ({ nodemapState }: any) => {
   const handleLineClick = (uuid: string, event: React.MouseEvent<SVGPathElement, MouseEvent>) => {
     if (!isEditing) return;
 
-    event.stopPropagation();
+    // event.stopPropagation();
     setSelectedLineId(uuid);
   };
 
@@ -315,7 +315,8 @@ const DropArea = ({ nodemapState }: any) => {
     });
   };
 
-  const handleSvgClick = () => {
+  const handleSvgClick = (e: any) => {
+    console.log(e.target);
     setSelectedLineId(null);
   };
 
@@ -440,14 +441,13 @@ const DropArea = ({ nodemapState }: any) => {
 
   drop(ref);
 
-  const handleDragStart = () => {
-    // setSelectedNodes(
-    //   subscribedChannels.map((channel) => ({
-    //     ...channel,
-    //     x: channel.x,
-    //     y: channel.y,
-    //   })),
-    // );
+  const handleDragStart = (e: any, uuid: string) => {
+    setSelectedNodes((prev) => {
+      const copy = [...prev];
+      copy.push(uuid);
+
+      return copy;
+    });
   };
 
   const onSelectNode = (uuid: string) => {
@@ -463,23 +463,69 @@ const DropArea = ({ nodemapState }: any) => {
     // });
   };
 
+  useEffect(() => {
+    const clickHandler = (e: any) => {
+      const clickedElement = e.target;
+
+      // Check if the clicked element is a node
+      if (clickedElement.dataset.nodeId) {
+        // Store the ID of the clicked node
+        const nodeId = clickedElement.dataset.nodeId;
+        // Use nodeId as needed
+        if (nodeId) setFocusedNode(nodeId);
+      } else if (clickedElement.classList.contains('nodemap')) {
+        setFocusedNode(null);
+      }
+    };
+
+    ref.current?.addEventListener('click', clickHandler);
+
+    return () => ref.current?.removeEventListener('click', clickHandler);
+  }, []);
+
   return (
-    <div
-      ref={ref}
-      className={`w-full h-full relative z-50 ${isDragging ? 'cursor-grabbing' : ''}`}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onMouseMove={handleMouseMove}
-      onClick={handleSvgClick}
-      onContextMenu={handleContextMenu}
-      onDoubleClick={isEditing ? handleCreateChannel : undefined}
-    >
+    <div className="w-full h-full">
+      <div
+        ref={ref}
+        className={`nodemap absolute top-0 left-0  w-full h-full !z-30 ${
+          isDragging ? 'cursor-grabbing' : ''
+        }`}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onClick={handleSvgClick}
+        onContextMenu={handleContextMenu}
+        onDoubleClick={isEditing ? handleCreateChannel : undefined}
+      >
+        {subscribedChannels.map((channel: any) => {
+          const xoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.x : 0;
+          const yoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.y : 0;
+          return (
+            <Node
+              key={channel.uuid}
+              uuid={channel.uuid}
+              label={channel.name}
+              x={Math.round((channel.x + xoffset) / gridSize) * gridSize}
+              y={Math.round((channel.y + yoffset) / gridSize) * gridSize}
+              isDefault={channel.isDefault}
+              handleCreateLine={handleCreateLine}
+              isHighlighted={selectedNodes.find((nodeId: string) => nodeId === channel.uuid)}
+              onSelectNode={onSelectNode}
+              onDragStart={handleDragStart}
+              selectedNodes={selectedNodes}
+              isHovering={isOver}
+              onDragEnd={() => setSelectedNodes([])}
+              isFocused={focusedNode === channel.uuid}
+            />
+          );
+        })}
+      </div>
       <ContextMenu>
         <ContextMenuTrigger disabled={!isEditing}>
           <>
             <svg
-              className="absolute h-full w-full "
+              className="absolute h-full w-full -z-10"
               style={{
                 width: '100%',
                 height: '100%',
@@ -502,28 +548,8 @@ const DropArea = ({ nodemapState }: any) => {
               <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-1undefined)"></rect>
             </svg>
 
-            {subscribedChannels.map((channel: any) => {
-              const xoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.x : 0;
-              const yoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.y : 0;
-              return (
-                <Node
-                  key={channel.uuid}
-                  uuid={channel.uuid}
-                  label={channel.name}
-                  x={Math.round((channel.x + xoffset) / gridSize) * gridSize}
-                  y={Math.round((channel.y + yoffset) / gridSize) * gridSize}
-                  isDefault={channel.isDefault}
-                  handleCreateLine={handleCreateLine}
-                  isHighlighted={selectedNodes.find((nodeId: string) => nodeId === channel.uuid)}
-                  onSelectNode={onSelectNode}
-                  onDragStart={handleDragStart}
-                  selectedNodes={selectedNodes}
-                  isHovering={isOver}
-                />
-              );
-            })}
             <div
-              className="relative flex-1 flex w-full h-full"
+              className="relative flex-1 flex w-full h-full -z-10"
               style={{
                 width: '8000px',
                 height: '8000px',
@@ -541,7 +567,6 @@ const DropArea = ({ nodemapState }: any) => {
                   position: 'absolute',
                 }}
               >
-                {/* Render lines */}
                 {channelConnectors.map((line, index) => {
                   if (isLineActivated(line)) return null;
 
@@ -554,7 +579,6 @@ const DropArea = ({ nodemapState }: any) => {
                   return renderLine(line, index, true, nodemapState.scale);
                 })}
 
-                {/* Current Line */}
                 {currentLine && renderLine(currentLine, 100, false, nodemapState.scale)}
               </svg>
 

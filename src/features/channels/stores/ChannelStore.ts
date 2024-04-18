@@ -204,6 +204,8 @@ export class ChannelStore {
   }) => {
     const userChannel = await channelApi.joinChannel({ channelId, sectionId });
 
+    console.log(userChannel);
+
     const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
 
     if (userChannelDataFound) {

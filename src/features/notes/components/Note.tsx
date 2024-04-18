@@ -1,8 +1,19 @@
-import NoteMetadata from './NoteMetaData';
-import { NoteHeader } from './NoteHeader';
 import { useStore } from '@/stores/RootStore';
 import Editor from '@/features/textEditor/Editor';
 import { observer } from 'mobx-react-lite';
+
+const emptyString = JSON.stringify({
+  root: {
+    children: [
+      { children: [], direction: null, format: '', indent: 0, type: 'paragraph', version: 1 },
+    ],
+    direction: null,
+    format: '',
+    indent: 0,
+    type: 'root',
+    version: 1,
+  },
+});
 
 const Note = () => {
   const { selectedNote, updateNoteApi, updateNote } = useStore('noteStore');
@@ -20,7 +31,8 @@ const Note = () => {
   };
 
   const handleContentChange = async (value: string) => {
-    if (!selectedNote) return;
+    if (!selectedNote || value === emptyString) return;
+
     await updateNoteApi(selectedNote.uuid, { content: value });
   };
 
@@ -31,7 +43,7 @@ const Note = () => {
       <div className="w-full h-full flex">
         <div className="flex flex-col rounded-xl h-full max-w-7xl w-full p-6 items-center">
           <div className="max-w-4xl w-full">
-            <NoteHeader />
+            {/* <NoteHeader /> */}
             <div className="w-full h-full items-center ">
               <div className="px-8 w-full">
                 <input
@@ -45,13 +57,17 @@ const Note = () => {
               </div>
 
               <div className="w-full">
-                <Editor content={selectedNote.content} onBlur={handleContentChange} />
+                <Editor
+                  key={Date.now().toString()}
+                  content={selectedNote.content}
+                  onBlur={handleContentChange}
+                />
               </div>
             </div>
           </div>
         </div>
 
-        <NoteMetadata />
+        {/* <NoteMetadata /> */}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import {
   Camera,
-  ChevronLeft,
   Fire,
   LightningFill,
   Person,
@@ -17,7 +16,7 @@ import {
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { ModalName } from '@/components/modal/modalList';
 import dayjs from 'dayjs';
@@ -45,15 +44,16 @@ interface Accumulator {
   groupedByDate: GroupedData;
 }
 
-const Profile = () => {
+const Profile = ({ userId }: { userId: string }) => {
   const [stats, setStats] = useState<any>([]);
   const [totalExp, setTotalExp] = useState(0);
   const { currentWorkspaceId, currentUserWorkspaceData } = useStore('workspaceStore');
   const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { findUserByUuid, uploadProfileImageApi, currentUser } = useStore('userStore');
-  const { userId } = useParams();
+  const { findUserByUuid, uploadProfileImageApi, currentUser, setCurrentUserProfileId } =
+    useStore('userStore');
+
   const [isLoading, setIsLoading] = useState(true);
   const [tempImage, setTempImage] = useState<any>(null);
 
@@ -78,6 +78,12 @@ const Profile = () => {
     modulesCompleteCount,
     completionPercentage,
   };
+
+  useEffect(() => {
+    setCurrentUserProfileId(userId);
+
+    return () => setCurrentUserProfileId(undefined);
+  }, [setCurrentUserProfileId, userId]);
 
   useEffect(() => {
     if (!userId || !currentWorkspaceId) return;
@@ -155,25 +161,24 @@ const Profile = () => {
   );
 
   return (
-    <div className="h-full overflow-auto flex relative">
-      {/* Main */}
-      <div className="flex justify-between items-center px-16 h-12 flex-1 absolute top-4 left-0 w-fit z-30">
-        <Button
-          variant="outline"
-          className="flex gap-2 h-9 px-4 rounded-xl"
-          onClick={handleClickBack}
-        >
-          <ChevronLeft size={12} style={{ marginTop: '0.1rem' }} /> Back
-        </Button>
-      </div>
+    <div className="h-full flex relative w-full overflow-auto">
+      {/* <div className="flex justify-between items-center px-16 h-12 flex-1 absolute top-4 left-0 w-fit z-30">
+          <Button
+            variant="outline"
+            className="flex gap-2 h-9 px-4 rounded-xl"
+            onClick={handleClickBack}
+          >
+            <ChevronLeft size={12} style={{ marginTop: '0.1rem' }} /> Back
+          </Button>
+        </div> */}
       <div className="h-full w-full justify-center flex flex-col">
         {/* Main */}
         <div className="flex flex-col gap-4 flex-1 w-full h-full items-center">
           {/* Header */}
-          <div className="flex flex-col gap-6 relative items-center w-full">
+          <div className="flex flex-col gap-2 relative items-center w-full">
             {/* <div className="h-52 absolute w-full rounded-xl bg-gradient-to-b to-transparent"></div> */}
             {/* Real header */}
-            <div className="mt-24 flex gap-12 items-end px-16 justify-center w-full max-w-5xl">
+            <div className="flex gap-12 items-end px-12 justify-center w-full max-w-5xl">
               {/* Avatar */}
               <div
                 className={`card relative flex-shrink-0 shadow rounded-xl bg-gradient-to-tr from-primary to-${user.preferences.primaryColor}-400`}
@@ -268,23 +273,18 @@ const Profile = () => {
             </div>
 
             {/* Separator */}
-            <div className="h-px w-full border-b border-border flex" />
+            <div className="h-px w-full flex bg-border my-12" />
 
             {/* Body */}
-            <div className="h-full gap-16 flex flex-col w-full p-6 px-16 justify-center max-w-5xl">
+            <div className="gap-12 flex w-full justify-between max-w-5xl px-12">
               {/* Quick Stats */}
-              <div className="card h-min flex flex-col gap-4 flex-shrink-0">
+              <div className="card w-1/3 flex flex-col gap-4 flex-shrink-0">
                 <div className="flex justify-between items-center prose">
-                  <h3 className="text-main">Statistics</h3>
-                  {!isLoading ? (
-                    <h3 className="text-main">{workspaceCompletionStats.completionPercentage}</h3>
-                  ) : (
-                    <Skeleton className="w-10 h-full" />
-                  )}
+                  <h3 className="text-main">Quick Stats</h3>
                 </div>
 
                 <div className=" flex flex-col h-full w-full">
-                  <div className="grid grid-cols-3 gap-4 w-full">
+                  <div className="flex flex-col gap-4 w-full">
                     {!isLoading ? (
                       <div className="card flex items-center gap-4 prose w-full bg-card shadow-md border border-border p-6 rounded-lg">
                         <StarFill className="text-yellow-400" size={48} />
@@ -329,7 +329,7 @@ const Profile = () => {
                 </div>
               </div>
               {/* Experience Chart */}
-              <div className="prose flex flex-col gap-4">
+              <div className="prose dark:prose-invert flex flex-col gap-4 w-2/3">
                 <div className="flex justify-between items-center prose">
                   <h3 className="text-main">Experience Earned</h3>
                   {!isLoading ? (
@@ -339,21 +339,12 @@ const Profile = () => {
                   )}
                 </div>
                 {!isLoading ? (
-                  <div className="w-full h-96 flex-shrink-0 card bg-card rounded-xl border border-border p-6">
+                  <div className="w-full h-96 flex-shrink-0 card bg-card rounded-xl border border-border p-2">
                     <ExperienceChart data={stats} />
                   </div>
                 ) : (
                   <Skeleton className="w-full h-80 rounded-xl" />
                 )}
-              </div>
-              {/* Timeline card */}
-              {/* Sidebar */}
-              <div className="h-full w-full flex flex-col prose gap-4">
-                <h2 className="text-main font-medium">Activity</h2>
-
-                <WorkspaceActivity
-                  endpoint={`activity/user/${currentWorkspaceId}/${currentUser?.uuid}`}
-                />
               </div>
             </div>
           </div>
@@ -453,90 +444,3 @@ const CardSkeleton = () => (
   </div>
 </div>; */
 }
-
-// History
-/* <div className=" flex flex-col rounded-xl overflow-hidden w-full prose gap-6">
-<h3 className="flex items-center text-main">Progress</h3>
-<div className="flex flex-col gap-6">
-  {history.map((entry: any, index: number) => (
-    <div className="flex gap-6 relative">
-      <div className="rounded-full w-6 h-6 p-1.5  border border-complete-dark flex items-center justify-center relative shadow bg-background">
-        {index !== history.length - 1 && (
-          <div className="absolute left-1/2 bottom-0 translate-y-full -translate-x-1/2 h-11 w-1.5 bg-yellow-400/30" />
-        )}
-
-        <StarFill className="text-complete" size={20} />
-      </div>
-      <div className="flex flex-col">
-        <h4 className="font-semibold leading-none mb-1.5 text-main">{`${entry.label}`}</h4>
-        <p className="text-muted text-xs">{`Completed ${entry.createdOn.format(
-          'MMM DD YYYY, hh:mm a',
-        )}`}</p>
-      </div>
-    </div>
-  ))}
-</div>
-</div> */
-
-// const history = [
-//   {
-//     uuid: '1',
-//     label: 'Arrays',
-//     createdOn: dayjs('01/02/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-//   {
-//     uuid: '2',
-//     label: 'Objects',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.InProgress,
-//   },
-//   {
-//     uuid: '3',
-//     label: 'Docker',
-//     createdOn: dayjs('01/05/2024'),
-//     status: CompletionStatus.InProgress,
-//   },
-//   {
-//     uuid: '4',
-//     label: 'Objects',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-//   {
-//     uuid: '5',
-//     label: 'Dates',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.OnHold,
-//   },
-//   {
-//     uuid: '6',
-//     label: 'React',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-//   {
-//     uuid: '7',
-//     label: 'Vue',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-//   {
-//     uuid: '8',
-//     label: 'Dates',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.OnHold,
-//   },
-//   {
-//     uuid: '9',
-//     label: 'React',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-//   {
-//     uuid: '10',
-//     label: 'Vue',
-//     createdOn: dayjs('01/03/2024'),
-//     status: CompletionStatus.Complete,
-//   },
-// ];

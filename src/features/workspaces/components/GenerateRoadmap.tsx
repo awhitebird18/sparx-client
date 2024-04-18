@@ -41,7 +41,7 @@ const GenerateRoadmap = ({ setStep }: { setStep: any }) => {
   }
 
   const handleConfirm = () => {
-    setStep(4);
+    setStep(3);
   };
 
   return (

@@ -55,6 +55,8 @@ import UsersModal from '@/features/users/components/UsersModal';
 import FlashcardsModal from '@/features/flashcards/components/FlashcardsModal';
 import DiscussionsModal from '@/features/chatroom/components/DiscussionsModal';
 import NotesModal from '@/features/notes/components/NotesModal';
+import Users from '@/features/users/components/Users';
+import Profile from '@/features/profile/components/Profile';
 
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelForm'));
 const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
@@ -77,7 +79,7 @@ const RemoveChannelModal = lazy(() => import('@/features/channels/components/Rem
 const ShortcutMenu = lazy(() => import('@/components/shortcutMenu/ShortcutMenu'));
 
 const modalList = {
-  CreateChannelModal: (props: { id: string; x: number; y: number }) => (
+  CreateChannelModal: (props: { onSubmit: any; channelId?: string }) => (
     <CreateChannelModal {...props} />
   ),
   CreateSectionModal: (props: { id: string; name: string }) => <CreateSectionModal {...props} />,
@@ -138,6 +140,7 @@ const modalList = {
   discussions: () => <DiscussionsModal />,
   flashcards: () => <FlashcardsModal />,
   notes: () => <NotesModal />,
+  users: (props: any) => <Profile {...props} />,
 };
 
 export type ModalName = keyof typeof modalList;

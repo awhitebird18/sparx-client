@@ -38,13 +38,9 @@ const Stats = () => {
     }
   }, [getCardCountReviewedToday]);
 
-  const handleClickBack = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className="flex flex-col w-full h-full p-8 justify-center gap-10 overflow-hidden">
-      <div className="flex pt-4 gap-6">
+    <div className="flex flex-col w-full h-full justify-center gap-10 overflow-hidden">
+      {/* <div className="flex pt-4 gap-6">
         <div className="flex flex-col gap-1.5">
           <div className="flex gap-2 items-center">
             <Button className="w-fit gap-2 h-8" size="sm" onClick={handleClickBack}>
@@ -54,7 +50,7 @@ const Stats = () => {
           </div>
           <p className="text-secondary">See all of your notes for workspace and make changes</p>
         </div>
-      </div>
+      </div> */}
       <div className="h-full overflow-auto pr-3">
         <div className="flex flex-col xl:grid grid-cols-12 grid-rows-3 gap-8 w-full overflow-auto">
           <OverviewCard className="col-span-6 row-span-2" cardCount={cardsStudiedCount} />
@@ -114,7 +110,7 @@ export default observer(Stats);
 const OverviewCard = ({ className, cardCount }: { className?: string; cardCount: number }) => {
   return (
     <div
-      className={`flex items-center justify-center h-full min-h-[30rem] p-6 ${className} rounded-xl bg-card shadow`}
+      className={`flex items-center justify-center h-full min-h-[30rem] p-6 ${className} rounded-xl bg-hover shadow card`}
     >
       <div className="flex flex-col items-center">
         <h2 className="text-5xl leading-8 text-center font-black bg-gradient-to-b from-indigo-600 to-fuchsia-500 bg-clip-text text-transparent">
@@ -144,7 +140,7 @@ const Card = ({
 }) => {
   return (
     <div
-      className={`flex-col items-start h-full text-left p-6 px-10 shadow rounded-xl ${className} bg-card break-words shadow-md hover:bg-card cursor-pointer`}
+      className={`flex-col items-start h-full text-left p-6 px-10 shadow rounded-xl ${className} bg-hover card break-words shadow-md hover:bg-card cursor-pointer`}
       onClick={onClick}
     >
       <div>{icon}</div>

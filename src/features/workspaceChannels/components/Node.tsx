@@ -29,12 +29,16 @@ import {
   Stack,
   Bookmark,
   FileText,
+  Plus,
 } from 'react-bootstrap-icons';
 import { ChannelUserCount } from '../types/channelUserCount';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useNavigate } from 'react-router-dom';
 import { ModalName } from '@/components/modal/modalList';
 import { nodeDimensions } from '../utils/nodeDimensions';
+import { HoverConnections } from './HoverConnections';
+import NodePanel from './NodePanel';
+import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 
 const createTransparentImage = () => {
   const img = new Image();
@@ -47,29 +51,29 @@ const Node = ({
   label,
   x,
   y,
-  onRemoveNode,
   hideUnstarted,
   isDefault,
   handleCreateLine,
   isHighlighted,
   onSelectNode,
   onDragStart,
+  onDragEnd,
   isHovering,
+  isFocused,
 }: any) => {
   const {
     currentChannelId,
     setCurrentChannelUuid,
-    updateUserChannelData,
-    joinChannelApi,
+
     userChannelData,
     setIsDraggingNode,
     setIsFullscreen,
   } = useStore('channelStore');
-  // const { setChannelConnectors } = useStore('channelConnectorStore');
+  const { channelConnectors } = useStore('channelConnectorStore');
   const { findChannelUnreads } = useStore('channelUnreadStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { flashcardsDueCounts } = useStore('flashcardStore');
-  const { directChannelSectionId } = useStore('sectionStore');
+
   const { channelUserCounts } = useStore('workspaceChannelStore');
   const { leaveChannelApi, isEditing } = useStore('channelStore');
   const [isHovered, setIsHovered] = useState(false);
@@ -114,14 +118,6 @@ const Node = ({
     (el: ChannelUserCount) => el.channelUuid === uuid,
   )?.userCount;
 
-  const handleUpdateChannelStatus = async (statusVal: CompletionStatus, e: MouseEvent) => {
-    e.stopPropagation();
-
-    const channel = await updateUserChannel(uuid, { status: statusVal });
-
-    updateUserChannelData({ uuid: channel.uuid, status: channel.status });
-  };
-
   // const handleMoveNode = async (uuid: string, x: number, y: number) => {
   //   updateSubscribedChannel({ uuid, x, y });
 
@@ -132,33 +128,11 @@ const Node = ({
   //   setActiveModal({ type: 'RemoveChannelModal', payload: { uuid: nodeId, setChannelConnectors } });
   // };
 
-  const handleJoin = async (channelId: string) => {
-    // if (!directChannelSectionId) return;
-    await joinChannelApi({ channelId, sectionId: directChannelSectionId });
-  };
-
-  const handleLeaveChannel = async (channelId: string) => {
-    await leaveChannelApi(channelId);
-
-    const navHistoryString = window.localStorage.getItem('navigationHistory');
-
-    const historyParsed = navHistoryString && JSON.parse(navHistoryString);
-
-    if (historyParsed?.length && currentChannelId === channelId) {
-      setCurrentChannelUuid(historyParsed[historyParsed.length - 2].nodeId);
-    }
-  };
-
   const unreadMessageCount = findChannelUnreads(uuid)?.unreadCount;
 
   const handleUpdateNode = (e: MouseEvent) => {
     e.stopPropagation();
     setActiveModal({ type: 'CreateChannelModal', payload: { uuid } });
-  };
-
-  const handleApplyToFavorites = (channelId: string) => {
-    setContextMenuOpen(false);
-    setActiveModal({ type: 'AddChannelToSectionModal', payload: { channelId } });
   };
 
   const userChannelDetails = userChannelData.find((el: any) => el.channel.uuid === uuid) ?? {};
@@ -177,82 +151,86 @@ const Node = ({
 
   const isBeingDragged = isHovering && isHighlighted;
 
+  const childConnector = channelConnectors.find((connector) => connector.end?.nodeId === uuid);
+
+  const isChildNode = !!childConnector;
+
+  const connectionSide = childConnector?.end?.side;
+
+  const leftSideActive = !isChildNode || (isChildNode && connectionSide === ConnectionSide.RIGHT);
+
+  const rightSideActive = !isChildNode || (isChildNode && connectionSide === ConnectionSide.LEFT);
+
   return (
     <>
-      <ContextMenu
-        onOpenChange={(val) => {
-          if (val) {
-            setContextMenuOpen(val);
-          }
+      <div
+        id={uuid}
+        onMouseDown={(e: MouseEvent) => {
+          e.stopPropagation();
+        }}
+        data-node-id={uuid}
+        onDragEnd={onDragEnd}
+        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handleMouseEnter}
+        ref={conditionalDragRef}
+        style={{
+          // cursor: 'move',
+          position: 'absolute',
+          left: x,
+          top: y,
+        }}
+        className={`node card cursor-pointer !z-50 transition-colors w-[${
+          nodeDimensions.width
+        }px] h-[${
+          nodeDimensions.height
+        }px] px-4 shadow-lg flex flex-col items-start duration-400 overflow-visible absolute justify-center border border-border rounded-lg bg-card text-main ${
+          currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
+        } ${isBeingDragged ? 'transition-opacity !opacity-100' : ''} ${
+          isSubscribed ? '' : 'opacity-50'
+        } ${hideUnstarted && !isSubscribed && 'hidden'} ${
+          isHighlighted ? 'ring-2 ring-primary-light' : ''
+        }`}
+        onClick={() => {
+          if (!isSubscribed || isEditing) return;
+          onSelectNode(uuid);
+          // setCurrentChannelUuid(uuid);
+          // addNotification({ title: 'Node changed', description: `Now viewing ${label}` });
+        }}
+        draggable
+        onDragStart={(e) => onDragStart(e, uuid)}
+        onDoubleClick={(e) => {
+          if (!isSubscribed) return;
+          setCurrentChannelUuid(uuid);
+          // handleUpdateNode(e);
         }}
       >
-        <ContextMenuTrigger disabled={isDefault} asChild>
+        <>
           <div
-            id={uuid}
-            onMouseDown={(e: MouseEvent) => {
-              e.stopPropagation();
-            }}
-            onMouseLeave={handleMouseLeave}
-            onMouseEnter={handleMouseEnter}
-            ref={conditionalDragRef}
-            style={{
-              opacity: 1,
-              cursor: 'move',
-              position: 'absolute',
-              left: x,
-              top: y,
-            }}
-            className={`card cursor-pointer z-50 transition-colors w-[${
-              nodeDimensions.width
-            }px] h-[${
-              nodeDimensions.height
-            }px] px-4 shadow-md flex flex-col items-start duration-400 overflow-visible absolute justify-center border border-border rounded-lg bg-card text-main ${
-              currentChannelId === uuid ? 'bg-primary text-white border-primary' : ''
-            } ${isBeingDragged ? 'transition-opacity !opacity-100' : ''} ${
-              isSubscribed ? '' : 'opacity-60'
-            } ${hideUnstarted && !isSubscribed && 'hidden'} ${
-              isHighlighted ? 'ring-2 ring-white' : ''
+            className={`node text-center gap-2 flex  flex-col ${
+              isEditing && 'pointer-events-none'
             }`}
-            onClick={() => {
-              if (!isSubscribed || isEditing) return;
-              onSelectNode(uuid);
-              setCurrentChannelUuid(uuid);
-              // addNotification({ title: 'Node changed', description: `Now viewing ${label}` });
-            }}
-            draggable
-            onDragStart={(e) => onDragStart(e, uuid)}
-            onDoubleClick={(e) => {
-              if (isDefault || !isEditing) return;
-              handleUpdateNode(e);
-            }}
           >
-            <>
+            <span
+              className={`font-semibold flex truncate whitespace-nowrap max-w-[250px] text-lg leading-tight w-full`}
+            >
+              {label}
+            </span>
+
+            <div className="flex justify-between gap-8">
+              {!isDefault && isSubscribed && (
+                <NodeStatus
+                  uuid={uuid}
+                  status={userChannelDetails.status}
+                  isActive={currentChannelId === uuid}
+                />
+              )}
+
               <div
-                className={`node text-center gap-2 flex  flex-col ${
-                  isEditing && 'pointer-events-none'
-                }`}
+                className={`${
+                  isDefault || !isSubscribed ? 'hidden' : 'flex'
+                } items-center gap-0.5 text-main text-xs`}
               >
-                <span
-                  className={`font-semibold flex truncate whitespace-nowrap max-w-[250px] text-lg leading-tight w-full`}
-                >
-                  {label}
-                </span>
-
-                <div className="flex justify-between gap-8">
-                  {!isDefault && isSubscribed && (
-                    <NodeStatus
-                      uuid={uuid}
-                      status={userChannelDetails.status}
-                      isActive={currentChannelId === uuid}
-                    />
-                  )}
-
-                  <div
-                    className={`${
-                      isDefault || !isSubscribed ? 'hidden' : 'flex'
-                    } items-center gap-0.5 text-main text-xs`}
-                  >
-                    {/* {nodemapSettings.userCountVisible && (
+                {/* {nodemapSettings.userCountVisible && (
                       <div
                         onClick={() => handleQuickIconClick(uuid, 'members')}
                         className="card flex gap-1 items-center text-white font-semibold bg-transparent hover:bg-slate-500/20 border border-border  h-6 w-10 justify-center rounded-md text-xs"
@@ -291,114 +269,31 @@ const Node = ({
                       {flashcardsDueCount?.count ?? 0}
                       <Stack />
                     </div> */}
-                  </div>
-                </div>
               </div>
-            </>
-            {isHovered && isEditing && (
+            </div>
+          </div>
+        </>
+        {/* {isHovered && isEditing && (
               <HoverIndicators
                 uuid={uuid}
                 handleCreateLine={handleCreateLine}
                 workspaceId={currentWorkspaceId}
               />
-            )}
-          </div>
-        </ContextMenuTrigger>
-        {contextMenuOpen && (
-          <ContextMenuContent className="w-52">
-            {isEditing && (
-              <>
-                <ContextMenuItem className="flex items-center gap-2" onClick={handleUpdateNode}>
-                  <PencilSquare /> Update Node
-                </ContextMenuItem>
-                <ContextMenuItem
-                  className="flex items-center gap-3"
-                  onClick={() => onRemoveNode?.(uuid)}
-                >
-                  <XSquare /> Delete node
-                </ContextMenuItem>
-              </>
-            )}
-
-            {isSubscribed && !isEditing && (
-              <>
-                <ContextMenuLabel>Set Status</ContextMenuLabel>
-
-                <ContextMenuItem
-                  className={`flex items-center gap-3 ${
-                    userChannelDetails.status === CompletionStatus.Skip &&
-                    'bg-primary hover:!bg-primary !text-white'
-                  }`}
-                  onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.Skip, e)}
-                >
-                  <ChevronDoubleRight /> Skip
-                </ContextMenuItem>
-                <ContextMenuItem
-                  className={`flex items-center gap-3 ${
-                    userChannelDetails.status === CompletionStatus.InProgress &&
-                    'bg-primary hover:!bg-primary !text-white'
-                  }`}
-                  onClick={(e: MouseEvent) =>
-                    handleUpdateChannelStatus(CompletionStatus.InProgress, e)
-                  }
-                >
-                  <PlayCircle /> In progress
-                </ContextMenuItem>
-                <ContextMenuItem
-                  className={`flex items-center gap-3 ${
-                    userChannelDetails.status === CompletionStatus.OnHold &&
-                    'bg-primary hover:!bg-primary !text-white'
-                  }`}
-                  onClick={(e: MouseEvent) => handleUpdateChannelStatus(CompletionStatus.OnHold, e)}
-                >
-                  <Alarm /> On hold
-                </ContextMenuItem>
-                <ContextMenuItem
-                  className={`flex items-center gap-3 ${
-                    userChannelDetails.status === CompletionStatus.Complete &&
-                    'bg-primary hover:!bg-primary !text-white'
-                  }`}
-                  onClick={(e: MouseEvent) =>
-                    handleUpdateChannelStatus(CompletionStatus.Complete, e)
-                  }
-                >
-                  <StarFill className="text-yellow-400" />
-                  Complete
-                </ContextMenuItem>
-                <ContextMenuSeparator />
-
-                <ContextMenuItem
-                  className="flex items-center gap-3"
-                  onClick={() => handleApplyToFavorites(uuid)}
-                >
-                  <Bookmark />
-                  Assign to favorites
-                </ContextMenuItem>
-
-                <ContextMenuSeparator />
-
-                <ContextMenuItem
-                  className="flex items-center gap-3 text-rose-400"
-                  onClick={() => handleLeaveChannel(uuid)}
-                >
-                  <XCircle />
-                  Leave node
-                </ContextMenuItem>
-              </>
-            )}
-
-            {!isSubscribed && !isEditing && (
-              <ContextMenuItem className="flex items-center gap-3" onClick={() => handleJoin(uuid)}>
-                <AlignStart /> Start node
-              </ContextMenuItem>
-            )}
-          </ContextMenuContent>
+            )} */}
+        {isHovered && (
+          <HoverConnections
+            uuid={uuid}
+            leftSideActive={leftSideActive}
+            rightSideActive={rightSideActive}
+          />
         )}
-      </ContextMenu>
+
+        {isFocused && <NodePanel uuid={uuid} />}
+      </div>
     </>
   );
 };
 
 export default observer(Node);
 
-// w-[280px] h-[80px]
+// w-[280px] h-[80px] z-[100]

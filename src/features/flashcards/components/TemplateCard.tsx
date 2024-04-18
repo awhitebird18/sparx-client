@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { useCallback, useMemo, useRef } from 'react';
 import { CardText, GripVertical, X } from 'react-bootstrap-icons';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { Field } from '../types/Field';
+import { Field as FieldType } from '../types/Field';
 import { Button } from '@/components/ui/Button';
 
 const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
@@ -11,7 +11,7 @@ const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
   const ref = useRef<HTMLDivElement>(null);
   // Drag drop
 
-  const canDropHandler = useCallback((item: Field) => {
+  const canDropHandler = useCallback((item: FieldType) => {
     if (item) {
       return true;
     }
@@ -25,7 +25,7 @@ const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
   });
 
   const handleDrop = useCallback(
-    (item: Field) => {
+    (item: FieldType) => {
       if (!item || !selectedVariant) return;
       addVariantField(selectedVariant.uuid, { fieldId: item.uuid, cardSide: side });
     },
@@ -89,7 +89,7 @@ const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
   return (
     <div
       ref={ref}
-      className={`rounded-xl w-1/2 bg-card p-6 relative shadow ${
+      className={`rounded-xl w-1/2 p-6 relative shadow-md card bg-hover ${
         isOver && 'outline-dashed outline-primary'
       }`}
     >
@@ -97,7 +97,7 @@ const TemplateCard = ({ side }: { side: 'front' | 'back' }) => {
 
       {fields ? (
         <div className="space-y-3 my-2">
-          {fields.map((field: Field, index: number) => (
+          {fields.map((field: FieldType, index: number) => (
             <Field field={field} onRemove={() => handleRemoveField(field)} index={index} />
           ))}
         </div>

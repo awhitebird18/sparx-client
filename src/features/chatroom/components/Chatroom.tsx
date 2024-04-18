@@ -116,9 +116,9 @@ const ChatRoom: React.FC = () => {
   const headerComponent = currentChannel?.type === ChannelType.CHANNEL ? <AvatarGroup /> : null;
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full overflow-hidden">
       <ContentLayout title={<ChannelTitle />} headerComponent={headerComponent} disablePadding>
-        <div className="relative flex flex-1 rounded-xl overflow-hidden">
+        <div className="relative flex flex-1 overflow-hidden">
           <div className="flex flex-col flex-1 overflow-hidden w-full">
             <div
               className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"

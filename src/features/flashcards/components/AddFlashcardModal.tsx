@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Modal from '@/components/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -65,45 +64,40 @@ const AddFlashcardModal = () => {
   };
 
   return (
-    <Modal title="Add flashcard">
-      <div className="flex flex-col w-screen max-w-2xl h-[40rem] space-y-8">
-        <div className="flex flex-col gap-8 flex-1 overflow-auto pr-4">
-          {/* Display fields based on selected template */}
-          {fields.map((field) => (
-            <CardField
-              key={field.uuid}
-              title={field.title}
-              content={fieldValues.find((fv: any) => fv.uuid === field.uuid)?.value || undefined}
-              onFieldChange={(value) => handleFieldChange(field.uuid, value)}
-            />
-          ))}
-        </div>
+    <div className="flex flex-col h-full w-full gap-10">
+      <div className="flex flex-col gap-12 flex-1 overflow-auto w-full">
+        {/* Display fields based on selected template */}
+        {fields.map((field) => (
+          <CardField
+            key={field.uuid}
+            title={field.title}
+            content={fieldValues.find((fv: any) => fv.uuid === field.uuid)?.value || undefined}
+            onFieldChange={(value) => handleFieldChange(field.uuid, value)}
+          />
+        ))}
+      </div>
 
-        <div className="flex justify-between items-center">
-          <div>
-            {/* Template selection */}
-            <Select onValueChange={handleTemplateChange} defaultValue={selectedTemplate?.uuid}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a template" />
-              </SelectTrigger>
-              <SelectContent>
-                {templates.map((template) => (
-                  <SelectItem key={template.uuid} value={template.uuid}>
-                    {template.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex gap-6">
-            <Button variant="outline" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit}>Submit</Button>
-          </div>
+      <div className="flex justify-between items-center">
+        <div>
+          {/* Template selection */}
+          <Select onValueChange={handleTemplateChange} defaultValue={selectedTemplate?.uuid}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a template" />
+            </SelectTrigger>
+            <SelectContent>
+              {templates.map((template) => (
+                <SelectItem key={template.uuid} value={template.uuid}>
+                  {template.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex gap-6">
+          <Button onClick={handleSubmit}>Create flashcard</Button>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 
@@ -146,8 +140,8 @@ const CardField = ({
   });
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="h-2/5">
+      <CollapsibleTrigger asChild>
         <div className="flex gap-2 items-center mb-2">
           <div>
             <ChevronDown size={18} />
@@ -155,8 +149,8 @@ const CardField = ({
           <h2>{title}</h2>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="card">
-        <div className="relative bg-card rounded-lg border-border-input border">
+      <CollapsibleContent className="card h-full">
+        <div className="relative bg-hover rounded-lg shadow-md h-full py-4">
           <Editor content={content ?? emptyContent} onChange={onFieldChange} />
         </div>
       </CollapsibleContent>

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import {
   ArrowLeftCircle,
+  Check,
   Check2Circle,
   Pencil,
+  Play,
   Plus,
   ThreeDots,
   Trash,
@@ -133,21 +135,25 @@ const TaskList: React.FC = () => {
         Header: 'Name',
         accessor: 'name',
         Cell: ({ value }: { value: string }) => (
-          <span className="flex items-center gap-3 text-main font-medium">{value}</span>
+          <div className=" max-w-[7rem] truncate">
+            <p className="items-center gap-3 text-main font-medium truncate text-sm">{value}</p>
+          </div>
         ),
       },
       {
         Header: 'Due date',
         accessor: 'dueDate',
         Cell: ({ value }: { value: string }) => (
-          <span className="">{dayjs(value).format('MMMM D')}</span>
+          <span className="text-sm">{dayjs(value).format('MMM D')}</span>
         ),
       },
       {
         Header: 'Updated on',
         accessor: 'updatedAt',
         Cell: ({ row, value }: { value: Date; row: any }) => {
-          return <span className="">{dayjs(value ? value : row.createdAt).format('MMMM D')}</span>;
+          return (
+            <span className="text-sm">{dayjs(value ? value : row.createdAt).format('MMM D')}</span>
+          );
         },
       },
 
@@ -155,8 +161,8 @@ const TaskList: React.FC = () => {
         Header: 'Status',
         accessor: 'isComplete',
         Cell: ({ value }: { value: any }) => (
-          <Badge variant={`${value ? 'success' : 'default'}`} className="w-24 h-6 items-center">
-            {value ? 'Complete' : 'In progress'}
+          <Badge variant={`${value ? 'success' : 'default'}`} className="w-6 h-6 p-0 items-center">
+            {value ? <Check size={16} /> : <Play size={16} />}
           </Badge>
         ),
       },
@@ -216,19 +222,18 @@ const TaskList: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col card w-full gap-3 h-full overflow-hidden">
+    <div className="h-full card w-full space-y-4">
       <div className="flex justify-between items-center prose">
-        <h3 className="text-main">Tasks</h3>
+        {/* <h3 className="text-main">Tasks</h3> */}
         <Button
           onClick={createTask}
-          size="icon"
-          className="w-7 h-7 rounded-md"
+          size="sm"
+          className="h-8 rounded-md ml-auto"
           disabled={isLoading}
         >
-          <Plus className="text-3xl" />
+          Add task
         </Button>
       </div>
-
       <Table
         columns={columns}
         data={tasks}

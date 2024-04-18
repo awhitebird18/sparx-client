@@ -97,7 +97,7 @@ const CompanyDropdown = () => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger className="overflow-hidden flex-shrink-0 flex flex-1 items-center gap-3 w-fit h-10">
+      <DropdownMenuTrigger className=" flex-shrink-0 flex flex-1 items-center gap-3 w-fit h-10">
         <div className="w-9 h-9 flex-shrink-0 rounded-md overflow-hidden border border-border bg-primary">
           <img
             src={currentWorkspace?.imgUrl ?? getCurrentWorkspaceImage()}
@@ -105,7 +105,7 @@ const CompanyDropdown = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2 text-lg truncate pr-1.5">
+        <div className="flex items-center gap-3 text-lg truncate pr-3">
           <span className="text-xl font-semibold tracking leading-tight truncate w-full">
             {currentWorkspace?.name}
           </span>
@@ -114,7 +114,7 @@ const CompanyDropdown = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-72 space-y-2"
+        className="w-72 space-y-2 z-50"
         align="start"
         alignOffset={0}
         sideOffset={5}

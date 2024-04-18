@@ -30,3 +30,5 @@ function Modal({ title, children, disablePadding }: ModalProps) {
 }
 
 export default observer(Modal);
+
+// max-w-fit max-w-[100% - 432px]

@@ -112,7 +112,7 @@ const NodeMap: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className={`relative flex h-full w-full  overflow-hidden ${
+      className={`relative flex h-full w-full overflow-hidden ${
         isSpacePressed ? 'cursor-grab' : ''
       }`}
       onContextMenu={handleContextMenu}
@@ -120,8 +120,6 @@ const NodeMap: React.FC = () => {
       {!isLoading && defaultCoords ? (
         <div className="h-full w-full">
           <TransformWrapper
-            // disabled={true}
-
             limitToBounds={false}
             initialScale={nodemapState?.scale ?? 1}
             initialPositionX={defaultCoords.x}

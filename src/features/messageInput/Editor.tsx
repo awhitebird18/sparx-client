@@ -14,7 +14,6 @@ import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
-import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
 import { Send } from 'react-bootstrap-icons';
 import { OnChangePlugin } from './plugins/OnChangePlugin';
 
@@ -34,13 +33,13 @@ export default function Editor({ placeholder, config, onSubmit, onChange }: Edit
     <LexicalComposer initialConfig={config}>
       <div
         id="focus-ring"
-        className="transition-colors border border-border shadow-sm mt-3 mb-1 p-2 rounded-lg mx-2"
+        className="transition-colors border border-border shadow-sm mt-2 pb-2 rounded-md relative"
       >
-        <div id="editor-container" className="editor-container rounded-md">
+        <div id="editor-container">
           <TopToolbarPlugin />
           <div className="editor-inner">
             <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
+              contentEditable={<ContentEditable className="editor-input mr-16" />}
               placeholder={<Placeholder value={placeholder} />}
               ErrorBoundary={LexicalErrorBoundary}
             />
@@ -54,17 +53,10 @@ export default function Editor({ placeholder, config, onSubmit, onChange }: Edit
             <AutoLinkPlugin />
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </div>
-          <div className="absolute right-1.5 bottom-1.5 gap-2 flex">
-            <SubmitButtonPlugin
-              onSubmit={onSubmit}
-              label={
-                <>
-                  <Send className="mr-2 text-xs" /> Send
-                </>
-              }
-            />
+          <div className="absolute right-2 bottom-2 gap-2 flex">
+            <SubmitButtonPlugin onSubmit={onSubmit} label={<Send />} />
           </div>
-          <BottomToolbarPLugin />
+          {/* <BottomToolbarPLugin /> */}
         </div>
       </div>
     </LexicalComposer>

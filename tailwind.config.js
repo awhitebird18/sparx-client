@@ -252,7 +252,6 @@ module.exports = {
         '::-webkit-scrollbar-track': {
           background: theme('colors.secondary.DEFAULT'),
           borderRadius: '1rem',
-          margin: '0.1rem',
         },
         '::-webkit-scrollbar-thumb': {
           backgroundColor: theme('colors.scrollbar.thumb'),

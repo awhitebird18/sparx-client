@@ -42,8 +42,8 @@ const NodeStats = () => {
     channelCount === 0 ? 0 : Math.round((stats[CompletionStatus.Complete] / channelCount) * 100);
 
   return (
-    <div className="card rounded-md flex gap-2.5 shadow-md  whitespace-nowrap items-center fixed bottom-2 left-2 bg-card p-1 pr-5">
-      <div className="flex items-center gap-1.5 bg-primary-transparent border border-primary flex-shrink-0 h-9 w-14 justify-center rounded-md text-white">
+    <div className="card rounded-md flex gap-2.5 shadow-lg   whitespace-nowrap items-center fixed bottom-2 left-2 bg-card p-1 pr-5">
+      <div className="flex items-center gap-1.5 bg-primary-transparent border border-primary flex-shrink-0 h-9 w-14 justify-center rounded-md text-main">
         {`${completionPercentage}%`}
       </div>
 
@@ -72,7 +72,9 @@ const NodeStats = () => {
         variant="default"
       >
         <ChevronLeft
-          className={`transition-transform transform duration-300 ${!isOpen && 'rotate-180'}`}
+          className={`transition-transform transform duration-300 text-muted ${
+            !isOpen && 'rotate-180'
+          }`}
         />
       </Button>
     </div>

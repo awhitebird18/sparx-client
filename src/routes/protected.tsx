@@ -99,7 +99,7 @@ const App = observer(() => {
 //   }
 
 //   if (workspaces.length && theme && !lastViewedWorkspace.firstLogin) {
-//     return <Navigate to="/app/home" replace />;
+//     return <Navigate to="/app/nodemap" replace />;
 //   }
 
 //   if (!theme) {
@@ -118,11 +118,10 @@ export const protectedRoutes = [
     path: '/app',
     element: <App />,
     children: [
-      { path: '', element: <Navigate to="home" /> },
+      { path: '', element: <Navigate to="nodemap" /> },
       { path: 'members/*', element: <UserRoutes /> },
       { path: 'nodemap/*', element: <Nodemap /> },
       { path: 'user/*', element: <Nodemap /> },
-      { path: 'profile/:userId', element: <Profile /> },
       { path: 'notes/*', element: <NotesRoutes /> },
       { path: 'search/*', element: <Search /> },
       { path: 'home/*', element: <OverviewRoutes /> },

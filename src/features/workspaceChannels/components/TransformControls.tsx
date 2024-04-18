@@ -2,10 +2,7 @@ import { Button } from '@/components/ui/Button';
 import {
   ArrowsAngleContract,
   ArrowsAngleExpand,
-  ArrowsFullscreen,
   Bullseye,
-  Fullscreen,
-  FullscreenExit,
   House,
   PencilSquare,
 } from 'react-bootstrap-icons';
@@ -17,21 +14,15 @@ import { useControls, useTransformEffect } from 'react-zoom-pan-pinch';
 
 const TransformControls = () => {
   const { zoomIn, zoomOut, instance, zoomToElement, setTransform, resetTransform } = useControls();
-  const {
-    currentChannelId,
-    subscribedChannels,
-    isEditing,
-    setIsEditing,
-    isFullscreen,
-    setIsFullscreen,
-  } = useStore('channelStore');
+  const { currentChannelId, subscribedChannels, isEditing, setIsEditing } =
+    useStore('channelStore');
   const { lastViewedWorkspace } = useStore('workspaceStore');
-  const { enterFullScreen } = useStore('sidebarStore');
+  const { toggleFullScreen, isFullscreen } = useStore('sidebarStore');
 
   const [scale, setScale] = useState(1);
 
   const handleViewFullscreen = () => {
-    enterFullScreen();
+    toggleFullScreen();
   };
 
   const scrollToActiveNode = () => {
@@ -58,7 +49,7 @@ const TransformControls = () => {
   });
 
   return (
-    <div className="flex gap-1 items-center z-10 p-1 px-1.5 rounded-md bg-card absolute bottom-2 right-2">
+    <div className="flex gap-1 items-center z-10 p-1 px-1.5 rounded-md bg-card absolute bottom-2 right-2 shadow-md">
       <Button className="w-10 h-10 p-0 " variant="ghost" onClick={() => resetTransform()}>
         <House size={18} />
       </Button>
@@ -83,7 +74,11 @@ const TransformControls = () => {
           <Funnel size={18} />
         </Button>
       </SettingsDropdown> */}
-      <Button className="w-10 h-10 p-0 " variant="ghost" onClick={handleViewFullscreen}>
+      <Button
+        className="w-10 h-10 p-0 "
+        variant={isFullscreen ? 'outline-primary' : 'ghost'}
+        onClick={handleViewFullscreen}
+      >
         {isFullscreen ? <ArrowsAngleContract size={14} /> : <ArrowsAngleExpand size={14} />}
       </Button>
       <Button className="w-10 h-10 p-0 text-4xl pb-2" variant="ghost" onClick={() => zoomOut(0.2)}>

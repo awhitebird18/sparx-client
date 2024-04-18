@@ -84,10 +84,6 @@ const General = () => {
 
   if (!currentWorkspace) return;
 
-  const transformedImage = currentWorkspace.imgUrl
-    ? transformCloudinaryUrl(currentWorkspace.imgUrl, 120, 120)
-    : getCurrentWorkspaceImage();
-
   function getCurrentWorkspaceImage() {
     const hour = new Date().getHours(); // Gets the current hour (0-23)
     const isDaytime = hour > 6 && hour < 18; // Define day time (e.g., 6 AM to 6 PM)
@@ -145,8 +141,11 @@ const General = () => {
               </FormDescription>
             </div>
           </form>
-          <div className="w-28 h-28 relative flex flex-col items-center gap-4 rounded-lg overflow-hidden border-b border-border">
-            <img className="w-full h-full" src={tempImg ?? transformedImage} />
+          <div className="w-28 h-28 relative flex flex-col items-center gap-4 rounded-lg overflow-hidden border border-border card">
+            <img
+              className="w-full h-full"
+              src={tempImg ?? currentWorkspace.imgUrl ?? getCurrentWorkspaceImage()}
+            />
 
             <Button
               variant="secondary"
