@@ -6,8 +6,6 @@
   :root,
   .light {
     --background: 220 20% 97%;
-    /* --background: 226 16% 100%; */
-    /* --background: var(--color-primary-50); */
     --foreground: 226 23% 94%;
 
     --scrollbarThumb: 230.2 10% 89%;
@@ -21,7 +19,6 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 84% 4.9%;
 
-    /* --card: 220 10% 100%; */
     --card: 0 0% 100%;
     --card-disabled: 0 0% 80%;
     --card-foreground: 220 20% 93%;
@@ -35,7 +32,6 @@
     --primary: 220 10% 11.2%;
     --primary-foreground: 210 10% 98%;
 
-    /* --secondary: 220 10% 85%; */
     --secondary: 0 0% 100%;
     --secondary-hover: 220 28% 94.1%;
     --secondary-foreground: 220 47.4% 11.2%;
@@ -112,7 +108,6 @@
     --popover: 226.2 15% 15%;
     --popover-foreground: 220 40% 98%;
 
-    /* --card: 226 30% 13%; */
     --card: 225 14% 16%;
     --card-disabled: 226 20% 16%;
     --card-foreground: 224 20% 26%;
@@ -128,8 +123,6 @@
     --primary-foreground: 220 47.4% 11.2%;
 
     --primary-border: var(--color-primary-500);
-
-    /* 227, 21%, 17% */
 
     --secondary: 232 20% 16%;
     --secondary-hover: 229 20% 20%;

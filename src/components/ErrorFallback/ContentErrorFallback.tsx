@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../logo/Logo';
 import { Button } from '../ui/Button';
 
-function ContentErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+const ContentErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const navigate = useNavigate();
 
   return (
@@ -24,6 +24,6 @@ function ContentErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
       </div>
     </div>
   );
-}
+};
 
 export default ContentErrorFallback;

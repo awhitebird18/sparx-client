@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ThemeTab from './ThemeTab';
 import NotificationsTab from './NotificationsTab';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import AccountTab from './AccountTab';
 import { Bell, Gear, Heart } from 'react-bootstrap-icons';
 

@@ -16,7 +16,6 @@ const VerificationSuccessful = () => {
         <span className="text-2xl font-bold">Sparx</span>
       </div>
       <div className="card bg-card flex flex-col items-center gap-0 rounded-xl border border-border p-8 prose">
-        {/* <Logo size={44} /> */}
         <div className="relative w-44 h-44 bird">
           <img className="w-full h-full absolute top-0 left-0" src="/birdBody.png" />
           <img

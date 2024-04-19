@@ -9,11 +9,11 @@ import Table from '@/components/ui/Table';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowReturnRight, Mouse, Plus, ThreeDots, Trash } from 'react-bootstrap-icons';
 import { Field } from '../types/Field';
 
-const TemplateList = () => {
+const TemplateList = observer(() => {
   const {
     variants,
     templates,
@@ -22,54 +22,67 @@ const TemplateList = () => {
     selectedVariant,
     handleSelectVariant,
     isLoading,
+    fetchTemplatesApi,
   } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
-  const [variantDropdownOpen, setVariantDropdownOpen] = useState(false);
-  const [templateDropdownOpen, setTemplateDropdownOpen] = useState(false);
+
   const [variantTableDropdownOpen, setVariantTableDropdownOpen] = useState(null);
-  const [templateSelectDropdownOpen, setTemplateSelectDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const fn = async () => {
+      await fetchTemplatesApi();
+    };
+
+    fn();
+  }, [fetchTemplatesApi]);
 
   // Templates
   const handleCreateTemplate = () => {
     setActiveModal({ type: 'CreateTemplateModal', payload: null });
-    setTemplateSelectDropdownOpen(false);
   };
 
   // Variants
   const handleCreateVariant = () => {
     setActiveModal({ type: 'CreateVariantModal', payload: { templateId: selectedTemplate?.uuid } });
-    setVariantDropdownOpen(false);
   };
 
-  const handleUpdateTemplate = (uuid: string | undefined, field: Partial<Field>) => {
-    if (!uuid) return;
-    setActiveModal({
-      type: 'UpdateTemplateModal',
-      payload: { uuid, updateFields: field },
-    });
-    setTemplateDropdownOpen(false);
-  };
+  const handleUpdateTemplate = useCallback(
+    (uuid: string | undefined, field: Partial<Field>) => {
+      if (!uuid) return;
+      setActiveModal({
+        type: 'UpdateTemplateModal',
+        payload: { uuid, updateFields: field },
+      });
+    },
+    [setActiveModal],
+  );
 
-  const handleRemoveTemplate = (uuid: string | undefined) => {
-    if (!uuid) return;
-    setActiveModal({ type: 'RemoveTemplateModal', payload: { uuid } });
-    setTemplateDropdownOpen(false);
-  };
+  const handleRemoveTemplate = useCallback(
+    (uuid: string | undefined) => {
+      if (!uuid) return;
+      setActiveModal({ type: 'RemoveTemplateModal', payload: { uuid } });
+    },
+    [setActiveModal],
+  );
 
-  const handleUpdateVariant = (uuid: string | undefined, field: Partial<Field>) => {
-    if (!uuid) return;
-    setActiveModal({
-      type: 'UpdateVariantModal',
-      payload: { uuid, updateFields: field },
-    });
-    setVariantDropdownOpen(false);
-  };
+  const handleUpdateVariant = useCallback(
+    (uuid: string | undefined, field: Partial<Field>) => {
+      if (!uuid) return;
+      setActiveModal({
+        type: 'UpdateVariantModal',
+        payload: { uuid, updateFields: field },
+      });
+    },
+    [setActiveModal],
+  );
 
-  const handleRemoveVariant = (uuid: string | undefined) => {
-    if (!uuid) return;
-    setActiveModal({ type: 'RemoveVariantModal', payload: { uuid } });
-    setVariantDropdownOpen(false);
-  };
+  const handleRemoveVariant = useCallback(
+    (uuid: string | undefined) => {
+      if (!uuid) return;
+      setActiveModal({ type: 'RemoveVariantModal', payload: { uuid } });
+    },
+    [setActiveModal],
+  );
 
   const templateColumns: any[] = useMemo(
     () => [
@@ -83,8 +96,8 @@ const TemplateList = () => {
         Cell: ({ value }: { value: Date }) => <span>{dayjs(value).format('DD/MM/YYYY')}</span>,
       },
       {
-        Header: 'Actions', // Name it as per your choice
-        id: 'actions', // It's a good practice to give an ID for reference
+        Header: 'Actions',
+        id: 'actions',
         Cell: ({ row }: { row: any }) => {
           const { uuid } = row.original;
 
@@ -130,8 +143,8 @@ const TemplateList = () => {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+
+    [handleRemoveTemplate, handleSelectTemplate, handleUpdateTemplate, variantTableDropdownOpen],
   );
 
   const variantColumns: any[] = useMemo(
@@ -146,8 +159,8 @@ const TemplateList = () => {
         Cell: ({ value }: { value: Date }) => <span>{dayjs(value).format('DD/MM/YYYY')}</span>,
       },
       {
-        Header: 'Actions', // Name it as per your choice
-        id: 'actions', // It's a good practice to give an ID for reference
+        Header: 'Actions',
+        id: 'actions',
         Cell: ({ row }: { row: any }) => {
           const { uuid } = row.original;
 
@@ -193,8 +206,7 @@ const TemplateList = () => {
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [handleRemoveVariant, handleSelectVariant, handleUpdateVariant, variantTableDropdownOpen],
   );
 
   return (
@@ -243,6 +255,6 @@ const TemplateList = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(TemplateList);
+export default TemplateList;

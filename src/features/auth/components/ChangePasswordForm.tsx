@@ -12,7 +12,6 @@ type FormData = {
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-// Zod schema
 const registrationSchema = z
   .object({
     password: z

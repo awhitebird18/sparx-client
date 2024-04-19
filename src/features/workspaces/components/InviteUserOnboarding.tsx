@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import RoadmapOnboarding from './RoadmapOnboarding';
 
-const InviteUserOnboarding = () => {
+const InviteUserOnboarding = observer(() => {
   const [step, setStep] = useState(2);
   const { currentUser } = useStore('userStore');
   const { lastViewedWorkspace } = useStore('workspaceStore');
@@ -26,6 +26,6 @@ const InviteUserOnboarding = () => {
       {step === 4 && <UserOnboarding />}
     </div>
   );
-};
+});
 
-export default observer(InviteUserOnboarding);
+export default InviteUserOnboarding;

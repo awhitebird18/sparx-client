@@ -1,10 +1,8 @@
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
 import { HouseFill } from 'react-bootstrap-icons';
-
 import authApi from '@/features/auth/api';
 import { Button } from '@/components/ui/Button';
 

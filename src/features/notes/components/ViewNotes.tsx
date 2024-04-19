@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import SearchInput from '@/components/ui/SearchInput';
 import {
   ArrowReturnRight,
   CaretDownFill,
@@ -8,15 +7,11 @@ import {
   FileEarmarkTextFill,
   Lock,
   PencilSquare,
-  Plus,
   ThreeDotsVertical,
   Unlock,
 } from 'react-bootstrap-icons';
-import { Column } from 'react-table';
 import { useStore } from '@/stores/RootStore';
-import { Note } from '../types/Note';
 import { observer } from 'mobx-react-lite';
-
 import {
   DropdownMenuTrigger,
   DropdownMenu,
@@ -27,10 +22,10 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { UpdateNote } from '../types/UpdateNote';
 import dayjs from 'dayjs';
 import NoteMetaData from './NoteMetaData';
+import EmptyFallback from './EmptyFallback';
+import SearchInput from '@/components/ui/SearchInput';
 
-type NoteColumn = Column<Note>;
-
-const ViewNotes: React.FC = () => {
+const ViewNotes: React.FC = observer(() => {
   const {
     notes,
     createNote,
@@ -45,7 +40,6 @@ const ViewNotes: React.FC = () => {
   const { findUserByUuid, currentUser } = useStore('userStore');
   const { setActiveModal } = useStore('modalStore');
   const [searchValue, setSearchValue] = useState('');
-  const { setSidePanelComponent } = useStore('sidePanelStore');
   const { setMainPanel, activeComponent } = useStore('mainPanelStore');
 
   useEffect(() => {
@@ -87,7 +81,6 @@ const ViewNotes: React.FC = () => {
     [currentChannelId, setActiveModal],
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleClickDelete = (uuid: string) => {
     setActiveModal({ type: 'DeleteNote', payload: { noteId: uuid } });
   };
@@ -107,14 +100,14 @@ const ViewNotes: React.FC = () => {
               <div className="rounded-xl flex flex-col items-center text-main gap-6">
                 <div className="flex justify-between items-center w-full py-0">
                   <div className="flex gap-3 items-center w-full">
-                    {/* <div className="w-52">
+                    <div className="w-52">
                       <SearchInput
                         placeholder="Search"
                         value={searchValue}
                         setValue={setSearchValue}
                         disabled={isLoading}
                       />
-                    </div> */}
+                    </div>
                     <Button
                       variant="secondary"
                       className="flex gap-3 w-fit items-center rounded-lg h-8"
@@ -133,15 +126,6 @@ const ViewNotes: React.FC = () => {
                       People
                       <CaretDownFill size={11} className="mt-0.5 text-secondary" />
                     </Button>
-                    {/* <Button
-                  variant="secondary"
-                  className="flex gap-3 w-fit items-center"
-                  size="sm"
-                  disabled={isLoading}
-                >
-                  Modified
-                  <CaretDownFill size={11} className="mt-0.5 text-secondary" />
-                </Button> */}
                     <Button
                       className="gap-3 ml-auto h-8 rounded-lg"
                       onClick={handleCreateNote}
@@ -158,6 +142,7 @@ const ViewNotes: React.FC = () => {
                     const user = findUserByUuid(note.createdBy);
                     return (
                       <div
+                        key={note.uuid}
                         onClick={() => handleViewNote(note.uuid)}
                         className="p-4 bg-hover card border border-border rounded-lg space-y-4 prose dark:prose-invert"
                       >
@@ -243,12 +228,7 @@ const ViewNotes: React.FC = () => {
               </div>
             ) : null}
 
-            <div className="flex items-start gap-6">
-              {/* <div className="flex flex-col gap-1.5">
-            <h2 className="text-main text-3xl font-medium">Notes</h2>
-            <p className="text-secondary">See all of your notes for workspace and make changes</p>
-          </div> */}
-            </div>
+            <div className="flex items-start gap-6"></div>
 
             {!isLoading && !filteredNotes.length ? (
               <div className="pt-12">
@@ -260,29 +240,6 @@ const ViewNotes: React.FC = () => {
       )}
     </>
   );
-};
+});
 
-export default observer(ViewNotes);
-
-const EmptyFallback = ({
-  channelName,
-  onCreateNote,
-}: {
-  channelName?: string;
-  onCreateNote: () => void;
-}) => (
-  <div className="flex flex-col gap-5 max-w-sm items-center prose">
-    <div className="flex flex-col gap-2 items-center">
-      <h3 className="text-center text-main text-xl">No Notes Found.</h3>
-      <p className="text-center text-secondary flex-items-center">
-        All of your <span className="text-primary px-0.5">{channelName}</span> notes will appear
-        here.
-      </p>
-    </div>
-
-    <Button className="items-center gap-1" onClick={onCreateNote}>
-      <Plus size={20} />
-      Start a new note
-    </Button>
-  </div>
-);
+export default ViewNotes;

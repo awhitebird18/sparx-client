@@ -1,5 +1,6 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import {
   ComposedChart,
@@ -12,7 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const NewCardsModal = () => {
+const NewCardsModal = observer(() => {
   const { getCardsAddedStats } = useStore('flashcardStore');
   const [stats, setStats] = useState<any>([]);
 
@@ -60,6 +61,6 @@ const NewCardsModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
 export default NewCardsModal;

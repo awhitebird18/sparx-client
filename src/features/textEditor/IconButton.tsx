@@ -1,10 +1,12 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from '@/components/ui/Button';
 
-const IconButton = ({ icon, active, onClick }: any) => {
+type Props = { icon: any; active: boolean; onClick: () => any };
+
+const IconButton = ({ icon, active, onClick }: Props) => {
   return (
     <Button
       onClick={onClick}
-      className={`w-8 h-8 p-0 border-none rounded-none ${active && "bg-violet-700 text-white"}`}
+      className={`w-8 h-8 p-0 border-none rounded-none ${active && 'bg-violet-700 text-white'}`}
       variant="outline"
     >
       {icon[0].toUpperCase()}

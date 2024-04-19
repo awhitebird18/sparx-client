@@ -2,17 +2,16 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Input } from '@/components/ui/Input';
 import { Variant } from '../types/variant';
 
-const UpdateVariantModal = ({
-  uuid,
-  updateFields,
-}: {
+export type UpdateVariantModalProps = {
   uuid: string;
   updateFields: Partial<Variant>;
-}) => {
+};
+
+const UpdateVariantModal = observer(({ uuid, updateFields }: UpdateVariantModalProps) => {
   const { updateVariantApi } = useStore('flashcardStore');
   const { closeModal } = useStore('modalStore');
   const [value, setValue] = useState(updateFields.title);
@@ -36,6 +35,6 @@ const UpdateVariantModal = ({
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(UpdateVariantModal);
+export default UpdateVariantModal;

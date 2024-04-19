@@ -2,7 +2,6 @@ import { CreateUserStatus } from '@/features/userStatus/types/createUserStatus';
 import { UpdateUserStatus } from '@/features/userStatus/types/updateUserStatus';
 import { UserStatus } from '@/features/userStatus/types/userStatus';
 import { makeObservable, observable, action, computed } from 'mobx';
-
 import { userStatusApi } from '@/features/userStatus/api';
 
 export class UserStatusStore {

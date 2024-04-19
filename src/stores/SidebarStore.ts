@@ -1,5 +1,4 @@
 import { makeObservable, observable, computed, action, runInAction } from 'mobx';
-
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
 import storage from '@/utils/storage';

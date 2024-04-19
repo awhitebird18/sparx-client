@@ -1,21 +1,9 @@
 import { useStore } from '@/stores/RootStore';
 import Editor from '@/features/textEditor/Editor';
 import { observer } from 'mobx-react-lite';
+import { emptyInputState } from '@/utils/emptyInputState';
 
-const emptyString = JSON.stringify({
-  root: {
-    children: [
-      { children: [], direction: null, format: '', indent: 0, type: 'paragraph', version: 1 },
-    ],
-    direction: null,
-    format: '',
-    indent: 0,
-    type: 'root',
-    version: 1,
-  },
-});
-
-const Note = () => {
+const Note = observer(() => {
   const { selectedNote, updateNoteApi, updateNote } = useStore('noteStore');
 
   const handleSaveTitle = async (value: string) => {
@@ -31,7 +19,7 @@ const Note = () => {
   };
 
   const handleContentChange = async (value: string) => {
-    if (!selectedNote || value === emptyString) return;
+    if (!selectedNote || value === emptyInputState) return;
 
     await updateNoteApi(selectedNote.uuid, { content: value });
   };
@@ -43,7 +31,6 @@ const Note = () => {
       <div className="w-full h-full flex">
         <div className="flex flex-col rounded-xl h-full max-w-7xl w-full p-6 items-center">
           <div className="max-w-4xl w-full">
-            {/* <NoteHeader /> */}
             <div className="w-full h-full items-center ">
               <div className="px-8 w-full">
                 <input
@@ -52,7 +39,9 @@ const Note = () => {
                   onChange={(e) => handleChangeTitle(e.target.value)}
                   placeholder="Untitled"
                   className="w-full border-none outline-none bg-transparent text-3xl font-semibold leading-snug"
-                  onBlur={(e: any) => handleSaveTitle(e.target.value)}
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                    handleSaveTitle(e.target.value)
+                  }
                 />
               </div>
 
@@ -66,11 +55,9 @@ const Note = () => {
             </div>
           </div>
         </div>
-
-        {/* <NoteMetadata /> */}
       </div>
     </div>
   );
-};
+});
 
-export default observer(Note);
+export default Note;

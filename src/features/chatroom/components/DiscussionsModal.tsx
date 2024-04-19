@@ -1,8 +1,9 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
 import Chatroom from './Chatroom';
+import { observer } from 'mobx-react-lite';
 
-const DiscussionsModal = () => {
+const DiscussionsModal = observer(() => {
   const { currentChannel } = useStore('channelStore');
   return (
     <Modal title={`${currentChannel?.name} members`}>
@@ -11,6 +12,6 @@ const DiscussionsModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
 export default DiscussionsModal;

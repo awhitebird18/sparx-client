@@ -1,17 +1,18 @@
 import { useLayoutEffect, useState } from 'react';
 import { $getRoot } from 'lexical';
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+type OnChangePluginProps = {
+  ignoreHistoryMergeTagChange?: boolean;
+  ignoreSelectionChange?: boolean;
+  onChange: (editorState: string, editorText: string) => void;
+};
 
 export function OnChangePlugin({
   ignoreHistoryMergeTagChange = true,
   ignoreSelectionChange = false,
   onChange,
-}: {
-  ignoreHistoryMergeTagChange?: boolean;
-  ignoreSelectionChange?: boolean;
-  onChange: (editorState: string, editorText: string) => void;
-}): null {
+}: OnChangePluginProps): null {
   const [editor] = useLexicalComposerContext();
   const [initialRender, setInitalRender] = useState<boolean>(true);
 

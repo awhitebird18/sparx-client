@@ -1,22 +1,20 @@
 import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react-lite';
-
 import { useStore } from '@/stores/RootStore';
 
-type EmojiPickerProps = {
+type Props = {
   onClickAway: () => void;
   position: { top: number; left: number };
   onEmojiClick: (id: string) => void;
 };
 
-const EmojiPicker = ({ onClickAway, position, onEmojiClick }: EmojiPickerProps) => {
+const EmojiPicker = observer(({ onClickAway, position, onEmojiClick }: Props) => {
   const { theme } = useStore('userPreferencesStore');
 
   return (
     <>
       <div className="flex fixed z-30" style={position}>
         <Picker
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onEmojiSelect={(emojiObj: any) => {
             onEmojiClick(emojiObj.id);
           }}
@@ -34,6 +32,6 @@ const EmojiPicker = ({ onClickAway, position, onEmojiClick }: EmojiPickerProps) 
       />
     </>
   );
-};
+});
 
-export default observer(EmojiPicker);
+export default EmojiPicker;

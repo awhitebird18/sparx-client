@@ -1,8 +1,6 @@
 import { makeObservable, observable, action, computed } from 'mobx';
-
 import usersApi from '../api';
 import userProfileApi from '@/features/profile/api';
-
 import { OnlineUser, UpdateUser, User } from '../types';
 import { UserStatus } from '../enums';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';

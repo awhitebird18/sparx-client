@@ -1,16 +1,13 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import ChangePasswordForm from './ChangePasswordForm';
 import authApi from '@/features/auth/api';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
+import { ChangePasswordData } from '../types/changePasswordData';
 
-type FormData = {
-  password: string;
-  confirmPassword: string;
-};
-
-const ChangePasswordModal = () => {
+const ChangePasswordModal = observer(() => {
   const { currentUser } = useStore('userStore');
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ChangePasswordData) => {
     try {
       if (!currentUser) return;
 
@@ -27,6 +24,6 @@ const ChangePasswordModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
 export default ChangePasswordModal;

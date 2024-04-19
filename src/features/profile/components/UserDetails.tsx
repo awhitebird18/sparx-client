@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-
 import {
   Form,
   FormControl,
@@ -14,9 +13,8 @@ import {
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
-
 import { User } from '@/features/users/types/user';
 
 const formSchema = z.object({
@@ -28,9 +26,9 @@ const formSchema = z.object({
   webUrl: z.string().min(2).max(30),
 });
 
-type ProfileModalProps = { userId: string };
+export type UserDetailsProps = { userId: string };
 
-const UserDetails = ({ userId }: ProfileModalProps) => {
+const UserDetails = observer(({ userId }: UserDetailsProps) => {
   const { findUserByUuid, updateUserApi, currentUser } = useStore('userStore');
   const [user, setUser] = useState<User>();
   const [userWorkspaceData] = useState({ location: '', bio: '', goal: '', webUrl: '' });
@@ -166,6 +164,6 @@ const UserDetails = ({ userId }: ProfileModalProps) => {
       </Form>
     </Modal>
   );
-};
+});
 
-export default observer(UserDetails);
+export default UserDetails;

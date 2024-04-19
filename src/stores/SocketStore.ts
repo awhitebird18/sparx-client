@@ -1,13 +1,11 @@
 import { action, makeObservable } from 'mobx';
 import io, { Socket } from 'socket.io-client';
-
 import { User } from '@/features/users/types';
 import { API_URL } from '@/config/api';
 
 const SOCKET_SERVER_URL = API_URL;
 
 export class SocketStore {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   socket: Socket | any;
 
   constructor() {
@@ -23,7 +21,6 @@ export class SocketStore {
     this.socket = io(SOCKET_SERVER_URL, { query: { userId: currentUser?.uuid } });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   connectSocket = (connectionString: string, callback: (value: any) => void) => {
     if (!this.socket) return;
     this.socket.on(connectionString, callback);
@@ -36,7 +33,6 @@ export class SocketStore {
     this.socket.off(connectionString);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emitSocket = (connectionString: string, value?: any) => {
     if (!this.socket) return;
 

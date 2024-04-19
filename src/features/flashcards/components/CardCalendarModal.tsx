@@ -1,10 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
+import { getColor } from '../utils/getColor';
 
-const CardCalendarModal = () => {
+const CardCalendarModal = observer(() => {
   const { getYearlyStats } = useStore('flashcardStore');
   const [stats, setStats] = useState<any>([]);
 
@@ -27,16 +28,6 @@ const CardCalendarModal = () => {
 
     fn();
   }, [getYearlyStats]);
-
-  // Function to determine color based on count
-  const getColor = (count: any) => {
-    if (count > 20) return 'bg-primary-lighter';
-    if (count > 15) return 'bg-primary-light';
-    if (count > 10) return 'bg-primary';
-    if (count > 5) return 'bg-primary-dark';
-    if (count > 0) return 'bg-primary-darkest';
-    return 'bg-card';
-  };
 
   return (
     <Modal title="Card Calendar">
@@ -69,12 +60,7 @@ const CardCalendarModal = () => {
           {stats.map((dayStat: any, index: number) => (
             <Tooltip>
               <TooltipTrigger>
-                <div
-                  key={index}
-                  className={`h-7 w-7 ${getColor(dayStat.count)} flex-shrink-0 `}
-                  // style={{ opacity: dayStat.count ? 1 : 0.3 }}
-                  // title={`Date: ${dayStat.date}, Count: ${dayStat.count}`}
-                />
+                <div key={index} className={`h-7 w-7 ${getColor(dayStat.count)} flex-shrink-0 `} />
               </TooltipTrigger>
               <TooltipContent>
                 <div className="flex flex-col items-center">
@@ -88,6 +74,6 @@ const CardCalendarModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(CardCalendarModal);
+export default CardCalendarModal;

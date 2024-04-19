@@ -3,99 +3,22 @@ import DisplayEditor from '@/features/textEditor/DisplayEditor';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { ChevronLeft, EmojiSmile } from 'react-bootstrap-icons';
+import { EmojiSmile } from 'react-bootstrap-icons';
 import Confetti from 'react-confetti';
 import { useNavigate } from 'react-router-dom';
 import { PerformanceRating } from '../enums/performanceRating';
+import { calculateCurrentInterval } from '../utils/calculateCurrentInterval';
+import { formatReviewInterval } from '../utils/formatReviewInterval';
+import { getNextInterval } from '../utils/getNextInterval';
+import { ReviewData } from '../types/reviewData';
 
-type ReviewData = {
-  uuid: string;
-  peroformnanceRating: PerformanceRating;
-};
-
-const getNextInterval = (currentInterval: any, easeFactor: any, rating: any) => {
-  let newInterval;
-  switch (rating) {
-    case 'again':
-      newInterval = 1; // Reset interval if the card was forgotten
-      break;
-    case 'hard':
-      newInterval = Math.max(currentInterval * (easeFactor - 0.2), 1);
-      break;
-    case 'good':
-      newInterval = currentInterval * easeFactor;
-      break;
-    case 'easy':
-      newInterval = currentInterval * (easeFactor + 0.1);
-      break;
-    default:
-      throw new Error('Invalid rating');
-  }
-  return Math.ceil(newInterval);
-};
-
-const formatReviewInterval = (interval: number) => {
-  // Adjust the logic here if you want to show "minutes" for small intervals
-  if (interval === 1) {
-    return '1 day';
-  } else {
-    return `${interval} days`;
-  }
-};
-
-const calculateCurrentInterval = (nextReviewDate: any) => {
-  const today: any = new Date();
-  today.setHours(0, 0, 0, 0); // Reset hours to start of day
-  const reviewDate: any = new Date(nextReviewDate);
-  const diffTime = Math.abs(reviewDate - today);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
-};
-
-// const formatDate = (date: any) => {
-//   return date.toISOString().split('T')[0];
-// };
-
-// function getNextReviewDate(interval: number, easeFactor: number, rating: string) {
-//   let newInterval;
-//   let newEaseFactor = easeFactor;
-
-//   switch (rating) {
-//     case 'easy':
-//       newInterval = Math.round(interval * (easeFactor + 0.1));
-//       break;
-//     case 'good':
-//       newInterval = Math.round(interval * easeFactor);
-//       break;
-//     case 'hard':
-//       newInterval = Math.round(interval * Math.max(easeFactor - 0.2, 1.3));
-//       newEaseFactor = Math.max(easeFactor - 0.2, 1.3);
-//       break;
-//     case 'again':
-//       newInterval = 1;
-//       break;
-//     default:
-//       newInterval = interval;
-//   }
-
-//   const nextReviewDate = new Date();
-//   nextReviewDate.setDate(nextReviewDate.getDate() + newInterval);
-
-//   return {
-//     nextReviewDate: nextReviewDate.toISOString().split('T')[0],
-//     newInterval,
-//     newEaseFactor,
-//   };
-// }
-
-const StudyFlashcardsModal = () => {
+const StudyFlashcardsModal = observer(() => {
   const { fetchFlashcardsApi, flashcards, submitReviewsApi } = useStore('flashcardStore');
   const { currentChannelId } = useStore('channelStore');
   const [isFront, setIsFront] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const navigate = useNavigate();
-
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [reviewData, setReviewData] = useState<ReviewData[]>([]);
 
@@ -123,19 +46,17 @@ const StudyFlashcardsModal = () => {
 
   const handlePerformanceRating = async (rating: PerformanceRating, currentCard: any) => {
     const newReview = {
-      uuid: currentCard.uuid, // Assuming your card has a uuid field
+      uuid: currentCard.uuid,
       performanceRating: rating,
     };
 
-    // Add the new review to the reviewData array
     setReviewData((reviewData: any[]) => [...reviewData, newReview]);
 
-    // Check if this is the last card
     if (currentCardIndex === flashcards.length - 1) {
       setIsEnd(true);
       await submitReviewsApi([...reviewData, newReview]);
     } else {
-      handleClickNext(); // Move to the next card
+      handleClickNext();
     }
   };
 
@@ -157,21 +78,7 @@ const StudyFlashcardsModal = () => {
   const easeFactor = currentCard.easeFactor;
 
   const againInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'again'));
-  // const hardInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'hard'));
-  // const goodInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'good'));
   const easyInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'easy'));
-
-  // Calculate the next review date based on the performance rating
-  // const displayNextReviewDate = (performanceRating: string) => {
-  //   const { newInterval } = getNextReviewDate(
-  //     currentInterval,
-  //     currentCard.easeFactor,
-  //     performanceRating,
-  //   );
-  //   const nextDate = new Date();
-  //   nextDate.setDate(nextDate.getDate() + newInterval);
-  //   return nextDate.toISOString().split('T')[0];
-  // };
 
   return (
     <div
@@ -267,6 +174,6 @@ const StudyFlashcardsModal = () => {
       )}
     </div>
   );
-};
+});
 
-export default observer(StudyFlashcardsModal);
+export default StudyFlashcardsModal;

@@ -1,5 +1,4 @@
 import { axios } from '@/lib/axios';
-
 import { UpdateUser, User } from '../types';
 import { handleApiError } from '@/utils/handleApiError';
 

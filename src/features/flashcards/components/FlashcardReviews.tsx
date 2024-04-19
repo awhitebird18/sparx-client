@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FlashcardReviews = () => {
   return (
     <div className="space-y-5 prose dark:prose-invert">

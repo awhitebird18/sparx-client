@@ -1,10 +1,8 @@
 import { useState } from 'react';
-
 import { useStore } from '@/stores/RootStore';
 import preferencesApi from '../api';
 import { timeOptions } from '@/utils/timeUtils';
 import { NotificationType } from '../enums/NotificationType';
-
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import {
   Select,
@@ -15,13 +13,14 @@ import {
   SelectTrigger,
 } from '@/components/ui/Select';
 import { Label } from '@/components/ui/Label';
+import { observer } from 'mobx-react-lite';
 
 enum NotificationSchedule {
   DAILY = 'daily',
   WEEKDAYS = 'weekdays',
 }
 
-const NotificationsTab = () => {
+const NotificationsTab = observer(() => {
   const { notificationType, setNotificationType } = useStore('userPreferencesStore');
   const [notificationSchedule, setNotificationSchedule] = useState<NotificationSchedule>(
     NotificationSchedule.DAILY,
@@ -114,6 +113,6 @@ const NotificationsTab = () => {
       </div>
     </div>
   );
-};
+});
 
 export default NotificationsTab;

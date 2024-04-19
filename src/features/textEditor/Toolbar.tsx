@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/Button';
-import { useStore } from '@/stores/RootStore';
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $INTERNAL_isPointSelection,
@@ -12,19 +10,15 @@ import {
 import { $setBlocksType } from '@lexical/selection';
 import { $createCodeNode } from '@lexical/code';
 
-export const Toolbar = () => {
+const Toolbar = () => {
   const [editor] = useLexicalComposerContext();
-  const { setActiveModal } = useStore('modalStore');
 
   const handleOnClick = (formatType: TextFormatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, formatType);
   };
 
   const handleUploadImage = () => {
-    setActiveModal({
-      type: 'InsertImageModal',
-      payload: { activeEditor: editor, onClose: () => setActiveModal(null) },
-    });
+    console.info('To implement');
   };
 
   const handleFormatCode = () => {
@@ -70,3 +64,5 @@ export const Toolbar = () => {
     </div>
   );
 };
+
+export default Toolbar;

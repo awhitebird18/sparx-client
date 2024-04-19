@@ -4,7 +4,9 @@ import { Magic, Map } from 'react-bootstrap-icons';
 import paths from '@/assets/images/paths.png';
 import GenerateRoadmap from '@/features/workspaces/components/GenerateRoadmap';
 
-const RoadmapOnboarding = ({ setStep }: { setStep: (val: number) => void }) => {
+type Props = { setStep: (val: number) => void };
+
+const RoadmapOnboarding = ({ setStep }: Props) => {
   const [showRoadmap, setShowRoadmap] = useState(false);
 
   const handleSubmit = async () => {

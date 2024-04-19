@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-
 import Nodes from './nodes/Nodes';
 import editorTheme from './theme/theme';
-
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutolinkPlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -22,22 +20,18 @@ import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import MentionsPlugin from './plugins/MentionsPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
-// import TreeViewPlugin from "./plugins/TreeViewPlugin/TreeViewPlugin";
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 import YouTubePlugin from './plugins/YoutubePlugin';
-
 import OnChangePlugin from './plugins/OnChangePlugin';
 import OnBlurPlugin from './plugins/OnBlurPlugin';
 
-const Editor = ({
-  content,
-  onChange,
-  onBlur,
-}: {
+type Props = {
   content: string | undefined;
   onChange?: (state: string) => void;
   onBlur?: (state: string) => void;
-}) => {
+};
+
+const Editor = ({ content, onChange, onBlur }: Props) => {
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
@@ -90,9 +84,6 @@ const Editor = ({
         <YouTubePlugin />
         <FloatingTextFormatToolbarPlugin />
         {floatingAnchorElem && <DraggableBlockPlugin anchorElem={floatingAnchorElem} />}
-        {/* <div className="w-[50rem] max-w-[40rem] min-w-[40rem] whitespace-pre-wrap mt-4">
-          <TreeViewPlugin />
-        </div> */}
       </div>
     </LexicalComposer>
   );

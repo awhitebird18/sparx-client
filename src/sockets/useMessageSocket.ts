@@ -2,6 +2,7 @@ import { useStore } from '@/stores/RootStore';
 import { useEffect } from 'react';
 import { setFavicon } from '@/utils/setFavicon';
 import { API_URL } from '@/config/api';
+import { observer } from 'mobx-react-lite';
 
 const useMessageSocket = () => {
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =

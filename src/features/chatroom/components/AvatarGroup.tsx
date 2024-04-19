@@ -1,19 +1,15 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Skeleton } from '@/components/ui/Skeleton';
 
-const AvatarGroup = () => {
+const AvatarGroup = observer(() => {
   const { currentChannel, channelUserIds } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const { findUserByUuid } = useStore('userStore');
 
   const userCount = Math.min(3, channelUserIds.length || 1);
-  // const userCount = channelUserIds.length;
-
   const avatarSize = 20;
-
   const componentWidth = `${userCount * avatarSize + 26.5}px`;
 
   const handleOpenChannelDetails = () => {
@@ -63,6 +59,6 @@ const AvatarGroup = () => {
       )}
     </div>
   );
-};
+});
 
-export default observer(AvatarGroup);
+export default AvatarGroup;

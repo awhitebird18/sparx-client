@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import useUserStatusSocket from './useUserStatusSocket';
 import useChannelConnectorSocket from './useChannelConnectorSocket';
 
-const SocketController = () => {
+const SocketController = observer(() => {
   useUserSocket();
   useChannelSocket();
   useSectionSocket();
@@ -19,6 +19,6 @@ const SocketController = () => {
   useChannelConnectorSocket();
 
   return null;
-};
+});
 
-export default observer(SocketController);
+export default SocketController;

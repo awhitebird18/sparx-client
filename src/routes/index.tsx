@@ -1,13 +1,12 @@
 import 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
-
 import { publicRoutes } from '@/routes/public';
-import { protectedRoutes } from '@/routes/protected';
+import protectedRoutes from '@/routes/protected';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import VerificationSuccessful from '@/features/auth/components/VerificationSuccessful';
 
-const AppRoutes = () => {
+const AppRoutes = observer(() => {
   const { currentUser } = useStore('userStore');
   const { workspaces } = useStore('workspaceStore');
 
@@ -19,6 +18,6 @@ const AppRoutes = () => {
   const routes = currentUser && workspaces ? protectedRoutes : publicRoutes;
 
   return useRoutes([...routes, ...commonRoutes]);
-};
+});
 
-export default observer(AppRoutes);
+export default AppRoutes;

@@ -1,40 +1,17 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  ReactNode,
-  useCallback,
-} from 'react';
+import React, { useState, useEffect, ReactNode, useCallback } from 'react';
 import { useStore } from '@/stores/RootStore';
 import authApi from '@/features/auth/api';
 import { LoginData, RegistrationData } from '@/features/auth/types';
 import AppSkeleton from '@/components/loaders/AppSkeleton';
 import { observer } from 'mobx-react-lite';
+import { AuthContextData } from './types/AuthContextData';
+import { AuthContext } from './contexts/AuthContext';
 
-interface AuthContextData {
-  userLogin: (loginCredentials: LoginData) => Promise<void>;
-  userLogout: () => void;
-  registerUser: (registrationData: RegistrationData) => Promise<any>;
-  verifyAndLoginUser: () => void;
-  registerAnonymous: () => void;
-}
-
-const AuthContext = createContext<AuthContextData | undefined>(undefined);
-
-export const useAuth = (): AuthContextData => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within a AuthProvider');
-  }
-  return context;
-};
-
-interface AuthProviderProps {
+interface Props {
   children: ReactNode;
 }
 
-const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<Props> = observer(({ children }) => {
   const { setSections } = useStore('sectionStore');
   const { setInitialPreferences, resetPreferences } = useStore('userPreferencesStore');
   const { setSubscribedChannels } = useStore('channelStore');
@@ -51,13 +28,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (!loading && animationComplete) {
-      // Start with fade-enter class
       setFadeClass('fade-enter-active');
-
-      // After a timeout, remove the AppSkeleton and show the main app
       const timeoutId = setTimeout(() => {
         setFadeClass('');
-      }, 400); // Match the duration of your transition
+      }, 400);
 
       return () => clearTimeout(timeoutId);
     }
@@ -66,7 +40,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogin = async (loginCredentials: LoginData) => {
     try {
       await authApi.login(loginCredentials);
-
       await verifyAndLoginUser();
     } catch (error) {
       console.error(error);
@@ -76,37 +49,34 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const userLogout = async () => {
     try {
       await authApi.logout();
-
       localStorage.removeItem('navigationHistory');
       localStorage.removeItem('primaryColor');
       localStorage.removeItem('sidebarWidth');
       localStorage.removeItem('theme');
       localStorage.removeItem('emoji-mart.last');
       localStorage.removeItem('emoji-mart.frequently');
-
       resetAll();
-
       resetPreferences();
-
       setCurrentUserId(undefined);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const registerUser = async (registrationData: RegistrationData): Promise<any> => {
+  const registerUser: AuthContextData['registerUser'] = async (
+    registrationData: RegistrationData,
+  ) => {
     try {
       const user = await authApi.register(registrationData);
-
       return user;
     } catch (error) {
       console.error(error);
     }
   };
-  const registerAnonymous = async (): Promise<any> => {
+
+  const registerAnonymous: AuthContextData['registerAnonymous'] = async () => {
     try {
       await authApi.registerAnonymous();
-
       await verifyAndLoginUser();
     } catch (error) {
       console.error(error);
@@ -115,12 +85,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const verifyAndLoginUser = useCallback(async () => {
     try {
-      // await authApi.logout();
       const data = await authApi.verify();
-
       setCurrentUserId(data.currentUser.uuid);
-
-      // If user has not joined any workspaces this is currently neccessary.
       if (!data.workspaces) {
         setUsers([data.currentUser]);
         return;
@@ -185,6 +151,4 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     </div>
   );
-};
-
-export default observer(AuthProvider);
+});

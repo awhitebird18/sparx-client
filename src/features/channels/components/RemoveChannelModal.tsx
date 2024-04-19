@@ -1,11 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
-// import { Line } from '@/features/workspaceChannels/types/line';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-// import { removeChannelConnectors } from '../api/removeChannelConnectors';
 
-const RemoveChannelModal = ({ uuid }: { uuid: string }) => {
+export type RemoveChannelModalProps = { uuid: string };
+
+const RemoveChannelModal = observer(({ uuid }: RemoveChannelModalProps) => {
   const { removeChannelApi, findChannelByUuid } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const { channelConnectors, setChannelConnectors } = useStore('channelConnectorStore');
@@ -13,23 +13,8 @@ const RemoveChannelModal = ({ uuid }: { uuid: string }) => {
 
   const handleRemoveField = async () => {
     if (!currentWorkspaceId) return;
-    // Remove the node itself
+
     await removeChannelApi(uuid, currentWorkspaceId);
-
-    // Find connectors related to the node being removed
-    // const connectorUuidsToRemove: any[] = channelConnectors
-    //   .filter((line: Line) => line.start.nodeId === uuid || (line.end && line.end.nodeId === uuid))
-    //   .map((line: Line) => line.uuid);
-
-    // if (connectorUuidsToRemove.length > 0) {
-    //   try {
-    //     await removeChannelConnectors(connectorUuidsToRemove);
-    //   } catch (error) {
-    //     console.error('Error removing connectors:', error);
-
-    //     return;
-    //   }
-    // }
 
     setChannelConnectors(
       channelConnectors.filter(
@@ -37,7 +22,7 @@ const RemoveChannelModal = ({ uuid }: { uuid: string }) => {
       ),
     );
 
-    setActiveModal(null); // Close the modal after the operation
+    setActiveModal(null);
   };
   const handleCancel = () => {
     setActiveModal(null);
@@ -63,6 +48,6 @@ const RemoveChannelModal = ({ uuid }: { uuid: string }) => {
       </>
     </Modal>
   );
-};
+});
 
-export default observer(RemoveChannelModal);
+export default RemoveChannelModal;

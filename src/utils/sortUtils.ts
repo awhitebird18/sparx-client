@@ -10,12 +10,11 @@ export const sortSectionChannels = (channels: Channel[], sortBy: SortBy) => {
   if (sortBy === SortBy.ALPHA) {
     return channels.slice().sort((a, b) => a.name.localeCompare(b.name));
   } else if (sortBy === SortBy.RECENT) {
-    // assuming you have a 'createdAt' or 'updatedAt' field in Channel
     return channels
       .slice()
       .sort((a, b) => (dayjs(b.createdAt).isBefore(dayjs(a.createdAt)) ? 1 : -1));
   }
-  // return original array if no valid sort type
+
   return channels;
 };
 
@@ -28,7 +27,6 @@ export const sortWorkspaceChannels = (
   channelUserCounts: ChannelUserCount[],
   sortBy: SortOptions,
 ): Channel[] => {
-  // Map user count to each channel
   const workspaceChannelsWithUserCount: ChannelWithUserCount[] = workspaceChannels.map(
     (channel) => {
       const channelCount = channelUserCounts.find((count) => count.channelUuid === channel.uuid);

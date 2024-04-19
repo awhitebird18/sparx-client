@@ -1,9 +1,9 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
-const LeaveWorkspaceModal = () => {
+const LeaveWorkspaceModal = observer(() => {
   const { setActiveModal } = useStore('modalStore');
   const { currentWorkspace, leaveWorkspaceApi } = useStore('workspaceStore');
   const { currentUser } = useStore('userStore');
@@ -36,6 +36,6 @@ const LeaveWorkspaceModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(LeaveWorkspaceModal);
+export default LeaveWorkspaceModal;

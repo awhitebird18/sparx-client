@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { CLEAR_HISTORY_COMMAND } from 'lexical';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-export function UpdateContentPlugin({ initialEditorState }: { initialEditorState: string }) {
+type Props = { initialEditorState: string };
+
+const UpdateContentPlugin = ({ initialEditorState }: Props) => {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     if (editor) {
@@ -13,4 +15,6 @@ export function UpdateContentPlugin({ initialEditorState }: { initialEditorState
   }, [editor, initialEditorState]);
 
   return null;
-}
+};
+
+export default UpdateContentPlugin;

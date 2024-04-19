@@ -1,11 +1,8 @@
 import { useRef, useState } from 'react';
-import { ClockHistory, Pencil } from 'react-bootstrap-icons';
+import { ClockHistory } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-import { At, Person, Tv } from 'react-bootstrap-icons';
-
 import { useStore } from '@/stores/RootStore';
 import useHistoryState from '@/hooks/useHistoryState';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,40 +12,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { HistoryItem } from '../types';
-
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { ChannelType } from '@/features/channels/enums';
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { observer } from 'mobx-react-lite';
+import { getDefaultType } from '../utils/getDefaultType';
 
-const getDefaultType = (id: string) => {
-  switch (id) {
-    case 'users':
-      return { title: 'Users', icon: <Person size={18} /> };
-    case 'channels':
-      return { title: 'Channels', icon: <Tv size={18} /> };
-
-    case 'mentions':
-      return { title: 'Mentions', icon: <At size={18} /> };
-
-    case 'drafts':
-      return { title: 'Drafts', icon: <Pencil size={18} /> };
-
-    default:
-      return undefined;
-  }
-};
-
-const HistoryDropdown = () => {
+const HistoryDropdown = observer(() => {
   const { setActiveModal } = useStore('modalStore');
   const { findChannelByUuid } = useStore('channelStore');
   const { findUserByName } = useStore('userStore');
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const history = useHistoryState();
   const navigate = useNavigate();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const focusRef = useRef<any>(null);
 
   const handleClickItem = (value: string) => {
@@ -133,6 +109,6 @@ const HistoryDropdown = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+});
 
-export default observer(HistoryDropdown);
+export default HistoryDropdown;

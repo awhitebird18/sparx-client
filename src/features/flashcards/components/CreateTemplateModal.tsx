@@ -1,11 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 
-const CreateTemplateModal = () => {
+const CreateTemplateModal = observer(() => {
   const { createTemplateApi, handleSelectTemplate } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
   const [value, setValue] = useState('');
@@ -39,6 +39,6 @@ const CreateTemplateModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(CreateTemplateModal);
+export default CreateTemplateModal;

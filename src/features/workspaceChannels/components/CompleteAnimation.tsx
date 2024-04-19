@@ -1,16 +1,13 @@
 import { useState, useEffect } from 'react';
-import './complete.css'; // Import your CSS file
+import '@/styles/complete.css';
 import { StarFill } from 'react-bootstrap-icons';
 
 const CelebrationAnimation = () => {
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    // Start the animation when the component mounts
     setAnimate(true);
-
-    // Set a timer to remove the animation
-    const timer = setTimeout(() => setAnimate(false), 3000); // 3 seconds for example
+    const timer = setTimeout(() => setAnimate(false), 3000);
 
     return () => clearTimeout(timer);
   }, []);

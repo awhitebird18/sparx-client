@@ -1,11 +1,12 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Channel } from '@/features/channels/types';
-
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { Folder } from 'react-bootstrap-icons';
 
-const MoveNote = ({ noteId, channelId }: { noteId: string; channelId: string }) => {
+export type MoveNoteProps = { noteId: string; channelId: string };
+
+const MoveNote = observer(({ noteId, channelId }: MoveNoteProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { moveNote } = useStore('noteStore');
   const { subscribedChannels } = useStore('channelStore');
@@ -39,6 +40,6 @@ const MoveNote = ({ noteId, channelId }: { noteId: string; channelId: string }) 
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(MoveNote);
+export default MoveNote;

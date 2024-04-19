@@ -7,36 +7,30 @@ import dayjs from 'dayjs';
 import { formatDate } from '../utils/datefns';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import { useStore } from '@/stores/RootStore';
-
 import { Badge } from '@/components/ui/Badge';
 import ChannelTitle from './ChannelTitle';
 import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
 import ChannelIntroduction from './ChannelIntroduction';
-import Thread from './Thread';
 import Editor from '@/features/messageInput/Editor';
-import UserInputNotSubscribed from './UserInputNotSubscribed';
-import UsersTypingDisplay from '../../userTyping/components/UsersTypingDisplay';
-
+import UsersTypingDisplay from './UsersTypingDisplay';
 import { Message as MessageType } from '@/features/messages/types';
 import { ChannelType } from '@/features/channels/enums';
-import ContentLayout from '@/components/layout/ContentLayout';
-import { Skeleton } from '@/components/ui/Skeleton';
+import ContentLayout from '@/layout/contentContainer/ContentLayout';
+import { MessageSkeleton } from './MessageSkeleton';
 
-const ChatRoom: React.FC = () => {
+const ChatRoom: React.FC = observer(() => {
   const {
     isLoading,
     groupedMessagesWithUser,
     fetchMessagesApi,
     setPage,
     createMessageApi,
-    thread,
     setIsLoading,
     setMessages,
   } = useStore('messageStore');
   const { setCurrentChannelUuid, currentChannelId, currentChannel } = useStore('channelStore');
   const { fetchChannelUserIdsApi } = useStore('userStore');
-
   const { clearUsersTyping } = useStore('userTypingStore');
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
   const { currentUser } = useStore('userStore');
@@ -44,7 +38,6 @@ const ChatRoom: React.FC = () => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
-
   const { channelId } = useParams();
 
   const handleSubmit = async (messageContent: string) => {
@@ -172,31 +165,20 @@ const ChatRoom: React.FC = () => {
                 </>
               )}
             </div>
-            {currentChannel?.isTemp && currentChannel.type !== ChannelType.DIRECT ? (
-              <UserInputNotSubscribed />
-            ) : (
-              <Editor
-                placeholder={`Message ${currentChannel?.name}`}
-                config={editorConfig}
-                onSubmit={handleSubmit}
-                onChange={handleInputChange}
-              />
-            )}
+
+            <Editor
+              placeholder={`Message ${currentChannel?.name}`}
+              config={editorConfig}
+              onSubmit={handleSubmit}
+              onChange={handleInputChange}
+            />
+
             <UsersTypingDisplay />
           </div>
         </div>
       </ContentLayout>
-
-      {thread && <Thread />}
     </div>
   );
-};
+});
 
-export default observer(ChatRoom);
-
-const MessageSkeleton = () => (
-  <div className="flex gap-3 w-1/2 items-center mx-2 mb-4">
-    <Skeleton className="w-10 h-10 rounded-md" />
-    <Skeleton className="w-full h-10 rounded-md" />
-  </div>
-);
+export default ChatRoom;

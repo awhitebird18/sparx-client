@@ -20,22 +20,19 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/ContextMenu';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
-import { Message } from '../types';
+import { Message as MessageType } from '../types';
 import OnlineStatusIndicator from '@/features/users/components/OnlineStatusIndicator';
 import { useNavigate } from 'react-router-dom';
 
-const Message = ({
-  message,
-  showUser,
-  disabled,
-  isThread,
-}: {
-  message: Message;
+type Props = {
+  message: MessageType;
   showUser: boolean;
   disabled?: boolean;
-  setThread?: (message: Message | null) => void;
+  setThread?: (message: MessageType | null) => void;
   isThread?: boolean;
-}) => {
+};
+
+const Message = observer(({ message, showUser, disabled, isThread }: Props) => {
   const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { setActiveModal } = useStore('modalStore');
@@ -43,7 +40,6 @@ const Message = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
   const navigate = useNavigate();
 
@@ -63,7 +59,7 @@ const Message = ({
     }
   };
 
-  const handleReplyToMessage = (message: Message) => {
+  const handleReplyToMessage = (message: MessageType) => {
     fetchThreadMessagesApi(message);
   };
 
@@ -221,6 +217,6 @@ const Message = ({
       )}
     </>
   );
-};
+});
 
-export default observer(Message);
+export default Message;

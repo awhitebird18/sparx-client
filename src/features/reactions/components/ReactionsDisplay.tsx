@@ -11,13 +11,12 @@ import Emoji from '@/components/ui/Emoji';
 
 type ReactionsDisplayProps = { message: Message };
 
-const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
+const ReactionsDisplay = observer(({ message }: ReactionsDisplayProps) => {
   const { addReactionApi } = useStore('messageStore');
   const { currentUser, findUserByUuid } = useStore('userStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
 
   const handleClickReaction = async (emojiId: string) => {
@@ -124,6 +123,6 @@ const ReactionsDisplay = ({ message }: ReactionsDisplayProps) => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(ReactionsDisplay);
+export default ReactionsDisplay;

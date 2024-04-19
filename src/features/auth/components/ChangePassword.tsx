@@ -1,21 +1,15 @@
 import Logo from '@/components/logo/Logo';
 import ChangePasswordForm from './ChangePasswordForm';
 import { useNavigate } from 'react-router-dom';
-
 import authApi from '@/features/auth/api';
-import { useAuth } from '@/providers/auth';
-
-type FormData = {
-  password: string;
-  confirmPassword: string;
-};
+import { useAuth } from '@/providers/contexts/useAuth';
+import { ChangePasswordData } from '../types/changePasswordData';
 
 const ChangePassword: React.FC = () => {
   const navigate = useNavigate();
-
   const { verifyAndLoginUser } = useAuth();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ChangePasswordData) => {
     try {
       const token = new URLSearchParams(window.location.search).get('token');
       if (!token) return;

@@ -1,6 +1,5 @@
 import { action, makeObservable, observable } from 'mobx';
-
-import { ModalName } from '@/components/modal/modalList';
+import { ModalName } from '@/layout/modal/modalList';
 
 interface ActiveModal {
   type: ModalName;

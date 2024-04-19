@@ -1,11 +1,13 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 
-const CreateFieldModal = ({ templateId }: { templateId: string }) => {
+export type CreateFieldModalProps = { templateId: string };
+
+const CreateFieldModal = observer(({ templateId }: CreateFieldModalProps) => {
   const { createFieldApi } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
   const [value, setValue] = useState('');
@@ -37,6 +39,6 @@ const CreateFieldModal = ({ templateId }: { templateId: string }) => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(CreateFieldModal);
+export default CreateFieldModal;

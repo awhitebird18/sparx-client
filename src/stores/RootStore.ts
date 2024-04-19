@@ -1,27 +1,24 @@
 import { createContext } from 'react';
 import { useContext } from 'react';
-
 import { MessageStore } from '@/features/messages/stores/messageStore';
 import { UserStore } from '@/features/users/stores/userStore';
 import { UserPreferencesStore } from '@/features/preferences/stores/UserPreferencesStore';
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
 import { WorkspaceChannelStore } from '@/features/workspaceChannels/stores/WorkspaceChannelStore';
-import { UserTypingStore } from '@/features/userTyping/stores/UserTypingStore';
+import { UserTypingStore } from '@/features/chatroom/stores/UserTypingStore';
 import { ChannelUnreadStore } from '@/features/channels/stores/ChannelUnreadStore';
-
 import { NotificationStore } from '@/stores/NotificationStore';
 import { ModalStore } from '@/stores/ModalStore';
 import { SocketStore } from '@/stores/SocketStore';
 import { SidebarStore } from '@/stores/SidebarStore';
-import { ThreadStore } from '@/features/threads/stores/threadStore';
 import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
 import { NotesStore } from '@/features/notes/stores/NotesStore';
 import { FlashcardStore } from '@/features/flashcards/stores/FlashcardStore';
 import { WorkspaceStore } from '@/features/workspaces/stores/workspaceStore';
 import { ChannelConnectorStore } from '@/features/workspaceChannels/stores/ChannelConnectorStore';
-import { SidePanelStore } from '@/components/layout/SidePanel.tsx/SidePanelStore';
-import { MainPanelStore } from '@/components/layout/sheet/MainPanelStore';
+import { SidePanelStore } from '@/layout/sidePanel/SidePanelStore';
+import { MainPanelStore } from '@/layout/mainPanel/MainPanelStore';
 
 interface RootStore {
   userStore: UserStore;
@@ -36,7 +33,6 @@ interface RootStore {
   notificationStore: NotificationStore;
   modalStore: ModalStore;
   socketStore: SocketStore;
-  threadStore: ThreadStore;
   userStatusStore: UserStatusStore;
   noteStore: NotesStore;
   flashcardStore: FlashcardStore;
@@ -59,7 +55,6 @@ class RootStoreImpl implements RootStore {
   socketStore = new SocketStore();
   notificationStore = new NotificationStore();
   modalStore = new ModalStore();
-  threadStore = new ThreadStore();
   userStatusStore = new UserStatusStore();
   noteStore = new NotesStore();
   flashcardStore = new FlashcardStore();

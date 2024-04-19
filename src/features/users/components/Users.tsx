@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
-import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import SearchInput from '@/components/ui/SearchInput';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import Username from '@/features/users/components/Username';
-import ContentLayout from '@/components/layout/ContentLayout';
+import ContentLayout from '@/layout/contentContainer/ContentLayout';
 import {
   ThreeDotsVertical,
   Alarm,
@@ -32,8 +31,9 @@ import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { Privileges } from '../enums/privileges';
 import { SubscriptionDetails } from '../types/subsciptionDetails';
 import { Skeleton } from '@/components/ui/Skeleton';
+import EmptyFallback from './EmptyFallback';
 
-const Users = () => {
+const Users = observer(() => {
   const {
     isLoading,
     setSearchValue,
@@ -71,7 +71,6 @@ const Users = () => {
       setIsLoading(true);
       handleResetFilter();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchChannelUserIdsApi, currentChannelId]);
 
   const handleViewUserProfile = async (userId: string) => {
@@ -88,7 +87,6 @@ const Users = () => {
   };
 
   const handleResetFilter = () => {
-    // setCompletionFilter(CompletionStatus.);
     setPrivilegesFilter(Privileges.ALL);
     setSearchValue('');
   };
@@ -96,13 +94,6 @@ const Users = () => {
   return (
     <ContentLayout title="Users">
       <div className="flex flex-col gap-6 justify-between">
-        {/* <div className="flex items-start pt-4">
-          <div className="flex flex-col gap-1.5">
-            <h2 className="text-main text-3xl font-medium">Members</h2>
-            <p className="text-secondary">See all of your notes for workspace and make changes</p>
-          </div>
-        </div> */}
-
         <div className="flex gap-2">
           <div className="w-72">
             <SearchInput placeholder="Search users" value={searchValue} setValue={setSearchValue} />
@@ -150,12 +141,6 @@ const Users = () => {
               <SelectItem value={Privileges.MEMBER}>Member</SelectItem>
             </SelectContent>
           </Select>
-
-          {/* {searchValue && (
-            <Button size="sm" variant="secondary">
-              Clear Filters
-            </Button>
-          )} */}
         </div>
       </div>
       {!isLoading && !filteredUsers.length ? (
@@ -251,21 +236,6 @@ const Users = () => {
       </div>
     </ContentLayout>
   );
-};
+});
 
-export default observer(Users);
-
-const EmptyFallback = ({ onClick }: { channelName?: string; onClick: () => void }) => (
-  <div className="flex flex-col gap-5 max-w-sm items-center prose pt-12">
-    <div className="flex flex-col gap-2 items-center">
-      <h3 className="text-center text-main text-xl">No Members Found.</h3>
-      <p className="text-center text-secondary flex-items-center">
-        All of your notes will appear here.
-      </p>
-    </div>
-
-    <Button className="items-center gap-1" onClick={onClick}>
-      Reset Filters
-    </Button>
-  </div>
-);
+export default Users;

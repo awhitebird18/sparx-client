@@ -1,9 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
-const RemoveVariantModal = ({ uuid }: { uuid: string }) => {
+export type RemoveVariantModalProps = { uuid: string };
+
+const RemoveVariantModal = observer(({ uuid }: RemoveVariantModalProps) => {
   const { removeVariantApi } = useStore('flashcardStore');
   const { closeModal } = useStore('modalStore');
 
@@ -28,6 +30,6 @@ const RemoveVariantModal = ({ uuid }: { uuid: string }) => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(RemoveVariantModal);
+export default RemoveVariantModal;

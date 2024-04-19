@@ -1,10 +1,3 @@
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useStore } from '@/stores/RootStore';
@@ -12,21 +5,19 @@ import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { ChevronLeft, CupHot, Play, StarFill } from 'react-bootstrap-icons';
 
-const NodeStats = () => {
+const NodeStats = observer(() => {
   const [isOpen, setIsOpen] = useState(true);
   const { userChannelData, subscribedChannels } = useStore('channelStore');
+  const channelCount = subscribedChannels.length;
 
   const handleToggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const channelCount = subscribedChannels.length;
-
   const stats = userChannelData
     .filter((channel: any) => channel.type !== 'direct')
     .reduce(
       (acc: any, channel: any) => {
-        // Increment the count for the respective status
         acc[channel.status] = (acc[channel.status] || 0) + 1;
         return acc;
       },
@@ -79,6 +70,6 @@ const NodeStats = () => {
       </Button>
     </div>
   );
-};
+});
 
-export default observer(NodeStats);
+export default NodeStats;

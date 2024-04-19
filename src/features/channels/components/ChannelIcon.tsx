@@ -13,28 +13,12 @@ type UserAvatarProps = {
 
 const ChannelIcon = ({ size = 50, imageUrl, isSelected, textPrimary, userId }: UserAvatarProps) => {
   return (
-    <Avatar
-      className="relative h-9 w-9"
-      // style={{ height: `${size}px`, width: `${size}px ` }}
-    >
-      <AvatarImage
-        src={imageUrl}
-        // style={{ height: `${size}px`, width: `${size}px` }}
-        className={`rounded-${size > 30 ? 'lg' : 'sm'} w-full h-full`}
-      />
+    <Avatar className="relative h-9 w-9">
+      <AvatarImage src={imageUrl} className={`rounded-${size > 30 ? 'lg' : 'sm'} w-full h-full`} />
       <AvatarFallback
         className={`h-9 w-9 flex-1 rounded-sm overflow-hidden bg-transparent dark:bg-transparent p-0 text-xl ${
           isSelected && !textPrimary ? 'text-primary-darkest bg-transparent' : 'text-main'
         } ${textPrimary && 'text-main'}`}
-        // children={
-        //   <Hash
-        //     className={`${isSelected ? 'text-main' : 'text-muted'}`}
-        //     style={{
-        //       height: `${size - 5}px`,
-        //       width: `${size - 5}px`,
-        //     }}
-        //   />
-        // }
       />
 
       {userId && (

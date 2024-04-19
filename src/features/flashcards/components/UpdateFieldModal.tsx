@@ -3,10 +3,12 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { Field } from '../types/Field';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Input } from '@/components/ui/Input';
 
-const UpdateField = ({ uuid, updateFields }: { uuid: string; updateFields: Partial<Field> }) => {
+export type UpdateFieldProps = { uuid: string; updateFields: Partial<Field> };
+
+const UpdateField = observer(({ uuid, updateFields }: UpdateFieldProps) => {
   const { updateFieldApi } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
   const [value, setValue] = useState(updateFields.title);
@@ -34,6 +36,6 @@ const UpdateField = ({ uuid, updateFields }: { uuid: string; updateFields: Parti
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(UpdateField);
+export default UpdateField;

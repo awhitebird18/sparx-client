@@ -1,7 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { TreeView } from '@lexical/react/LexicalTreeView';
 
-export default function TreeViewPlugin() {
+const TreeViewPlugin = () => {
   const [editor] = useLexicalComposerContext();
   return (
     <TreeView
@@ -14,4 +14,6 @@ export default function TreeViewPlugin() {
       treeTypeButtonClassName={''}
     />
   );
-}
+};
+
+export default TreeViewPlugin;

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const RecentlyAdded = () => {
   return (
     <div className="prose dark:prose-invert">

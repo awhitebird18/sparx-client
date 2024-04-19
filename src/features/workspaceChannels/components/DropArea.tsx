@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import { NodeData } from '../types/nodeData';
 import { observer } from 'mobx-react-lite';
@@ -6,58 +6,32 @@ import { ContextMenu, ContextMenuTrigger } from '@/components/ui/ContextMenu';
 import { useStore } from '@/stores/RootStore';
 import { createAngledPath } from '../utils/createAngledPath';
 import { calculateCoordinates } from '../utils/calculateCoordinates';
-
 import { Line } from '../types/line';
 import Node from './Node';
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 import { Channel } from '@/features/channels/types';
-import CustomDragLayer from './CustomDragLayer';
 import { nodeDimensions } from '../utils/nodeDimensions';
+import { gridSize } from '../utils/gridSize';
+import { ReactZoomPanPinchState } from 'react-zoom-pan-pinch';
 
-const nodeHeight = 80;
-const nodeWidth = 280;
-const nodeGap = 20;
-const gridSize = 40; // Size of each grid square
-const snapToGrid = true;
+type Props = { nodemapState: ReactZoomPanPinchState };
 
-const DropArea = ({ nodemapState }: any) => {
+const DropArea = observer(({ nodemapState }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const { setActiveModal } = useStore('modalStore');
-
-  const {
-    channelConnectors,
-    removeChannelConnectorApi,
-    selectedLineId,
-    setSelectedLineId,
-    createChannelConnectorApi,
-  } = useStore('channelConnectorStore');
-  const {
-    updateSubscribedChannel,
-    subscribedChannels,
-    isEditing,
-    updateChannelApi,
-    setIsControlPressed,
-    isControlPressed,
-    userChannelData,
-  } = useStore('channelStore');
-  const { currentWorkspaceId, setNodemapState, currentWorkspace } = useStore('workspaceStore');
-  const [isDragging, setIsDragging] = useState(false);
-  // Review
-  const [, setDragStart] = useState({ x: 0, y: 0 });
-  // const [gridSize] = useState({ width: 4000, height: 8000 });
+  const { channelConnectors, removeChannelConnectorApi, selectedLineId, setSelectedLineId } =
+    useStore('channelConnectorStore');
+  const { subscribedChannels, isEditing, updateChannelApi, setIsControlPressed, userChannelData } =
+    useStore('channelStore');
+  const { currentWorkspaceId, setNodemapState } = useStore('workspaceStore');
+  const [isDragging] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hideUnstarted] = useState(false);
   const [currentLine, setCurrentLine] = useState<Line | null>(null);
-  const [snapState, setSnapState] = useState({
-    isSnapping: false,
-    xSnapped: false,
-    ySnapped: false,
-    snapPosition: { x: 0, y: 0 },
-  });
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectionBox, setSelectionBox] = useState({ startX: 0, startY: 0, endX: 0, endY: 0 });
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
-  const [renderKey, setRenderKey] = useState(0);
+  const [renderKey] = useState(0);
   const [hoverOffset, setHoverOffset] = useState({ x: 0, y: 0 });
   const [focusedNode, setFocusedNode] = useState<string | null>(null);
 
@@ -107,7 +81,7 @@ const DropArea = ({ nodemapState }: any) => {
   }, []);
 
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
+    const handleClick: any = (event: MouseEvent) => {
       const target = event.target as Element;
 
       if (!target.classList.contains('connector') && currentLine) {
@@ -155,7 +129,7 @@ const DropArea = ({ nodemapState }: any) => {
     setSelectedLineId,
   ]);
 
-  const handleMouseDown = (e: any) => {
+  const handleMouseDown = (e: MouseEvent) => {
     setIsSelecting(true);
     const { offsetX, offsetY } = e.nativeEvent;
 
@@ -168,17 +142,16 @@ const DropArea = ({ nodemapState }: any) => {
     }));
   };
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handleMouseUp = () => {
     setIsSelecting(false);
     const nodesWithinSelection = getNodesWithinSelection();
 
     setSelectedNodes(nodesWithinSelection);
 
-    // Clear selection box
     setSelectionBox({ startX: 0, startY: 0, endX: 0, endY: 0 });
   };
 
-  const handleMouseMove = (event: any) => {
+  const handleMouseMove = (event: MouseEvent) => {
     if (!isSelecting || !ref.current) return;
     const containerRect = ref.current.getBoundingClientRect();
     const offsetX = event.clientX - containerRect.left;
@@ -192,13 +165,11 @@ const DropArea = ({ nodemapState }: any) => {
   };
 
   const getNodesWithinSelection = () => {
-    // Calculate coordinates of the selection box
     const minX = Math.min(selectionBox.startX, selectionBox.endX);
     const minY = Math.min(selectionBox.startY, selectionBox.endY);
     const maxX = Math.max(selectionBox.startX, selectionBox.endX);
     const maxY = Math.max(selectionBox.startY, selectionBox.endY);
 
-    // Get nodes within the selection box
     const nodesWithinSelection = subscribedChannels
       .filter((node) => {
         return (
@@ -217,22 +188,11 @@ const DropArea = ({ nodemapState }: any) => {
     e.preventDefault();
   };
 
-  const handleLineClick = (uuid: string, event: React.MouseEvent<SVGPathElement, MouseEvent>) => {
+  const handleLineClick = (uuid: string) => {
     if (!isEditing) return;
 
-    // event.stopPropagation();
     setSelectedLineId(uuid);
   };
-
-  // const handleMouseMove = (event: any) => {
-  //   const containerRect = ref?.current?.getBoundingClientRect();
-
-  //   if (!containerRect) return;
-
-  //   const mouseX = (event.clientX - containerRect.left) / nodemapState.scale;
-  //   const mouseY = (event.clientY - containerRect.top) / nodemapState.scale;
-
-  // };
 
   const onDrop = useCallback(
     async (uuid: string, x: number, y: number) => {
@@ -246,8 +206,6 @@ const DropArea = ({ nodemapState }: any) => {
       if (item && ref.current) {
         const delta = monitor.getDifferenceFromInitialOffset();
         if (delta) {
-          const scale = nodemapState.scale; // Get the current scale
-
           const selectedChannels = subscribedChannels.filter((channel: Channel) =>
             selectedNodes.find((nodeId) => nodeId === channel.uuid),
           );
@@ -261,23 +219,13 @@ const DropArea = ({ nodemapState }: any) => {
           }
 
           setHoverOffset({ x: 0, y: 0 });
-
-          setSnapState({
-            isSnapping: false,
-            xSnapped: false,
-            ySnapped: false,
-            snapPosition: {
-              x: 0,
-              y: 0,
-            },
-          });
         }
       }
     },
-    [hoverOffset.x, hoverOffset.y, nodemapState.scale, onDrop, selectedNodes, subscribedChannels],
+    [hoverOffset.x, hoverOffset.y, onDrop, selectedNodes, subscribedChannels],
   );
 
-  const handleHover = useCallback((item: NodeData, monitor: DropTargetMonitor<NodeData, void>) => {
+  const handleHover = useCallback((_: any, monitor: DropTargetMonitor<NodeData, void>) => {
     const delta = monitor.getDifferenceFromInitialOffset();
 
     if (!delta) return;
@@ -292,7 +240,7 @@ const DropArea = ({ nodemapState }: any) => {
     },
     drop: handleDrop,
     hover: handleHover,
-    collect: (monitor: any) => ({
+    collect: (monitor: DropTargetMonitor) => ({
       isOver: monitor.isOver(),
     }),
   };
@@ -315,16 +263,14 @@ const DropArea = ({ nodemapState }: any) => {
     });
   };
 
-  const handleSvgClick = (e: any) => {
-    console.log(e.target);
+  const handleSvgClick = () => {
     setSelectedLineId(null);
   };
 
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleMouseMove: any = (event: MouseEvent<Document>) => {
       if (ref.current) {
         const { left, top } = ref.current.getBoundingClientRect();
-        // Calculate mouse position relative to the container
         const mouseX = event.clientX - left;
         const mouseY = event.clientY - top;
 
@@ -332,39 +278,14 @@ const DropArea = ({ nodemapState }: any) => {
       }
     };
 
-    // Add event listener to the document or a larger scope if necessary
     document.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      // Remove event listener on cleanup
       document.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
-  const handleCreateLine = async (uuid: string, side: ConnectionSide) => {
-    if (!currentLine) {
-      setCurrentLine({
-        start: { nodeId: uuid, side },
-      });
-    } else {
-      if (!currentWorkspaceId) return;
-
-      const updatedLine = { ...currentLine, end: { nodeId: uuid, side } };
-      setCurrentLine(null);
-
-      await createChannelConnectorApi(
-        {
-          parentChannelId: updatedLine.start.nodeId,
-          childChannelId: updatedLine.end.nodeId,
-          parentSide: updatedLine.start.side,
-          childSide: updatedLine.end.side,
-        },
-        currentWorkspaceId,
-      );
-    }
-  };
-
-  const isLineActivated = (line: any) => {
+  const isLineActivated = (line: Line) => {
     const startActivated = userChannelData.find(
       (subscription) => subscription.channel.uuid === line.start.nodeId,
     )?.isSubscribed;
@@ -376,7 +297,7 @@ const DropArea = ({ nodemapState }: any) => {
     return startActivated && endActivated;
   };
 
-  function renderLine(line: Line, index: number, isLineActivated: boolean, scale: number) {
+  function renderLine(line: Line, isLineActivated: boolean) {
     const adjustedChannels = subscribedChannels.map((channel) => {
       if (selectedNodes.includes(channel.uuid)) {
         const xoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.x : 0;
@@ -401,7 +322,6 @@ const DropArea = ({ nodemapState }: any) => {
 
     return (
       <g key={Math.random()}>
-        {/* Visible dashed line */}
         <path
           d={pathD}
           fill="none"
@@ -424,15 +344,15 @@ const DropArea = ({ nodemapState }: any) => {
             />
           )}
         </path>
-        {/* Invisible wider line for easier click detection */}
+
         <path
           d={pathD}
           fill="none"
           stroke="transparent"
-          strokeWidth="10" // Adjust this width to be wider than the visible line
+          strokeWidth="10"
           onClick={(e) => {
             if (!line.uuid) return;
-            handleLineClick(line.uuid, e);
+            handleLineClick(line.uuid);
           }}
         />
       </g>
@@ -441,7 +361,7 @@ const DropArea = ({ nodemapState }: any) => {
 
   drop(ref);
 
-  const handleDragStart = (e: any, uuid: string) => {
+  const handleDragStart = (uuid: string) => {
     setSelectedNodes((prev) => {
       const copy = [...prev];
       copy.push(uuid);
@@ -450,38 +370,34 @@ const DropArea = ({ nodemapState }: any) => {
     });
   };
 
-  const onSelectNode = (uuid: string) => {
-    // setSelectedNodes((prevSelectedNodes: any) => {
-    //   if (prevSelectedNodes?.find((node: Channel) => node.uuid === uuid)) {
-    //     return prevSelectedNodes.filter((node: Channel) => node.uuid !== uuid);
-    //   } else {
-    //     return [
-    //       ...prevSelectedNodes,
-    //       { ...subscribedChannels.find((channel) => channel.uuid === uuid) },
-    //     ];
-    //   }
-    // });
+  const onSelectNode = () => {
+    console.info('to implement');
   };
 
   useEffect(() => {
-    const clickHandler = (e: any) => {
-      const clickedElement = e.target;
+    const currentRef = ref.current;
 
-      // Check if the clicked element is a node
+    const clickHandler: any = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+      const clickedElement = e.target as HTMLElement;
+
       if (clickedElement.dataset.nodeId) {
-        // Store the ID of the clicked node
         const nodeId = clickedElement.dataset.nodeId;
-        // Use nodeId as needed
+
         if (nodeId) setFocusedNode(nodeId);
       } else if (clickedElement.classList.contains('nodemap')) {
         setFocusedNode(null);
       }
     };
 
-    ref.current?.addEventListener('click', clickHandler);
+    if (currentRef) {
+      const handleEvent: EventListener = clickHandler;
+      currentRef.addEventListener('click', handleEvent);
 
-    return () => ref.current?.removeEventListener('click', clickHandler);
-  }, []);
+      return () => {
+        currentRef.removeEventListener('click', handleEvent);
+      };
+    }
+  }, [ref]);
 
   return (
     <div className="w-full h-full">
@@ -498,7 +414,7 @@ const DropArea = ({ nodemapState }: any) => {
         onContextMenu={handleContextMenu}
         onDoubleClick={isEditing ? handleCreateChannel : undefined}
       >
-        {subscribedChannels.map((channel: any) => {
+        {subscribedChannels.map((channel: Channel) => {
           const xoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.x : 0;
           const yoffset = selectedNodes.includes(channel.uuid) ? hoverOffset.y : 0;
           return (
@@ -508,15 +424,14 @@ const DropArea = ({ nodemapState }: any) => {
               label={channel.name}
               x={Math.round((channel.x + xoffset) / gridSize) * gridSize}
               y={Math.round((channel.y + yoffset) / gridSize) * gridSize}
-              isDefault={channel.isDefault}
-              handleCreateLine={handleCreateLine}
-              isHighlighted={selectedNodes.find((nodeId: string) => nodeId === channel.uuid)}
+              isDefault={!!channel.isDefault}
+              isHighlighted={!!selectedNodes.find((nodeId: string) => nodeId === channel.uuid)}
               onSelectNode={onSelectNode}
               onDragStart={handleDragStart}
-              selectedNodes={selectedNodes}
               isHovering={isOver}
               onDragEnd={() => setSelectedNodes([])}
               isFocused={focusedNode === channel.uuid}
+              hideUnstarted={false}
             />
           );
         })}
@@ -541,7 +456,6 @@ const DropArea = ({ nodemapState }: any) => {
                 width="40"
                 height="40"
                 patternUnits="userSpaceOnUse"
-                // patternTransform="translate(-1,-1)"
               >
                 <circle cx="1" cy="1" r="1" fill="#777"></circle>
               </pattern>
@@ -567,19 +481,19 @@ const DropArea = ({ nodemapState }: any) => {
                   position: 'absolute',
                 }}
               >
-                {channelConnectors.map((line, index) => {
+                {channelConnectors.map((line) => {
                   if (isLineActivated(line)) return null;
 
-                  return renderLine(line, index, false, nodemapState.scale);
+                  return renderLine(line, false);
                 })}
 
-                {channelConnectors.map((line, index) => {
+                {channelConnectors.map((line) => {
                   if (!isLineActivated(line)) return null;
 
-                  return renderLine(line, index, true, nodemapState.scale);
+                  return renderLine(line, true);
                 })}
 
-                {currentLine && renderLine(currentLine, 100, false, nodemapState.scale)}
+                {currentLine && renderLine(currentLine, false)}
               </svg>
 
               <div className="w-1 h-1 absolute bg-white" style={{ top: 4000, left: 4000 }} />
@@ -596,17 +510,11 @@ const DropArea = ({ nodemapState }: any) => {
                 }}
               />
             )}
-
-            {/* <CustomDragLayer
-              selectedNodes={selectedNodes}
-              scale={nodemapState.scale}
-              snapState={snapState}
-            /> */}
           </>
         </ContextMenuTrigger>
       </ContextMenu>
     </div>
   );
-};
+});
 
-export default observer(DropArea);
+export default DropArea;

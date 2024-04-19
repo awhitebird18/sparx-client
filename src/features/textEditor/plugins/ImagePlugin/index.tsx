@@ -1,5 +1,5 @@
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -11,33 +11,29 @@ import {
   COMMAND_PRIORITY_EDITOR,
   COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
-  createCommand,
   DRAGOVER_COMMAND,
   DRAGSTART_COMMAND,
   DROP_COMMAND,
-  LexicalCommand,
   LexicalEditor,
-} from "lexical";
-import { useEffect, useState } from "react";
+} from 'lexical';
+import { useEffect, useState } from 'react';
 
 import {
   $createImageNode,
   $isImageNode,
   ImageNode,
   ImagePayload,
-} from "../../nodes/ImageNode/ImageNode";
-import { Button } from "@/components/ui/Button";
-import FileInput from "./Inputs/FileInput";
-import TextInput from "./Inputs/TextInput";
-import Modal from "@/components/temp/Modal";
+} from '../../nodes/ImageNode/ImageNode';
+import { Button } from '@/components/ui/Button';
+import FileInput from './Inputs/FileInput';
+import TextInput from './Inputs/TextInput';
+import Modal from '@/layout/modal/Modal';
+import { INSERT_IMAGE_COMMAND } from '../../commands/insertImageCommand';
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   (targetWindow || window).getSelection();
-
-export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
-  createCommand("INSERT_IMAGE_COMMAND");
 
 export function InsertImageUploadedDialogBody({
   activeEditor,
@@ -46,18 +42,18 @@ export function InsertImageUploadedDialogBody({
   activeEditor: LexicalEditor;
   onClose: () => void;
 }) {
-  const [src, setSrc] = useState("");
-  const [altText, setAltText] = useState("");
+  const [src, setSrc] = useState('');
+  const [altText, setAltText] = useState('');
 
-  const isDisabled = src === "";
+  const isDisabled = src === '';
 
   const loadImage = (files: FileList | null) => {
     const reader = new FileReader();
     reader.onload = function () {
-      if (typeof reader.result === "string") {
+      if (typeof reader.result === 'string') {
         setSrc(reader.result);
       }
-      return "";
+      return '';
     };
     if (files !== null) {
       reader.readAsDataURL(files[0]);
@@ -70,7 +66,7 @@ export function InsertImageUploadedDialogBody({
   };
 
   return (
-    <Modal title="Insert image" onClose={onClose}>
+    <Modal title="Insert image">
       <div className="space-y-6">
         <FileInput
           label="Image Upload"
@@ -103,7 +99,7 @@ export default function ImagePlugin(): JSX.Element | null {
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
-      throw new Error("ImagesPlugin: ImageNode not registered on editor");
+      throw new Error('ImagesPlugin: ImageNode not registered on editor');
     }
 
     return mergeRegister(
@@ -118,29 +114,29 @@ export default function ImagePlugin(): JSX.Element | null {
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR,
       ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return onDragStart(event);
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return onDrop(event, editor);
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [editor]);
 
@@ -148,8 +144,8 @@ export default function ImagePlugin(): JSX.Element | null {
 }
 
 const TRANSPARENT_IMAGE =
-  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-const img = document.createElement("img");
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const img = document.createElement('img');
 img.src = TRANSPARENT_IMAGE;
 
 function onDragStart(event: DragEvent): boolean {
@@ -161,10 +157,10 @@ function onDragStart(event: DragEvent): boolean {
   if (!dataTransfer) {
     return false;
   }
-  dataTransfer.setData("text/plain", "_");
+  dataTransfer.setData('text/plain', '_');
   dataTransfer.setDragImage(img, 0, 0);
   dataTransfer.setData(
-    "application/x-lexical-drag",
+    'application/x-lexical-drag',
     JSON.stringify({
       data: {
         altText: node.__altText,
@@ -176,8 +172,8 @@ function onDragStart(event: DragEvent): boolean {
         src: node.__src,
         width: node.__width,
       },
-      type: "image",
-    })
+      type: 'image',
+    }),
   );
 
   return true;
@@ -228,12 +224,12 @@ function getImageNodeInSelection(): ImageNode | null {
 }
 
 function getDragImageData(event: DragEvent): null | InsertImagePayload {
-  const dragData = event.dataTransfer?.getData("application/x-lexical-drag");
+  const dragData = event.dataTransfer?.getData('application/x-lexical-drag');
   if (!dragData) {
     return null;
   }
   const { type, data } = JSON.parse(dragData);
-  if (type !== "image") {
+  if (type !== 'image') {
     return null;
   }
 
@@ -252,9 +248,9 @@ function canDropImage(event: DragEvent): boolean {
   return !!(
     target &&
     target instanceof HTMLElement &&
-    !target.closest("code, span.editor-image") &&
+    !target.closest('code, span.editor-image') &&
     target.parentElement &&
-    target.parentElement.closest("div.ContentEditable__root")
+    target.parentElement.closest('div.ContentEditable__root')
   );
 }
 

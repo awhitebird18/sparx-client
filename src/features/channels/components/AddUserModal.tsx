@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronBarExpand, X } from 'react-bootstrap-icons';
-
 import { useStore } from '@/stores/RootStore';
-
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
 import { Button } from '@/components/ui/Button';
 import UserAvatar from '@/features/users/components/UserAvatar';
@@ -15,16 +13,15 @@ import {
   CommandItem,
 } from '@/components/ui/Command';
 import { getChannelUsers } from '@/features/channels/api/getChannelUsers';
-
 import { Channel } from '@/features/channels/types';
 import { User } from '@/features/users/types/user';
 import { observer } from 'mobx-react-lite';
 
-type AddUserModalProps = {
+export type AddUserModalProps = {
   channel: Channel;
 };
 
-const AddUserModal = ({ channel }: AddUserModalProps) => {
+const AddUserModal = observer(({ channel }: AddUserModalProps) => {
   const { users, findBot, currentUser } = useStore('userStore');
   const { createMessageApi, formatAutomatedMessage } = useStore('messageStore');
   const { inviteUsersToChannelApi } = useStore('channelStore');
@@ -156,6 +153,6 @@ const AddUserModal = ({ channel }: AddUserModalProps) => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(AddUserModal);
+export default AddUserModal;

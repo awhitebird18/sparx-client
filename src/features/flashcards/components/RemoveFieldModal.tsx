@@ -1,9 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
-const RemoveFieldModal = ({ uuid }: { uuid: string }) => {
+export type RemoveFieldModalProps = { uuid: string };
+
+const RemoveFieldModal = observer(({ uuid }: RemoveFieldModalProps) => {
   const { removeFieldApi } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
 
@@ -32,6 +34,6 @@ const RemoveFieldModal = ({ uuid }: { uuid: string }) => {
       </>
     </Modal>
   );
-};
+});
 
-export default observer(RemoveFieldModal);
+export default RemoveFieldModal;

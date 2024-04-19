@@ -9,41 +9,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
-import { ChevronDown } from 'react-bootstrap-icons';
-import Editor from '@/features/textEditor/Editor';
+import CardField from './CardField';
 
-const AddFlashcardModal = () => {
+const AddFlashcardModal = observer(() => {
   const { closeModal } = useStore('modalStore');
   const { templates, handleSelectTemplate, createCardNoteApi, fields, selectedTemplate } =
     useStore('flashcardStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { currentChannelId } = useStore('channelStore');
+  const [fieldValues, setFieldValues] = useState<any>([]);
 
-  const [fieldValues, setFieldValues] = useState<any>([]); // This will hold the updated field values as an array
-
-  // Handle selecting a template
   const handleTemplateChange = (value: string) => {
     handleSelectTemplate(value);
 
-    setFieldValues([]); // Reset field values when template changes
+    setFieldValues([]);
   };
 
-  // Handle field content changes
   const handleFieldChange = (uuid: string, value: string) => {
     const index = fieldValues.findIndex((fv: any) => fv.uuid === uuid);
     if (index !== -1) {
-      // Update existing field value
       const updatedFieldValues = [...fieldValues];
       updatedFieldValues[index] = { ...updatedFieldValues[index], value };
       setFieldValues(updatedFieldValues);
     } else {
-      // Add new field value
       setFieldValues([...fieldValues, { uuid, value }]);
     }
   };
 
-  // Handle submit
   const handleSubmit = async () => {
     if (selectedTemplate && fieldValues.length > 0 && currentChannelId && currentWorkspaceId) {
       await createCardNoteApi(
@@ -66,7 +58,6 @@ const AddFlashcardModal = () => {
   return (
     <div className="flex flex-col h-full w-full gap-10">
       <div className="flex flex-col gap-12 flex-1 overflow-auto w-full">
-        {/* Display fields based on selected template */}
         {fields.map((field) => (
           <CardField
             key={field.uuid}
@@ -76,10 +67,8 @@ const AddFlashcardModal = () => {
           />
         ))}
       </div>
-
       <div className="flex justify-between items-center">
         <div>
-          {/* Template selection */}
           <Select onValueChange={handleTemplateChange} defaultValue={selectedTemplate?.uuid}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a template" />
@@ -99,61 +88,6 @@ const AddFlashcardModal = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(AddFlashcardModal);
-
-const CardField = ({
-  title,
-  content,
-  onFieldChange,
-}: {
-  title: string;
-  content: string;
-  onFieldChange: (value: string) => void;
-}) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
-
-  const emptyContent = JSON.stringify({
-    root: {
-      children: [
-        {
-          children: [
-            {
-              detail: 0,
-              text: '',
-              type: 'text',
-              version: 1,
-            },
-          ],
-          format: '',
-          type: 'paragraph',
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      type: 'root',
-      version: 1,
-    },
-  });
-
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="h-2/5">
-      <CollapsibleTrigger asChild>
-        <div className="flex gap-2 items-center mb-2">
-          <div>
-            <ChevronDown size={18} />
-          </div>
-          <h2>{title}</h2>
-        </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="card h-full">
-        <div className="relative bg-hover rounded-lg shadow-md h-full py-4">
-          <Editor content={content ?? emptyContent} onChange={onFieldChange} />
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-};
+export default AddFlashcardModal;

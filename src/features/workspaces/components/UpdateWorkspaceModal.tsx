@@ -1,15 +1,9 @@
-import { observer } from 'mobx-react-lite';
-
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useState } from 'react';
 import General from './General';
 import { Bell, Gear, Heart } from 'react-bootstrap-icons';
-
-enum PreferenceTabs {
-  GENERAL = 'Theming',
-  NOTIFICATIONS = 'Notifications',
-  ACCOUNT = 'Account',
-}
+import { PreferenceTabs } from '../types/preferenceTabs';
+import ListItem from './ListItem';
 
 const UpdateWorkspaceModal = () => {
   const [activeTab, setActiveTab] = useState(PreferenceTabs.GENERAL);
@@ -27,25 +21,32 @@ const UpdateWorkspaceModal = () => {
     }
   };
 
-  const listItem = (icon: any, tab: PreferenceTabs, disabled?: boolean) => (
-    <div
-      onClick={() => setActiveTab(tab)}
-      className={`h-9 p-0 px-6 w-full hover:bg-card-hover text-sm text-main flex items-center cursor-pointer overflow-hidden font-medium ${
-        activeTab === tab && 'bg-card-hover hover:bg-card-hover'
-      } ${disabled && ' opacity-30 pointer-events-none'}`}
-    >
-      <span className="w-6 text-base">{icon}</span>
-      {tab}
-    </div>
-  );
-
   return (
     <Modal title="Workspace settings" disablePadding>
       <div className="card flex transform transition-all w-max h-[36rem]">
         <nav className="space-y-2 border-r border-border py-6 w-44 lg:w-64">
-          {listItem(<Heart />, PreferenceTabs.GENERAL)}
-          {listItem(<Bell />, PreferenceTabs.NOTIFICATIONS, true)}
-          {listItem(<Gear />, PreferenceTabs.ACCOUNT, true)}
+          <ListItem
+            icon={<Heart />}
+            tab={PreferenceTabs.GENERAL}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+
+          <ListItem
+            icon={<Bell />}
+            tab={PreferenceTabs.NOTIFICATIONS}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            disabled
+          />
+
+          <ListItem
+            icon={<Gear />}
+            tab={PreferenceTabs.ACCOUNT}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            disabled
+          />
         </nav>
 
         <div className="flex-1 p-6 h-full overflow-hidden w-[40rem]">{renderTabContent()}</div>
@@ -54,4 +55,4 @@ const UpdateWorkspaceModal = () => {
   );
 };
 
-export default observer(UpdateWorkspaceModal);
+export default UpdateWorkspaceModal;

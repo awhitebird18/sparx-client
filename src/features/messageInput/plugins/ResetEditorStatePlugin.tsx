@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { CLEAR_HISTORY_COMMAND } from 'lexical';
 
-type props = { editorState: string };
+type Props = { editorState: string };
 
-export function ResetEditorStatePlugin({ editorState }: props) {
+export function ResetEditorStatePlugin({ editorState }: Props) {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     if (editor) {

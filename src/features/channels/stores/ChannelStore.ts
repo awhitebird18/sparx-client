@@ -204,8 +204,6 @@ export class ChannelStore {
   }) => {
     const userChannel = await channelApi.joinChannel({ channelId, sectionId });
 
-    console.log(userChannel);
-
     const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
 
     if (userChannelDataFound) {
@@ -216,16 +214,6 @@ export class ChannelStore {
   };
 
   joinDefaultChannelApi = async () => console.error('Review');
-
-  // joinDefaultChannelApi = async ({ workspaceId }: { workspaceId: string }) => {
-  // const userChannel = await channelApi.joinDefaultChannel({ workspaceId });
-  // const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
-  // if (userChannelDataFound) {
-  //   this.updateUserChannelData(userChannel);
-  // } else {
-  //   this.addUserChannelData(userChannel);
-  // }
-  // };
 
   leaveChannelApi = async (channelUuid: string) => {
     const res = await channelApi.leaveChannel(channelUuid);

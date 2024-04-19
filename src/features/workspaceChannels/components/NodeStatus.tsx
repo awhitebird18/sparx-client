@@ -1,43 +1,26 @@
 import { useEffect, useState } from 'react';
-import { ChevronDoubleRight, CupHot, Play, StarFill } from 'react-bootstrap-icons';
+import { StarFill } from 'react-bootstrap-icons';
 import CelebrationAnimation from './CompleteAnimation';
 import { observer } from 'mobx-react-lite';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 
-const NodeStatus = ({ status, isActive }: { uuid: string; status: string; isActive: boolean }) => {
+export type Props = { uuid: string; status: string; isActive: boolean };
+
+const NodeStatus = observer(({ status, isActive }: Props) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [showLabel, setShowLabel] = useState(false);
-  let icon = undefined;
 
   useEffect(() => {
     if (status === CompletionStatus.Complete) {
       setShowLabel(false);
 
-      // Show animation
-      setShowAnimation(true); // Trigger animation
+      setShowAnimation(true);
       setTimeout(() => {
         setShowAnimation(false);
         setShowLabel(true);
       }, 3000);
     }
   }, [status]);
-
-  switch (status) {
-    case CompletionStatus.Complete:
-      icon = <StarFill size={11} />;
-      break;
-    case CompletionStatus.InProgress:
-      icon = <Play />;
-      break;
-    case CompletionStatus.OnHold:
-      icon = <CupHot />;
-      break;
-    case CompletionStatus.Skip:
-      icon = <ChevronDoubleRight />;
-      break;
-    default:
-      break;
-  }
 
   return (
     <span
@@ -60,6 +43,6 @@ const NodeStatus = ({ status, isActive }: { uuid: string; status: string; isActi
       )}
     </span>
   );
-};
+});
 
-export default observer(NodeStatus);
+export default NodeStatus;

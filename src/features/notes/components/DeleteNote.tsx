@@ -1,9 +1,11 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
-const DeleteNote = ({ noteId }: { noteId: string }) => {
+export type DeleteNoteProps = { noteId: string };
+
+const DeleteNote = observer(({ noteId }: DeleteNoteProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { removeNote } = useStore('noteStore');
 
@@ -34,6 +36,6 @@ const DeleteNote = ({ noteId }: { noteId: string }) => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(DeleteNote);
+export default DeleteNote;

@@ -18,10 +18,6 @@ body {
   height: 100%;
 }
 
-/* div[role='textbox'] {
-  padding-bottom: 2rem !important;
-} */
-
 .cool {
   stroke: red;
 }
@@ -29,18 +25,18 @@ body {
 @keyframes fadeUpwards {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Start 20px below its final position */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0); /* End at its final position */
+    transform: translateY(0);
   }
 }
 
 .celebration-btn {
-  animation: fadeUpwards 1s ease forwards; /* Apply the animation */
-  animation-delay: 1s; /* Start after a delay of 1 second */
-  opacity: 0; /* Start fully transparent */
+  animation: fadeUpwards 1s ease forwards;
+  animation-delay: 1s;
+  opacity: 0;
 }
 
 .celebration-screen {
@@ -59,7 +55,7 @@ body {
 
 /* Start of card */
 .flip-card {
-  perspective: 1000; /* Create depth */
+  perspective: 1000;
 }
 
 .flip-card-inner {
@@ -71,7 +67,6 @@ body {
   transform-style: preserve-3d;
 }
 
-/* When flipped, rotate the inner container */
 .flip-card.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
@@ -80,11 +75,11 @@ body {
 .flip-card-back {
   position: absolute;
   width: 100%;
-  backface-visibility: hidden; /* Hide the back side */
+  backface-visibility: hidden;
 }
 
 .flip-card-back {
-  transform: rotateY(180deg); /* Rotate the back */
+  transform: rotateY(180deg);
 }
 .flip-card.flipped .flip-card-back h2 {
   transform: rotateY(180deg);
@@ -93,7 +88,6 @@ body {
 .rotate-back {
   transform: rotateY(180deg);
 }
-
 /* End of card */
 
 .prose {
@@ -239,12 +233,7 @@ pre::-webkit-scrollbar-thumb {
   font-size: 14px;
   outline: none;
   cursor: pointer;
-  /* border-radius: 8px; */
 }
-
-/* .typeahead-popover ul li.selected {
-    background: #eee;
-  } */
 
 .typeahead-popover li {
   margin: 0 8px 0 8px;
@@ -256,7 +245,6 @@ pre::-webkit-scrollbar-thumb {
   align-content: center;
   flex-direction: row;
   flex-shrink: 0;
-  /* border-radius: 8px; */
   border: 0;
 }
 
@@ -274,10 +262,6 @@ pre::-webkit-scrollbar-thumb {
 .typeahead-popover li:last-child {
   border-radius: 0px 0px 8px 8px;
 }
-
-/* .typeahead-popover li:hover {
-    background-color: #eee;
-  } */
 
 .typeahead-popover li .text {
   display: flex;

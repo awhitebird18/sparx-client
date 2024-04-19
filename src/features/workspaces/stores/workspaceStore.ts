@@ -1,10 +1,8 @@
 import { action, computed, makeAutoObservable, observable, reaction } from 'mobx';
 import workspaceSpaceApi from '@/features/workspaces/api';
-
 import { CreateWorkspace, UpdateWorkspace } from '../types';
 import { Workspace } from '../types/workspace';
-
-type NodemapState = { scale: number; positionX: number; positionY: number };
+import { NodemapState } from '../types/nodemapState';
 
 export class WorkspaceStore {
   workspaces: Workspace[] = [];
