@@ -1,39 +1,33 @@
 import Logo from '@/components/logo/Logo';
-import { ModalName } from '@/components/modal/modalList';
 import { Button } from '@/components/ui/Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useStore } from '@/stores/RootStore';
 import { updateUserChannel } from '@/features/channels/api/updateUserChannel';
-import { MouseEventHandler } from 'react';
 import {
   Alarm,
   AlignStart,
-  Bookmark,
   BookmarkCheckFill,
   ChevronDoubleRight,
-  Circle,
-  HandIndex,
   HandIndexFill,
   InfoCircle,
   Pencil,
-  PencilSquare,
   PlayCircle,
   StarFill,
   ThreeDots,
   Trash,
-  XCircle,
-  XSquare,
 } from 'react-bootstrap-icons';
+import { observer } from 'mobx-react-lite';
 
-const NodePanel = ({ uuid }: { uuid: string }) => {
+type Props = { uuid: string };
+
+const NodePanel = observer(({ uuid }: Props) => {
   const {
     setCurrentChannelUuid,
     updateChannelApi,
@@ -47,20 +41,16 @@ const NodePanel = ({ uuid }: { uuid: string }) => {
   const { setActiveModal } = useStore('modalStore');
   const { setSidePanelComponent } = useStore('sidePanelStore');
   const { directChannelSectionId } = useStore('sectionStore');
+  const userChannelDetails = userChannelData.find((el: any) => el.channel.uuid === uuid) ?? {};
+  const isSubscribed = userChannelDetails.isSubscribed;
 
   const updateChannel = async (name: string) => {
     await updateChannelApi(uuid, { name }, currentWorkspaceId);
   };
 
-  const userChannelDetails = userChannelData.find((el: any) => el.channel.uuid === uuid) ?? {};
-
-  const isSubscribed = userChannelDetails.isSubscribed;
-
   const handleUpdateChannelStatus = async (statusVal: CompletionStatus, e: MouseEvent) => {
     e.stopPropagation();
-
     const channel = await updateUserChannel(uuid, { status: statusVal });
-
     updateUserChannelData({ uuid: channel.uuid, status: channel.status });
   };
 
@@ -69,17 +59,13 @@ const NodePanel = ({ uuid }: { uuid: string }) => {
   };
 
   const handleJoin = async (channelId: string) => {
-    // if (!directChannelSectionId) return;
     await joinChannelApi({ channelId, sectionId: directChannelSectionId });
   };
 
   const handleLeaveChannel = async (channelId: string) => {
     await leaveChannelApi(channelId);
-
     const navHistoryString = window.localStorage.getItem('navigationHistory');
-
     const historyParsed = navHistoryString && JSON.parse(navHistoryString);
-
     if (historyParsed?.length && currentChannelId === channelId) {
       setCurrentChannelUuid(historyParsed[historyParsed.length - 2].nodeId);
     }
@@ -218,6 +204,6 @@ const NodePanel = ({ uuid }: { uuid: string }) => {
       </DropdownMenu>
     </div>
   );
-};
+});
 
 export default NodePanel;

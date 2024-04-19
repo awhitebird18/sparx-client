@@ -6,19 +6,17 @@ import {
   House,
   PencilSquare,
 } from 'react-bootstrap-icons';
-
 import { useStore } from '@/stores/RootStore';
 import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useControls, useTransformEffect } from 'react-zoom-pan-pinch';
 
-const TransformControls = () => {
+const TransformControls = observer(() => {
   const { zoomIn, zoomOut, instance, zoomToElement, setTransform, resetTransform } = useControls();
   const { currentChannelId, subscribedChannels, isEditing, setIsEditing } =
     useStore('channelStore');
   const { lastViewedWorkspace } = useStore('workspaceStore');
   const { toggleFullScreen, isFullscreen } = useStore('sidebarStore');
-
   const [scale, setScale] = useState(1);
 
   const handleViewFullscreen = () => {
@@ -29,11 +27,9 @@ const TransformControls = () => {
     if (currentChannelId) {
       const activeNode = subscribedChannels.find((channel) => channel.uuid === currentChannelId);
       if (activeNode) {
-        // Assuming each node has a unique ID and is an HTMLElement
         const nodeElement = document.getElementById(activeNode.uuid);
 
         if (nodeElement) {
-          // Use zoomToElement with the node element
           zoomToElement(nodeElement, 1);
         }
       }
@@ -65,15 +61,7 @@ const TransformControls = () => {
           <PencilSquare size={18} />
         </Button>
       )}
-      {/* <SettingsDropdown>
-        <Button
-          className="w-8 h-8 p-0 "
-          variant="ghost"
-          onClick={() => setShowIndicators((prev) => !prev)}
-        >
-          <Funnel size={18} />
-        </Button>
-      </SettingsDropdown> */}
+
       <Button
         className="w-10 h-10 p-0 "
         variant={isFullscreen ? 'outline-primary' : 'ghost'}
@@ -92,6 +80,6 @@ const TransformControls = () => {
       </Button>
     </div>
   );
-};
+});
 
-export default observer(TransformControls);
+export default TransformControls;

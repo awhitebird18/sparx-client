@@ -2,8 +2,9 @@ import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
 import { ChannelType } from '../enums';
 import { Tv } from 'react-bootstrap-icons';
+import { observer } from 'mobx-react-lite';
 
-const NoChannelsFallback = () => {
+const NoChannelsFallback = observer(() => {
   const { setActiveModal } = useStore('modalStore');
   const { findSectionByChannelType } = useStore('sectionStore');
 
@@ -23,6 +24,6 @@ const NoChannelsFallback = () => {
       </Button>
     </div>
   );
-};
+});
 
 export default NoChannelsFallback;

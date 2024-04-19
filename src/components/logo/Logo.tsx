@@ -1,8 +1,5 @@
 import logo from '@/assets/images/appLogo.svg';
-
-interface LogoProps {
-  size?: number;
-}
+import { LogoProps } from './logoProps';
 
 const Logo = ({ size = 12 }: LogoProps) => {
   return (

@@ -1,13 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import { ChevronDown } from 'react-bootstrap-icons';
-
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
 import { useStore } from '@/stores/RootStore';
 import { ChannelType } from '@/features/channels/enums';
 
-const ChannelTitle = () => {
+const ChannelTitle = observer(() => {
   const { currentChannel } = useStore('channelStore');
   const { setActiveModal } = useStore('modalStore');
   const { findUserByName } = useStore('userStore');
@@ -68,6 +67,6 @@ const ChannelTitle = () => {
       </div>
     </Button>
   );
-};
+});
 
-export default observer(ChannelTitle);
+export default ChannelTitle;

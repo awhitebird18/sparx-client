@@ -9,14 +9,11 @@ import type {
   SerializedEditor,
   SerializedLexicalNode,
   Spread,
-} from "lexical";
-
-import { $applyNodeReplacement, DecoratorNode } from "lexical";
-import * as React from "react";
-import { Suspense } from "react";
-import "./ImageNode.css";
-
-const ImageComponent = React.lazy(() => import("./ImageComponent"));
+} from 'lexical';
+import { $applyNodeReplacement, DecoratorNode } from 'lexical';
+import ImageComponent from './ImageComponent';
+import { Suspense } from 'react';
+import './ImageNode.css';
 
 export interface ImagePayload {
   altText: string;
@@ -55,12 +52,12 @@ export type SerializedImageNode = Spread<
 export class ImageNode extends DecoratorNode<JSX.Element> {
   __src: string;
   __altText: string;
-  __width: "inherit" | number;
-  __height: "inherit" | number;
+  __width: 'inherit' | number;
+  __height: 'inherit' | number;
   __maxWidth: number;
 
   static getType(): string {
-    return "image";
+    return 'image';
   }
 
   static clone(node: ImageNode): ImageNode {
@@ -70,7 +67,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       node.__maxWidth,
       node.__width,
       node.__height,
-      node.__showCaption
+      node.__showCaption,
     );
   }
 
@@ -93,11 +90,11 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   exportDOM(): DOMExportOutput {
-    const element = document.createElement("img");
-    element.setAttribute("src", this.__src);
-    element.setAttribute("alt", this.__altText);
-    element.setAttribute("width", this.__width.toString());
-    element.setAttribute("height", this.__height.toString());
+    const element = document.createElement('img');
+    element.setAttribute('src', this.__src);
+    element.setAttribute('alt', this.__altText);
+    element.setAttribute('width', this.__width.toString());
+    element.setAttribute('height', this.__height.toString());
     return { element };
   }
 
@@ -114,34 +111,34 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     src: string,
     altText: string,
     maxWidth: number,
-    width?: "inherit" | number,
-    height?: "inherit" | number,
+    width?: 'inherit' | number,
+    height?: 'inherit' | number,
 
-    key?: NodeKey
+    key?: NodeKey,
   ) {
     super(key);
     this.__src = src;
     this.__altText = altText;
     this.__maxWidth = maxWidth;
-    this.__width = width || "inherit";
-    this.__height = height || "inherit";
+    this.__width = width || 'inherit';
+    this.__height = height || 'inherit';
   }
 
   exportJSON(): SerializedImageNode {
     return {
       altText: this.getAltText(),
       caption: this.__caption.toJSON(),
-      height: this.__height === "inherit" ? 0 : this.__height,
+      height: this.__height === 'inherit' ? 0 : this.__height,
       maxWidth: this.__maxWidth,
       showCaption: this.__showCaption,
       src: this.getSrc(),
-      type: "image",
+      type: 'image',
       version: 1,
-      width: this.__width === "inherit" ? 0 : this.__width,
+      width: this.__width === 'inherit' ? 0 : this.__width,
     };
   }
 
-  setWidthAndHeight(width: "inherit" | number, height: "inherit" | number): void {
+  setWidthAndHeight(width: 'inherit' | number, height: 'inherit' | number): void {
     const writable = this.getWritable();
     writable.__width = width;
     writable.__height = height;
@@ -155,7 +152,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   // View
 
   createDOM(config: EditorConfig): HTMLElement {
-    const span = document.createElement("span");
+    const span = document.createElement('span');
     const theme = config.theme;
     const className = theme.image;
 

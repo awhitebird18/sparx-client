@@ -1,13 +1,11 @@
 import { useState, useRef } from 'react';
 import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
-
 import { useStore } from '@/stores/RootStore';
-
 import { Button } from '@/components/ui/Button';
-import { ModalName } from '@/components/modal/modalList';
+import { ModalName } from '@/layout/modal/modalList';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
-
 import { Message } from '../types';
+import { observer } from 'mobx-react-lite';
 
 type OptionsPanelProps = {
   message: Message;
@@ -16,14 +14,13 @@ type OptionsPanelProps = {
   isThread?: boolean;
 };
 
-const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) => {
+const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanelProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { currentUser } = useStore('userStore');
   const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
 
   const handleOpenModal = ({
@@ -113,6 +110,6 @@ const OptionsPanel = ({ message, setIsEditing, isThread }: OptionsPanelProps) =>
       )}
     </div>
   );
-};
+});
 
 export default OptionsPanel;

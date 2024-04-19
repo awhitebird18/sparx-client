@@ -1,8 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-
-import { useAuth } from '@/providers/auth';
-
+import { useAuth } from '@/providers/contexts/useAuth';
 import Logo from '@/components/logo/Logo';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';

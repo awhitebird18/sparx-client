@@ -16,39 +16,24 @@ import {
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { ModalName } from '@/components/modal/modalList';
+import { ModalName } from '@/layout/modal/modalList';
 import dayjs from 'dayjs';
 import ExperienceChart from './ExperienceChart';
-import taskApi from '@/features/overview/api';
-import WorkspaceActivity from '@/features/overview/components/WorkspaceActivity';
+import taskApi from '@/features/tasks/api';
 import { Skeleton } from '@/components/ui/Skeleton';
 import UserAvatar from '@/features/users/components/UserAvatar';
+import { groupExperienceByDayAndGetTotalExp } from '../utils/groupExperienceByDayAndGetTotalExp';
+import { CardSkeleton } from './CardSkeleton';
 
-interface Experience {
-  date: string;
-  points: number;
-}
+export type Props = {
+  userId: string;
+};
 
-interface GroupedData {
-  [key: string]: {
-    date: string;
-    points: number;
-    label: string;
-  };
-}
-
-interface Accumulator {
-  totalPoints: number;
-  groupedByDate: GroupedData;
-}
-
-const Profile = ({ userId }: { userId: string }) => {
+const Profile = observer(({ userId }: Props) => {
   const [stats, setStats] = useState<any>([]);
   const [totalExp, setTotalExp] = useState(0);
   const { currentWorkspaceId, currentUserWorkspaceData } = useStore('workspaceStore');
-  const navigate = useNavigate();
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { findUserByUuid, uploadProfileImageApi, currentUser, setCurrentUserProfileId } =
@@ -89,7 +74,6 @@ const Profile = ({ userId }: { userId: string }) => {
     if (!userId || !currentWorkspaceId) return;
 
     const fetchData = async () => {
-      // const activityPromise = taskApi.getUserActivity(userId, currentWorkspaceId);
       const experiencePromise = taskApi.getExperience(userId, currentWorkspaceId);
 
       const [experience] = await Promise.all([experiencePromise]);
@@ -104,7 +88,6 @@ const Profile = ({ userId }: { userId: string }) => {
 
       setTotalExp(totalPoints);
       setStats(experienceGroupedByDate);
-      // setActivity(activity);
 
       setIsLoading(false);
     };
@@ -120,10 +103,6 @@ const Profile = ({ userId }: { userId: string }) => {
 
   // Need to throw error if no userId
   if (!userId) return null;
-
-  const handleClickBack = () => {
-    navigate(-1);
-  };
 
   const handleClickUploadImageButton = (e: MouseEvent) => {
     e.preventDefault();
@@ -162,24 +141,10 @@ const Profile = ({ userId }: { userId: string }) => {
 
   return (
     <div className="h-full flex relative w-full overflow-auto">
-      {/* <div className="flex justify-between items-center px-16 h-12 flex-1 absolute top-4 left-0 w-fit z-30">
-          <Button
-            variant="outline"
-            className="flex gap-2 h-9 px-4 rounded-xl"
-            onClick={handleClickBack}
-          >
-            <ChevronLeft size={12} style={{ marginTop: '0.1rem' }} /> Back
-          </Button>
-        </div> */}
       <div className="h-full w-full justify-center flex flex-col">
-        {/* Main */}
         <div className="flex flex-col gap-4 flex-1 w-full h-full items-center">
-          {/* Header */}
           <div className="flex flex-col gap-2 relative items-center w-full">
-            {/* <div className="h-52 absolute w-full rounded-xl bg-gradient-to-b to-transparent"></div> */}
-            {/* Real header */}
             <div className="flex gap-12 items-end px-12 justify-center w-full max-w-5xl">
-              {/* Avatar */}
               <div
                 className={`card relative flex-shrink-0 shadow rounded-xl bg-gradient-to-tr from-primary to-${user.preferences.primaryColor}-400`}
               >
@@ -218,7 +183,6 @@ const Profile = ({ userId }: { userId: string }) => {
               </div>
 
               <div className="flex justify-between w-full">
-                {/* Basic details */}
                 <div className="flex flex-col gap-4">
                   <span className="text-3xl font-semibold text-main">{`${user.firstName} ${user.lastName}`}</span>
                   <div className="flex gap-10">
@@ -272,12 +236,9 @@ const Profile = ({ userId }: { userId: string }) => {
               </div>
             </div>
 
-            {/* Separator */}
             <div className="h-px w-full flex bg-border my-12" />
 
-            {/* Body */}
             <div className="gap-12 flex w-full justify-between max-w-5xl px-12">
-              {/* Quick Stats */}
               <div className="card w-1/3 flex flex-col gap-4 flex-shrink-0">
                 <div className="flex justify-between items-center prose">
                   <h3 className="text-main">Quick Stats</h3>
@@ -328,7 +289,7 @@ const Profile = ({ userId }: { userId: string }) => {
                   </div>
                 </div>
               </div>
-              {/* Experience Chart */}
+
               <div className="prose dark:prose-invert flex flex-col gap-4 w-2/3">
                 <div className="flex justify-between items-center prose">
                   <h3 className="text-main">Experience Earned</h3>
@@ -352,95 +313,6 @@ const Profile = ({ userId }: { userId: string }) => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(Profile);
-
-function groupExperienceByDayAndGetTotalExp(data: any) {
-  // Prepopulate the dates for the last 7 days, including today, with points set to 0
-  const last7Days: GroupedData = {};
-  for (let i = 6; i >= 0; i--) {
-    let date = dayjs();
-    date = date.subtract(i, 'day');
-    // date.setDate(date.getDate() - i);
-    // const formattedDate: string = date.toISOString().split('T')[0];
-    const formattedDate: string = date.format('MMM D');
-    const label: string = date.format('ddd');
-    last7Days[formattedDate] = { date: formattedDate, label, points: 0 };
-  }
-
-  const { totalPoints, groupedByDate }: Accumulator = data.reduce(
-    (acc: Accumulator, { date, points }: Experience) => {
-      // Sum total points
-      acc.totalPoints += points;
-
-      // Convert date to a specific format if needed, for consistent key comparison
-      const formattedDate: string = dayjs(date).format('MMM D');
-
-      // Check if the date is within the last 7 days and group by date and sum points for each date
-      // eslint-disable-next-line no-prototype-builtins
-      if (acc.groupedByDate.hasOwnProperty(formattedDate)) {
-        acc.groupedByDate[formattedDate].points += points;
-      }
-
-      return acc;
-    },
-    { totalPoints: 0, groupedByDate: last7Days },
-  );
-
-  // Set the total experience points
-
-  // Convert the grouped object back into an array for stats, ensuring all last 7 days are included
-  const experienceGroupedByDate = Object.values(groupedByDate);
-
-  return { totalPoints, experienceGroupedByDate };
-}
-
-const CardSkeleton = () => (
-  <Skeleton className="card h-28 flex items-center gap-4 prose w-full bg-card shadow-md border-border p-6 rounded-lg" />
-);
-
-// Badges
-{
-  /* <div className="card h-min flex flex-col gap-4 flex-shrink-0">
-  <div className="flex justify-between items-center prose">
-    <h3 className="text-main">Badges</h3>
-    <Button className="text-primary font-semibold" variant="link">
-      VIEW ALL
-    </Button>
-  </div>
-
-  <div className="flex gap-4 w-fit">
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <Fire className="text-rose-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <FileTextFill className="text-blue-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <StarFill className="text-yellow-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <ClipboardFill className="text-pink-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <HandThumbsUpFill className="text-orange-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-    <div className="card flex flex-col items-center gap-4 prose w-28 bg-card shadow-lg p-6 rounded-3xl">
-      <ChatLeftDotsFill className="text-emerald-400" size={48} />
-
-      <h4 className="text-main">Level 6</h4>
-    </div>
-  </div>
-</div>; */
-}
+export default Profile;

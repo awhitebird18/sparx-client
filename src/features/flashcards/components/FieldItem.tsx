@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react-lite';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +11,11 @@ import { ChevronDown, GripVertical } from 'react-bootstrap-icons';
 import { useDrag } from 'react-dnd';
 import { useState } from 'react';
 
-const FieldItem = ({ field }: { field: Field }) => {
+type FieldItemProps = { field: Field };
+
+const FieldItem = observer(({ field }: FieldItemProps) => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const [, dragRef] = useDrag(() => ({
     type: 'field-item',
     item: { uuid: field.uuid },
@@ -61,6 +61,6 @@ const FieldItem = ({ field }: { field: Field }) => {
       </DropdownMenu>
     </div>
   );
-};
+});
 
-export default observer(FieldItem);
+export default FieldItem;

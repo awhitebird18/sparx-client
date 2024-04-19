@@ -2,7 +2,7 @@ import { FallbackProps } from 'react-error-boundary';
 import Logo from '../logo/Logo';
 import { Button } from '../ui/Button';
 
-function AppErrorFallback({ error }: FallbackProps) {
+const AppErrorFallback = ({ error }: FallbackProps) => {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-8 bg-background">
       <div className="card flex flex-col items-center justify-center p-16 bg-card border border-border rounded-3xl shadow space-y-6">
@@ -21,6 +21,6 @@ function AppErrorFallback({ error }: FallbackProps) {
       </div>
     </div>
   );
-}
+};
 
 export default AppErrorFallback;

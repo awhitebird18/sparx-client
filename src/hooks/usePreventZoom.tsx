@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 const usePreventZoom = () => {
   useEffect(() => {
-    const handleWheel = (event: any) => {
+    const handleWheel = (event: WheelEvent) => {
       if (event.ctrlKey) {
         event.preventDefault();
       }
@@ -10,9 +10,7 @@ const usePreventZoom = () => {
 
     window.addEventListener('wheel', handleWheel, { passive: false });
 
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-    };
+    return () => window.removeEventListener('wheel', handleWheel);
   }, []);
 };
 

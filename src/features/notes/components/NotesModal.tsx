@@ -1,6 +1,5 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
-import Notes from './ViewNotes';
 import MainPage from './MainPage';
 
 const NotesModal = () => {

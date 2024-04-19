@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import workspaceNight from '@/assets/images/lgoo.png';
 import workspaceDay from '@/assets/images/workspaceDay.png';
 import {
@@ -25,15 +24,12 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const General = () => {
+const General = observer(() => {
   const { currentWorkspace, updateWorkspaceApi, uploadWorkspaceImageApi } =
     useStore('workspaceStore');
-
   const [tempImg, setTempImg] = useState<any>(null);
-
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(() => {
@@ -85,13 +81,13 @@ const General = () => {
   if (!currentWorkspace) return;
 
   function getCurrentWorkspaceImage() {
-    const hour = new Date().getHours(); // Gets the current hour (0-23)
-    const isDaytime = hour > 6 && hour < 18; // Define day time (e.g., 6 AM to 6 PM)
+    const hour = new Date().getHours();
+    const isDaytime = hour > 6 && hour < 18;
 
     if (isDaytime) {
-      return workspaceDay; // Return the day image if it's day time
+      return workspaceDay;
     } else {
-      return workspaceNight; // Return the night image if it's night time
+      return workspaceNight;
     }
   }
 
@@ -104,20 +100,6 @@ const General = () => {
             className="flex flex-col w-max space-y-4"
           >
             <div className="flex flex-col flex-1 space-y-4 w-80">
-              {/* <div className="text-2xl flex items-center gap-4 relative">
-                {!isEditing && (
-                  <Button
-                    className="absolute top-0 right-0 h-7 py-0 gap-2 text-base text-muted-foreground"
-                    size="sm"
-                    variant="outline"
-                    onClick={handleEditForm}
-                    type="button"
-                  >
-                    <Pencil className="text-sm" /> Edit
-                  </Button>
-                )}
-              </div> */}
-
               <FormField
                 control={form.control}
                 name="name"
@@ -213,6 +195,6 @@ const General = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(General);
+export default General;

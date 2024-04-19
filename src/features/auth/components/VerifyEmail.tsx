@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const VerifyEmail = ({ userId }: { userId: string }) => {
+export type VerifyEmailProps = { userId: string };
+
+const VerifyEmail = ({ userId }: VerifyEmailProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,7 +13,6 @@ const VerifyEmail = ({ userId }: { userId: string }) => {
     socket.emit('waitingForVerification', { userId });
 
     socket.on('verified', () => {
-      // Handle verification, like redirecting the user.
       navigate('/verified', { replace: true });
       socket.disconnect();
     });

@@ -2,17 +2,13 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Input } from '@/components/ui/Input';
 import { Template } from '../types/template';
 
-const UpdateTemplateModal = ({
-  uuid,
-  updateFields,
-}: {
-  uuid: string;
-  updateFields: Partial<Template>;
-}) => {
+export type UpdateTemplateModalProps = { uuid: string; updateFields: Partial<Template> };
+
+const UpdateTemplateModal = observer(({ uuid, updateFields }: UpdateTemplateModalProps) => {
   const { updateTemplateApi } = useStore('flashcardStore');
   const { setActiveModal } = useStore('modalStore');
   const [value, setValue] = useState(updateFields.title);
@@ -40,6 +36,6 @@ const UpdateTemplateModal = ({
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(UpdateTemplateModal);
+export default UpdateTemplateModal;

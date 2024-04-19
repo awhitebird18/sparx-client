@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 import { Note } from '../types/Note';
-
 import notesApi from '../api';
 import { UpdateNote } from '../types/UpdateNote';
 

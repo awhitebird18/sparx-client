@@ -1,6 +1,5 @@
-import Table from '@/components/ui/Table';
-import { useMemo, useState } from 'react';
-import { ArrowReturnRight, ChevronDown, Mouse, ThreeDots, Trash } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { ChevronDown, ThreeDots } from 'react-bootstrap-icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,25 +10,14 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { Field } from '../types/Field';
 import { observer } from 'mobx-react-lite';
-import { Template } from '../types/template';
-import { Variant } from '../types/variant';
-import dayjs from 'dayjs';
 import FieldItem from './FieldItem';
 import TemplateCard from './TemplateCard';
-import { useNavigate } from 'react-router-dom';
 
-const Templates = () => {
+const Templates = observer(() => {
   const { setActiveModal } = useStore('modalStore');
-  const [templateDropdownOpen, setTemplateDropdownOpen] = useState(false);
-
   const [fieldDropdownOpen, setFieldDropdownOpen] = useState(false);
-  const [variantDropdownOpen, setVariantDropdownOpen] = useState(false);
-  const [variantTableDropdownOpen, setVariantTableDropdownOpen] = useState(null);
-  const { fields, variants, selectedTemplate, selectedVariant, handleSelectVariant, isLoading } =
-    useStore('flashcardStore');
-  const navigate = useNavigate();
+  const { fields, selectedTemplate } = useStore('flashcardStore');
 
-  // Fields
   const handleCreateField = () => {
     setActiveModal({ type: 'CreateField', payload: { templateId: selectedTemplate?.uuid } });
     setFieldDropdownOpen(false);
@@ -38,14 +26,13 @@ const Templates = () => {
   return (
     <div className="flex flex-col relative w-full overflow-auto gap-10">
       <div className="space-y-8">
-        {/* Cards */}
         <div className="space-y-4">
           <div className="flex gap-10 h-72">
             <TemplateCard side="front" />
             <TemplateCard side="back" />
           </div>
         </div>
-        {/* Fields */}
+
         <div className="w-full space-y-4">
           <div className="flex items-center justify-between">
             <DropdownMenu open={fieldDropdownOpen} onOpenChange={setFieldDropdownOpen}>
@@ -68,7 +55,6 @@ const Templates = () => {
 
           <div className=" flex items-center justify-between gap-6 px-6 w-full rounded-xl bg-hover card h-16 shadow-md">
             <div className="flex items-center gap-6">
-              {/* Field */}
               {fields.map((field: Field) => (
                 <FieldItem field={field} />
               ))}
@@ -81,6 +67,6 @@ const Templates = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(Templates);
+export default Templates;

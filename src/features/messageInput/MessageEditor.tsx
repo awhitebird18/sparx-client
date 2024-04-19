@@ -1,5 +1,4 @@
 import { useStore } from '@/stores/RootStore';
-
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -12,22 +11,19 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
-
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
-import BottomToolbarPLugin from './plugins/BottomToolbarPlugin';
 import CancelButtonPlugin from './plugins/CancelButtonPlugin';
-
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import { Message } from '@/features/messages/types';
 
-type EditorProps = {
+type Props = {
   message: Message;
   setIsEditing: (bool: boolean) => void;
 };
 
-export default function MessageEditor({ message, setIsEditing }: EditorProps) {
+export default function MessageEditor({ message, setIsEditing }: Props) {
   const { updateMessageApi } = useStore('messageStore');
 
   const handleSubmit = async (messageContent: string) => {
@@ -62,7 +58,6 @@ export default function MessageEditor({ message, setIsEditing }: EditorProps) {
             <CancelButtonPlugin setIsEditing={setIsEditing} />
             <SubmitButtonPlugin onSubmit={handleSubmit} label="Update" />
           </div>
-          <BottomToolbarPLugin />
         </div>
       </div>
     </LexicalComposer>

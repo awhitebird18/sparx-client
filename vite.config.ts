@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc';
 import { resolve, join } from 'path';
 import { readdirSync } from 'fs';
 import packageJSON from './package.json';
+import eslint from 'vite-plugin-eslint';
 
 const srcPath = resolve('./src');
 const srcRootContent = readdirSync(srcPath);
@@ -18,7 +19,7 @@ srcRootContent.forEach((directory) => {
 });
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), eslint()],
   resolve: {
     alias: absolutePathAliases,
   },

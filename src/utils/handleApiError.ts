@@ -1,4 +1,3 @@
-// errorHandler.ts
 import { AxiosError } from 'axios';
 import Logger from '@/utils/logger';
 

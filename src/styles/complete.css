@@ -1,0 +1,36 @@
+.celebration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.5s ease-in-out;
+  position: absolute;
+  top: 4;
+  left: 0;
+  text-wrap: nowrap;
+}
+
+.celebration-container.animate {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.star {
+  font-size: 12.5px;
+  animation: starAnimation 1.2s forwards;
+}
+
+@keyframes starAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  85% {
+    transform: scale(2.5);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

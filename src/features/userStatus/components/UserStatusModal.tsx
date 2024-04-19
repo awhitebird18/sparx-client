@@ -1,22 +1,18 @@
 import { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { X } from 'react-bootstrap-icons';
-
 import { Input } from '@/components/ui/Input';
-
 import '@/features/userStatus/styles/userStatusModal.css';
 import { useStore } from '@/stores/RootStore';
 import { StatusDuration } from '../enums';
 import { UserStatus } from '../types/userStatus';
-
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import Emoji from '@/components/ui/Emoji';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 
-const UserStatusModal = () => {
+const UserStatusModal = observer(() => {
   const {
-    // removeUserStatusApi,
     createUserStatusApi,
     userStatuses,
     activeUserStatus,
@@ -30,13 +26,7 @@ const UserStatusModal = () => {
   const [currentUserStatus, setCurrentUserStatus] = useState<UserStatus | undefined>(
     activeUserStatus,
   );
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const emojiButtonRef = useRef<any>(null);
-
-  // const handleRemoveUserStatus = async (userStatusUuid: string) => {
-  //   await removeUserStatusApi(userStatusUuid);
-  // };
 
   const handleCloseModal = () => {
     setActiveModal(null);
@@ -44,8 +34,6 @@ const UserStatusModal = () => {
 
   const handleShowEmojiPicker = () => {
     if (emojiButtonRef.current) {
-      // const rect = emojiButtonRef.current.getBoundingClientRect();
-
       setShowEmojiPicker({ top: 142, left: 40 });
     }
   };
@@ -91,7 +79,7 @@ const UserStatusModal = () => {
 
   const handleAddReaction = (emojiId: string) => {
     handleCloseEmojiPicker();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     setCurrentUserStatus((prev: any) => ({ ...prev, emoji: emojiId }));
   };
 
@@ -122,7 +110,6 @@ const UserStatusModal = () => {
             placeholder="What's your status?"
             className="pl-14 h-12 border-border"
             onChange={(e) =>
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               setCurrentUserStatus((prev: any) => ({
                 ...prev,
                 text: e.target.value,
@@ -205,6 +192,6 @@ const UserStatusModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(UserStatusModal);
+export default UserStatusModal;

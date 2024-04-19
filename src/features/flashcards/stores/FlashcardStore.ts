@@ -1,8 +1,6 @@
-// stores/FlashcardStore.ts
-import { autorun, makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 import { Flashcard } from '../types/card';
 import flashcardsApi from '../api';
-
 import { Field } from '../types/Field';
 import { Template } from '../types/template';
 import { Variant } from '../types/variant';
@@ -14,20 +12,16 @@ export class FlashcardStore {
   selectedFlashcard?: Flashcard = undefined;
   flashcardsDueCounts: { channelId: string; count: number }[] = [];
   isLoading = false;
-
   templates: Template[] = [];
   selectedTemplate?: Template = undefined;
-
   fields: Field[] = [];
-
   variants: Variant[] = [];
-
   selectedVariant?: Variant = undefined;
 
   constructor() {
     makeAutoObservable(this);
     reaction(
-      () => this.selectedTemplate, // This is the data function - what to react to
+      () => this.selectedTemplate,
       (current, prev) => {
         if (current && current.uuid !== prev?.uuid) {
           this.fetchFieldsApi(current.uuid);
@@ -43,7 +37,7 @@ export class FlashcardStore {
     );
 
     reaction(
-      () => this.templates, // This is the data function - what to react to
+      () => this.templates,
       (templates) => {
         if (templates?.length) {
           const localStorageTemplate = window.localStorage.getItem('selectedTemplate');
@@ -59,7 +53,7 @@ export class FlashcardStore {
     );
 
     reaction(
-      () => this.variants, // This is the data function - what to react to
+      () => this.variants,
       (variants) => {
         if (variants?.length) {
           this.selectedVariant = variants[0];
@@ -68,10 +62,6 @@ export class FlashcardStore {
         }
       },
     );
-
-    autorun(() => {
-      this.fetchTemplatesApi();
-    });
   }
 
   setSelectedFlashcard = (flashcard: Flashcard | undefined) => {

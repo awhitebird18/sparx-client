@@ -7,7 +7,7 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 
-const Onboarding = () => {
+const Onboarding = observer(() => {
   const [step, setStep] = useState<number>(1);
   const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
   const navigate = useNavigate();
@@ -34,6 +34,6 @@ const Onboarding = () => {
       {step === 4 && <UserOnboarding />}
     </div>
   );
-};
+});
 
-export default observer(Onboarding);
+export default Onboarding;

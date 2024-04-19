@@ -9,7 +9,9 @@ import { DndProvider } from 'react-dnd';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'react-bootstrap-icons';
 
-const GenerateRoadmap = ({ setStep }: { setStep: any }) => {
+type Props = { setStep: any };
+
+const GenerateRoadmap = observer(({ setStep }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const { currentWorkspace } = useStore('workspaceStore');
   const { setSubscribedChannels } = useStore('channelStore');
@@ -69,6 +71,6 @@ const GenerateRoadmap = ({ setStep }: { setStep: any }) => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(GenerateRoadmap);
+export default GenerateRoadmap;

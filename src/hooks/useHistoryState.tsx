@@ -1,12 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from '@/stores/RootStore';
-
-interface NavigationHistoryItem {
-  timestamp: number;
-  primaryView: string;
-  nodeId: string;
-}
+import { NavigationHistoryItem } from './types/navigationHistoryItem';
 
 const useHistoryState = () => {
   const location = useLocation();
@@ -15,7 +10,6 @@ const useHistoryState = () => {
   let timestamp: number;
 
   useEffect(() => {
-    // Retrieve the current navigation history from localStorage
     const historyJson = localStorage.getItem('navigationHistory');
     const navigationHistory: NavigationHistoryItem[] = historyJson ? JSON.parse(historyJson) : [];
 
@@ -27,8 +21,6 @@ const useHistoryState = () => {
       primaryView = 'home';
     }
 
-    // Check if the current view is the same as the last one in the history
-    // to prevent duplicate entries.
     if (
       !currentChannelId ||
       (currentChannelId === lastItem?.nodeId && primaryView === lastItem?.primaryView)
@@ -36,7 +28,7 @@ const useHistoryState = () => {
       return;
     }
     timestamp = new Date().getTime();
-    // Add the new navigation state to the history
+
     const newHistoryItem: NavigationHistoryItem = {
       timestamp: timestamp,
       primaryView,
@@ -45,12 +37,9 @@ const useHistoryState = () => {
 
     navigationHistory.push(newHistoryItem);
 
-    // Save the updated navigation history back to localStorage
     localStorage.setItem('navigationHistory', JSON.stringify(navigationHistory));
   }, [location, currentChannelId]);
 
-  // Optionally, if you want to consume the navigation history in your component,
-  // retrieve it here so it returns the latest history after updates.
   const getNavigationHistory = (): NavigationHistoryItem[] => {
     const historyJson = localStorage.getItem('navigationHistory');
     return historyJson ? JSON.parse(historyJson) : [];

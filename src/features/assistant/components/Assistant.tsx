@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
-import assistantApi from '@/features/Assistant/api';
+import assistantApi from '@/features/assistant/api';
 import { ChannelType } from '@/features/channels/enums';
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
-import { Flashcard } from '@/features/flashcards/types/card';
 import MessageDisplay from '@/features/messageInput/MessageDisplay';
 import { nodeDimensions } from '@/features/workspaceChannels/utils/nodeDimensions';
 import { useStore } from '@/stores/RootStore';
@@ -11,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { ChevronLeft } from 'react-bootstrap-icons';
 
-const Assistant = () => {
+const Assistant = observer(() => {
   const { currentChannelId, createChannelApi, currentChannel, findChannelByUuid } =
     useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
@@ -100,7 +99,6 @@ const Assistant = () => {
   };
 
   const handleCreateNote = async (title: string) => {
-    // e.stopPropagation();
     if (!currentWorkspaceId || !currentChannelId) return;
 
     setResponse((subtopics: any) => subtopics.filter((subtopic: any) => subtopic.title !== title));
@@ -131,7 +129,7 @@ const Assistant = () => {
       setArticle('');
       setIsProvidingArticle(false);
       selectNote(note.uuid);
-      setMainPanel({ type: 'notes' });
+      setMainPanel({ type: 'note' });
     } catch (err) {
       setError(true);
     } finally {
@@ -288,6 +286,6 @@ const Assistant = () => {
       ) : null}
     </div>
   );
-};
+});
 
-export default observer(Assistant);
+export default Assistant;

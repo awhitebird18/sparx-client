@@ -5,10 +5,9 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { UpdateNote } from '../types/UpdateNote';
 
-const NoteMetadata = () => {
+const NoteMetadata = observer(() => {
   const { selectedNote, updateNoteApi } = useStore('noteStore');
   const { findUserByUuid, currentUser } = useStore('userStore');
-
   const user = findUserByUuid(selectedNote ? selectedNote.createdBy : '');
 
   const handleUpdateNote = (data: Partial<UpdateNote>) => {
@@ -17,7 +16,6 @@ const NoteMetadata = () => {
   };
 
   const noteOwner = user ? user : currentUser;
-
   if (!noteOwner || !selectedNote) return <div className="card w-[32rem] h-full hidden xl:block" />;
 
   return (
@@ -58,6 +56,6 @@ const NoteMetadata = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(NoteMetadata);
+export default NoteMetadata;

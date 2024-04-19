@@ -1,6 +1,5 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/Collapsible';
 import {
   Select,
   SelectContent,
@@ -10,100 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-import Editor from '@/features/textEditor/Editor';
 import { useStore } from '@/stores/RootStore';
-import { useState } from 'react';
-import { ChevronDown } from 'react-bootstrap-icons';
+import CardField from './CardField';
+import { defaultCreateCard } from '../utils/defaultCreateCard';
+import { observer } from 'mobx-react-lite';
 
-const CreateFlashcard = () => {
+const CreateFlashcard = observer(() => {
   const { createFlashcard } = useStore('flashcardStore');
-  const [sections] = useState([
-    {
-      uuid: '1',
-      title: 'Front side',
-      content: JSON.stringify({
-        root: {
-          children: [
-            {
-              children: [
-                {
-                  detail: 0,
-                  text: 'This is a simple Lexical editor paragraph.',
-                  type: 'text',
-                  version: 1,
-                },
-              ],
-              format: '',
-              type: 'paragraph',
-              version: 1,
-            },
-            {
-              children: [
-                { detail: 0, mode: 'normal', text: 'sd', type: 'text', version: 1 },
-                {
-                  detail: 0,
-                  format: 1,
-                  mode: 'normal',
-                  text: 'fdsfdsfsdfdsf',
-                  type: 'text',
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              type: 'paragraph',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'root',
-          version: 1,
-        },
-      }),
-      onChange: (value: string) => {
-        console.info(value.toString());
-      },
-      isOpen: true,
-    },
-    {
-      uuid: '2',
-      title: 'Back side',
-      content: JSON.stringify({
-        root: {
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  text: 'This is a simple Lexical editor paragraph.',
-                  detail: 0,
-                },
-              ],
-              version: 1,
-              format: 0,
-            },
-          ],
-          direction: 'ltr',
-          format: 0,
-          indent: 0,
-          type: 'root',
-          version: 1,
-        },
-      }),
-      onChange: (value: string) => {
-        console.info(value);
-      },
-      isOpen: true,
-    },
-  ]);
-
-  const handlePreview = () => {
-    console.info();
-  };
 
   const handleSave = () => {
     createFlashcard();
@@ -113,7 +25,7 @@ const CreateFlashcard = () => {
     <Modal title="Create flashcard">
       <div className="card w-[40rem]">
         <div className="flex flex-col gap-16 py-6">
-          {sections.map(
+          {defaultCreateCard.map(
             (section: {
               uuid: string;
               title: string;
@@ -153,44 +65,12 @@ const CreateFlashcard = () => {
             </Select>
           </div>
           <div className="right-side flex gap-6">
-            <Button onClick={handlePreview} variant="outline">
-              Preview
-            </Button>
             <Button onClick={handleSave}>Save</Button>
           </div>
         </div>
       </div>
     </Modal>
   );
-};
+});
 
 export default CreateFlashcard;
-
-const CardField = ({
-  title,
-  content,
-  onFieldChange,
-}: {
-  title: string;
-  content: string;
-  onFieldChange: (value: string) => void;
-}) => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger>
-        <div className="flex gap-2 items-center">
-          <div>
-            <ChevronDown size={18} />
-          </div>
-          <h2>{title}</h2>
-        </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="relative h-full">
-          <Editor content={content} onChange={onFieldChange} />
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-  );
-};

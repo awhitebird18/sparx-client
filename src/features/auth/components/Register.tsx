@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useAuth } from '@/providers/auth';
-
+import { useAuth } from '@/providers/contexts/useAuth';
 import { Input } from '@/components/ui/Input';
 import Logo from '@/components/logo/Logo';
 import { Button } from '@/components/ui/Button';
@@ -22,7 +20,6 @@ type FormData = {
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-// Zod schema
 const registrationSchema = z
   .object({
     email: z.string().nonempty('Email is required').email('Invalid email address.'),
@@ -59,8 +56,6 @@ const RegisterPage: React.FC = () => {
     resolver: zodResolver(registrationSchema),
   });
   const { registerUser, verifyAndLoginUser } = useAuth();
-  // const navigate = useNavigate();
-
   const [isLoading, setIsLoading] = useState(false);
   const [userIdToBeVerified] = useState(null);
 
@@ -74,7 +69,6 @@ const RegisterPage: React.FC = () => {
 
       verifyAndLoginUser();
 
-      // setUserIdToBeVerified(user.uuid);
       reset();
     } catch (error) {
       console.error(error);

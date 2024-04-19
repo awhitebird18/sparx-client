@@ -5,9 +5,9 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 
 import { Button } from '@/components/ui/Button';
 
-type props = { onSubmit: (val: string) => void; label: React.ReactNode };
+type Props = { onSubmit: (val: string) => void; label: React.ReactNode };
 
-const SubmitButtonPlugin = ({ onSubmit, label }: props) => {
+const SubmitButtonPlugin = ({ onSubmit, label }: Props) => {
   const [editor] = useLexicalComposerContext();
 
   const handleSubmit = useCallback(() => {

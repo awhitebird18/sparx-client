@@ -26,7 +26,6 @@ import {
   TypeStrikethrough,
   TypeUnderline,
 } from 'react-bootstrap-icons';
-
 import { Button } from '@/components/ui/Button';
 
 const LowPriority = 1;

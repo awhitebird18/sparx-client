@@ -7,8 +7,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { useStore } from '@/stores/RootStore';
 import Spinner from '@/components/ui/Spinner';
+import { observer } from 'mobx-react-lite';
 
-const Flashcards = () => {
+const Flashcards = observer(() => {
   const { isLoading } = useStore('flashcardStore');
 
   if (isLoading)
@@ -36,6 +37,6 @@ const Flashcards = () => {
       </div>
     </Tabs>
   );
-};
+});
 
 export default Flashcards;

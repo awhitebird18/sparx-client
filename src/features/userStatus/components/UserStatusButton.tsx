@@ -2,8 +2,9 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
-const SetUserStatusButton = () => {
+const SetUserStatusButton = observer(() => {
   const { activeUserStatus } = useStore('userStatusStore');
 
   return (
@@ -20,6 +21,6 @@ const SetUserStatusButton = () => {
       </p>
     </Button>
   );
-};
+});
 
 export default SetUserStatusButton;

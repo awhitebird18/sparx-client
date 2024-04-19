@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CardHeading, CaretDownFill, ChevronLeft, Plus, Search } from 'react-bootstrap-icons';
-// import { Column } from 'react-table';
+import { CaretDownFill, Search } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import { Flashcard } from '../types/card';
 import Table from '@/components/ui/Table';
 import dayjs from 'dayjs';
-
 import { observer } from 'mobx-react-lite';
 import { Checkbox } from '@/components/ui/Checkbox';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { useNavigate } from 'react-router-dom';
+import { extractTextFromLexicalState } from '@/utils/extractTextFromLexicalState';
+import { EmptyFallback } from './EmptyFallback';
 
-// type FlashcardColumn = Column<Flashcard>;
-
-const Browse: React.FC = () => {
+const Browse: React.FC = observer(() => {
   const { fetchFlashcard, getChannelCards } = useStore('flashcardStore');
   const { currentChannelId, currentChannel } = useStore('channelStore');
   const { findUserByUuid } = useStore('userStore');
-  const { setActiveModal } = useStore('modalStore');
   const [cards, setCards] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate();
+  const { setMainPanel } = useStore('mainPanelStore');
 
   const handleAddFlashcard = () => {
-    setActiveModal({ type: 'AddFlashcardModal', payload: null });
+    setMainPanel({ type: 'addFlashcard', payload: null });
   };
 
   useEffect(() => {
@@ -93,15 +89,11 @@ const Browse: React.FC = () => {
         Cell: () => <Checkbox checked />,
       },
     ],
-    [],
+    [findUserByUuid],
   );
 
   const handleClickFlashcard = (row: Flashcard) => {
     fetchFlashcard(row.uuid);
-  };
-
-  const handleClickBack = () => {
-    navigate(-1);
   };
 
   const filteredCards = cards.filter((card: any) => card.content.includes(searchValue));
@@ -157,51 +149,6 @@ const Browse: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
-export default observer(Browse);
-
-function extractTextFromLexicalState(lexicalState: string) {
-  try {
-    const parsedState = JSON.parse(lexicalState);
-    const root = parsedState.root;
-    if (root && root.children && root.children.length > 0) {
-      for (const child of root.children) {
-        if (child.children && child.children.length > 0) {
-          for (const subChild of child.children) {
-            if (subChild.type === 'text') {
-              return subChild.text || '';
-            }
-          }
-        }
-      }
-    }
-    return ''; // Return empty string if no text is found
-  } catch (error) {
-    console.error('Error parsing Lexical state:', error);
-    return '';
-  }
-}
-
-const EmptyFallback = ({
-  channelName,
-  onCreateNote,
-}: {
-  channelName?: string;
-  onCreateNote: () => void;
-}) => (
-  <div className="flex flex-col gap-5 max-w-sm h-full pt-12 items-center prose">
-    {/* <div className="gap-2 flex flex-col items-center text-main ">
-  </div> */}
-
-    <div className="flex flex-col gap-2 items-center">
-      <h3 className="text-center text-main text-xl">No Flashcards Found.</h3>
-      <p className="text-center text-secondary">{`All of your ${channelName} flashcards will appear here.`}</p>
-    </div>
-
-    <Button size="sm" className=" items-center gap-1" onClick={onCreateNote}>
-      <Plus size={18} className="thick-icon" />
-      Create a new flashcard
-    </Button>
-  </div>
-);
+export default Browse;

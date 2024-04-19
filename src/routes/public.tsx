@@ -1,24 +1,7 @@
-import { lazy } from 'react';
-import { useStore } from '@/stores/RootStore';
-import { observer } from 'mobx-react-lite';
-import { Navigate, Outlet } from 'react-router-dom';
-
+import { Navigate } from 'react-router-dom';
 import Login from '@/features/auth/components/Login';
-
-const Register = lazy(() => import('@/features/auth/components/Register'));
-const ForgotPassword = lazy(() => import('@/features/auth/components/ForgotPassword'));
-const ChangePassword = lazy(() => import('@/features/auth/components/ChangePassword'));
-
-const Auth = observer(() => {
-  const { currentUser } = useStore('userStore');
-  const { workspaces } = useStore('workspaceStore');
-
-  if (currentUser && workspaces.length) {
-    return <Navigate to="/app" replace />;
-  }
-
-  return <Outlet />;
-});
+import { ChangePassword, ForgotPassword, Register } from './lazyLoadComponents';
+import Auth from './Auth';
 
 export const publicRoutes = [
   {

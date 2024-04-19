@@ -1,17 +1,16 @@
 import { useStore } from '@/stores/RootStore';
-
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
-
 import { Channel } from '@/features/channels/types';
 import { User } from '@/features/users/types/user';
+import { observer } from 'mobx-react-lite';
 
-type RemoveUserModalProps = {
+export type RemoveUserModalProps = {
   channel: Channel;
   user: User;
 };
 
-const RemoveUserModal = ({ channel, user }: RemoveUserModalProps) => {
+const RemoveUserModal = observer(({ channel, user }: RemoveUserModalProps) => {
   const { setActiveModal } = useStore('modalStore');
   const { removeUserFromChannelApi } = useStore('channelStore');
 
@@ -41,6 +40,6 @@ const RemoveUserModal = ({ channel, user }: RemoveUserModalProps) => {
       </>
     </Modal>
   );
-};
+});
 
 export default RemoveUserModal;

@@ -1,7 +1,6 @@
 import { axios } from '@/lib/axios';
 import { stores } from '@/stores/RootStore';
 import { NotificationType } from '@/stores/NotificationStore';
-
 import { UpdateUser, User } from '../types';
 import { handleApiError } from '@/utils/handleApiError';
 

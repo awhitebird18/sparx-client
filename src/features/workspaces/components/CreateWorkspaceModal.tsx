@@ -14,7 +14,7 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { ChannelType } from '@/features/channels/enums';
 import { useState } from 'react';
 
@@ -22,13 +22,12 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const CreateWorkspaceModal = () => {
+const CreateWorkspaceModal = observer(() => {
   const { createWorkspaceApi, joinWorkspaceApi, selectWorkspace } = useStore('workspaceStore');
   const { setActiveModal } = useStore('modalStore');
   const { findSectionByChannelType } = useStore('sectionStore');
   const { joinChannelApi, createChannelApi } = useStore('channelStore');
   const [isLoading, setIsLoading] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,11 +39,8 @@ const CreateWorkspaceModal = () => {
     setIsLoading(true);
 
     const workspace = await createWorkspaceApi(values);
-
     await joinWorkspaceApi(workspace.uuid);
-
     const section = findSectionByChannelType(ChannelType.CHANNEL);
-
     const channel = await createChannelApi(
       {
         name: workspace.name,
@@ -56,13 +52,10 @@ const CreateWorkspaceModal = () => {
       section?.uuid,
       workspace.uuid,
     );
-
     await joinChannelApi({ channelId: channel.uuid, sectionId: section?.uuid });
 
     selectWorkspace(workspace.uuid);
-
     setIsLoading(false);
-
     handleCloseModal();
   }
 
@@ -110,6 +103,6 @@ const CreateWorkspaceModal = () => {
       </Form>
     </Modal>
   );
-};
+});
 
-export default observer(CreateWorkspaceModal);
+export default CreateWorkspaceModal;

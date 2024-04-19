@@ -7,10 +7,11 @@ import {
 import { Switch } from '@/components/ui/Switch';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
-
 import { ChatLeftDots, People, Stack } from 'react-bootstrap-icons';
 
-const SettingsDropdown = ({ children }: { children: any }) => {
+type Props = { children: any };
+
+const SettingsDropdown = observer(({ children }: Props) => {
   const { nodemapSettings, updateNodemapSettingsApi } = useStore('workspaceChannelStore');
 
   const handleChangeFilter = async (field: string, value: boolean) => {
@@ -64,6 +65,6 @@ const SettingsDropdown = ({ children }: { children: any }) => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+});
 
-export default observer(SettingsDropdown);
+export default SettingsDropdown;

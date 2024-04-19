@@ -1,6 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-
-import Chatroom from "../components/Chatroom";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Chatroom from '../components/Chatroom';
 
 const MentionRoutes = () => {
   return (

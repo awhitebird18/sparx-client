@@ -1,14 +1,14 @@
 import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-
 import Nodes from './nodes/Nodes';
 import editorTheme from './theme/theme';
-
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 
-const Editor = ({ content }: { content: string | undefined }) => {
+type Props = { content: string | undefined };
+
+const Editor = ({ content }: Props) => {
   const lexicalConfig: InitialConfigType = {
     editable: false,
     namespace: 'My Display Only Editor',

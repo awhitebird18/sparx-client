@@ -1,9 +1,7 @@
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-
 import { useStore } from '@/stores/RootStore';
-
 import {
   Form,
   FormControl,
@@ -15,13 +13,16 @@ import {
 } from '@/components/ui/Form';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
+import { observer } from 'mobx-react-lite';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
+export type createSectionModalProps = { id: string; name: string };
+
+const CreateSectionModal = observer(({ id, name }: createSectionModalProps) => {
   const { updateSectionApi, createSectionApi } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,6 +72,6 @@ const CreateSectionForm = ({ id, name }: { id: string; name: string }) => {
       </Form>
     </Modal>
   );
-};
+});
 
-export default CreateSectionForm;
+export default CreateSectionModal;

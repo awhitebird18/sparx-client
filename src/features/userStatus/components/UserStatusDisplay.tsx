@@ -4,7 +4,9 @@ import { observer } from 'mobx-react-lite';
 import { UserStatus } from '../types/userStatus';
 import Emoji from '@/components/ui/Emoji';
 
-const UserStatusDisplay = ({ status }: { status: UserStatus }) => {
+type Props = { status: UserStatus };
+
+const UserStatusDisplay = observer(({ status }: Props) => {
   return (
     <Tooltip>
       <Button size="icon" className="" variant="link">
@@ -23,6 +25,6 @@ const UserStatusDisplay = ({ status }: { status: UserStatus }) => {
       </Button>
     </Tooltip>
   );
-};
+});
 
-export default observer(UserStatusDisplay);
+export default UserStatusDisplay;

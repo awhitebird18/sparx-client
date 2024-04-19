@@ -1,14 +1,13 @@
 import { useStore } from '@/stores/RootStore';
-
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import Message from './Message';
-
 import { Message as MessageType } from '../types';
+import { observer } from 'mobx-react-lite';
 
-type DeletemessageProps = { message: MessageType };
+export type DeletemessageProps = { message: MessageType };
 
-const DeleteMessage = ({ message }: DeletemessageProps) => {
+const DeleteMessage = observer(({ message }: DeletemessageProps) => {
   const { removeMessageApi } = useStore('messageStore');
   const { setActiveModal } = useStore('modalStore');
 
@@ -44,6 +43,6 @@ const DeleteMessage = ({ message }: DeletemessageProps) => {
       </div>
     </Modal>
   );
-};
+});
 
 export default DeleteMessage;

@@ -1,12 +1,10 @@
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import authApi from '@/features/users/api';
-
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import {
   Form,
   FormControl,
@@ -22,7 +20,7 @@ const formSchema = z.object({
   email: z.string().email(),
 });
 
-const InviteUserForm = () => {
+const InviteUserForm = observer(() => {
   const { currentWorkspace } = useStore('workspaceStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,6 +67,6 @@ const InviteUserForm = () => {
       </Form>
     </Modal>
   );
-};
+});
 
-export default observer(InviteUserForm);
+export default InviteUserForm;

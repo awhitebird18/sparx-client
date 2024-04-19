@@ -3,18 +3,16 @@ import DropArea from './DropArea';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import NodeStats from './NodeStats';
-
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import TransformControls from './TransformControls';
-// import useScrollToMiddle from './useScrollToMiddle';
 import { Button } from '@/components/ui/Button';
 import { XCircle } from 'react-bootstrap-icons';
-import { Skeleton } from '@/components/ui/Skeleton';
-import useScrollToMiddle from './useScrollToMiddle';
+import useScrollToMiddle from '../../../hooks/useScrollToMiddle';
+import NodemapSkeleton from './NodemapSkeleton';
+import NodeStatsSkeleton from './NodeStatsSkeleton';
+import { gridDimensions } from '../utils/gridSize';
 
-const gridDimensions = { width: 8000, height: 8000 };
-
-const NodeMap: React.FC = () => {
+const NodeMap: React.FC = observer(() => {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   useScrollToMiddle(ref, gridDimensions.width, gridDimensions.height);
@@ -32,13 +30,13 @@ const NodeMap: React.FC = () => {
   const [isSpacePressed, setIsSpacePressed] = useState(false);
 
   useEffect(() => {
-    const handleKeyDown = (e: any) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpacePressed(true);
       }
     };
 
-    const handleKeyUp = (e: any) => {
+    const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         setIsSpacePressed(false);
       }
@@ -63,19 +61,6 @@ const NodeMap: React.FC = () => {
 
     setDefaultCoods({ x: -defaultChannel.x + width / 2, y: -defaultChannel.y + height / 2 });
   }, [subscribedChannels]);
-
-  // const scrollToMiddle = useCallback(() => {
-  //   if (ref.current) {
-  //     const container = ref.current;
-  //     const containerRect = container.getBoundingClientRect();
-
-  //     setX(Number(containerRect));
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   scrollToMiddle();
-  // }, []);
 
   useEffect(() => {
     if (!currentWorkspaceId) return;
@@ -104,8 +89,7 @@ const NodeMap: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWorkspaceId]);
 
-  const handleContextMenu = (event: any) => {
-    // Prevent right-click from affecting the cursor
+  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
   };
 
@@ -134,7 +118,7 @@ const NodeMap: React.FC = () => {
               allowLeftClickPan: true,
             }}
             maxScale={4}
-            onWheel={(_, event: any) => {
+            onWheel={(_, event: WheelEvent) => {
               if (!event.ctrlKey) {
                 event.preventDefault();
               }
@@ -182,32 +166,6 @@ const NodeMap: React.FC = () => {
       {!isLoading ? <NodeStats /> : <NodeStatsSkeleton />}
     </div>
   );
-};
+});
 
-export default observer(NodeMap);
-
-const NodemapSkeleton = () => (
-  <div className="flex w-full h-full relative">
-    <div className="flex items-center justify-center w-full"></div>
-    <div className="flex flex-col gap-3.5 items-center h-full border-l border-border bg-background p-2 w-14">
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-      <Skeleton className="w-8 h-8" />
-    </div>
-  </div>
-);
-
-const NodeStatsSkeleton = () => (
-  <div className="card rounded-xl bg-white dark:bg-slate-700/20 border border-border flex gap-2.5 p-2.5 shadow whitespace-nowrap items-center absolute bottom-2 left-2  pr-5">
-    <Skeleton className="h-7 w-12 rounded-lg bg-green-200" />
-    <Skeleton className="h-7 w-12 rounded-lg bg-slate-100" />
-    <Skeleton className="h-7 w-12 rounded-lg bg-slate-100" />
-    <Skeleton className="h-7 w-12 rounded-lg bg-slate-100" />
-
-    <div className="card absolute rounded-md shadow-md border border-border -right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0.5 ml-auto bg-card" />
-  </div>
-);
+export default NodeMap;

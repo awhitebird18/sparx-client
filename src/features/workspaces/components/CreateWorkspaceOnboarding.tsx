@@ -6,17 +6,20 @@ import { useStore } from '@/stores/RootStore';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ChangeEvent, useRef, useState } from 'react';
-import { ArrowRightCircle, Image } from 'react-bootstrap-icons';
+import { ArrowRightCircle } from 'react-bootstrap-icons';
 import { ChannelType } from '@/features/channels/enums';
 import { observer } from 'mobx-react-lite';
 import Spinner from '@/components/ui/Spinner';
-import { useAuth } from '@/providers/auth';
+import { useAuth } from '@/providers/contexts/useAuth';
+import ImageFallback from './ImageFallback';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
+type Props = { setStep: (arg: number) => void };
+
+const CreateWorkspaceOnboarding = observer(({ setStep }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { userLogout } = useAuth();
   const {
@@ -28,7 +31,6 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
   const { createChannelApi, joinChannelApi } = useStore('channelStore');
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [workspaceImage, setWorkspaceImage] = useState('');
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +46,6 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
     setLastViewedWorkspace();
     setLastViewedWorkspaceData(userWorkspaceData);
 
-    // Set workspace defaults
     const newChannel = await createChannelApi(
       { name: workspace.name, isDefault: true, x: 4000, y: 4000, type: ChannelType.CHANNEL },
       undefined,
@@ -120,7 +121,6 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
                 </FormItem>
               )}
             />
-
             <Button
               className={`font-medium gap-2 ${isLoading && 'opacity-50'}`}
               type="submit"
@@ -137,12 +137,6 @@ const CreateWorkspaceOnboarding = ({ setStep }: { setStep: (arg: number) => void
       </Button>
     </div>
   );
-};
+});
 
-export default observer(CreateWorkspaceOnboarding);
-
-const ImageFallback = ({ onClick }: { onClick: any }) => (
-  <Button className="w-full h-full flex items-center justify-center" onClick={onClick}>
-    <Image size={36} />
-  </Button>
-);
+export default CreateWorkspaceOnboarding;

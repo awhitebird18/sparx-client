@@ -1,9 +1,11 @@
 import { useStore } from '@/stores/RootStore';
 
 import { Button } from '@/components/ui/Button';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 
-const DeleteSection = ({ id, name }: { id: string; name: string }) => {
+export type DeleteSectionProps = { id: string; name: string };
+
+const DeleteSection = ({ id, name }: DeleteSectionProps) => {
   const { removeSectionApi } = useStore('sectionStore');
   const { setActiveModal } = useStore('modalStore');
 

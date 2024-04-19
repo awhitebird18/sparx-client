@@ -2,10 +2,8 @@ import { makeObservable, observable, action } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
 import channelApi from '@/features/channels/api';
 import nodemapApi from '@/features/workspaceChannels/api';
-
 import { Channel } from '../../channels/types';
 import { SortOptions, SubscribeStatus, ChannelVisibility } from '../../channels/enums';
 import { ChannelUserCount } from '../types/channelUserCount';

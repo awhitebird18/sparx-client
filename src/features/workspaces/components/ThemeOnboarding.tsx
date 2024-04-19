@@ -5,7 +5,9 @@ import { useStore } from '@/stores/RootStore';
 import { useEffect, useState } from 'react';
 import { ArrowRightCircle } from 'react-bootstrap-icons';
 
-const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
+type Props = { setStep: (arg: number) => void };
+
+const ThemeOnboarding = ({ setStep }: Props) => {
   const { updateThemeApi, setInitialPreferences } = useStore('userPreferencesStore');
   const [selectedTheme, setSelectedTheme] = useState<Theme | undefined>(Theme.DARK);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,11 +77,6 @@ const ThemeOnboarding = ({ setStep }: { setStep: (arg: number) => void }) => {
         {isLoading ? 'Saving theme...' : 'Continue'}
         {isLoading ? <Spinner size={6} /> : <ArrowRightCircle size={18} />}
       </Button>
-
-      {/* <Button className="font-medium gap-4" type="submit" disabled={isLoading}>
-        {isLoading ? 'Continue' : 'Saving theme...'}
-        {isLoading && <Spinner />}
-      </Button> */}
     </div>
   );
 };

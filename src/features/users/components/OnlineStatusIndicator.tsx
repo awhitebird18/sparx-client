@@ -1,10 +1,11 @@
 import { observer } from 'mobx-react-lite';
-
 import { useStore } from '@/stores/RootStore';
 import { OnlineUser } from '../types';
 import { UserStatus } from '../enums';
 
-const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
+type Props = { userId: string };
+
+const OnlineStatusIndicator = observer(({ userId }: Props) => {
   const { onlineUsers } = useStore('userStore');
 
   const onlineUserFound = onlineUsers.find(
@@ -31,6 +32,6 @@ const OnlineStatusIndicator = ({ userId }: { userId: string }) => {
   }
 
   return <div className={`rounded-full ${onlineStatusColor} w-4 h-4 border-background border-2`} />;
-};
+});
 
-export default observer(OnlineStatusIndicator);
+export default OnlineStatusIndicator;

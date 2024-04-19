@@ -1,9 +1,6 @@
-import type { BaseSelection, LexicalCommand, LexicalEditor, NodeKey } from 'lexical';
-
+import type { BaseSelection, LexicalEditor, NodeKey } from 'lexical';
 import './ImageNode.css';
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
 import {
@@ -14,7 +11,6 @@ import {
   $setSelection,
   CLICK_COMMAND,
   COMMAND_PRIORITY_LOW,
-  createCommand,
   DRAGSTART_COMMAND,
   KEY_BACKSPACE_COMMAND,
   KEY_DELETE_COMMAND,
@@ -26,10 +22,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import ImageResizer from './ImageResizer';
 import { $isImageNode } from './ImageNode';
 const imageCache = new Set();
-
-export const RIGHT_CLICK_IMAGE_COMMAND: LexicalCommand<MouseEvent> = createCommand(
-  'RIGHT_CLICK_IMAGE_COMMAND',
-);
+import { RIGHT_CLICK_IMAGE_COMMAND } from '../../commands/rightClickImageCommand';
 
 function useSuspenseImage(src: string) {
   if (!imageCache.has(src)) {

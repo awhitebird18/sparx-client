@@ -1,25 +1,23 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import roadmapApi from '@/features/workspaceChannels/api';
 import { Label } from '@/components/ui/Label';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
-const GenerateRoadmap = () => {
+const GenerateRoadmap = observer(() => {
   const { currentWorkspaceId } = useStore('workspaceStore');
   const [topic, setTopic] = useState('');
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
   };
 
   const handleSubmit = async () => {
     if (!currentWorkspaceId) return;
-
     const generateRoadmapPromise = roadmapApi.generateRoadmap(topic, currentWorkspaceId);
-
     setTopic('');
     await generateRoadmapPromise;
   };
@@ -35,6 +33,6 @@ const GenerateRoadmap = () => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(GenerateRoadmap);
+export default GenerateRoadmap;

@@ -9,7 +9,6 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { TRANSFORMERS } from '@lexical/markdown';
-
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
@@ -21,14 +20,14 @@ function Placeholder({ value }: { value?: string }) {
   return <div className="editor-placeholder text-muted-foreground">{value}</div>;
 }
 
-type EditorProps = {
+type Props = {
   placeholder?: string;
   config: InitialConfigType;
   onSubmit: (val: string) => void;
   onChange?: (editorState: string, textContent: string) => void;
 };
 
-export default function Editor({ placeholder, config, onSubmit, onChange }: EditorProps) {
+export default function Editor({ placeholder, config, onSubmit, onChange }: Props) {
   return (
     <LexicalComposer initialConfig={config}>
       <div

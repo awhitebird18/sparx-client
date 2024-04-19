@@ -1,4 +1,3 @@
-/* resizable.css */
 .react-resizable-handle-e {
   cursor: ew-resize;
   width: 15px;
@@ -11,7 +10,6 @@
   background: transparent;
 }
 
-/* resizable.css */
 .react-resizable-handle-w {
   cursor: ew-resize;
   width: 15px;
@@ -46,10 +44,10 @@
     rgba(148, 186, 233, 0) 70%
   );
   filter: blur(20px);
-  background-size: cover; /* Cover the whole area */
-  background-position: center; /* Center the background */
-  background-repeat: no-repeat; /* Do not repeat the background */
-  z-index: -1; /* Place it behind the sidebar content */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
 ::-webkit-scrollbar-corner {
@@ -68,14 +66,13 @@
 }
 
 /* Bird flapping */
-
 @keyframes flapLeft {
   0%,
   100% {
     transform: rotateZ(3deg);
   }
   50% {
-    transform: rotateZ(-4deg); /* Adjust rotation for left wing */
+    transform: rotateZ(-4deg);
   }
 }
 
@@ -85,7 +82,7 @@
     transform: rotateZ(-3deg);
   }
   50% {
-    transform: rotateZ(4deg); /* Adjust rotation for right wing */
+    transform: rotateZ(4deg);
   }
 }
 
@@ -110,41 +107,39 @@
 }
 
 .bird {
-  animation: bird 6s infinite alternate; /* Adjust time as needed */
-  transform-origin: center; /* Adjust pivot point as needed */
+  animation: bird 6s infinite alternate;
+  transform-origin: center;
 }
 
 .bubbles {
-  animation: bubbles 6s infinite alternate; /* Adjust time as needed */
-  transform-origin: center; /* Adjust pivot point as needed */
+  animation: bubbles 6s infinite alternate;
+  transform-origin: center;
 }
 
 .birdLeftWing {
-  animation: flapLeft 6s infinite alternate; /* Adjust time as needed */
-  transform-origin: center; /* Adjust pivot point as needed */
+  animation: flapLeft 6s infinite alternate;
+  transform-origin: center;
 }
 
 .birdRightWing {
-  animation: flapRight 6s infinite alternate; /* Adjust time as needed */
-  transform-origin: center; /* Adjust pivot point as needed */
+  animation: flapRight 6s infinite alternate;
+  transform-origin: center;
 }
 
 /* App skeleton transition */
-
-/* Add this to your stylesheet */
 .fade-enter {
   opacity: 0;
 }
 .fade-enter-active {
   opacity: 1;
-  transition: opacity 500ms; /* Adjust duration as needed */
+  transition: opacity 500ms;
 }
 .fade-exit {
   opacity: 1;
 }
 .fade-exit-active {
   opacity: 0;
-  transition: opacity 500ms; /* Adjust duration as needed */
+  transition: opacity 500ms;
 }
 
 /* Target the first and last cell of the last row for bottom rounded corners */

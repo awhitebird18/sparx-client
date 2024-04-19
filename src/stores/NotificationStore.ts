@@ -1,6 +1,5 @@
 import { makeObservable, observable, action, reaction, IReactionDisposer } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
-
 import { setFavicon } from '@/utils/setFavicon';
 
 export enum NotificationType {

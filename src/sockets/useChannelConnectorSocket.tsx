@@ -14,9 +14,6 @@ const useChannelConnectorSocket = () => {
   useEffect(() => {
     return connectSocket('remove-channel-connector', (data) => {
       removeChannelConnector(data.payload.uuid);
-
-      // removeSubscribedChannel(channelId);
-      // removeChannelUuidFromSection(channelId);
     });
   }, [connectSocket, removeChannelConnector]);
 };

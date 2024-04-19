@@ -1,5 +1,6 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import {
   ComposedChart,
@@ -12,7 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const CardsReviewedModal = () => {
+const CardsReviewedModal = observer(() => {
   const { getReviewHistoryApi } = useStore('flashcardStore');
   const [stats, setStats] = useState<any>([]);
 
@@ -53,7 +54,6 @@ const CardsReviewedModal = () => {
               }}
             />
             <Legend />
-
             <Bar dataKey="easy" stackId="a" fill="#10b981" label="Cards added" />
             <Bar dataKey="good" stackId="a" fill="#a855f7" label="Cards added" />
             <Bar dataKey="hard" stackId="a" fill="#f97316" label="Cards added" />
@@ -63,6 +63,6 @@ const CardsReviewedModal = () => {
       </div>
     </Modal>
   );
-};
+});
 
 export default CardsReviewedModal;

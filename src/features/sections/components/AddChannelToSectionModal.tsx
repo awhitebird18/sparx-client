@@ -1,4 +1,4 @@
-import Modal from '@/components/modal/Modal';
+import Modal from '@/layout/modal/Modal';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import {
@@ -10,7 +10,9 @@ import {
 } from '@/components/ui/Select';
 import { Section } from '../types';
 
-const AddChannelToSectionModal = ({ channelId }: { channelId: string }) => {
+export type AddChannelToSectionModalProps = { channelId: string };
+
+const AddChannelToSectionModal = observer(({ channelId }: AddChannelToSectionModalProps) => {
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { findChannelByUuid } = useStore('channelStore');
 
@@ -40,6 +42,6 @@ const AddChannelToSectionModal = ({ channelId }: { channelId: string }) => {
       </div>
     </Modal>
   );
-};
+});
 
-export default observer(AddChannelToSectionModal);
+export default AddChannelToSectionModal;

@@ -1,15 +1,12 @@
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 
-// HoverIndicators.tsx
-const HoverIndicators = ({
-  uuid,
-  handleCreateLine,
-  workspaceId,
-}: {
+type Props = {
   uuid: string;
   handleCreateLine: (uuid: string, connectionSide: ConnectionSide, workspaceId?: string) => void;
   workspaceId: string | undefined;
-}) => {
+};
+
+const HoverIndicators = ({ uuid, handleCreateLine, workspaceId }: Props) => {
   return (
     <>
       <div
