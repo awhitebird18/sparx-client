@@ -1,14 +1,12 @@
 import { Base } from '@/types/base';
-import { SortBy } from '@/components/layout/sidebar/enums';
-import { ChannelType } from '@/features/channels/enums';
+import { SortBy } from '@/layout/sidebar/enums';
 
 export interface Section extends Base {
   name: string;
-  type: ChannelType;
-  isSystem: boolean;
+  isDefault: boolean;
   isOpen: boolean;
-  channelIds: string[];
   emoji?: string;
   orderIndex: number;
   sortBy: SortBy;
+  channelIds: string[];
 }

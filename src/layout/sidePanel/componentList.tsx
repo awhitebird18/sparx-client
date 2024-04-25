@@ -10,7 +10,7 @@ import {
   NotesSidePanel,
   StatsPanel,
 } from './lazyLoadComponents';
-import { WorkspaceActivityProps } from '@/features/activity/components/WorkspaceActivity';
+import { Props as WorkspaceActivityProps } from '@/features/activity/components/WorkspaceActivity';
 
 const sidePanelComponents = {
   users: () => <Users />,

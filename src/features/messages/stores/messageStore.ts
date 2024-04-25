@@ -52,7 +52,7 @@ export class MessageStore {
     const groupedMessages = this.messages
       .filter((message: Message) => !message.parentId)
       .reduce((groups: { [key: string]: Message[] }, message) => {
-        const date = message.createdAt.format('MM-DD-YYYY');
+        const date = dayjs(message.createdAt).format('MM-DD-YYYY');
 
         if (!groups[date]) {
           groups[date] = [];
@@ -133,11 +133,11 @@ export class MessageStore {
     const messageFound = this.findMessageByUuid(message.uuid);
     if (messageFound) return;
 
-    this.messages.unshift(convertToDayJs(message));
+    this.messages.unshift(message);
   };
 
   addMessages = (newMessages: Message[]) => {
-    this.setMessages([...this.messages, ...convertToDayJs(newMessages)]);
+    this.setMessages([...this.messages, ...newMessages]);
   };
 
   updateMessage = (updatedMessage: Message) => {
@@ -156,7 +156,7 @@ export class MessageStore {
     try {
       const updatedMessage = await messageApi.updateMessage(uuid, updatMessage);
 
-      this.updateMessage(convertToDayJs(updatedMessage));
+      this.updateMessage(updatedMessage);
     } catch (err) {
       console.error(err);
     }

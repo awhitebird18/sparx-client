@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { StatCardMaturityCount } from '../types/statCardMaturityCount';
 
-export const getCardMaturityStats = async (): Promise<any[]> => {
+export const getCardMaturityStats = async (): Promise<StatCardMaturityCount[]> => {
   try {
-    const res = await axios.get('cards/maturity-stats');
+    const { data } = await axios.get('cards/maturity-stats');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

@@ -1,16 +1,19 @@
 import { makeAutoObservable, reaction } from 'mobx';
 import { Flashcard } from '../types/card';
 import flashcardsApi from '../api';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 import { Template } from '../types/template';
 import { Variant } from '../types/variant';
-import { CreateVariant } from '../types/CreateVariant';
+import { CreateVariant } from '../types/createVariant';
+import { StatCardsDuePerChannelCount } from '../types/statCardsDuePerChannelCount';
+import { CardReview } from '../types/cardReview';
+import { FieldValue } from '../types/fieldValue';
 
 export class FlashcardStore {
   flashcards: Flashcard[] = [];
   cardsDue = 0;
   selectedFlashcard?: Flashcard = undefined;
-  flashcardsDueCounts: { channelId: string; count: number }[] = [];
+  flashcardsDueCounts: StatCardsDuePerChannelCount[] = [];
   isLoading = false;
   templates: Template[] = [];
   selectedTemplate?: Template = undefined;
@@ -41,7 +44,7 @@ export class FlashcardStore {
       (templates) => {
         if (templates?.length) {
           const localStorageTemplate = window.localStorage.getItem('selectedTemplate');
-          const template = templates.find((template: any) => {
+          const template = templates.find((template: Template) => {
             return localStorageTemplate
               ? template.uuid === localStorageTemplate
               : template.isDefault;
@@ -304,7 +307,7 @@ export class FlashcardStore {
     variantId: string,
     data: { fieldId: string; cardSide: 'front' | 'back' },
   ) => {
-    const variant = await flashcardsApi.removeVariantField(variantId, data);
+    await flashcardsApi.removeVariantField(variantId, data);
 
     this.updateVariant(variant);
   };
@@ -337,7 +340,7 @@ export class FlashcardStore {
   // Flashcards
   createCardNoteApi = async (
     templateId: string,
-    fieldValues: any,
+    fieldValues: FieldValue[],
     currentChannelId: string,
     workspaceId: string,
   ) => {
@@ -347,14 +350,14 @@ export class FlashcardStore {
   };
 
   // Review
-  submitReviewsApi = async (reviewData: any) => {
-    await flashcardsApi.submitReviewData(reviewData);
+  submitReviewsApi = async (reviewData: CardReview[]) => {
+    await flashcardsApi.createReviewEntry(reviewData);
   };
 
   getCardCountDueForChannel = async (channelId: string) => {
-    const count = await flashcardsApi.getCardCountDueForChannel(channelId);
+    const channelCount = await flashcardsApi.getCardCountDueForChannel(channelId);
 
-    this.cardsDue = count;
+    this.cardsDue = channelCount.count;
   };
 
   // Stats
@@ -370,7 +373,7 @@ export class FlashcardStore {
     return await flashcardsApi.getCardsAddedStats();
   };
 
-  getFlashcardsDueToday = async ({ workspaceId }: { workspaceId: string }) => {
+  getFlashcardsDueToday = async (workspaceId: string) => {
     const data = await flashcardsApi.getDueToday({ workspaceId });
     this.flashcardsDueCounts = data;
   };
@@ -391,7 +394,7 @@ export class FlashcardStore {
     return await flashcardsApi.getCardCountReviewedToday();
   };
 
-  getChannelCards = async (channelId: string) => {
-    return await flashcardsApi.browseChannelCards(channelId);
+  getChannelCardDetails = async (channelId: string) => {
+    return await flashcardsApi.getChannelCardDetails(channelId);
   };
 }

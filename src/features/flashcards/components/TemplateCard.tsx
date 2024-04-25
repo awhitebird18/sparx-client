@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { useCallback, useMemo, useRef } from 'react';
 import { CardText } from 'react-bootstrap-icons';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { Field as FieldType } from '../types/Field';
+import { Field, Field as FieldType } from '../types/field';
 import TemplateField from './TemplateField';
 
 type TemplateCardProps = { side: 'front' | 'back' };
@@ -47,7 +47,7 @@ const TemplateCard = observer(({ side }: TemplateCardProps) => {
 
   const fields = selectedVariant?.[side === 'front' ? 'frontFields' : 'backFields'];
 
-  const handleRemoveField = (field: any) => {
+  const handleRemoveField = (field: Field) => {
     if (!selectedVariant) return;
 
     removeVariantFieldApi(selectedVariant.uuid, {

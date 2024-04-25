@@ -1,6 +1,6 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
-export const formatDate = (date: Dayjs) => {
+export const formatDate = (date: string) => {
   const messageDate = dayjs(date);
   const todaysDate = dayjs();
 

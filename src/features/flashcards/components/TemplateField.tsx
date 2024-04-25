@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/Button';
 import { GripVertical, X } from 'react-bootstrap-icons';
+import { Field } from '../types/field';
 
-type TemplateFieldProps = { field: any; onRemove: any };
+type TemplateFieldProps = { field: Field; onRemove: () => void };
 
 const TemplateField = ({ field, onRemove }: TemplateFieldProps) => {
   return (

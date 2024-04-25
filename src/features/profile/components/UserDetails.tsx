@@ -32,14 +32,11 @@ const UserDetails = observer(({ userId }: UserDetailsProps) => {
   const { findUserByUuid, updateUserApi, currentUser } = useStore('userStore');
   const [user, setUser] = useState<User>();
   const [userWorkspaceData] = useState({ location: '', bio: '', goal: '', webUrl: '' });
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(() => {
       const user = findUserByUuid(userId);
-
       if (!user) return;
-
       return {
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -51,15 +48,15 @@ const UserDetails = observer(({ userId }: UserDetailsProps) => {
     }, [findUserByUuid, userId, userWorkspaceData]),
   });
 
-  useEffect(() => {
-    setUser(findUserByUuid(userId));
-  }, [currentUser, findUserByUuid, userId]);
-
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     const updatedUser = await updateUserApi(values);
 
     setUser(updatedUser);
   }
+
+  useEffect(() => {
+    setUser(findUserByUuid(userId));
+  }, [currentUser, findUserByUuid, userId]);
 
   if (!user || !currentUser) return;
 

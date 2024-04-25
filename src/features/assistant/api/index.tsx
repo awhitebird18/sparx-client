@@ -1,6 +1,6 @@
 import { generateSubtopics } from './generateSubtopics';
 import { summarizeArticle } from './summarizeArticle';
 import { generateNote } from './generateNote';
-import { generateFlashcards } from './generateFlashcards';
+import { generateFlashcardIdeas } from './generateFlashcardIdeas';
 
-export default { generateSubtopics, summarizeArticle, generateNote, generateFlashcards };
+export default { generateSubtopics, summarizeArticle, generateNote, generateFlashcardIdeas };

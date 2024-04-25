@@ -5,7 +5,7 @@ import { UserStore } from '@/features/users/stores/userStore';
 import { UserPreferencesStore } from '@/features/preferences/stores/UserPreferencesStore';
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
-import { WorkspaceChannelStore } from '@/features/workspaceChannels/stores/WorkspaceChannelStore';
+import { NodemapStore } from '@/features/nodemap/stores/NodemapStore';
 import { UserTypingStore } from '@/features/chatroom/stores/UserTypingStore';
 import { ChannelUnreadStore } from '@/features/channels/stores/ChannelUnreadStore';
 import { NotificationStore } from '@/stores/NotificationStore';
@@ -16,9 +16,10 @@ import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
 import { NotesStore } from '@/features/notes/stores/NotesStore';
 import { FlashcardStore } from '@/features/flashcards/stores/FlashcardStore';
 import { WorkspaceStore } from '@/features/workspaces/stores/workspaceStore';
-import { ChannelConnectorStore } from '@/features/workspaceChannels/stores/ChannelConnectorStore';
 import { SidePanelStore } from '@/layout/sidePanel/SidePanelStore';
 import { MainPanelStore } from '@/layout/mainPanel/MainPanelStore';
+import { ActivityStore } from '@/features/activity/stores/activityStore';
+import { AssistantStore } from '@/features/assistant/stores/assistantStore';
 
 interface RootStore {
   userStore: UserStore;
@@ -26,7 +27,7 @@ interface RootStore {
   userTypingStore: UserTypingStore;
   channelStore: ChannelStore;
   channelUnreadStore: ChannelUnreadStore;
-  workspaceChannelStore: WorkspaceChannelStore;
+  nodemapStore: NodemapStore;
   messageStore: MessageStore;
   sectionStore: SectionStore;
   sidebarStore: SidebarStore;
@@ -37,9 +38,10 @@ interface RootStore {
   noteStore: NotesStore;
   flashcardStore: FlashcardStore;
   workspaceStore: WorkspaceStore;
-  channelConnectorStore: ChannelConnectorStore;
   sidePanelStore: SidePanelStore;
   mainPanelStore: MainPanelStore;
+  activityStore: ActivityStore;
+  assistantStore: AssistantStore;
 }
 
 class RootStoreImpl implements RootStore {
@@ -48,7 +50,7 @@ class RootStoreImpl implements RootStore {
   userTypingStore = new UserTypingStore();
   channelStore = new ChannelStore();
   channelUnreadStore = new ChannelUnreadStore();
-  workspaceChannelStore = new WorkspaceChannelStore();
+  nodemapStore = new NodemapStore();
   messageStore = new MessageStore();
   sectionStore = new SectionStore();
   sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
@@ -59,9 +61,10 @@ class RootStoreImpl implements RootStore {
   noteStore = new NotesStore();
   flashcardStore = new FlashcardStore();
   workspaceStore = new WorkspaceStore();
-  channelConnectorStore = new ChannelConnectorStore();
   sidePanelStore = new SidePanelStore();
   mainPanelStore = new MainPanelStore();
+  activityStore = new ActivityStore();
+  assistantStore = new AssistantStore();
 }
 
 export const stores = new RootStoreImpl();

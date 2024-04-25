@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 const useWorkspaceChannelSocket = () => {
   const { connectSocket } = useStore('socketStore');
-  const { removeWorkspaceChannel, updateChannelUserCount } = useStore('workspaceChannelStore');
+  const { removeWorkspaceChannel, updateChannelUserCount } = useStore('channelStore');
 
   // Update channel count
   useEffect(() => {

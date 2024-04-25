@@ -4,9 +4,9 @@ import { Flashcard } from '../types/card';
 
 export const getFlashcard = async (uuid: string): Promise<Flashcard> => {
   try {
-    const res = await axios.get(`cards/${uuid}`);
+    const { data } = await axios.get(`cards/${uuid}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

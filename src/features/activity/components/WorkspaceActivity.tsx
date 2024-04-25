@@ -1,54 +1,45 @@
-import { useEffect, useRef, useState } from 'react';
-import { axios } from '@/lib/axios';
+import { useCallback, useEffect, useRef } from 'react';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ActivityRow } from './ActivityRow';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
-export type WorkspaceActivityProps = { endpoint: string };
+type IntersectionObserverEntry = {
+  isIntersecting: boolean;
+};
 
-const WorkspaceActivity = ({ endpoint }: WorkspaceActivityProps) => {
-  const [activities, setActivities] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const observer = useRef<IntersectionObserver | null>(null);
+export type Props = { endpoint: string };
+
+const WorkspaceActivity = observer(({ endpoint }: Props) => {
+  const { activities, hasMore, isLoading, fetchMoreActivities, page, incrementPage } =
+    useStore('activityStore');
+
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const callback = (entries: any) => {
+  const handleIncrementPage = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
       if (entries[0].isIntersecting && hasMore) {
-        setPage((prevPage) => prevPage + 1);
+        incrementPage();
       }
-    };
-    observer.current = new IntersectionObserver(callback);
-    const currentObserver = observer.current;
-    if (sentinelRef.current) currentObserver.observe(sentinelRef.current);
-
-    return () => currentObserver.disconnect();
-  }, [hasMore, isLoading]);
+    },
+    [hasMore, incrementPage],
+  );
 
   useEffect(() => {
-    const fetchMoreActivities = async () => {
-      setIsLoading(true);
-      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
-      const [{ data }] = await Promise.all([
-        axios.get(`${endpoint}?page=${page}`),
-        minimumLoadingTimePromise,
-      ]);
-      if (data.length < 10) {
-        setIsLoading(false);
-        setHasMore(false);
-      }
-      setActivities((prevActivities) => [...prevActivities, ...data]);
-      setIsLoading(false);
-    };
+    const observer = new IntersectionObserver(handleIncrementPage);
+    if (sentinelRef.current) observer.observe(sentinelRef.current);
 
-    fetchMoreActivities();
-  }, [page, endpoint]);
+    return () => observer.disconnect();
+  }, [handleIncrementPage, hasMore, incrementPage, isLoading]);
+
+  useEffect(() => {
+    fetchMoreActivities(endpoint);
+  }, [page, endpoint, fetchMoreActivities]);
 
   return (
     <div className="h-full pr-2 overflow-auto prose dark:prose-invert">
       {activities.map((activity) => {
-        return <ActivityRow key={activity.id} activity={activity} />;
+        return <ActivityRow key={activity.uuid} activity={activity} />;
       })}
 
       {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
@@ -64,6 +55,6 @@ const WorkspaceActivity = ({ endpoint }: WorkspaceActivityProps) => {
       )}
     </div>
   );
-};
+});
 
 export default WorkspaceActivity;

@@ -6,8 +6,8 @@ const StatsPanel = () => {
     <div className=" flex flex-col rounded-xl overflow-hidden w-full gap-6 prose dark:prose-invert">
       <h3 className="flex items-center text-main">Progress</h3>
       <div className="flex flex-col gap-6">
-        {history.map((entry: any, index: number) => (
-          <div key={entry.uuid} className="flex gap-6 relative">
+        {history.map((entry, index: number) => (
+          <div key={entry.id} className="flex gap-6 relative">
             <div className="rounded-full w-6 h-6 p-1.5  border border-complete-dark flex items-center justify-center relative shadow bg-background">
               {index !== history.length - 1 && (
                 <div className="absolute left-1/2 bottom-0 translate-y-full -translate-x-1/2 h-11 w-1.5 bg-yellow-400/30" />

@@ -28,11 +28,11 @@ const registrationSchema = z
     path: ['confirmPassword'],
   });
 
-type ChangePasswordFormProps = {
+export type Props = {
   onSubmit: (data: FormData) => Promise<void>;
 };
 
-const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
+const ChangePasswordForm = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,

@@ -1,11 +1,9 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const removeFlashcard = async (uuid: string) => {
+export const removeFlashcard = async (uuid: string): Promise<void> => {
   try {
-    const res = await axios.delete(`flashcards/${uuid}`);
-
-    return res.data;
+    await axios.delete(`flashcards/${uuid}`);
   } catch (error) {
     return handleApiError(error);
   }

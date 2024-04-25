@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import ThemeTab from './ThemeTab';
-import NotificationsTab from './NotificationsTab';
 import Modal from '@/layout/modal/Modal';
 import AccountTab from './AccountTab';
 import { Bell, Gear, Heart } from 'react-bootstrap-icons';
@@ -18,8 +17,6 @@ const PreferencesModal: React.FC = () => {
     switch (activeTab) {
       case PreferenceTabs.THEMING:
         return <ThemeTab />;
-      case PreferenceTabs.NOTIFICATIONS:
-        return <NotificationsTab />;
       case PreferenceTabs.ACCOUNT:
         return <AccountTab />;
       default:
@@ -27,7 +24,7 @@ const PreferencesModal: React.FC = () => {
     }
   };
 
-  const listItem = (icon: any, tab: PreferenceTabs) => (
+  const listItem = (icon: ReactNode, tab: PreferenceTabs) => (
     <div
       onClick={() => setActiveTab(tab)}
       className={`card h-9 rounded-md p-0 px-3 w-full hover:bg-hover text-sm text-main flex items-center cursor-pointer overflow-hidden font-medium ${

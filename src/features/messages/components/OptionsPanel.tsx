@@ -21,7 +21,7 @@ const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanel
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
-  const emojiButtonRef = useRef<any>(null);
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleOpenModal = ({
     type,
@@ -40,7 +40,6 @@ const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanel
   const handleShowEmojiPicker = () => {
     if (emojiButtonRef.current) {
       const rect = emojiButtonRef.current.getBoundingClientRect();
-
       setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
     }
   };
@@ -57,7 +56,6 @@ const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanel
     if (!currentUser) return;
     await addReactionApi({
       emojiId,
-      userId: currentUser.uuid,
       messageId: message.uuid,
     });
     handleCloseEmojiPicker();

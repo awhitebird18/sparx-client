@@ -1,5 +1,3 @@
-export interface UpdateReaction {
-  emojiId: string;
-  messageId: string;
-  userId: string;
-}
+import { CreateReaction } from './createReaction';
+
+export type UpdateReaction = Partial<CreateReaction>;

@@ -1,8 +1,11 @@
 import { axios } from '@/lib/axios';
-import { Channel } from '../types';
+import { Channel, ChannelSubscription } from '../types';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const updateUserChannel = async (channelId: string, updateFields: Partial<Channel>) => {
+export const updateUserChannel = async (
+  channelId: string,
+  updateFields: Partial<Channel>,
+): Promise<ChannelSubscription> => {
   try {
     const { data } = await axios.patch(`/channel-subscriptions/${channelId}`, updateFields);
 

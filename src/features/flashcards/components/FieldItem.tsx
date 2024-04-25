@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 import { useStore } from '@/stores/RootStore';
 import { ChevronDown, GripVertical } from 'react-bootstrap-icons';
 import { useDrag } from 'react-dnd';

@@ -1,14 +1,15 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { Variant } from '../types/variant';
 
 export const removeVariantField = async (
   variantId: string,
-  data: { fieldId: string; cardSide: 'front' | 'back' },
-) => {
+  newField: { fieldId: string; cardSide: 'front' | 'back' },
+): Promise<Variant> => {
   try {
-    const res = await axios.post(`card-type/${variantId}/fields/remove`, data);
+    const { data } = await axios.post(`card-type/${variantId}/fields/remove`, newField);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

@@ -7,6 +7,7 @@ import {
   FileEarmarkTextFill,
   Lock,
   PencilSquare,
+  Plus,
   ThreeDotsVertical,
   Unlock,
 } from 'react-bootstrap-icons';
@@ -19,10 +20,10 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/DropdownMenu';
 import UserAvatar from '@/features/users/components/UserAvatar';
-import { UpdateNote } from '../types/UpdateNote';
+import { UpdateNote } from '../types/updateNote';
 import dayjs from 'dayjs';
 import NoteMetaData from './NoteMetaData';
-import EmptyFallback from './EmptyFallback';
+import EmptyFallback from '@/components/EmptyFallback';
 import SearchInput from '@/components/ui/SearchInput';
 
 const ViewNotes: React.FC = observer(() => {
@@ -42,15 +43,9 @@ const ViewNotes: React.FC = observer(() => {
   const [searchValue, setSearchValue] = useState('');
   const { setMainPanel, activeComponent } = useStore('mainPanelStore');
 
-  useEffect(() => {
-    if (!currentChannelId) return;
-
-    fetchNotes(currentChannelId);
-
-    return () => {
-      setIsLoading(true);
-    };
-  }, [fetchNotes, currentChannelId, setSelectedNoteId, setIsLoading]);
+  const filteredNotes = notes.filter((note) =>
+    searchValue ? note.title?.toLowerCase().includes(searchValue) : note,
+  );
 
   const handleCreateNote = async () => {
     if (!currentChannelId) return;
@@ -68,7 +63,6 @@ const ViewNotes: React.FC = observer(() => {
   const handleViewNote = useCallback(
     (uuid: string) => {
       selectNote(uuid);
-
       setMainPanel({ type: 'note' });
     },
     [selectNote, setMainPanel],
@@ -85,9 +79,13 @@ const ViewNotes: React.FC = observer(() => {
     setActiveModal({ type: 'DeleteNote', payload: { noteId: uuid } });
   };
 
-  const filteredNotes = notes.filter((note) =>
-    searchValue ? note.title?.toLowerCase().includes(searchValue) : note,
-  );
+  useEffect(() => {
+    if (!currentChannelId) return;
+    fetchNotes(currentChannelId);
+    return () => {
+      setIsLoading(true);
+    };
+  }, [fetchNotes, currentChannelId, setSelectedNoteId, setIsLoading]);
 
   return (
     <>
@@ -232,7 +230,21 @@ const ViewNotes: React.FC = observer(() => {
 
             {!isLoading && !filteredNotes.length ? (
               <div className="pt-12">
-                <EmptyFallback channelName={currentChannel?.name} onCreateNote={handleCreateNote} />
+                <EmptyFallback
+                  title="No Notes Found."
+                  description={
+                    <>
+                      All of your{' '}
+                      <span className="text-primary px-0.5">{currentChannel?.name}</span> notes will
+                      appear here.
+                    </>
+                  }
+                  action={{
+                    icon: <Plus size={20} />,
+                    title: 'Start a new note',
+                    callback: handleCreateNote,
+                  }}
+                />
               </div>
             ) : null}
           </div>

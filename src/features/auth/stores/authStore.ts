@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action } from 'mobx';
 
 interface User {
   id: string;
@@ -23,12 +23,10 @@ export class AuthStore {
   }
 
   logout() {
-    // Clear user data on logout
     this.user = null;
   }
 
   isAuthenticated() {
-    // Check if there is a user logged in
     return this.user !== null;
   }
 }

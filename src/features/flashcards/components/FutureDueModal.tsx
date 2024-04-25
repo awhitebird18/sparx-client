@@ -12,18 +12,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { StatFutureDueCount } from '../types/statFutureDueCount';
 
 const FutureDueModal = observer(() => {
   const { getFutureDue } = useStore('flashcardStore');
-  const [stats, setStats] = useState<any>([]);
+  const [stats, setStats] = useState<StatFutureDueCount[]>([]);
 
   useEffect(() => {
     const fn = async () => {
       const data = await getFutureDue();
-
       setStats(data);
     };
-
     fn();
   }, [getFutureDue]);
 

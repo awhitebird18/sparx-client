@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 import { observer } from 'mobx-react-lite';
 import FieldItem from './FieldItem';
 import TemplateCard from './TemplateCard';

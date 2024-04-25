@@ -8,7 +8,6 @@ import {
   InviteUserModal,
   NewCardsModal,
   RemoveChannelModal,
-  AddUserModal,
   RemoveUserModal,
   DeleteMessage,
   PreferencesModal,
@@ -35,12 +34,12 @@ import {
   DeleteNote,
 } from './lazyLoadComponents';
 
-import { AddUserModalProps } from '@/features/channels/components/AddUserModal';
+import { Props as ChangePasswordFormProps } from '@/features/auth/components/ChangePasswordForm';
 import { RemoveUserModalProps } from '@/features/channels/components/RemoveUserModal';
 import { DeletemessageProps } from '@/features/messages/components/DeleteMessage';
 import { UserDetailsProps } from '@/features/profile/components/UserDetails';
-import { DeleteSectionProps } from '@/features/sections/components/DeleteSection';
-import { DeleteNoteProps } from '@/features/notes/components/DeleteNote';
+import { Props as DeleteSectionProps } from '@/features/sections/components/DeleteSection';
+import { DeleteNoteProps } from '@/features/notes/components/DeleteNoteModal';
 import { MoveNoteProps } from '@/features/notes/components/MoveNote';
 import { AddChannelToSectionModalProps } from '@/features/sections/components/AddChannelToSectionModal';
 import { CreateFieldModalProps } from '@/features/flashcards/components/CreateFieldModal';
@@ -52,15 +51,15 @@ import { RemoveTemplateModalProps } from '@/features/flashcards/components/Remov
 import { CreateVariantModalProps } from '@/features/flashcards/components/CreateVariantModal';
 import { UpdateVariantModalProps } from '@/features/flashcards/components/UpdateVariantModal';
 import { RemoveVariantModalProps } from '@/features/flashcards/components/RemoveVariantModal';
-import { UpdateTaskProps } from '@/features/overview/components/UpdateTask';
-import { DeleteTaskProps } from '@/features/overview/components/DeleteTask';
+import { Props as UpdateTaskProps } from '@/features/tasks/components/UpdateTask';
+import { Props as DeleteTaskProps } from '@/features/tasks/components/DeleteTask';
 import { CreateChannelModalProps } from '@/features/channels/components/CreateChannelModal';
-import { createSectionModalProps } from '@/features/sections/components/CreateSectionForm';
+import { Props as CreateSectionModalProps } from '@/features/sections/components/CreateSectionForm';
 import { RemoveChannelModalProps } from '@/features/channels/components/RemoveChannelModal';
 
 const modalList = {
   CreateChannelModal: (props: CreateChannelModalProps) => <CreateChannelModal {...props} />,
-  CreateSectionModal: (props: createSectionModalProps) => <CreateSectionModal {...props} />,
+  CreateSectionModal: (props: CreateSectionModalProps) => <CreateSectionModal {...props} />,
   AddChannelToSectionModal: (props: AddChannelToSectionModalProps) => (
     <AddChannelToSectionModal {...props} />
   ),
@@ -68,10 +67,9 @@ const modalList = {
   DeleteMessageModal: (props: DeletemessageProps) => <DeleteMessage {...props} />,
   InviteUserModal: () => <InviteUserModal />,
   PreferencesModal: () => <PreferencesModal />,
-  AddUserModal: (props: AddUserModalProps) => <AddUserModal {...props} />,
   RemoveUserModal: (props: RemoveUserModalProps) => <RemoveUserModal {...props} />,
   UserDetails: (props: UserDetailsProps) => <UserDetails {...props} />,
-  ChangePasswordModal: () => <ChangePasswordModal />,
+  ChangePasswordModal: (props: ChangePasswordFormProps) => <ChangePasswordModal {...props} />,
   UserStatusModal: () => <UserStatusModal />,
   NewCardsModal: () => <NewCardsModal />,
   FutureDueModal: () => <FutureDueModal />,

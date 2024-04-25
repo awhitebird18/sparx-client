@@ -4,18 +4,14 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 
 const LeaveWorkspaceModal = observer(() => {
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const { currentWorkspace, leaveWorkspaceApi } = useStore('workspaceStore');
   const { currentUser } = useStore('userStore');
-
-  const handleCancel = () => {
-    setActiveModal(null);
-  };
 
   const handleLeave = () => {
     if (!currentWorkspace || !currentUser) return;
     leaveWorkspaceApi(currentUser.uuid, currentWorkspace.uuid);
-    setActiveModal(null);
+    closeModal();
   };
 
   return (
@@ -26,7 +22,7 @@ const LeaveWorkspaceModal = observer(() => {
           reinvited.
         </p>
         <div className="ml-auto space-x-4">
-          <Button onClick={handleCancel} variant="outline">
+          <Button onClick={closeModal} variant="outline">
             Cancel
           </Button>
           <Button onClick={handleLeave} variant="destructive">

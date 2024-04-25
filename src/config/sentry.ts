@@ -14,8 +14,6 @@ if (process.env.NODE_ENV === 'production') {
     tracePropagationTargets: ['localhost', /^https:\/\/spa-rx\.ca/],
     integrations: [
       new Sentry.BrowserTracing({
-        // See docs for support of different versions of variation of react router
-        // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
         routingInstrumentation: Sentry.reactRouterV6Instrumentation(
           React.useEffect,
           useLocation,

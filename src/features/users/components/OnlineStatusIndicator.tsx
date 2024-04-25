@@ -7,7 +7,6 @@ type Props = { userId: string };
 
 const OnlineStatusIndicator = observer(({ userId }: Props) => {
   const { onlineUsers } = useStore('userStore');
-
   const onlineUserFound = onlineUsers.find(
     (onlineUser: OnlineUser) => onlineUser.userId === userId,
   );

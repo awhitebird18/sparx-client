@@ -1,5 +1,5 @@
 import { Base } from '@/types/base';
-import { Field } from './Field';
+import { Field } from './field';
 
 export interface Variant extends Base {
   title: string;

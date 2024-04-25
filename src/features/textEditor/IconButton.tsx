@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/Button';
 
-type Props = { icon: any; active: boolean; onClick: () => any };
+type Props = { icon: string; active: boolean; onClick: () => void };
 
 const IconButton = ({ icon, active, onClick }: Props) => {
   return (

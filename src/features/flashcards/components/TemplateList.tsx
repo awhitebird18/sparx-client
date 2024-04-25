@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowReturnRight, Mouse, Plus, ThreeDots, Trash } from 'react-bootstrap-icons';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 
 const TemplateList = observer(() => {
   const {

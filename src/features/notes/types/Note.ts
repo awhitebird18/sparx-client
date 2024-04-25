@@ -1,10 +1,8 @@
-export interface Note {
-  uuid: string;
+import { Base } from '@/types/base';
+
+export interface Note extends Base {
   title?: string;
+  isPrivate: boolean;
   content?: string;
   createdBy: string;
-  channelId: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  isPrivate: boolean;
 }

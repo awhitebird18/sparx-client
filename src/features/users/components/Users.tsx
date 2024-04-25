@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -29,9 +29,9 @@ import {
 } from '@/components/ui/Select';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { Privileges } from '../enums/privileges';
-import { SubscriptionDetails } from '../types/subsciptionDetails';
 import { Skeleton } from '@/components/ui/Skeleton';
-import EmptyFallback from './EmptyFallback';
+import EmptyFallback from '@/components/EmptyFallback';
+import { ChannelSubscription } from '@/features/channels/types';
 
 const Users = observer(() => {
   const {
@@ -46,32 +46,9 @@ const Users = observer(() => {
     filteredUsers,
     setIsLoading,
   } = useStore('userStore');
-  const { currentChannelId, currentChannel } = useStore('channelStore');
+  const { currentChannelId } = useStore('channelStore');
   const { leaveWorkspaceApi, currentWorkspaceId } = useStore('workspaceStore');
   const { setMainPanel } = useStore('mainPanelStore');
-
-  useEffect(() => {
-    if (!currentChannelId) return;
-
-    const fn = async () => {
-      try {
-        setIsLoading(true);
-        const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
-
-        await Promise.all([fetchChannelUserIdsApi(currentChannelId), minimumLoadingTimePromise]);
-      } catch (err) {
-        console.error(err);
-      }
-      setIsLoading(false);
-    };
-
-    fn();
-
-    return () => {
-      setIsLoading(true);
-      handleResetFilter();
-    };
-  }, [fetchChannelUserIdsApi, currentChannelId]);
 
   const handleViewUserProfile = async (userId: string) => {
     setMainPanel({ type: 'profile', payload: { userId } });
@@ -86,13 +63,32 @@ const Users = observer(() => {
     leaveWorkspaceApi(userId, currentWorkspaceId);
   };
 
-  const handleResetFilter = () => {
+  const handleResetFilter = useCallback(() => {
     setPrivilegesFilter(Privileges.ALL);
     setSearchValue('');
-  };
+  }, [setPrivilegesFilter, setSearchValue]);
+
+  useEffect(() => {
+    if (!currentChannelId) return;
+    const fn = async () => {
+      try {
+        setIsLoading(true);
+        const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
+        await Promise.all([fetchChannelUserIdsApi(currentChannelId), minimumLoadingTimePromise]);
+      } catch (err) {
+        console.error(err);
+      }
+      setIsLoading(false);
+    };
+    fn();
+    return () => {
+      setIsLoading(true);
+      handleResetFilter();
+    };
+  }, [fetchChannelUserIdsApi, currentChannelId, setIsLoading, handleResetFilter]);
 
   return (
-    <ContentLayout title="Users">
+    <ContentLayout>
       <div className="flex flex-col gap-6 justify-between">
         <div className="flex gap-2">
           <div className="w-72">
@@ -144,12 +140,16 @@ const Users = observer(() => {
         </div>
       </div>
       {!isLoading && !filteredUsers.length ? (
-        <EmptyFallback channelName={currentChannel?.name} onClick={handleResetFilter} />
+        <EmptyFallback
+          title="No Members Found."
+          description={<>All of your notes will appear here.</>}
+          action={{ title: 'Reset Filters', callback: handleResetFilter }}
+        />
       ) : null}
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-1 4xl:grid-cols-2 gap-4 justify-normal items-start grid-rows-[max-content_1fr]">
         {!isLoading && filteredUsers.length
-          ? filteredUsers.map((userChannel: SubscriptionDetails) => {
+          ? filteredUsers.map((userChannel: ChannelSubscription) => {
               const user = findUserByUuid(userChannel.userId);
 
               if (!user) return null;

@@ -1,123 +1,111 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import channelApi from '@/features/channels/api';
-import { Channel, CreateChannel, UpdateChannel } from '../types';
-import { User } from '@/features/users/types/user';
+import { Channel, ChannelSubscription, CreateChannel, UpdateChannel } from '../types';
+import { ChannelUserCount } from '@/features/channels/types/channelUserCount';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+interface ChannelTreeNode {
+  channel: Channel;
+  children: ChannelTreeNode[];
+}
+
 export class ChannelStore {
-  subscribedChannels: Channel[] = [];
+  channels: Channel[] = [];
   currentChannelId: string | undefined;
   channelUserIds: string[] = [];
   isLoading = true;
-  userChannelData: any[] = [];
-  zoomLevel = 1.0;
-  isEditing = false;
-  isFullscreen = false;
-  isDraggingNode = false;
-  isControlPressed = false;
+  userChannelData: ChannelSubscription[] = [];
+  channelUserCounts: ChannelUserCount[] = [];
 
   constructor() {
-    makeObservable(this, {
-      subscribedChannels: observable,
-      currentChannelId: observable,
-      channelUserIds: observable,
-      isLoading: observable,
-      isControlPressed: observable,
-      isFullscreen: observable,
-      isEditing: observable,
-      isDraggingNode: observable,
-      zoomLevel: observable,
-      userChannelData: observable,
-      currentChannel: computed,
-      getChannelByUuid: computed,
-      defaultChannel: computed,
-      findChannelByUuid: action,
-      updateSubscribedChannel: action,
-      addUserChannelData: action,
-      setCurrentChannelUuid: action,
-      setSubscribedChannels: action,
-      removeSubscribedChannel: action,
-      addSubscribedChannel: action,
-      setIsLoading: action,
-      setIsEditing: action,
-      setIsFullscreen: action,
-      setIsDraggingNode: action,
-      createChannelApi: action,
-      updateChannelApi: action,
-      fetchSubscribedChannelsApi: action,
-      joinChannelApi: action,
-      joinDefaultChannelApi: action,
-      leaveChannelApi: action,
-      filterTempChannels: action,
-      findTempChannel: action,
-      inviteUsersToChannelApi: action,
-      createDirectChannelApi: action,
-      setZoomLevel: action,
-      removeUserFromChannelApi: action,
-      findUserChannelDataByChannelId: action,
+    makeAutoObservable(this);
+  }
+
+  get channelTree() {
+    const channelMap = new Map<string, Channel>();
+    const channelTree: ChannelTreeNode[] = [];
+    // Create a map of channel IDs to channels
+    this.channels.forEach((channel) => {
+      channelMap.set(channel.uuid, channel);
     });
+
+    // Iterate through channels to build the tree
+    this.channels.forEach((channel) => {
+      const parentChannelId = channel.parentChannelId;
+
+      if (!parentChannelId) {
+        // If the channel has no parent, it's a root channel
+        channelTree.push({ channel, children: [] });
+      } else {
+        // If the channel has a parent, find the parent channel in the map
+        const parentChannel = channelMap.get(parentChannelId);
+        if (parentChannel) {
+          // Add the channel as a child of the parent channel
+          const parentNode = channelTree.find((node) => node.channel.uuid === parentChannelId);
+          if (parentNode) {
+            parentNode.children.push({ channel, children: [] });
+          }
+        }
+      }
+    });
+
+    // Assign child channels to their parent channels
+    this.channels.forEach((channel) => {
+      const channelNode = channelTree.find((node) => node.channel.uuid === channel.uuid);
+      if (channelNode) {
+        channel.childChannelIds?.forEach((childChannelId) => {
+          const childChannel = channelMap.get(childChannelId);
+          if (childChannel) {
+            channelNode.children.push({ channel: childChannel, children: [] });
+          }
+        });
+      }
+    });
+
+    return channelTree;
   }
 
   // Todo: computed value happens when the chatroom is entered. However, does not
   // occur when the join channel button is clicked.
   get currentChannel(): Channel | undefined {
-    const channel = this.subscribedChannels.find(
-      (channel) => channel.uuid === this.currentChannelId,
-    );
+    const channel = this.channels.find((channel) => channel.uuid === this.currentChannelId);
 
     return channel;
   }
 
   get defaultChannel(): Channel | undefined {
-    const channel = this.subscribedChannels.find((channel) => channel.isDefault);
+    const channel = this.channels.find((channel) => channel.isDefault);
 
     if (channel) {
       return channel;
     }
   }
 
-  setZoomLevel = (value: number) => {
-    this.zoomLevel = value;
-  };
-
-  setIsEditing = (bool: boolean) => {
-    this.isEditing = bool;
-  };
-  setIsDraggingNode = (bool: boolean) => {
-    this.isDraggingNode = bool;
-  };
-
-  setIsFullscreen = (bool: boolean) => {
-    this.isFullscreen = bool;
-  };
-  setIsControlPressed = (bool: boolean) => {
-    this.isControlPressed = bool;
-  };
-
   get getChannelByUuid() {
     return (uuid: string) => {
-      return this.subscribedChannels.find((channel) => channel.uuid === uuid);
+      return this.channels.find((channel) => channel.uuid === uuid);
     };
   }
+
   filterTempChannels = () => {
-    this.subscribedChannels = this.subscribedChannels.filter((el: Channel) => !el.isTemp);
+    this.channels = this.channels.filter((el: Channel) => !el.isTemp);
   };
 
   findChannelByUuid = (uuid: string) => {
-    return this.subscribedChannels.find((channel: Channel) => channel.uuid === uuid);
+    return this.channels.find((channel: Channel) => channel.uuid === uuid);
   };
 
   findTempChannel = () => {
-    return this.subscribedChannels.find((el: Channel) => el.isTemp);
+    return this.channels.find((el: Channel) => el.isTemp);
   };
 
   setSubscribedChannels = (channels: Channel[]) => {
-    this.subscribedChannels = channels.filter((channel) => channel.type !== 'direct');
+    this.channels = channels;
   };
 
   setCurrentChannelUuid = (channelUuid: string | undefined) => {
@@ -127,20 +115,18 @@ export class ChannelStore {
   addSubscribedChannel = (channel: Channel) => {
     if (this.findChannelByUuid(channel.uuid)) return;
 
-    this.subscribedChannels.push(channel);
+    this.channels.push(channel);
   };
 
-  updateSubscribedChannel = (updatedChannel: Partial<any>) => {
-    const channelFound = this.subscribedChannels.find(
-      (channel) => channel.uuid === updatedChannel.uuid,
-    );
+  updateSubscribedChannel = (updatedChannel: Partial<Channel>) => {
+    const channelFound = this.channels.find((channel) => channel.uuid === updatedChannel.uuid);
 
     if (!channelFound) return;
 
     Object.assign(channelFound, updatedChannel);
   };
 
-  updateUserChannelData = (userChannel: any) => {
+  updateUserChannelData = (userChannel: Partial<ChannelSubscription>) => {
     const userChannelFound = this.userChannelData.find((el) => el.uuid === userChannel.uuid);
 
     if (!userChannelFound) return;
@@ -149,7 +135,7 @@ export class ChannelStore {
   };
 
   leaveChannel = (channelId: string) => {
-    const channelFound = this.subscribedChannels.find((channel) => channel.uuid === channelId);
+    const channelFound = this.channels.find((channel) => channel.uuid === channelId);
 
     if (!channelFound) return;
 
@@ -157,24 +143,17 @@ export class ChannelStore {
   };
 
   removeSubscribedChannel = (uuid: string) => {
-    this.subscribedChannels = this.subscribedChannels.filter(
-      (channel: Channel) => channel.uuid !== uuid,
-    );
+    this.channels = this.channels.filter((channel: Channel) => channel.uuid !== uuid);
   };
 
-  removeChannelApi = async (channelId: string, workspaceId: string) => {
-    await channelApi.removeChannel(channelId, workspaceId);
+  removeChannelApi = async (channelId: string) => {
+    await channelApi.removeChannel(channelId);
 
     this.removeSubscribedChannel(channelId);
   };
 
   setIsLoading = (bool: boolean) => {
     this.isLoading = bool;
-  };
-
-  inviteUsersToChannelApi = async (channelUuid: string, users: User[]) => {
-    const userIds = users.map((user: User) => user.uuid);
-    await channelApi.inviteUsersToChannel(channelUuid, userIds);
   };
 
   createChannelApi = async (
@@ -188,23 +167,10 @@ export class ChannelStore {
     return channel;
   };
 
-  createDirectChannelApi = async (channelUserIds: string[], workspaceId: string) => {
-    const channel = await channelApi.createDirectChannel(channelUserIds, workspaceId);
-
-    this.addSubscribedChannel(channel);
-    return channel;
-  };
-
-  joinChannelApi = async ({
-    channelId,
-    sectionId,
-  }: {
-    channelId: string;
-    sectionId: string | undefined;
-  }) => {
+  joinChannelApi = async ({ channelId, sectionId }: { channelId: string; sectionId?: string }) => {
     const userChannel = await channelApi.joinChannel({ channelId, sectionId });
 
-    const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channel.uuid);
+    const userChannelDataFound = this.findUserChannelDataByChannelId(userChannel.channelId);
 
     if (userChannelDataFound) {
       this.updateUserChannelData(userChannel);
@@ -237,23 +203,25 @@ export class ChannelStore {
     this.channelUserIds = channelUserIds;
   };
 
-  setUserChannelData = (userChannels: any[]) => {
+  setUserChannelData = (userChannels: ChannelSubscription[]) => {
     this.userChannelData = userChannels;
   };
 
   fetchUserChannelData = async (workspaceId: string) => {
-    const userChannels = await channelApi.getUserChannels(workspaceId);
+    const userChannels = await channelApi.getUserChannelData(workspaceId);
 
     this.setUserChannelData(userChannels);
   };
 
   findUserChannelDataByChannelId = (channelId: string) => {
-    const channelData = this.userChannelData.find((el: any) => el.channel.uuid === channelId);
+    const channelData = this.userChannelData.find(
+      (el: ChannelSubscription) => el.channelId === channelId,
+    );
 
     return channelData;
   };
 
-  addUserChannelData = (userData: any) => {
+  addUserChannelData = (userData: ChannelSubscription) => {
     this.userChannelData.push(userData);
   };
 
@@ -262,7 +230,7 @@ export class ChannelStore {
     this.setIsLoading(true);
 
     try {
-      const channels = await channelApi.getSubscribedChannels(workspaceId);
+      const channels = await channelApi.getChannels(workspaceId);
 
       this.setSubscribedChannels([
         ...channels.map((channel: Channel) => ({
@@ -279,5 +247,31 @@ export class ChannelStore {
 
   moveNode = async (channelId: string, position: { x: number; y: number }) => {
     return await channelApi.updateNodePosition(channelId, position);
+  };
+
+  fetchChannelUserCounts = async (workspaceId: string) => {
+    const data = await channelApi.getChannelUserCounts(workspaceId);
+    this.addChannelUserCounts(data);
+  };
+
+  // Channels
+  addChannelUserCounts = (channelUserCounts: ChannelUserCount[]) => {
+    this.channelUserCounts.push(...channelUserCounts);
+  };
+
+  addChannelUserCount = (channelUserCounts: ChannelUserCount) => {
+    this.channelUserCounts.push(channelUserCounts);
+  };
+
+  updateChannelUserCount = (channelUserCount: ChannelUserCount) => {
+    const channelUserCountFound = this.findChannelUserCount(channelUserCount.channelUuid);
+    if (!channelUserCountFound) {
+      return this.addChannelUserCount(channelUserCount);
+    }
+    Object.assign(channelUserCountFound, channelUserCount);
+  };
+
+  findChannelUserCount = (channelUuid: string) => {
+    return this.channelUserCounts.find((el: ChannelUserCount) => el.channelUuid === channelUuid);
   };
 }

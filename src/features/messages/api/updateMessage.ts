@@ -4,9 +4,9 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const updateMessage = async (id: string, updateMessage: UpdateMessage): Promise<Message> => {
   try {
-    const res = await axios.patch(`/messages/${id}`, updateMessage);
+    const { data } = await axios.patch(`/messages/${id}`, updateMessage);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

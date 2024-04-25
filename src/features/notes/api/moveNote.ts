@@ -1,6 +1,6 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
-import { Note } from '../types/Note';
+import { Note } from '../types/note';
 
 export const moveNote = async (uuid: string, nodeId: string): Promise<Note> => {
   try {

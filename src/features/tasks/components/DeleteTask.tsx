@@ -1,7 +1,8 @@
 import Modal from '@/layout/modal/Modal';
 import { Button } from '@/components/ui/Button';
+import { Task } from '../types/task';
 
-type Props = { task: any; onDelete: (id: any) => void };
+export type Props = { task: Task; onDelete: () => void };
 
 const DeleteTask = ({ onDelete }: Props) => {
   return (

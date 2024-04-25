@@ -7,18 +7,13 @@ import { useState } from 'react';
 
 const CreateTemplateModal = observer(() => {
   const { createTemplateApi, handleSelectTemplate } = useStore('flashcardStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const [value, setValue] = useState('');
 
   const handleCreateTemplate = async () => {
     const template = await createTemplateApi(value);
-    setActiveModal(null);
-
+    closeModal();
     handleSelectTemplate(template.uuid);
-  };
-
-  const handleCancel = () => {
-    setActiveModal(null);
   };
 
   return (
@@ -31,7 +26,7 @@ const CreateTemplateModal = observer(() => {
         />
 
         <div className="flex gap-4 justify-end">
-          <Button onClick={handleCancel} variant="outline">
+          <Button onClick={closeModal} variant="outline">
             Cancel
           </Button>
           <Button onClick={handleCreateTemplate}>Submit</Button>

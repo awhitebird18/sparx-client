@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import NodeMap from '@/features/workspaceChannels/components/Nodemap';
+import NodeMap from '@/features/nodemap/components/Nodemap';
 
 const ChannelRoutes = () => {
   return (

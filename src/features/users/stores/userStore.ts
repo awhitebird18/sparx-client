@@ -5,7 +5,7 @@ import { OnlineUser, UpdateUser, User } from '../types';
 import { UserStatus } from '../enums';
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { Privileges } from '../enums/privileges';
-import { SubscriptionDetails } from '../types/subsciptionDetails';
+import { ChannelSubscription } from '@/features/channels/types';
 
 export class UserStore {
   users: User[] = [];
@@ -19,7 +19,7 @@ export class UserStore {
   hasMore = true;
   userOnlineStatus = UserStatus.ONLINE;
   currentUserId: string | undefined = undefined;
-  channelUsers: SubscriptionDetails[] = [];
+  channelUsers: ChannelSubscription[] = [];
   currentProfileUserId: string | undefined = undefined;
 
   constructor() {
@@ -74,7 +74,7 @@ export class UserStore {
   };
 
   get filteredUsers() {
-    return this.channelUsers.filter((userDetails: SubscriptionDetails) => {
+    return this.channelUsers.filter((userDetails: ChannelSubscription) => {
       // Get user
       const user = this.findUserByUuid(userDetails.userId);
       if (!user) return;
@@ -213,7 +213,7 @@ export class UserStore {
     this.setIsLoading(false);
   };
 
-  setChannelUsers = (users: SubscriptionDetails[]) => {
+  setChannelUsers = (users: ChannelSubscription[]) => {
     this.channelUsers = users;
   };
 

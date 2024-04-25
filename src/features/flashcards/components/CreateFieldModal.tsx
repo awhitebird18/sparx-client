@@ -9,16 +9,12 @@ export type CreateFieldModalProps = { templateId: string };
 
 const CreateFieldModal = observer(({ templateId }: CreateFieldModalProps) => {
   const { createFieldApi } = useStore('flashcardStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const [value, setValue] = useState('');
 
   const handleCreateField = () => {
     createFieldApi({ templateId, title: value });
-    setActiveModal(null);
-  };
-
-  const handleCancel = () => {
-    setActiveModal(null);
+    closeModal();
   };
 
   return (
@@ -31,7 +27,7 @@ const CreateFieldModal = observer(({ templateId }: CreateFieldModalProps) => {
         />
 
         <div className="flex gap-4 justify-end">
-          <Button onClick={handleCancel} variant="outline">
+          <Button onClick={closeModal} variant="outline">
             Cancel
           </Button>
           <Button onClick={handleCreateField}>Submit</Button>

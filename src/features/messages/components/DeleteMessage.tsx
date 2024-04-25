@@ -9,15 +9,11 @@ export type DeletemessageProps = { message: MessageType };
 
 const DeleteMessage = observer(({ message }: DeletemessageProps) => {
   const { removeMessageApi } = useStore('messageStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
 
   const handleDeleteMessage = () => {
     removeMessageApi(message.uuid);
-    handleCloseModal();
-  };
-
-  const handleCloseModal = () => {
-    setActiveModal(null);
+    closeModal();
   };
 
   if (!message) return null;
@@ -33,7 +29,7 @@ const DeleteMessage = observer(({ message }: DeletemessageProps) => {
           </div>
         </div>
         <div className="flex gap-2 ml-auto">
-          <Button className=" w-28" onClick={handleCloseModal} variant="outline">
+          <Button className=" w-28" onClick={closeModal} variant="outline">
             Cancel
           </Button>
           <Button className="ml-auto w-28" onClick={handleDeleteMessage} variant="destructive">

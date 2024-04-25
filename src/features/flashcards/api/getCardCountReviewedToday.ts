@@ -1,11 +1,11 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const getCardCountReviewedToday = async () => {
+export const getCardCountReviewedToday = async (): Promise<number> => {
   try {
-    const res = await axios.get('review-history/today');
+    const { data } = await axios.get('review-history/today');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

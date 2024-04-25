@@ -3,11 +3,15 @@ import { useEffect } from 'react';
 
 const useChannelSocket = () => {
   const { addChannelUuidToSection, removeChannelUuidFromSection } = useStore('sectionStore');
-  const { updateWorkspaceChannel, updateChannelUserCount } = useStore('workspaceChannelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { connectSocket, emitSocket } = useStore('socketStore');
-  const { addSubscribedChannel, updateSubscribedChannel, leaveChannel, removeSubscribedChannel } =
-    useStore('channelStore');
+  const {
+    addSubscribedChannel,
+    updateSubscribedChannel,
+    leaveChannel,
+    removeSubscribedChannel,
+    updateChannelUserCount,
+  } = useStore('channelStore');
 
   // Subscribes to workspace room
   useEffect(() => {
@@ -49,10 +53,10 @@ const useChannelSocket = () => {
   // Update channel
   useEffect(() => {
     return connectSocket('update-channel', (data) => {
-      updateWorkspaceChannel(data);
+      updateSubscribedChannel(data);
       updateSubscribedChannel(data);
     });
-  }, [connectSocket, updateWorkspaceChannel, updateSubscribedChannel, updateChannelUserCount]);
+  }, [connectSocket, updateSubscribedChannel, updateChannelUserCount]);
 
   // Remove channel
   useEffect(() => {

@@ -12,18 +12,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { StatCardsAddedCount } from '../types/statCardsAddedCount';
 
 const NewCardsModal = observer(() => {
   const { getCardsAddedStats } = useStore('flashcardStore');
-  const [stats, setStats] = useState<any>([]);
+  const [stats, setStats] = useState<StatCardsAddedCount[]>([]);
 
   useEffect(() => {
     const fn = async () => {
       const data = await getCardsAddedStats();
-
       setStats(data);
     };
-
     fn();
   }, [getCardsAddedStats]);
 

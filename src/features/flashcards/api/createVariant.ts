@@ -1,12 +1,13 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
-import { CreateVariant } from '../types/CreateVariant';
+import { CreateVariant } from '../types/createVariant';
+import { Variant } from '../types/variant';
 
-export const createVariant = async (createVariant: CreateVariant) => {
+export const createVariant = async (createVariant: CreateVariant): Promise<Variant> => {
   try {
-    const res = await axios.post('card-type', createVariant);
+    const { data } = await axios.post('card-type', createVariant);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

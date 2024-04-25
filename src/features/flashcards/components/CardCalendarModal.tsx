@@ -4,16 +4,15 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import { getColor } from '../utils/getColor';
+import { StatDailyStudiedCount } from '../types/statDailyStudiedCount';
 
 const CardCalendarModal = observer(() => {
   const { getYearlyStats } = useStore('flashcardStore');
-  const [stats, setStats] = useState<any>([]);
-
-  const gridRef = useRef(null);
+  const [stats, setStats] = useState<StatDailyStudiedCount[]>([]);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to the right after the component mounts
-    const gridElement: any = gridRef.current;
+    const gridElement = gridRef.current;
     if (gridElement) {
       gridElement.scrollLeft = gridElement.scrollWidth;
     }
@@ -57,7 +56,7 @@ const CardCalendarModal = observer(() => {
             height: 'max-content',
           }}
         >
-          {stats.map((dayStat: any, index: number) => (
+          {stats.map((dayStat, index: number) => (
             <Tooltip>
               <TooltipTrigger>
                 <div key={index} className={`h-7 w-7 ${getColor(dayStat.count)} flex-shrink-0 `} />

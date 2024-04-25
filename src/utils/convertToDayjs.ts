@@ -1,6 +1,7 @@
+import { Base } from '@/types/base';
 import dayjs from 'dayjs';
 
-export const convertToDayJs = (obj: any): any => {
+export const convertToDayJs = (obj: Base): any => {
   if (Array.isArray(obj)) {
     return obj.map(convertToDayJs);
   }

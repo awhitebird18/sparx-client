@@ -1,11 +1,12 @@
-import { createFlashcard } from './createFlashcard';
-import { updateFlashcard } from './udpateFlashcard';
+// Card
+import { updateFlashcard } from './updateFlashcard';
 import { removeFlashcard } from './removeFlashcard';
 import { getFlashcard } from './getFlashcard';
 import { getFlashcards } from './getFlashcards';
+import { createFlashcard } from './createFlashcard';
 
 // Notes
-import { createCardNote } from './createCardNote';
+import { createNote } from './createNote';
 
 // Fields
 import { getFields } from './getFields';
@@ -18,17 +19,18 @@ import { getTemplates } from './getTemplates';
 import { createTemplate } from './createTemplate';
 import { removeTemplate } from './removeTemplate';
 import { updateTemplate } from './updateTemplate';
+import { createDefaultTemplate } from './createDefaultTemplate';
 
 // Variants
 import { getVariants } from './getVariants';
 import { updateVariant } from './updateVariant';
 import { removeVariant } from './removeVariant';
 import { createVariant } from './createVariant';
-import { addVariantField } from './addVariantField';
+import { createVariantField } from './createVariantField';
 import { removeVariantField } from './removeVariantField';
 
 // Reviews
-import { submitReviewData } from './submitReviewData';
+import { createReviewEntry } from './createReviewEntry';
 import { getCardCountDueForChannel } from './getCardCountDueForChannel';
 
 // Stats
@@ -37,11 +39,11 @@ import { getFutureDue } from './getFutureDue';
 import { getCardsAddedStats } from './getCardsAddedStat';
 import { getCardMaturityStats } from './getCardMaturityStats';
 import { getYearlyStats } from './getYearlyStats';
-
-import { createDefaultTemplate } from './createDefaultTemplate';
 import { getCardCountReviewedToday } from './getCardCountReviewedToday';
 import { getDueToday } from './getDueToday';
-import { browseChannelCards } from './browseChannelCards';
+
+// Browse
+import { getChannelCardDetails } from './getChannelCardDetails';
 
 export default {
   createFlashcard,
@@ -49,7 +51,7 @@ export default {
   removeFlashcard,
   getFlashcard,
   getFlashcards,
-  createCardNote,
+  createNote,
   getTemplates,
   createTemplate,
   removeTemplate,
@@ -63,9 +65,9 @@ export default {
   createVariant,
   updateVariant,
   removeVariant,
-  addVariantField,
+  createVariantField,
   removeVariantField,
-  submitReviewData,
+  createReviewEntry,
   getReviewHistory,
   getFutureDue,
   getCardsAddedStats,
@@ -74,5 +76,5 @@ export default {
   getCardCountDueForChannel,
   createDefaultTemplate,
   getCardCountReviewedToday,
-  browseChannelCards,
+  getChannelCardDetails,
 };

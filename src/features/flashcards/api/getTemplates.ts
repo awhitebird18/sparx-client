@@ -4,9 +4,9 @@ import { Template } from '../types/template';
 
 export const getTemplates = async (): Promise<Template[]> => {
   try {
-    const res = await axios.get('card-template');
+    const { data } = await axios.get('card-template');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

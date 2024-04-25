@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { Note } from '../types/note';
 
-export const removeNote = async (noteUuid: string) => {
+export const removeNote = async (noteUuid: string): Promise<Note> => {
   try {
-    const res = await axios.delete(`notes/${noteUuid}`);
+    const { data } = await axios.delete(`notes/${noteUuid}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

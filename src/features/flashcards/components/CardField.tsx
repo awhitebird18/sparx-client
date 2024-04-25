@@ -6,7 +6,7 @@ import { emptyInputState } from '@/utils/emptyInputState';
 
 export type CardFieldProps = {
   title: string;
-  content: string;
+  content?: string;
   onFieldChange: (value: string) => void;
 };
 

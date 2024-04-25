@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react';
 import { ResponsiveContainer, PieChart, Pie } from 'recharts';
 import { COLORS } from '../utils/cardCountUtils';
 import CustomChartLabel from './CustomChartLabel';
+import { StatCardMaturityCount } from '../types/statCardMaturityCount';
 
 const CardCountModal = observer(() => {
   const { getCardMaturityStats } = useStore('flashcardStore');
-  const [stats, setStats] = useState<any>([]);
+  const [stats, setStats] = useState<StatCardMaturityCount[]>([]);
 
   useEffect(() => {
     const fn = async () => {
@@ -16,7 +17,6 @@ const CardCountModal = observer(() => {
 
       setStats(data);
     };
-
     fn();
   }, [getCardMaturityStats]);
 
@@ -40,7 +40,7 @@ const CardCountModal = observer(() => {
           </ResponsiveContainer>
         </div>
         <div className="space-y-6">
-          {stats.map((stat: any, index: number) => (
+          {stats.map((stat, index: number) => (
             <div className="flex gap-4 items-center">
               <div
                 className="bg-emerald-200 w-8 h-8 rounded-lg"

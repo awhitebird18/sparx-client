@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { v4 as uuid } from 'uuid';
@@ -8,14 +7,11 @@ import { formatDate } from '../utils/datefns';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import { useStore } from '@/stores/RootStore';
 import { Badge } from '@/components/ui/Badge';
-import ChannelTitle from './ChannelTitle';
-import AvatarGroup from './AvatarGroup';
 import Message from '@/features/messages/components/Message';
 import ChannelIntroduction from './ChannelIntroduction';
 import Editor from '@/features/messageInput/Editor';
 import UsersTypingDisplay from './UsersTypingDisplay';
 import { Message as MessageType } from '@/features/messages/types';
-import { ChannelType } from '@/features/channels/enums';
 import ContentLayout from '@/layout/contentContainer/ContentLayout';
 import { MessageSkeleton } from './MessageSkeleton';
 
@@ -35,7 +31,6 @@ const ChatRoom: React.FC = observer(() => {
   const { emitSocket, joinRoom, leaveRoom } = useStore('socketStore');
   const { currentUser } = useStore('userStore');
   const { updateUnreadCountApi, clearChannelUnreads } = useStore('channelUnreadStore');
-
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const { channelId } = useParams();
@@ -100,17 +95,22 @@ const ChatRoom: React.FC = observer(() => {
       clearUsersTyping();
       setMessages([]);
     };
-  }, [clearUsersTyping, currentChannelId, fetchChannelUserIdsApi, joinRoom, leaveRoom]);
+  }, [
+    clearUsersTyping,
+    currentChannelId,
+    fetchChannelUserIdsApi,
+    joinRoom,
+    leaveRoom,
+    setMessages,
+  ]);
 
   useEffect(() => {
     return () => setIsLoading(true);
-  }, []);
-
-  const headerComponent = currentChannel?.type === ChannelType.CHANNEL ? <AvatarGroup /> : null;
+  }, [setIsLoading]);
 
   return (
     <div className="flex h-full overflow-hidden">
-      <ContentLayout title={<ChannelTitle />} headerComponent={headerComponent} disablePadding>
+      <ContentLayout disablePadding>
         <div className="relative flex flex-1 overflow-hidden">
           <div className="flex flex-col flex-1 overflow-hidden w-full">
             <div
@@ -120,39 +120,46 @@ const ChatRoom: React.FC = observer(() => {
               <div ref={bottomRef} />
 
               <>
-                {groupedMessagesWithUser.map(({ date, messages }: any, index: number) => (
-                  <div key={index}>
-                    <div key={date} className="relative">
-                      <div className="w-full flex my-2 sticky top-2">
-                        <Badge
-                          variant="outline"
-                          className="py-1.5 px-4 rounded-xl mx-auto w-fit !bg-background border !border-border z-20"
-                        >
-                          {formatDate(date)}
-                        </Badge>
-                        <div className="bg-border h-px absolute top-[50%] left-0 w-full" />
+                {groupedMessagesWithUser.map(
+                  (
+                    { date, messages }: { date: string; messages: MessageType[] },
+                    index: number,
+                  ) => {
+                    return (
+                      <div key={index}>
+                        <div key={date} className="relative">
+                          <div className="w-full flex my-2 sticky top-2">
+                            <Badge
+                              variant="outline"
+                              className="py-1.5 px-4 rounded-xl mx-auto w-fit !bg-background border !border-border z-20"
+                            >
+                              {formatDate(date)}
+                            </Badge>
+                            <div className="bg-border h-px absolute top-[50%] left-0 w-full" />
+                          </div>
+
+                          {messages
+                            .filter((message: MessageType) => !message.parentId)
+                            .map((message: MessageType, index: number) => {
+                              const displayUser =
+                                index === 0 ||
+                                messages[index - 1].userId !== message.userId ||
+                                !!message.isSystem;
+
+                              return (
+                                <Message
+                                  key={message.uuid}
+                                  message={message}
+                                  showUser={displayUser}
+                                  disabled={message.isSystem}
+                                />
+                              );
+                            })}
+                        </div>
                       </div>
-
-                      {messages
-                        .filter((message: MessageType) => !message.parentId)
-                        .map((message: MessageType, index: number) => {
-                          const displayUser =
-                            index === 0 ||
-                            messages[index - 1].userId !== message.userId ||
-                            !!message.isSystem;
-
-                          return (
-                            <Message
-                              key={message.uuid}
-                              message={message}
-                              showUser={displayUser}
-                              disabled={message.isSystem}
-                            />
-                          );
-                        })}
-                    </div>
-                  </div>
-                ))}
+                    );
+                  },
+                )}
 
                 {!isLoading && <ChannelIntroduction channelId={currentChannelId} />}
               </>

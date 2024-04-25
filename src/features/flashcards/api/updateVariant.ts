@@ -7,7 +7,7 @@ export const updateVariant = async (
   updatedFields: Partial<Variant>,
 ): Promise<Variant> => {
   try {
-    const res = await axios.patch(`card-type/${uuid}`, updatedFields);
+    const res = await axios.patch(`card-variant/${uuid}`, updatedFields);
 
     return res.data;
   } catch (error) {

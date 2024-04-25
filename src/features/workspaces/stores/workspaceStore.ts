@@ -1,14 +1,15 @@
 import { action, computed, makeAutoObservable, observable, reaction } from 'mobx';
 import workspaceSpaceApi from '@/features/workspaces/api';
-import { CreateWorkspace, UpdateWorkspace } from '../types';
+import { CreateWorkspace } from '../types';
 import { Workspace } from '../types/workspace';
 import { NodemapState } from '../types/nodemapState';
+import { WorkspaceDetails } from '../types/workspaceDetails';
 
 export class WorkspaceStore {
   workspaces: Workspace[] = [];
   currentWorkspaceId: string | undefined = undefined;
-  userWorkspaceData: any[] = [];
-  lastViewedWorkspace: any;
+  userWorkspaceData: WorkspaceDetails[] = [];
+  lastViewedWorkspace: WorkspaceDetails | null = null;
   nodemapState?: NodemapState;
 
   constructor() {
@@ -37,9 +38,9 @@ export class WorkspaceStore {
     this.currentWorkspaceId = undefined;
   };
 
-  get currentUserWorkspaceData(): any {
+  get currentUserWorkspaceData(): WorkspaceDetails | undefined {
     const userWorkspace = this.userWorkspaceData.find(
-      (userWorkspace) => userWorkspace.workspace.uuid === this.currentWorkspaceId,
+      (userWorkspace) => userWorkspace.workspaceId === this.currentWorkspaceId,
     );
 
     return userWorkspace;
@@ -80,17 +81,17 @@ export class WorkspaceStore {
     // Assuming you want to do something with lastViewedWorkspace after finding it
     // For example, setting it as a state or property
 
-    const workspaceId = lastViewedWorkspace.workspace.uuid;
+    const workspaceId = lastViewedWorkspace.workspaceId;
 
     this.lastViewedWorkspace = lastViewedWorkspace;
     this.selectWorkspace(workspaceId);
   };
 
-  setLastViewedWorkspaceData = (userWorkspaceData: any) => {
+  setLastViewedWorkspaceData = (userWorkspaceData: WorkspaceDetails) => {
     this.lastViewedWorkspace = userWorkspaceData;
   };
 
-  addUserWorkspace = (userWorkspace: any) => {
+  addUserWorkspace = (userWorkspace: WorkspaceDetails) => {
     this.userWorkspaceData.push(userWorkspace);
   };
 
@@ -114,7 +115,7 @@ export class WorkspaceStore {
     Object.assign(workspaceFound, updatedWorkspace);
   };
 
-  updateUserWorkspaceData = (updatedUserWorkspace: any) => {
+  updateUserWorkspaceData = (updatedUserWorkspace: WorkspaceDetails) => {
     const workspaceFound = this.userWorkspaceData.find(
       (workspace) => workspace.uuid === updatedUserWorkspace.uuid,
     );
@@ -133,7 +134,7 @@ export class WorkspaceStore {
     return workspace;
   };
 
-  updateWorkspaceApi = async (id: string, updateWorkspace: UpdateWorkspace) => {
+  updateWorkspaceApi = async (id: string, updateWorkspace: Partial<Workspace>) => {
     const workspace = await workspaceSpaceApi.updateWorkspace(id, updateWorkspace);
 
     this.updateWorkspace(workspace);
@@ -155,7 +156,7 @@ export class WorkspaceStore {
     this.updateWorkspace(workspace);
   };
 
-  setUserWorkspaceData = (userWorkspaceData: any[]) => {
+  setUserWorkspaceData = (userWorkspaceData: WorkspaceDetails[]) => {
     this.userWorkspaceData = userWorkspaceData;
   };
 

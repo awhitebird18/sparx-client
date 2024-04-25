@@ -20,7 +20,7 @@ export class SidebarStore {
   isShortcutKeysOpen: boolean;
   isMembersOpen: boolean;
   isFullscreen: boolean;
-  ref: any;
+  ref: React.RefObject<HTMLDivElement>;
 
   constructor(channelStore: ChannelStore, sectionStore: SectionStore) {
     makeObservable(this, {
@@ -82,7 +82,7 @@ export class SidebarStore {
     return false;
   }
 
-  setRef = (ref: any) => {
+  setRef = (ref: React.RefObject<HTMLDivElement>) => {
     this.ref = ref;
   };
 
@@ -172,15 +172,6 @@ export class SidebarStore {
     if (element) {
       if (element.requestFullscreen) {
         element.requestFullscreen();
-      } else if (element.mozRequestFullScreen) {
-        // Firefox
-        element.mozRequestFullScreen();
-      } else if (element.webkitRequestFullscreen) {
-        // Chrome, Safari and Opera
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        // IE/Edge
-        element.msRequestFullscreen();
       }
     }
   };
@@ -189,17 +180,6 @@ export class SidebarStore {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     }
-
-    // else if (document.mozCancelFullScreen) {
-
-    //   document.mozCancelFullScreen();
-    // } else if (document.webkitExitFullscreen) {
-
-    //   document.webkitExitFullscreen();
-    // } else if (document.msExitFullscreen) {
-
-    //   document.msExitFullscreen();
-    // }
   };
 
   toggleFullScreen = () => {
@@ -263,18 +243,18 @@ export class SidebarStore {
     const placeholder = this.sectionStore.sections
       // .map((section) => ({
       //   ...section,
-      //   // channels: this.channelStore.subscribedChannels.filter(
+      //   // channels: this.channelStore.channels.filter(
       //   //   // Todo: channel does not have sectionId
       //   //   (channel) => channel.sectionId === section.uuid,
       //   // ),
       // }))
       .slice()
       .sort((a, b) => {
-        if (a.isSystem !== b.isSystem) {
-          // First sort by isSystem (true values come first)
-          return Number(b.isSystem) - Number(a.isSystem);
+        if (a.isDefault !== b.isDefault) {
+          // First sort by isDefault (true values come first)
+          return Number(b.isDefault) - Number(a.isDefault);
         } else {
-          // If isSystem is equal, sort by name (alphabetically)
+          // If isDefault is equal, sort by name (alphabetically)
           return a.name.localeCompare(b.name);
         }
       });

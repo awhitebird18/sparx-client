@@ -13,36 +13,54 @@ import { useMemo } from 'react';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
+import { NavigationHistoryItem } from '@/hooks/types/navigationHistoryItem';
 
 dayjs.extend(advancedFormat);
 dayjs.extend(relativeTime);
 
-type HistoryItem = {
-  nodeId: string;
-  primaryView: string;
-  timestamp: number;
-  name?: string;
+type PopulatedHistory = {
+  [date: string]: {
+    timestamp: number;
+    primaryView: string;
+    nodeId: string;
+    name?: string;
+  }[];
 };
+
+type RenderHistory = [
+  string,
+  {
+    timestamp: number;
+    primaryView: string;
+    nodeId: string;
+    name?: string;
+  }[],
+][];
 
 const CurrentNode = observer(() => {
   const { currentChannel, setCurrentChannelUuid, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
   const { setTitle } = useStore('notificationStore');
 
-  const handleNavigate = (node: any) => {
+  const handleNavigate = (node: NavigationHistoryItem) => {
     setCurrentChannelUuid(node.nodeId);
+
+    if (!node.name) return;
     setTitle(node.name);
   };
 
-  const sortedArray = useMemo(
-    () => history.sort((a: HistoryItem, b: HistoryItem) => b.timestamp - a.timestamp),
+  const sortedArray: NavigationHistoryItem[] = useMemo(
+    () =>
+      history.sort(
+        (a: NavigationHistoryItem, b: NavigationHistoryItem) => b.timestamp - a.timestamp,
+      ),
     [history],
   );
 
-  const uniqueNodes = useMemo(() => {
+  const uniqueNodes: NavigationHistoryItem[] = useMemo(() => {
     const seenNodeIds = new Set();
     return sortedArray
-      .filter((item: HistoryItem) => {
+      .filter((item: NavigationHistoryItem) => {
         if (!seenNodeIds.has(item.nodeId)) {
           seenNodeIds.add(item.nodeId);
           const nodeName = findChannelByUuid(item.nodeId)?.name;
@@ -58,9 +76,9 @@ const CurrentNode = observer(() => {
       }));
   }, [sortedArray, findChannelByUuid]);
 
-  const populatedHistory = useMemo(
+  const populatedHistory: PopulatedHistory = useMemo(
     () =>
-      uniqueNodes.reduce((acc: any, item: HistoryItem) => {
+      uniqueNodes.reduce((acc: PopulatedHistory, item: NavigationHistoryItem) => {
         const dateKey = dayjs(item.timestamp).format('YYYY-MM-DD');
         if (!acc[dateKey]) {
           acc[dateKey] = [];
@@ -71,19 +89,18 @@ const CurrentNode = observer(() => {
     [uniqueNodes],
   );
 
-  const historyArr = Object.entries(populatedHistory);
+  const historyArr: RenderHistory = Object.entries(populatedHistory);
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <h3 className="leftSide flex gap-3 items-center text-main w-min max-w-sm">
-          <span className="truncate">{currentChannel?.name}</span>
-          <ChevronDown size={12} className="mt-1 flex-shrink-0" />
-        </h3>
+      <DropdownMenuTrigger className="fixed flex items-center gap-3 top-2 left-1/2 -translate-x-1/2 z-30 cursor-pointer w-min h-12 p-1 max-w-sm prose dark:prose-invert">
+        <h3 className="text-main truncate">{currentChannel?.name}</h3>
+        <ChevronDown size={15} className="mt-1 flex-shrink-0 text-secondary" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="center"
-        className="max-w-[28rem] border border-border rounded-md bg-card p-0"
+        className="w-[28rem] border border-border rounded-md bg-card p-0"
+        sideOffset={5}
       >
         <div>
           <DropdownMenuLabel className="border-b border-border flex gap-3 bg-card font-semibold h-12 px-6 items-center">
@@ -92,7 +109,7 @@ const CurrentNode = observer(() => {
           </DropdownMenuLabel>
           <div className="flex flex-col p-2 py-2 overflow-auto max-h-96">
             {historyArr.length ? (
-              historyArr.map(([date, items]: any) => {
+              historyArr.map(([date, items]) => {
                 const historyDate = dayjs(date);
 
                 const isToday = dayjs().isSame(historyDate, 'date');
@@ -104,7 +121,7 @@ const CurrentNode = observer(() => {
                     </div>
 
                     <div>
-                      {items.map((item: any) => {
+                      {items.map((item) => {
                         const itemTimeObj = dayjs(item.timestamp);
 
                         return (

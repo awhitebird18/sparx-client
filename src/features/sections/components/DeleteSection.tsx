@@ -1,22 +1,16 @@
 import { useStore } from '@/stores/RootStore';
-
 import { Button } from '@/components/ui/Button';
 import Modal from '@/layout/modal/Modal';
 
-export type DeleteSectionProps = { id: string; name: string };
+export type Props = { id: string; name: string };
 
-const DeleteSection = ({ id, name }: DeleteSectionProps) => {
+const DeleteSection = ({ id, name }: Props) => {
   const { removeSectionApi } = useStore('sectionStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
 
   async function handleDelete() {
     await removeSectionApi(id);
-
-    setActiveModal(null);
-  }
-
-  function handleCancel() {
-    setActiveModal(null);
+    closeModal();
   }
 
   return (
@@ -31,7 +25,7 @@ const DeleteSection = ({ id, name }: DeleteSectionProps) => {
         </p>
 
         <div className="flex ml-auto gap-2">
-          <Button className="w-28" onClick={handleCancel}>
+          <Button className="w-28" onClick={closeModal}>
             Cancel
           </Button>
           <Button className="w-28" onClick={handleDelete} variant="destructive">

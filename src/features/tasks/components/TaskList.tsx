@@ -21,13 +21,14 @@ import {
 import Table from '@/components/ui/Table';
 import taskApi from '@/features/tasks/api';
 import { Badge } from '@/components/ui/Badge';
-import { TaskType } from '../types/taskType';
 import { observer } from 'mobx-react-lite';
+import { CreateTask } from '../types/createTask';
+import { Task } from '../types/task';
 
 const TaskList: React.FC = observer(() => {
-  const { setActiveModal } = useStore('modalStore');
+  const { setActiveModal, closeModal } = useStore('modalStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
-  const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeDropdownId, setActiveDropdownId] = useState(null);
 
@@ -35,12 +36,7 @@ const TaskList: React.FC = observer(() => {
     if (!currentWorkspaceId) return;
 
     const fn = async () => {
-      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
-
-      const [tasks] = await Promise.all([
-        taskApi.getTasks(currentWorkspaceId),
-        minimumLoadingTimePromise,
-      ]);
+      const tasks = await taskApi.getTasks(currentWorkspaceId);
 
       setTasks(tasks);
       setIsLoading(false);
@@ -55,7 +51,7 @@ const TaskList: React.FC = observer(() => {
     await taskApi.removeTask(taskId, currentWorkspaceId);
 
     setTasks(tasks.filter((task) => task.uuid !== taskId));
-    setActiveModal(null);
+    closeModal();
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +67,7 @@ const TaskList: React.FC = observer(() => {
   };
 
   const createTask = () => {
-    const onSubmit = async (task: any) => {
+    const onSubmit = async (task: CreateTask) => {
       if (!currentWorkspaceId) return;
 
       const newTask = await taskApi.createTask({ ...task, workspaceId: currentWorkspaceId });
@@ -90,8 +86,8 @@ const TaskList: React.FC = observer(() => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleUpdateTask = async (task: TaskType) => {
-    const onSubmit = async (task: any) => {
+  const handleUpdateTask = async (task: Task) => {
+    const onSubmit = async (task: Task) => {
       if (!currentWorkspaceId) return;
 
       const updatedTask = await taskApi.updateTask(task.uuid, currentWorkspaceId, task);
@@ -106,14 +102,14 @@ const TaskList: React.FC = observer(() => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleDeleteTask = (task: TaskType) => {
+  const handleDeleteTask = (task: Task) => {
     setActiveModal({
       type: 'DeleteTask',
       payload: {
         task,
         onDelete: () => {
           deleteTask(task.uuid);
-          setActiveModal(null);
+          closeModal();
         },
       },
     });

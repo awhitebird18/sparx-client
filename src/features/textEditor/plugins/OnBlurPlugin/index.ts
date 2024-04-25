@@ -3,7 +3,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { BLUR_COMMAND } from 'lexical';
 import { COMMAND_PRIORITY_LOW } from 'lexical';
 
-const OnBlurPlugin = ({ onBlur }: { onBlur?: (val: any) => void }) => {
+const OnBlurPlugin = ({ onBlur }: { onBlur?: (val: string) => void }) => {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {

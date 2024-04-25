@@ -20,11 +20,11 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-export type createSectionModalProps = { id: string; name: string };
+export type Props = { id: string; name: string };
 
-const CreateSectionModal = observer(({ id, name }: createSectionModalProps) => {
+const CreateSectionModal = observer(({ id, name }: Props) => {
   const { updateSectionApi, createSectionApi } = useStore('sectionStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,7 +38,7 @@ const CreateSectionModal = observer(({ id, name }: createSectionModalProps) => {
     } else {
       await createSectionApi(values);
     }
-    setActiveModal(null);
+    closeModal();
   }
 
   return (

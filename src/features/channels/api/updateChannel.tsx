@@ -6,7 +6,7 @@ export const updateChannel = async (
   channelId: string,
   updateFields: Partial<Channel>,
   workspaceId: string,
-) => {
+): Promise<Channel> => {
   try {
     const { data } = await axios.patch(`/channels/${channelId}`, {
       updateChannelDto: updateFields,

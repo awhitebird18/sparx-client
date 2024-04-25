@@ -1,6 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useTable, Column, TableOptions } from 'react-table';
 import { Skeleton } from './Skeleton';
+import { ReactNode } from 'react';
+
+interface RowData {
+  uuid: string;
+}
 
 interface Props<T extends object> {
   columns: Column<T>[];
@@ -11,7 +16,7 @@ interface Props<T extends object> {
   tableClasses?: string | undefined;
   headerClasses?: string;
   rowClasses?: string;
-  emptyElement?: any;
+  emptyElement?: ReactNode;
 }
 
 const Table = observer(
@@ -28,14 +33,13 @@ const Table = observer(
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<T>({
       columns,
       data,
-      getRowId: (row: any) => row.uuid,
+      getRowId: (row: RowData) => row.uuid,
     } as TableOptions<T>);
 
     return (
       <div
         className={`w-full border border-border bg-card card rounded-xl h-fit shadow-sm overflow-auto ${tableClasses}`}
       >
-        {/* Table for header */}
         <table {...getTableProps()} className="m-0 w-full border-collapse">
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -89,7 +93,7 @@ const Table = observer(
         {isLoading ? (
           <Skeleton className="w-full h-16 rounded-none bg-card dark:bg-slate-500/5" />
         ) : null}
-        {!isLoading && !rows.length ? (
+        {!isLoading && !rows.length && emptyElement ? (
           <div className="w-full flex items-center justify-center">{emptyElement}</div>
         ) : null}
       </div>

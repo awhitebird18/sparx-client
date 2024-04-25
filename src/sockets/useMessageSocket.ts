@@ -2,29 +2,28 @@ import { useStore } from '@/stores/RootStore';
 import { useEffect } from 'react';
 import { setFavicon } from '@/utils/setFavicon';
 import { API_URL } from '@/config/api';
-import { observer } from 'mobx-react-lite';
 
 const useMessageSocket = () => {
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
     useStore('notificationStore');
   const { incrementChannelUnreads, channelUnreadsCount } = useStore('channelUnreadStore');
   const { addMessage, removeMessage, updateMessage } = useStore('messageStore');
-  const { currentChannelId, subscribedChannels, findChannelByUuid } = useStore('channelStore');
+  const { currentChannelId, channels, findChannelByUuid } = useStore('channelStore');
   const { connectSocket, emitSocket } = useStore('socketStore');
   const { currentUser } = useStore('userStore');
 
   // Subscribes to messages for each subscribed channel
   useEffect(() => {
-    subscribedChannels.forEach((channel) => {
+    channels.forEach((channel) => {
       emitSocket('joinChannel', channel.uuid);
     });
 
     return () => {
-      subscribedChannels.forEach((channel) => {
+      channels.forEach((channel) => {
         emitSocket('leaveChannel', channel.uuid);
       });
     };
-  }, [emitSocket, subscribedChannels]);
+  }, [emitSocket, channels]);
 
   // New message
   useEffect(() => {

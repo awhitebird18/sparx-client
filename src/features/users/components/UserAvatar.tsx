@@ -39,7 +39,6 @@ const UserAvatar = observer(
         />
         {!profileImage && (
           <AvatarFallback
-            // delayMs={00}
             className={`h-full flex-1 w-full ${rounded} overflow-hidden bg-transparent`}
             children={
               <PersonFill

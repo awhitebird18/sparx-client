@@ -12,18 +12,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { StatReviewHistoryCount } from '../types/statReviewHistoryCount';
 
 const CardsReviewedModal = observer(() => {
   const { getReviewHistoryApi } = useStore('flashcardStore');
-  const [stats, setStats] = useState<any>([]);
+  const [stats, setStats] = useState<StatReviewHistoryCount[]>([]);
 
   useEffect(() => {
     const fn = async () => {
       const data = await getReviewHistoryApi();
-
       setStats(data);
     };
-
     fn();
   }, [getReviewHistoryApi]);
 

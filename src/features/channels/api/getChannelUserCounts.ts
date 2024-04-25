@@ -1,11 +1,12 @@
+import { ChannelUserCount } from '@/features/channels/types/channelUserCount';
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const getChannelUserCounts = async (workspaceId: string): Promise<any[]> => {
+export const getChannelUserCounts = async (workspaceId: string): Promise<ChannelUserCount[]> => {
   try {
-    const res = await axios.get(`/channels/user-count/${workspaceId}`);
+    const { data } = await axios.get(`/channels/user-count/${workspaceId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

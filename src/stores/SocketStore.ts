@@ -6,7 +6,7 @@ import { API_URL } from '@/config/api';
 const SOCKET_SERVER_URL = API_URL;
 
 export class SocketStore {
-  socket: Socket | any;
+  socket: Socket | undefined = undefined;
 
   constructor() {
     makeObservable(this, {
@@ -25,7 +25,7 @@ export class SocketStore {
     if (!this.socket) return;
     this.socket.on(connectionString, callback);
 
-    return () => this.socket.off(connectionString);
+    return () => this?.socket?.off(connectionString);
   };
 
   disconnectSocket = (connectionString: string) => {

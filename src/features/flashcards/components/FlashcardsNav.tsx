@@ -1,4 +1,4 @@
-import { MainPanelComponent } from '@/components/layout/mainPanel/componentList';
+import { MainPanelComponent } from '@/layout/mainPanel/componentList';
 import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
@@ -6,25 +6,33 @@ import { useEffect } from 'react';
 import { navOptions } from '../utils/flashcardNavigationOptions';
 
 const FlashcardsNav = observer(() => {
-  const { getCardCountDueForChannel, setIsLoading } = useStore('flashcardStore');
+  const { getCardCountDueForChannel, setIsLoading, getFlashcardsDueToday } =
+    useStore('flashcardStore');
   const { currentChannelId } = useStore('channelStore');
   const { setMainPanel } = useStore('mainPanelStore');
+  const { currentWorkspaceId } = useStore('workspaceStore');
 
   const handleOpenMainPanel = (mainPanelComponent: MainPanelComponent) => {
     setMainPanel({ type: mainPanelComponent });
   };
 
   useEffect(() => {
-    if (!currentChannelId) return;
+    if (!currentChannelId || !currentWorkspaceId) return;
     const fn = async () => {
       setIsLoading(true);
       await getCardCountDueForChannel(currentChannelId);
-
+      await getFlashcardsDueToday(currentWorkspaceId);
       setIsLoading(false);
     };
 
     fn();
-  }, [currentChannelId, getCardCountDueForChannel, setIsLoading]);
+  }, [
+    currentChannelId,
+    getCardCountDueForChannel,
+    setIsLoading,
+    currentWorkspaceId,
+    getFlashcardsDueToday,
+  ]);
 
   return (
     <div className="w-full overflow-auto flex flex-col gap-5 prose dark:prose-invert">

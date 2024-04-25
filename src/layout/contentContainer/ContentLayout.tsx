@@ -1,7 +1,5 @@
 export type ContentLayoutProps = {
   children: React.ReactNode;
-  headerComponent?: React.ReactNode;
-  title: string | React.ReactNode;
   disablePadding?: boolean;
 };
 

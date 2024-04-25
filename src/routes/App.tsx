@@ -13,7 +13,7 @@ const App = observer(() => {
   const location = useLocation();
   const { currentUser } = useStore('userStore');
   const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
-  const { setCurrentChannelUuid, subscribedChannels, findChannelByUuid } = useStore('channelStore');
+  const { setCurrentChannelUuid, channels, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
 
   if (!currentUser) {
@@ -42,12 +42,12 @@ const App = observer(() => {
     ) {
       setCurrentChannelUuid(history[history.length - 1]?.nodeId);
     } else {
-      const defaultChannel = subscribedChannels.find((channel) => channel.isDefault);
+      const defaultChannel = channels.find((channel) => channel.isDefault);
 
       setCurrentChannelUuid(defaultChannel?.uuid);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscribedChannels]);
+  }, [channels]);
 
   return (
     <Suspense>

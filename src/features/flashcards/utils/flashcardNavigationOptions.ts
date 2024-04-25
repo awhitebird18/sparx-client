@@ -1,13 +1,14 @@
-import { MainPanelComponent } from '@/components/layout/mainPanel/componentList';
+import { MainPanelComponent } from '@/layout/mainPanel/componentList';
 import {
   BarChartFill,
   BookFill,
   ClipboardCheckFill,
+  Icon,
   PlusCircleFill,
   SearchHeartFill,
 } from 'react-bootstrap-icons';
 
-export const navOptions: { id: MainPanelComponent; title: string; icon: any; color: string }[] = [
+export const navOptions: { id: MainPanelComponent; title: string; icon: Icon; color: string }[] = [
   {
     id: 'studyFlashcards',
     title: 'Study Flashcards',

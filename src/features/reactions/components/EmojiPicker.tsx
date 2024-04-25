@@ -2,6 +2,10 @@ import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
 
+type EmojiObj = {
+  id: string;
+};
+
 type Props = {
   onClickAway: () => void;
   position: { top: number; left: number };
@@ -13,9 +17,10 @@ const EmojiPicker = observer(({ onClickAway, position, onEmojiClick }: Props) =>
 
   return (
     <>
+      {/* Emoji picker */}
       <div className="flex fixed z-30" style={position}>
         <Picker
-          onEmojiSelect={(emojiObj: any) => {
+          onEmojiSelect={(emojiObj: EmojiObj) => {
             onEmojiClick(emojiObj.id);
           }}
           set="apple"
@@ -25,11 +30,8 @@ const EmojiPicker = observer(({ onClickAway, position, onEmojiClick }: Props) =>
         />
       </div>
 
-      <div
-        id="hohoho"
-        className="fixed top-0 left-0 w-screen h-screen z-20"
-        onClick={onClickAway}
-      />
+      {/* Click away backdrop */}
+      <div className="fixed top-0 left-0 w-screen h-screen z-20" onClick={onClickAway} />
     </>
   );
 });

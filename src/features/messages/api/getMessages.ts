@@ -4,9 +4,9 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const getMessages = async (page: number, channelId: string): Promise<Message[]> => {
   try {
-    const res = await axios.get(`/messages/channel/${channelId}?page=${page}`);
+    const { data } = await axios.get(`/messages/channel/${channelId}?page=${page}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

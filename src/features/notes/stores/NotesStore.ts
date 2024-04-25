@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { Note } from '../types/Note';
+import { Note } from '@/features/notes/types/note';
 import notesApi from '../api';
-import { UpdateNote } from '../types/UpdateNote';
+import { UpdateNote } from '../types/updateNote';
 
 export class NotesStore {
   notes: Note[] = [];
@@ -22,7 +22,6 @@ export class NotesStore {
     this.selectedNoteId = noteId;
   };
 
-  // Optional: Action to load notes (e.g., from an API)
   setNotes(notes: Note[]) {
     this.notes = notes;
   }

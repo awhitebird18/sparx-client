@@ -1,26 +1,22 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { NotificationType, PrimaryColors, Theme } from '../enums';
+import { PrimaryColors, Theme } from '../enums';
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
 import storage from '@/utils/storage';
 
 export class UserPreferencesStore {
   primaryColor: PrimaryColors | undefined;
-  notificationType: NotificationType | undefined;
   theme: Theme | undefined;
 
   constructor() {
     makeObservable(this, {
       primaryColor: observable,
       theme: observable,
-      notificationType: observable,
       setPrimaryColor: action,
       setTheme: action,
-      setNotificationType: action,
       updateThemeApi: action,
       updatePrimaryColorApi: action,
-      updateNotificationTypeApi: action,
       setInitialPreferences: action,
       resetPreferences: action,
     });
@@ -44,7 +40,7 @@ export class UserPreferencesStore {
       () => this.primaryColor,
       (newPrimaryColor) => {
         if (!newPrimaryColor) return;
-        // Remove primary color class from body
+
         for (let i = 0; i < primaryColors.length; i++) {
           document.body.classList.remove(primaryColors[i]);
         }
@@ -52,10 +48,6 @@ export class UserPreferencesStore {
         document.body.classList.add(newPrimaryColor);
       },
     );
-
-    // this.setNotificationType(NotificationType.DIRECT);
-    // this.setPrimaryColor(getValidPrimaryColor(storage.getPrimaryColor()));
-    // this.setTheme(getValidTheme(storage.getTheme()));
   }
 
   setPrimaryColor = (color: PrimaryColors) => {
@@ -64,10 +56,6 @@ export class UserPreferencesStore {
 
   setTheme = (theme: Theme) => {
     this.theme = theme;
-  };
-
-  setNotificationType = (notificationType: NotificationType) => {
-    this.notificationType = notificationType;
   };
 
   updatePrimaryColorApi = async (primaryColor: PrimaryColors) => {
@@ -84,24 +72,17 @@ export class UserPreferencesStore {
     storage.setTheme(userPreferences.theme);
   };
 
-  updateNotificationTypeApi = (notificationType: NotificationType) => {
-    this.notificationType = notificationType;
-  };
-
   resetPreferences = () => {
     this.setTheme(Theme.DARK);
     this.setPrimaryColor(PrimaryColors.BLUE);
-    this.setNotificationType(NotificationType.DIRECT);
   };
 
   setInitialPreferences = ({
     theme,
     primaryColor,
-    notificationType,
   }: {
     theme: Theme;
     primaryColor: PrimaryColors;
-    notificationType: NotificationType;
   }) => {
     if (theme) {
       this.setTheme(theme);
@@ -111,6 +92,5 @@ export class UserPreferencesStore {
       this.setPrimaryColor(primaryColor);
       storage.setPrimaryColor(primaryColor);
     }
-    if (notificationType) this.setNotificationType(notificationType);
   };
 }

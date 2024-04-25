@@ -1,11 +1,9 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const removeTemplate = async (uuid: string) => {
+export const removeTemplate = async (uuid: string): Promise<void> => {
   try {
-    const res = await axios.delete(`card-template/${uuid}`);
-
-    return res.data;
+    await axios.delete(`card-template/${uuid}`);
   } catch (error) {
     return handleApiError(error);
   }

@@ -22,14 +22,6 @@ const ThemeTab = observer(() => {
   const { theme, updateThemeApi, primaryColor, updatePrimaryColorApi } =
     useStore('userPreferencesStore');
 
-  const handleThemeSelect = (value: string) => {
-    updateThemeApi(getValidTheme(value));
-  };
-
-  const handlePrimaryColorSelect = (value: string) => {
-    updatePrimaryColorApi(getValidPrimaryColor(value));
-  };
-
   const colorOptions = primaryColors.map((color: string) => (
     <SelectItem key={color} value={color}>
       <div className="flex items-center gap-4">
@@ -38,6 +30,14 @@ const ThemeTab = observer(() => {
       </div>
     </SelectItem>
   ));
+
+  const handleThemeSelect = (value: string) => {
+    updateThemeApi(getValidTheme(value));
+  };
+
+  const handlePrimaryColorSelect = (value: string) => {
+    updatePrimaryColorApi(getValidPrimaryColor(value));
+  };
 
   return (
     <ScrollArea>

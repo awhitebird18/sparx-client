@@ -4,9 +4,9 @@ import { Flashcard } from '../types/card';
 
 export const getFlashcards = async (channelId: string): Promise<Flashcard[]> => {
   try {
-    const res = await axios.get(`cards/channel/${channelId}`);
+    const { data } = await axios.get(`cards/channel/${channelId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

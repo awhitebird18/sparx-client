@@ -1,9 +1,8 @@
 import Modal from '@/layout/modal/Modal';
-import { useState } from 'react';
-import General from './General';
+import { ReactNode, useState } from 'react';
+import WorkspaceOverview from './WorkspaceOverview';
 import { Bell, Gear, Heart } from 'react-bootstrap-icons';
 import { PreferenceTabs } from '../types/preferenceTabs';
-import ListItem from './ListItem';
 
 const UpdateWorkspaceModal = () => {
   const [activeTab, setActiveTab] = useState(PreferenceTabs.GENERAL);
@@ -11,11 +10,11 @@ const UpdateWorkspaceModal = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case PreferenceTabs.GENERAL:
-        return <General />;
+        return <WorkspaceOverview />;
       case PreferenceTabs.NOTIFICATIONS:
-        return <General />;
+        return null;
       case PreferenceTabs.ACCOUNT:
-        return <General />;
+        return null;
       default:
         return null;
     }
@@ -56,3 +55,23 @@ const UpdateWorkspaceModal = () => {
 };
 
 export default UpdateWorkspaceModal;
+
+type ListItemProps = {
+  icon: ReactNode;
+  tab: PreferenceTabs;
+  disabled?: boolean;
+  activeTab: PreferenceTabs;
+  setActiveTab: (preference: PreferenceTabs) => void;
+};
+
+const ListItem = ({ icon, tab, disabled, activeTab, setActiveTab }: ListItemProps) => (
+  <div
+    onClick={() => setActiveTab(tab)}
+    className={`h-9 p-0 px-6 w-full hover:bg-card-hover text-sm text-main flex items-center cursor-pointer overflow-hidden font-medium ${
+      activeTab === tab && 'bg-card-hover hover:bg-card-hover'
+    } ${disabled && ' opacity-30 pointer-events-none'}`}
+  >
+    <span className="w-6 text-base">{icon}</span>
+    {tab}
+  </div>
+);

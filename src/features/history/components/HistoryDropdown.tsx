@@ -13,23 +13,21 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { HistoryItem } from '../types';
 import ChannelIcon from '@/features/channels/components/ChannelIcon';
-import { ChannelType } from '@/features/channels/enums';
 import { transformCloudinaryUrl } from '@/utils/transformCloudinaryUrl';
 import { observer } from 'mobx-react-lite';
 import { getDefaultType } from '../utils/getDefaultType';
 
 const HistoryDropdown = observer(() => {
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const { findChannelByUuid } = useStore('channelStore');
-  const { findUserByName } = useStore('userStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const history = useHistoryState();
   const navigate = useNavigate();
-  const focusRef = useRef<any>(null);
+  const focusRef = useRef<HTMLInputElement>(null);
 
   const handleClickItem = (value: string) => {
     navigate(value);
-    setActiveModal(null);
+    closeModal();
   };
 
   return (
@@ -47,7 +45,7 @@ const HistoryDropdown = observer(() => {
         onCloseAutoFocus={(event) => {
           if (focusRef.current) {
             focusRef.current.focus();
-            focusRef.current = null;
+
             event.preventDefault();
           }
         }}
@@ -63,16 +61,8 @@ const HistoryDropdown = observer(() => {
 
                   if (!itemData) {
                     const channel = findChannelByUuid(item.primaryView);
-
                     if (!channel) return null;
-
                     let channelIcon = channel.icon;
-
-                    if (channel.type === ChannelType.DIRECT) {
-                      const user = findUserByName(channel.name);
-                      if (!user) return;
-                      channelIcon = user.profileImage;
-                    }
 
                     if (channelIcon) {
                       channelIcon = transformCloudinaryUrl(channelIcon, 60, 60);

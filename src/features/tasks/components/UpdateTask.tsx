@@ -19,6 +19,8 @@ import { format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
 import { observer } from 'mobx-react-lite';
 import { Calendar2 } from 'react-bootstrap-icons';
+import { Task } from '../types/task';
+import { CreateTask } from '../types/createTask';
 
 const formSchema = z.object({
   name: z.string().min(2).max(30),
@@ -27,10 +29,10 @@ const formSchema = z.object({
   }),
 });
 
-export type UpdateTaskProps = { task: any; onSubmit: (data: any) => void };
+export type Props = { task: Task; onSubmit: (data: Partial<CreateTask>) => void };
 
-const UpdateTask = observer(({ task, onSubmit }: UpdateTaskProps) => {
-  const { setActiveModal } = useStore('modalStore');
+const UpdateTask = observer(({ task, onSubmit }: Props) => {
+  const { closeModal } = useStore('modalStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: useMemo(() => {
@@ -44,15 +46,11 @@ const UpdateTask = observer(({ task, onSubmit }: UpdateTaskProps) => {
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
       await onSubmit(values);
-      handleCloseModal();
+      closeModal();
     } catch (err) {
       console.error(err);
     }
   }
-
-  const handleCloseModal = () => {
-    setActiveModal(null);
-  };
 
   return (
     <Modal title={task ? 'Update task' : 'Create task'}>
@@ -121,14 +119,7 @@ const UpdateTask = observer(({ task, onSubmit }: UpdateTaskProps) => {
           </div>
 
           <div className="flex ml-auto gap-3 mt-10">
-            <Button
-              type="button"
-              className="ml-auto w-28"
-              variant="outline"
-              onClick={() => {
-                handleCloseModal();
-              }}
-            >
+            <Button type="button" className="ml-auto w-28" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
             <Button className="ml-auto w-28" type="submit" variant="default">

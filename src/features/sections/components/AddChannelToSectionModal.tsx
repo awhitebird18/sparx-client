@@ -15,15 +15,12 @@ export type AddChannelToSectionModalProps = { channelId: string };
 const AddChannelToSectionModal = observer(({ channelId }: AddChannelToSectionModalProps) => {
   const { sections, updateChannelSectionApi } = useStore('sectionStore');
   const { findChannelByUuid } = useStore('channelStore');
-
   const channel = findChannelByUuid(channelId);
-
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
 
   const handleSelectClick = async (sectionId: string) => {
     await updateChannelSectionApi(sectionId, channelId);
-
-    setActiveModal(null);
+    closeModal();
   };
 
   return (

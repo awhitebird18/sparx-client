@@ -1,5 +1,6 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { ChannelSubscription } from '../types';
 
 export const joinChannel = async ({
   channelId,
@@ -7,11 +8,11 @@ export const joinChannel = async ({
 }: {
   channelId: string;
   sectionId?: string;
-}) => {
+}): Promise<ChannelSubscription> => {
   try {
-    const res = await axios.post('channel-subscriptions/join', { channelId, sectionId });
+    const { data } = await axios.post('channel-subscriptions/join', { channelId, sectionId });
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

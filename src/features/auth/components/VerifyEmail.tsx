@@ -1,3 +1,4 @@
+import AnimatedLogo from '@/components/logo/AnimatedLogo';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -9,9 +10,7 @@ const VerifyEmail = ({ userId }: VerifyEmailProps) => {
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_API_URL, { query: { userId } });
-
     socket.emit('waitingForVerification', { userId });
-
     socket.on('verified', () => {
       navigate('/verified', { replace: true });
       socket.disconnect();
@@ -28,23 +27,7 @@ const VerifyEmail = ({ userId }: VerifyEmailProps) => {
         <span className="text-2xl font-bold">Sparx</span>
       </div>
       <div className="card bg-card flex flex-col items-center gap-0 rounded-xl border border-border p-8 prose">
-        {/* <Logo size={44} /> */}
-        <div className="relative w-44 h-44 bird">
-          <img className="w-full h-full absolute top-0 left-0" src="/birdBody.png" />
-          <img
-            className="birdLeftWing w-full h-full absolute top-0 left-0"
-            src="/birdLeftWing.png"
-          />
-          <img
-            className="birdRightWing w-full h-full absolute top-0 left-0"
-            src="/birdRightWing.png"
-          />
-          <img className="w-full h-full absolute top-0 left-0 opacity-50" src="/smallBubbles.png" />
-          <img
-            className="w-full h-full absolute top-0 left-0 opacity-50 bubbles"
-            src="/mediumBubbles.png"
-          />
-        </div>
+        <AnimatedLogo />
         <h2 className="text-main mb-4  text-3xl">Verification Email Sent</h2>
         <p className="text-secondary">
           Please check your email and click on the verification link to continue.

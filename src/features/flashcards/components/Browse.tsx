@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CaretDownFill, Search } from 'react-bootstrap-icons';
+import { CaretDownFill, Plus, Search } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import { Flashcard } from '../types/card';
 import Table from '@/components/ui/Table';
@@ -10,38 +10,28 @@ import { observer } from 'mobx-react-lite';
 import { Checkbox } from '@/components/ui/Checkbox';
 import UserAvatar from '@/features/users/components/UserAvatar';
 import { extractTextFromLexicalState } from '@/utils/extractTextFromLexicalState';
-import { EmptyFallback } from './EmptyFallback';
+import EmptyFallback from '@/components/EmptyFallback';
+import { CardMetaData } from '../types/cardMetaData';
 
 const Browse: React.FC = observer(() => {
-  const { fetchFlashcard, getChannelCards } = useStore('flashcardStore');
+  const { fetchFlashcard, getChannelCardDetails } = useStore('flashcardStore');
   const { currentChannelId, currentChannel } = useStore('channelStore');
   const { findUserByUuid } = useStore('userStore');
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<CardMetaData[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const { setMainPanel } = useStore('mainPanelStore');
 
-  const handleAddFlashcard = () => {
-    setMainPanel({ type: 'addFlashcard', payload: null });
-  };
+  const filteredCards = cards.filter((card) => card.content.includes(searchValue));
 
-  useEffect(() => {
-    if (!currentChannelId) return;
-    const fn = async () => {
-      const cards = await getChannelCards(currentChannelId);
-
-      const convertedCardContent = cards.map((card: any) => ({
-        ...card,
-        content: extractTextFromLexicalState(card.content),
-      }));
-
-      setCards(convertedCardContent);
-    };
-
-    fn();
-  }, [currentChannelId, getChannelCards]);
-
-  const columns: any[] = React.useMemo(
+  const columns: any = React.useMemo(
     () => [
+      {
+        Header: 'Uuid',
+        accessor: 'uuid',
+        Cell: ({ value }: { value: string }) => {
+          return <p className="whitespace-nowrap overflow-hidden text-ellipsis">{value}</p>;
+        },
+      },
       {
         Header: 'Card Field',
         accessor: 'content',
@@ -63,7 +53,7 @@ const Browse: React.FC = observer(() => {
                   {value && `${user?.firstName} ${user?.lastName}`}
                 </>
               ) : (
-                <> Deleted user</>
+                <>Deleted user</>
               )}
             </div>
           );
@@ -72,16 +62,17 @@ const Browse: React.FC = observer(() => {
       {
         Header: 'Created On',
         accessor: 'createdAt',
-        Cell: ({ value }: { value: Date }) => <span>{dayjs(value).format('MMM D YYYY')}</span>,
+        Cell: ({ value }: { value: string }) => <span>{dayjs(value).format('MMM D YYYY')}</span>,
       },
       {
         Header: 'Next Review Date',
         accessor: 'nextReviewDate',
-        Cell: ({ value }: { value: Date }) => <span>{dayjs(value).format('MMM D YYYY')}</span>,
+        Cell: ({ value }: { value: string }) => <span>{dayjs(value).format('MMM D YYYY')}</span>,
       },
       {
         Header: 'Reviews',
         accessor: 'repetitions',
+        Cell: ({ value }: { value: number }) => <span>{value}</span>,
       },
       {
         Header: 'Private',
@@ -92,11 +83,29 @@ const Browse: React.FC = observer(() => {
     [findUserByUuid],
   );
 
+  const handleAddFlashcard = () => {
+    setMainPanel({ type: 'addFlashcard', payload: null });
+  };
+
   const handleClickFlashcard = (row: Flashcard) => {
     fetchFlashcard(row.uuid);
   };
 
-  const filteredCards = cards.filter((card: any) => card.content.includes(searchValue));
+  useEffect(() => {
+    if (!currentChannelId) return;
+    const fn = async () => {
+      const cards = await getChannelCardDetails(currentChannelId);
+
+      const convertedCardContent = cards.map((card) => ({
+        ...card,
+        content: extractTextFromLexicalState(card.content),
+      }));
+
+      setCards(convertedCardContent);
+    };
+
+    fn();
+  }, [currentChannelId, getChannelCardDetails]);
 
   return (
     <div className="flex-1 flex flex-col h-full prose relative">
@@ -104,7 +113,6 @@ const Browse: React.FC = observer(() => {
         {cards.length ? (
           <div className="rounded-xl flex flex-col items-center text-main gap-4">
             <div className="flex justify-between items-center w-full py-0">
-              {/* <p className="">{`${filteredNotes.length} results`}</p> */}
               <div className="flex gap-3 items-center">
                 <div className="h-9 border-border rounded-lg border overflow-hidden flex items-center gap-0 px-3 text-secondary ml-auto bg-card">
                   <Search className="thick-icon" />
@@ -144,7 +152,15 @@ const Browse: React.FC = observer(() => {
             />
           </div>
         ) : (
-          <EmptyFallback channelName={currentChannel?.name} onCreateNote={handleAddFlashcard} />
+          <EmptyFallback
+            title="No Flashcards Found."
+            description={<>All of your ${currentChannel?.name} flashcards will appear here.</>}
+            action={{
+              icon: <Plus size={18} className="thick-icon" />,
+              title: 'Create a new flashcard',
+              callback: handleAddFlashcard,
+            }}
+          />
         )}
       </div>
     </div>

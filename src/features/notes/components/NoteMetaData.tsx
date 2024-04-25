@@ -3,20 +3,20 @@ import UserAvatar from '@/features/users/components/UserAvatar';
 import { useStore } from '@/stores/RootStore';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { UpdateNote } from '../types/UpdateNote';
+import { UpdateNote } from '../types/updateNote';
 
 const NoteMetadata = observer(() => {
   const { selectedNote, updateNoteApi } = useStore('noteStore');
   const { findUserByUuid, currentUser } = useStore('userStore');
   const user = findUserByUuid(selectedNote ? selectedNote.createdBy : '');
 
+  const noteOwner = user ? user : currentUser;
+  if (!noteOwner || !selectedNote) return <div className="card w-[32rem] h-full hidden xl:block" />;
+
   const handleUpdateNote = (data: Partial<UpdateNote>) => {
     if (!selectedNote) return;
     updateNoteApi(selectedNote.uuid, data);
   };
-
-  const noteOwner = user ? user : currentUser;
-  if (!noteOwner || !selectedNote) return <div className="card w-[32rem] h-full hidden xl:block" />;
 
   return (
     <div className="h-full space-y-8 px-4">

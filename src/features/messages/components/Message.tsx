@@ -40,21 +40,18 @@ const Message = observer(({ message, showUser, disabled, isThread }: Props) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
-  const emojiButtonRef = useRef<any>(null);
+  const emojiButtonRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const user = findUserByUuid(message.userId);
+  if (!user) return;
 
   const handleViewUserProfile = (userId: string) => {
     navigate(`/app/profile/${userId}`);
   };
 
-  const user = findUserByUuid(message.userId);
-
-  if (!user) return;
-
   const handleShowEmojiPicker = () => {
     if (emojiButtonRef.current) {
       const rect = emojiButtonRef.current.getBoundingClientRect();
-
       setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
     }
   };
@@ -78,7 +75,6 @@ const Message = observer(({ message, showUser, disabled, isThread }: Props) => {
   const handleAddReaction = async (emojiId: string) => {
     await addReactionApi({
       emojiId,
-      userId: message.userId,
       messageId: message.uuid,
     });
     handleCloseEmojiPicker();

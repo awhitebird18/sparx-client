@@ -1,12 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 
 export const getFields = async (templateId: string): Promise<Field[]> => {
   try {
-    const res = await axios.get(`card-field/template/${templateId}`);
+    const { data } = await axios.get(`card-field/template/${templateId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

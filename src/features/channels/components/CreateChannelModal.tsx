@@ -21,10 +21,13 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-export type CreateChannelModalProps = { onSubmit: any; channelId?: string };
+export type CreateChannelModalProps = {
+  onSubmit: (channelName: string) => void;
+  channelId?: string;
+};
 
 const CreateChannelModal = observer(({ onSubmit, channelId }: CreateChannelModalProps) => {
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const { findChannelByUuid } = useStore('channelStore');
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,13 +47,9 @@ const CreateChannelModal = observer(({ onSubmit, channelId }: CreateChannelModal
     }, [channelId, findChannelByUuid]),
   });
 
-  const handleCloseModal = () => {
-    setActiveModal(null);
-  };
-
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     onSubmit(values.name);
-    handleCloseModal();
+    closeModal();
   }
 
   return (
@@ -77,14 +76,7 @@ const CreateChannelModal = observer(({ onSubmit, channelId }: CreateChannelModal
           />
 
           <div className="flex ml-auto gap-3 mt-10">
-            <Button
-              type="button"
-              className="ml-auto w-28"
-              variant="outline"
-              onClick={() => {
-                handleCloseModal();
-              }}
-            >
+            <Button type="button" className="ml-auto w-28" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
             <Button className="ml-auto w-28" type="submit" variant="default">

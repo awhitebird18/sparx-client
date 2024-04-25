@@ -8,7 +8,7 @@ export interface User extends Base {
   email: string;
   profileImage?: string;
   isBot: boolean;
-  isAdmin?: boolean;
+  isAdmin: boolean;
   status?: UserStatus;
   preferences: UserPreferences;
 }

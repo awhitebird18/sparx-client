@@ -5,26 +5,22 @@ import { emptyInputState } from '@/utils/emptyInputState';
 
 const Note = observer(() => {
   const { selectedNote, updateNoteApi, updateNote } = useStore('noteStore');
+  if (!selectedNote) return;
 
   const handleSaveTitle = async (value: string) => {
     if (!selectedNote) return;
-
     await updateNoteApi(selectedNote.uuid, { title: value });
   };
 
   const handleChangeTitle = async (value: string) => {
     if (!selectedNote) return;
-
     updateNote(selectedNote.uuid, { title: value });
   };
 
   const handleContentChange = async (value: string) => {
     if (!selectedNote || value === emptyInputState) return;
-
     await updateNoteApi(selectedNote.uuid, { content: value });
   };
-
-  if (!selectedNote) return;
 
   return (
     <div className="h-full flex">

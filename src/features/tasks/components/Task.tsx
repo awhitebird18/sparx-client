@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { ThreeDots } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 
-interface TaskProps {
+interface Props {
   task: {
     id: number;
     text: string;
@@ -26,7 +26,7 @@ interface TaskProps {
   dueDate: string;
 }
 
-const Task: React.FC<TaskProps> = observer(({ task, onDelete, onComplete }) => {
+const Task: React.FC<Props> = observer(({ task, onDelete, onComplete }) => {
   const { setActiveModal } = useStore('modalStore');
   const { setCurrentChannelUuid } = useStore('channelStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);

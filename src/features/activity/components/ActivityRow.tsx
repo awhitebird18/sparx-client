@@ -1,10 +1,14 @@
 import UserAvatar from '@/features/users/components/UserAvatar';
 import dayjs from 'dayjs';
+import { Activity } from '../types/activity';
+import { useStore } from '@/stores/RootStore';
 
-type Props = { activity: any };
+type Props = { activity: Activity };
 
 export const ActivityRow = ({ activity }: Props) => {
-  const user = activity.user;
+  const { findUserByUuid } = useStore('userStore');
+  const user = findUserByUuid(activity.userId);
+  if (!user) return;
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (

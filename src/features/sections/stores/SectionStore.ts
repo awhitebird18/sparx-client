@@ -2,10 +2,8 @@ import { makeObservable, observable, action, computed } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
 import { CreateSection, Section, UpdateSection } from '@/features/sections/types';
 import sectionsApi from '../api';
-import { ChannelType } from '@/features/channels/enums';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -30,17 +28,12 @@ export class SectionStore {
       removeSectionApi: action,
       moveSectionApi: action,
       fetchsectionsApi: action,
-      findSectionByChannelType: action,
+      findDefaultSection: action,
       findSectionByUuid: action,
       addChannelUuidToSection: action,
       updateChannelSectionApi: action,
       removeChannelUuidFromSection: action,
-      directChannelSectionId: computed,
     });
-  }
-
-  get directChannelSectionId() {
-    return this.sections.find((section: Section) => section.type === ChannelType.DIRECT)?.uuid;
   }
 
   get sortedSections() {
@@ -131,8 +124,8 @@ export class SectionStore {
     this.updateSection(sectionBFound);
   };
 
-  findSectionByChannelType = (channelType: ChannelType) => {
-    return this.sections.find((el: Section) => el.type === channelType);
+  findDefaultSection = () => {
+    return this.sections.find((el: Section) => el.isDefault);
   };
 
   addChannelUuidToSection = (channelUuid: string, sectionUuid: string) => {

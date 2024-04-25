@@ -7,45 +7,29 @@ export type RemoveChannelModalProps = { uuid: string };
 
 const RemoveChannelModal = observer(({ uuid }: RemoveChannelModalProps) => {
   const { removeChannelApi, findChannelByUuid } = useStore('channelStore');
-  const { setActiveModal } = useStore('modalStore');
-  const { channelConnectors, setChannelConnectors } = useStore('channelConnectorStore');
-  const { currentWorkspaceId } = useStore('workspaceStore');
+  const { closeModal } = useStore('modalStore');
 
   const handleRemoveField = async () => {
-    if (!currentWorkspaceId) return;
+    await removeChannelApi(uuid);
 
-    await removeChannelApi(uuid, currentWorkspaceId);
-
-    setChannelConnectors(
-      channelConnectors.filter(
-        (line) => line.start.nodeId !== uuid && (!line.end || line.end.nodeId !== uuid),
-      ),
-    );
-
-    setActiveModal(null);
-  };
-  const handleCancel = () => {
-    setActiveModal(null);
+    closeModal();
   };
 
   const channel = findChannelByUuid(uuid);
-
   if (!channel) return null;
 
   return (
     <Modal title={`Remove ${channel.name}?`}>
-      <>
-        <p className="mb-6 text-muted">Are you sure you would like to remove this node?</p>
+      <p className="mb-6 text-muted">Are you sure you would like to remove this node?</p>
 
-        <div className="flex gap-4 ">
-          <Button onClick={handleCancel} variant="outline" className="ml-auto">
-            Cancel
-          </Button>
-          <Button onClick={handleRemoveField} variant="destructive">
-            Confirm
-          </Button>
-        </div>
-      </>
+      <div className="flex gap-4 ">
+        <Button onClick={closeModal} variant="outline" className="ml-auto">
+          Cancel
+        </Button>
+        <Button onClick={handleRemoveField} variant="destructive">
+          Confirm
+        </Button>
+      </div>
     </Modal>
   );
 });
