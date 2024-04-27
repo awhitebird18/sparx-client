@@ -129,7 +129,7 @@ export class WorkspaceStore {
     const workspace = await workspaceSpaceApi.createWorkspace(createWorkspace);
 
     // Todo: add back
-    // this.addWorkspace(workspace);
+    this.addWorkspace(workspace);
 
     return workspace;
   };
@@ -144,10 +144,12 @@ export class WorkspaceStore {
     await workspaceSpaceApi.leaveWorkspace(userId, workspaceId);
   };
 
-  joinWorkspaceApi = async (id: string) => {
-    const userWorkspace = await workspaceSpaceApi.joinWorkspace(id);
+  joinWorkspaceApi = async (workspaceId: string) => {
+    const userWorkspace = await workspaceSpaceApi.joinWorkspace(workspaceId);
 
     this.addUserWorkspace(userWorkspace);
+
+    return userWorkspace;
   };
 
   uploadWorkspaceImageApi = async (workspaceId: string, imgUrl: string) => {

@@ -1,11 +1,5 @@
 import { Button } from '@/components/ui/Button';
-import {
-  ArrowsAngleContract,
-  ArrowsAngleExpand,
-  Bullseye,
-  House,
-  PencilSquare,
-} from 'react-bootstrap-icons';
+import { ArrowsAngleContract, ArrowsAngleExpand, Bullseye, House } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -14,8 +8,6 @@ import { useControls, useTransformEffect } from 'react-zoom-pan-pinch';
 const TransformControls = observer(() => {
   const { zoomIn, zoomOut, instance, zoomToElement, setTransform, resetTransform } = useControls();
   const { currentChannelId, channels } = useStore('channelStore');
-  const { isEditing, setIsEditing } = useStore('nodemapStore');
-  const { lastViewedWorkspace } = useStore('workspaceStore');
   const { toggleFullScreen, isFullscreen } = useStore('sidebarStore');
   const [scale, setScale] = useState(1);
 
@@ -52,15 +44,6 @@ const TransformControls = observer(() => {
       <Button className="w-10 h-10 p-0 " variant="ghost" onClick={scrollToActiveNode}>
         <Bullseye size={18} />
       </Button>
-      {lastViewedWorkspace?.isAdmin && (
-        <Button
-          className="w-10 h-10 p-0 "
-          variant={isEditing ? 'outline-primary' : 'ghost'}
-          onClick={() => setIsEditing(!isEditing)}
-        >
-          <PencilSquare size={18} />
-        </Button>
-      )}
 
       <Button
         className="w-10 h-10 p-0 "

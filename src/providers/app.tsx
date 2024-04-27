@@ -11,7 +11,6 @@ import '@/styles/app.css';
 import '@/styles/chatroom.css';
 import '@/styles/index.css';
 import '@/styles/globals.css';
-import 'react-resizable/css/styles.css';
 
 export type AppProviderProps = {
   children: React.ReactNode;

@@ -9,8 +9,8 @@ import {
 import { useStore } from '@/stores/RootStore';
 import {
   AlignStart,
-  BookmarkCheckFill,
-  HandIndexFill,
+  BookmarkCheck,
+  HandIndex,
   InfoCircle,
   Pencil,
   ThreeDots,
@@ -46,9 +46,10 @@ const NodePanel = observer(({ uuid }: Props) => {
 
   const handleJoin = async (channelId: string) => {
     const defaultSection = findDefaultSection();
-    if (!defaultSection) return;
 
-    await joinChannelApi({ channelId, sectionId: defaultSection.uuid });
+    // if (!defaultSection) return;
+
+    await joinChannelApi({ channelId, sectionId: defaultSection?.uuid });
   };
 
   const handleLeaveChannel = async (channelId: string) => {
@@ -63,29 +64,29 @@ const NodePanel = observer(({ uuid }: Props) => {
   return (
     <div
       data-node-id={uuid}
-      className="absolute -top-20 left-0 flex gap-2 bg-hover border border-border card rounded-lg shadow-xl p-1 items-center !z-40 !opacity-100"
+      className="absolute -top-16 left-0 flex gap-2 bg-card card border border-border card rounded-lg p-1 items-center z-30"
     >
       <Button
         variant="ghost"
-        className="h-10 w-10 text-secondary"
+        className={`h-12 w-12 text-secondary ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
         size="icon"
         onClick={() => setCurrentChannelUuid(uuid)}
       >
-        <HandIndexFill size={17} />
+        <HandIndex size={20} />
       </Button>
 
       {/* Node Status Dropdown */}
       <Button
         variant="ghost"
-        className="h-10 w-10 text-secondary"
+        className={`h-12 w-12 text-secondary ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
         size="icon"
         onClick={() => handleApplyToFavorites(uuid)}
       >
-        <BookmarkCheckFill size={17} />
+        <BookmarkCheck size={19} />
       </Button>
       <Button
         variant="ghost"
-        className="h-10 w-10"
+        className={`h-12 w-12 ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
         size="icon"
         onClick={() => setSidePanelComponent({ type: 'assistant' })}
       >
@@ -93,14 +94,14 @@ const NodePanel = observer(({ uuid }: Props) => {
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="p-0 w-10 h-10" variant="outline" size="icon">
-            <ThreeDots />
+          <Button className="p-0 w-12 h-12 text-main" variant="ghost" size="icon">
+            <ThreeDots size={20} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-40 p-2">
+        <DropdownMenuContent align="start" className="w-40 p-1">
           {isSubscribed ? (
             <DropdownMenuItem
-              className="flex items-center gap-3"
+              className="flex items-center gap-4 px-2"
               onClick={() => handleLeaveChannel(uuid)}
             >
               <AlignStart /> Leave node
@@ -111,7 +112,7 @@ const NodePanel = observer(({ uuid }: Props) => {
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            className="gap-3 h-10 px-3"
+            className="gap-4 h-9 px-2"
             onClick={() => {
               if (!currentWorkspaceId) return;
               setActiveModal({
@@ -123,14 +124,14 @@ const NodePanel = observer(({ uuid }: Props) => {
             <Pencil /> Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="gap-3 h-10 px-3"
+            className="gap-4 h-9 px-2"
             onClick={() => {
               setActiveModal({ type: 'RemoveChannelModal', payload: { uuid } });
             }}
           >
             <Trash /> Delete
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-3 h-10 px-3">
+          <DropdownMenuItem className="gap-4 h-9 px-2">
             <InfoCircle /> Info
           </DropdownMenuItem>
         </DropdownMenuContent>

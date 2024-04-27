@@ -6,6 +6,7 @@ import AppSkeleton from '@/components/loaders/AppSkeleton';
 import { observer } from 'mobx-react-lite';
 import { AuthContextData } from './types/AuthContextData';
 import { AuthContext } from './contexts/AuthContext';
+import { PrimaryColors, Theme } from '@/features/preferences/enums';
 
 interface Props {
   children: ReactNode;
@@ -14,13 +15,18 @@ interface Props {
 export const AuthProvider: React.FC<Props> = observer(({ children }) => {
   const { setSections } = useStore('sectionStore');
   const { setInitialPreferences, resetPreferences } = useStore('userPreferencesStore');
-  const { setSubscribedChannels } = useStore('channelStore');
+  const { setSubscribedChannels, setUserChannelData } = useStore('channelStore');
   const { setChannelUnreads } = useStore('channelUnreadStore');
   const { setUsers, setCurrentUserId } = useStore('userStore');
   const { connectToSocketServer } = useStore('socketStore');
   const { setUserStatuses } = useStore('userStatusStore');
-  const { setWorkspaces, setUserWorkspaceData, currentWorkspaceId, resetAll } =
-    useStore('workspaceStore');
+  const {
+    setWorkspaces,
+    setUserWorkspaceData,
+    currentWorkspaceId,
+    resetAll,
+    currentUserWorkspaceData,
+  } = useStore('workspaceStore');
   const [loading, setLoading] = useState(true);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [fadeClass, setFadeClass] = useState('fade-enter');
@@ -86,22 +92,27 @@ export const AuthProvider: React.FC<Props> = observer(({ children }) => {
   const verifyAndLoginUser = useCallback(async () => {
     try {
       const data = await authApi.verify();
-      setCurrentUserId(data.currentUser.uuid);
-      if (!data.workspaces) {
-        setUsers([data.currentUser]);
-        return;
-      } else {
-        setUsers(data.users);
-      }
 
-      connectToSocketServer(data.currentUser);
-      setChannelUnreads(data.channelUnreads);
-      setInitialPreferences(data.userPreferences);
-      setSections(data.sections);
-      setSubscribedChannels(data.channels);
-      setUserStatuses(data?.userStatuses);
+      setInitialPreferences({ primaryColor: PrimaryColors.PURPLE, theme: Theme.LIGHT });
+
+      if (!data.currentUser) return;
+
+      setUsers(data.users);
+      setCurrentUserId(data.currentUser.uuid);
+
+      if (!data.workspaces) return;
       setWorkspaces(data.workspaces);
       setUserWorkspaceData(data.userWorkspaces);
+
+      if (currentUserWorkspaceData?.isFirstLogin) return;
+
+      setInitialPreferences(data.userPreferences);
+      connectToSocketServer(data.currentUser);
+      setChannelUnreads(data.channelUnreads);
+      setSections(data.sections);
+      setSubscribedChannels(data.channels);
+      setUserChannelData(data.channelSubscriptions);
+      setUserStatuses(data?.userStatuses);
     } catch (error) {
       console.error(error);
     } finally {

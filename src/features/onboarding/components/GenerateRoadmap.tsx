@@ -9,29 +9,33 @@ import { DndProvider } from 'react-dnd';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'react-bootstrap-icons';
 
-type Props = { incrementStep: () => void };
+type Props = { setStep: (val: number) => void };
 
-const GenerateRoadmap = observer(({ incrementStep }: Props) => {
+const GenerateRoadmap = observer(({ setStep }: Props) => {
   const [isLoading, setIsLoading] = useState(true);
   const { currentWorkspace } = useStore('workspaceStore');
   const { setSubscribedChannels } = useStore('channelStore');
 
   const handleGenerateRoadmap = useCallback(async () => {
     if (!currentWorkspace) return;
-    setIsLoading(true);
 
-    const channels = await workspaceApi.generateRoadmap(
-      currentWorkspace.name,
-      currentWorkspace.uuid,
-    );
+    try {
+      setIsLoading(true);
 
-    setSubscribedChannels(channels);
-
-    setIsLoading(false);
+      const channels = await workspaceApi.generateRoadmap(
+        currentWorkspace.name,
+        currentWorkspace.uuid,
+      );
+      setSubscribedChannels(channels);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [currentWorkspace, setSubscribedChannels]);
 
   const handleConfirm = () => {
-    incrementStep();
+    setStep(3);
   };
 
   useEffect(() => {
@@ -54,7 +58,7 @@ const GenerateRoadmap = observer(({ incrementStep }: Props) => {
       </DndProvider>
       <div
         className="card bg-card border border-border rounded-xl w-fit h-fit flex p-8 flex-col gap-4 absolute bottom-12 right-20 z-50 prose dark:prose-invert"
-        style={{ zIndex: 100000000000000 }}
+        style={{ zIndex: 100 }}
       >
         <h3>How does this look?</h3>
         <div className="flex gap-4 ml-auto ">

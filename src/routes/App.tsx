@@ -12,7 +12,7 @@ import useHistoryState from '@/hooks/useHistoryState';
 const App = observer(() => {
   const location = useLocation();
   const { currentUser } = useStore('userStore');
-  const { workspaces, lastViewedWorkspace } = useStore('workspaceStore');
+  const { workspaces, lastViewedWorkspace, currentUserWorkspaceData } = useStore('workspaceStore');
   const { setCurrentChannelUuid, channels, findChannelByUuid } = useStore('channelStore');
   const history = useHistoryState();
 
@@ -20,7 +20,12 @@ const App = observer(() => {
     return <Navigate to="/login" replace />;
   }
 
-  if (workspaces.length === 0 || !lastViewedWorkspace || lastViewedWorkspace?.isFirstLogin) {
+  if (
+    workspaces.length === 0 ||
+    !lastViewedWorkspace ||
+    lastViewedWorkspace?.isFirstLogin ||
+    currentUserWorkspaceData?.isFirstLogin
+  ) {
     return <Navigate to="/onboarding" replace />;
   }
 

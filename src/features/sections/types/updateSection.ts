@@ -1,4 +1,4 @@
-import { SortBy } from '@/layout/sidebar/enums';
+import { SortBy } from '../enums/sortBy';
 
 export interface UpdateSection {
   name?: string;

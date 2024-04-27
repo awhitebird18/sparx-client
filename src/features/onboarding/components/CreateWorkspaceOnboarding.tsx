@@ -16,18 +16,13 @@ const formSchema = z.object({
   name: z.string().min(2).max(30),
 });
 
-type Props = { incrementStep: () => void };
+type Props = { setStep: (val: number) => void };
 
-const CreateWorkspaceOnboarding = observer(({ incrementStep }: Props) => {
+const CreateWorkspaceOnboarding = observer(({ setStep }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { userLogout } = useAuth();
-  const {
-    createWorkspaceApi,
-    joinWorkspaceApi,
-    setLastViewedWorkspace,
-    setLastViewedWorkspaceData,
-  } = useStore('workspaceStore');
-  const { createChannelApi, joinChannelApi } = useStore('channelStore');
+  const { createWorkspaceApi, joinWorkspaceApi, setLastViewedWorkspace } =
+    useStore('workspaceStore');
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [workspaceImage, setWorkspaceImage] = useState('');
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,26 +33,18 @@ const CreateWorkspaceOnboarding = observer(({ incrementStep }: Props) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    const workspace = await createWorkspaceApi({ name: values.name, imgUrl: workspaceImage });
-    const userWorkspaceData = await joinWorkspaceApi(workspace.uuid);
+    try {
+      setIsLoading(true);
+      const workspace = await createWorkspaceApi({ name: values.name, imgUrl: workspaceImage });
 
-    setLastViewedWorkspace();
-    setLastViewedWorkspaceData(userWorkspaceData);
-
-    const newChannel = await createChannelApi(
-      { name: workspace.name, isDefault: true, x: 4000, y: 4000 },
-      undefined,
-      workspace.uuid,
-    );
-
-    await joinChannelApi({
-      channelId: newChannel.uuid,
-      sectionId: undefined,
-    });
-
-    setIsLoading(false);
-    incrementStep();
+      await joinWorkspaceApi(workspace.uuid);
+      setLastViewedWorkspace();
+      setStep(2);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleSelectImage = (e: ChangeEvent<HTMLInputElement>) => {

@@ -4,4 +4,5 @@ export interface CreateChannel {
   isDefault?: boolean;
   x?: number;
   y?: number;
+  parentChannelId?: string;
 }

@@ -10,18 +10,25 @@ dayjs.extend(timezone);
 
 export class NodemapStore {
   zoomLevel = 1.0;
-  isEditing = false;
   isFullscreen = false;
   isDraggingNode = false;
+  isLoading = false;
   isControlPressed = false;
   nodemapSettings: Partial<NodemapSettings> = {
     userCountVisible: false,
     flashcardsDueVisible: false,
     unreadMessageCountVisible: false,
+    xPosition: 4000,
+    yPosition: 4000,
+    zoomLevel: 1,
   };
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  setIsLoading(bool: boolean) {
+    this.isLoading = bool;
   }
 
   fetchNodemapSettingsApi = async (workspaceId: string) => {
@@ -29,6 +36,8 @@ export class NodemapStore {
     if (!nodemapSettings) {
       await nodemapApi.createNodemapSettings(workspaceId);
     }
+
+    console.log(nodemapSettings);
     this.setNodemapSettings(nodemapSettings);
   };
 
@@ -40,17 +49,16 @@ export class NodemapStore {
     Object.assign(this.nodemapSettings, nodemapSettings);
   };
 
-  updateNodemapSettingsApi = async (uuid: string, updateFields: Partial<NodemapSettings>) => {
-    const nodemapSettings = await nodemapApi.updateNodemapSettings(uuid, updateFields);
+  updateNodemapSettingsApi = async (
+    workspaceId: string,
+    updateFields: Partial<NodemapSettings>,
+  ) => {
+    const nodemapSettings = await nodemapApi.updateNodemapSettings(workspaceId, updateFields);
     this.updateNodemapSettings(nodemapSettings);
   };
 
   setZoomLevel = (value: number) => {
     this.zoomLevel = value;
-  };
-
-  setIsEditing = (bool: boolean) => {
-    this.isEditing = bool;
   };
 
   setIsDraggingNode = (bool: boolean) => {

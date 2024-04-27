@@ -13,7 +13,6 @@ export type Props = { endpoint: string };
 const WorkspaceActivity = observer(({ endpoint }: Props) => {
   const { activities, hasMore, isLoading, fetchMoreActivities, page, incrementPage } =
     useStore('activityStore');
-
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const handleIncrementPage = useCallback(
@@ -36,6 +35,18 @@ const WorkspaceActivity = observer(({ endpoint }: Props) => {
     fetchMoreActivities(endpoint);
   }, [page, endpoint, fetchMoreActivities]);
 
+  if (isLoading)
+    return (
+      <div className="card rounded-2xl opacity-90 h-full">
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
+      </div>
+    );
+
   return (
     <div className="h-full pr-2 overflow-auto prose dark:prose-invert">
       {activities.map((activity) => {
@@ -43,16 +54,6 @@ const WorkspaceActivity = observer(({ endpoint }: Props) => {
       })}
 
       {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
-      {isLoading && (
-        <div className="card rounded-2xl opacity-90 h-full">
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        </div>
-      )}
     </div>
   );
 });

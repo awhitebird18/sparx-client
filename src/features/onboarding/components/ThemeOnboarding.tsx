@@ -2,30 +2,30 @@ import { Button } from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import { PrimaryColors, Theme } from '@/features/preferences/enums';
 import { useStore } from '@/stores/RootStore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ArrowRightCircle } from 'react-bootstrap-icons';
 
-type Props = { incrementStep: () => void };
+type Props = { setStep: (val: number) => void };
 
-const ThemeOnboarding = ({ incrementStep }: Props) => {
-  const { updateThemeApi, setInitialPreferences } = useStore('userPreferencesStore');
-  const [selectedTheme, setSelectedTheme] = useState<Theme | undefined>(Theme.DARK);
+const ThemeOnboarding = ({ setStep }: Props) => {
+  const { setInitialPreferences, createUserPreferences } = useStore('userPreferencesStore');
+  const [selectedTheme, setSelectedTheme] = useState<Theme>(Theme.LIGHT);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setInitialPreferences({
-      theme: Theme.DARK,
-      primaryColor: PrimaryColors.BLUE,
-    });
-  }, [setInitialPreferences]);
+  // useEffect(() => {
+  //   setInitialPreferences({
+  //     theme: Theme.DARK,
+  //     primaryColor: PrimaryColors.BLUE,
+  //   });
+  // }, [setInitialPreferences]);
 
   const handleSubmit = async () => {
     if (selectedTheme) {
       setIsLoading(true);
-      await updateThemeApi(selectedTheme);
+      await createUserPreferences({ theme: selectedTheme });
       setIsLoading(false);
     }
-    incrementStep();
+    setStep(4);
   };
 
   const handleThemeSelect = (theme: Theme) => {

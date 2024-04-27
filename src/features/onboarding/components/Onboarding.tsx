@@ -11,43 +11,35 @@ import { useAuth } from '@/providers/contexts/useAuth';
 import AnimatedLogo from '@/components/logo/AnimatedLogo';
 
 const Onboarding = observer(() => {
+  const { currentUser } = useStore('userStore');
   const [step, setStep] = useState<number>(1);
   const { workspaces, lastViewedWorkspace, currentWorkspaceId, markUserWorkspaceViewedApi } =
     useStore('workspaceStore');
   const navigate = useNavigate();
   const { verifyAndLoginUser } = useAuth();
 
-  const incrementStep = () => {
-    setStep((prev) => {
-      return prev + 1;
-    });
-  };
-
   useEffect(() => {
-    if (lastViewedWorkspace && !lastViewedWorkspace.isFirstLogin) {
+    if (currentUser && lastViewedWorkspace && !lastViewedWorkspace.isFirstLogin) {
       return navigate('/app');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, lastViewedWorkspace]);
+
+  useEffect(() => {
     if (workspaces.length) {
       setStep(2);
     }
-  }, [lastViewedWorkspace, navigate, workspaces]);
+  }, [workspaces.length]);
 
-  useEffect(() => {
-    if (step < 5 || !lastViewedWorkspace || !currentWorkspaceId) return;
+  const finalizeSetupWorkspaceSetup = async () => {
+    if (!lastViewedWorkspace || !currentWorkspaceId) return;
 
-    const finalizeSetupWorkspaceSetup = async () => {
-      await markUserWorkspaceViewedApi(lastViewedWorkspace.uuid);
-      await seedWorkspaceData(currentWorkspaceId);
-      verifyAndLoginUser();
-    };
-    finalizeSetupWorkspaceSetup();
-  }, [
-    step,
-    currentWorkspaceId,
-    verifyAndLoginUser,
-    markUserWorkspaceViewedApi,
-    lastViewedWorkspace,
-  ]);
+    await markUserWorkspaceViewedApi(lastViewedWorkspace.uuid);
+
+    await seedWorkspaceData(currentWorkspaceId);
+
+    verifyAndLoginUser();
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-background relative">
@@ -55,10 +47,12 @@ const Onboarding = observer(() => {
         <span className="text-2xl font-bold">Sparx</span>
       </div>
 
-      {step === 1 && <CreateWorkspaceOnboarding incrementStep={incrementStep} />}
-      {step === 2 && <RoadmapOnboarding incrementStep={incrementStep} />}
-      {step === 3 && <ThemeOnboarding incrementStep={incrementStep} />}
-      {step === 4 && <UserOnboarding incrementStep={incrementStep} />}
+      {step === 1 && <CreateWorkspaceOnboarding setStep={setStep} />}
+      {step === 2 && <RoadmapOnboarding setStep={setStep} />}
+      {step === 3 && <ThemeOnboarding setStep={setStep} />}
+      {step === 4 && (
+        <UserOnboarding finalizeSetup={finalizeSetupWorkspaceSetup} setStep={setStep} />
+      )}
       {step === 5 && <GettingSetupModal />}
     </div>
   );

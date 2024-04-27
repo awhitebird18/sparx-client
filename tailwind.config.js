@@ -4,7 +4,6 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 module.exports = {
   darkMode: ['class'],
   purge: {
-    // Your other purge configurations...
     options: {
       safelist: [
         { pattern: /^from-/, variants: ['500'] },
@@ -28,7 +27,6 @@ module.exports = {
       '2xl': '1536px',
       '3xl': '1920px',
       '4xl': '2000px',
-      // You can continue adding more breakpoints if needed
     },
     container: {
       center: true,
@@ -180,7 +178,6 @@ module.exports = {
               marginTop: '0',
               marginBottom: '0',
             },
-            // Define other elements like h3, h4, p as you like
           },
         },
         dark: {
@@ -192,8 +189,6 @@ module.exports = {
                 color: theme('colors.blue.400'),
               },
             },
-
-            // Again, define other elements as needed
           },
         },
       }),
@@ -221,9 +216,6 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         spin: 'spin 1s linear infinite',
       },
-      // boxShadow: {
-      //   md: '0 3px 4px 0px rgba(0, 0, 0, 0.04)',
-      // },
       textColor: {
         main: 'hsl(var(--text-main))',
         primary: 'var(--primary)',
@@ -242,7 +234,13 @@ module.exports = {
     },
   },
   plugins: [
-    require('tailwindcss-animate'),
+    function ({ addComponents }) {
+      addComponents({
+        '.card-base': {
+          '@apply card bg-card border border-border shadow-sm rounded-lg': {},
+        },
+      });
+    },
     function ({ addBase, theme }) {
       addBase({
         '::-webkit-scrollbar': {

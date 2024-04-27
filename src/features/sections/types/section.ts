@@ -1,5 +1,5 @@
 import { Base } from '@/types/base';
-import { SortBy } from '@/layout/sidebar/enums';
+import { SortBy } from '../enums/sortBy';
 
 export interface Section extends Base {
   name: string;

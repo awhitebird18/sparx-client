@@ -1,35 +1,25 @@
-import { action, makeObservable, observable, reaction } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 
 import { PrimaryColors, Theme } from '../enums';
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
 import storage from '@/utils/storage';
+import { UserPreferences } from '../types';
 
 export class UserPreferencesStore {
   primaryColor: PrimaryColors | undefined;
   theme: Theme | undefined;
 
   constructor() {
-    makeObservable(this, {
-      primaryColor: observable,
-      theme: observable,
-      setPrimaryColor: action,
-      setTheme: action,
-      updateThemeApi: action,
-      updatePrimaryColorApi: action,
-      setInitialPreferences: action,
-      resetPreferences: action,
-    });
+    makeAutoObservable(this);
 
     reaction(
       () => this.theme,
       (newTheme) => {
-        if (newTheme === 'dark') {
+        if (newTheme === Theme.DARK) {
           document.body.classList.add(Theme.DARK);
           document.body.classList.remove(Theme.LIGHT);
-        }
-
-        if (newTheme === 'light') {
+        } else {
           document.body.classList.add(Theme.LIGHT);
           document.body.classList.remove(Theme.DARK);
         }
@@ -40,7 +30,6 @@ export class UserPreferencesStore {
       () => this.primaryColor,
       (newPrimaryColor) => {
         if (!newPrimaryColor) return;
-
         for (let i = 0; i < primaryColors.length; i++) {
           document.body.classList.remove(primaryColors[i]);
         }
@@ -50,12 +39,22 @@ export class UserPreferencesStore {
     );
   }
 
-  setPrimaryColor = (color: PrimaryColors) => {
+  setPrimaryColor(color: PrimaryColors) {
     this.primaryColor = color;
-  };
+  }
 
-  setTheme = (theme: Theme) => {
+  setTheme(theme: Theme) {
     this.theme = theme;
+  }
+
+  createUserPreferences = async (userPreferences: Partial<UserPreferences>) => {
+    const data = await userPreferencesApi.createUserPreferences(userPreferences);
+
+    this.primaryColor = data.primaryColor;
+    storage.setPrimaryColor(data.primaryColor);
+
+    this.theme = data.theme;
+    storage.setTheme(data.theme);
   };
 
   updatePrimaryColorApi = async (primaryColor: PrimaryColors) => {
@@ -87,10 +86,14 @@ export class UserPreferencesStore {
     if (theme) {
       this.setTheme(theme);
       storage.setTheme(theme);
+    } else {
+      this.setTheme(Theme.LIGHT);
     }
     if (primaryColor) {
       this.setPrimaryColor(primaryColor);
       storage.setPrimaryColor(primaryColor);
+    } else {
+      this.setPrimaryColor(PrimaryColors.PURPLE);
     }
   };
 }

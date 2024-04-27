@@ -21,53 +21,129 @@ export class ChannelStore {
   isLoading = true;
   userChannelData: ChannelSubscription[] = [];
   channelUserCounts: ChannelUserCount[] = [];
+  focusedNodeId: string | null = null;
+  draggingNodeId: string | null = null;
+  hoverOffset: { x: number; y: number } = { x: 0, y: 0 };
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { autoBind: true });
+  }
+
+  setFocusedNodeId(focusedNodeId: string | null) {
+    this.focusedNodeId = focusedNodeId;
+  }
+
+  setHoverOffset(hoverOffset: { x: number; y: number }) {
+    this.hoverOffset = hoverOffset;
+  }
+
+  setDraggingNodeId(draggingNodeId: string | null) {
+    this.draggingNodeId = draggingNodeId;
+  }
+
+  get descendantNodeIds() {
+    const descendants: string[] = [];
+
+    if (!this.draggingNodeId) return descendants;
+
+    const rootNode = this.findNode(this.draggingNodeId);
+
+    if (rootNode) {
+      this.collectDescendants(rootNode, descendants);
+    }
+
+    return descendants;
+  }
+
+  findDirectDescendants(channelId: string) {
+    const rootNode = this.findNodeRecursive(this.channelTree, channelId);
+
+    return rootNode?.children;
+  }
+
+  isNodeDescendant(targetId: string): boolean {
+    return this.descendantNodeIds.includes(targetId);
+  }
+
+  findNode(nodeId: string): ChannelTreeNode | undefined {
+    // Start the recursive search from the root nodes
+    return this.findNodeRecursive(this.channelTree, nodeId);
+  }
+
+  private findNodeRecursive(nodes: ChannelTreeNode[], nodeId: string): ChannelTreeNode | undefined {
+    for (const node of nodes) {
+      if (node.channel.uuid === nodeId) {
+        return node;
+      }
+      const foundNode = this.findNodeRecursive(node.children, nodeId);
+      if (foundNode) {
+        return foundNode;
+      }
+    }
+    return undefined;
+  }
+
+  collectDescendants(node: ChannelTreeNode, descendants: string[]) {
+    for (const child of node.children) {
+      descendants.push(child.channel.uuid);
+      this.collectDescendants(child, descendants);
+    }
   }
 
   get channelTree() {
-    const channelMap = new Map<string, Channel>();
+    const channelMap = new Map<string, ChannelTreeNode>();
     const channelTree: ChannelTreeNode[] = [];
-    // Create a map of channel IDs to channels
+
+    // Constructing the channelTree
     this.channels.forEach((channel) => {
-      channelMap.set(channel.uuid, channel);
+      channelMap.set(channel.uuid, { channel, children: [] });
     });
 
-    // Iterate through channels to build the tree
     this.channels.forEach((channel) => {
       const parentChannelId = channel.parentChannelId;
-
-      if (!parentChannelId) {
-        // If the channel has no parent, it's a root channel
-        channelTree.push({ channel, children: [] });
-      } else {
-        // If the channel has a parent, find the parent channel in the map
-        const parentChannel = channelMap.get(parentChannelId);
-        if (parentChannel) {
-          // Add the channel as a child of the parent channel
-          const parentNode = channelTree.find((node) => node.channel.uuid === parentChannelId);
-          if (parentNode) {
-            parentNode.children.push({ channel, children: [] });
-          }
+      const currentChannelNode = channelMap.get(channel.uuid);
+      if (parentChannelId) {
+        const parentChannelNode = channelMap.get(parentChannelId);
+        if (parentChannelNode && currentChannelNode) {
+          parentChannelNode.children.push(currentChannelNode);
         }
-      }
-    });
-
-    // Assign child channels to their parent channels
-    this.channels.forEach((channel) => {
-      const channelNode = channelTree.find((node) => node.channel.uuid === channel.uuid);
-      if (channelNode) {
-        channel.childChannelIds?.forEach((childChannelId) => {
-          const childChannel = channelMap.get(childChannelId);
-          if (childChannel) {
-            channelNode.children.push({ channel: childChannel, children: [] });
-          }
-        });
+      } else if (currentChannelNode) {
+        channelTree.push(currentChannelNode);
       }
     });
 
     return channelTree;
+  }
+
+  isDescendant = (channelId: string, targetChannelId: string): boolean => {
+    // Find the root node based on channelId
+    const rootNode = this.findNodeInTree(this.channelTree, channelId);
+    if (!rootNode) return false;
+
+    return this.hasDescendant(rootNode, targetChannelId);
+  };
+
+  private findNodeInTree(nodes: ChannelTreeNode[], channelId: string): ChannelTreeNode | undefined {
+    for (const node of nodes) {
+      if (node.channel.uuid === channelId) {
+        return node;
+      }
+      const result = this.findNodeInTree(node.children, channelId);
+      if (result) return result;
+    }
+    return undefined;
+  }
+
+  private hasDescendant(node: ChannelTreeNode, targetChannelId: string): boolean {
+    if (node.channel.uuid === targetChannelId) {
+      return true;
+    }
+    for (const child of node.children) {
+      if (this.hasDescendant(child, targetChannelId)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // Todo: computed value happens when the chatroom is entered. However, does not

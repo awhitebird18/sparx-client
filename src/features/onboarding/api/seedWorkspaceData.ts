@@ -3,7 +3,7 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const seedWorkspaceData = async (workspaceId: string): Promise<any> => {
   try {
-    const { data } = await axios.post(`/auth/seed-workspace-data/${workspaceId}`);
+    const { data } = await axios.get(`/auth/seed-workspace-data/${workspaceId}`);
 
     return data;
   } catch (error) {

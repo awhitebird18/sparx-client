@@ -7,9 +7,12 @@ export const updateNodemapSettings = async (
   udpateFields: Partial<NodemapSettings>,
 ): Promise<NodemapSettings> => {
   try {
-    const res = await axios.patch(`/nodemap-settings/${workspaceId}`, udpateFields);
+    const { data } = await axios.patch(
+      `/nodemap-settings?workspaceId=${workspaceId}`,
+      udpateFields,
+    );
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

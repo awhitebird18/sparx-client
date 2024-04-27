@@ -22,7 +22,7 @@ const RemoveChannelModal = observer(({ uuid }: RemoveChannelModalProps) => {
     <Modal title={`Remove ${channel.name}?`}>
       <p className="mb-6 text-muted">Are you sure you would like to remove this node?</p>
 
-      <div className="flex gap-4 ">
+      <div className="flex gap-4">
         <Button onClick={closeModal} variant="outline" className="ml-auto">
           Cancel
         </Button>

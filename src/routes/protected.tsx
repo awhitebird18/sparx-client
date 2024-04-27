@@ -19,7 +19,7 @@ const protectedRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to={navigateToLastPage()} />,
+    element: <Navigate to="/app" />,
   },
 ];
 

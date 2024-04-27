@@ -5,7 +5,7 @@
 @layer base {
   :root,
   .light {
-    --background: 220 20% 97%;
+    --background: 226 12% 94%;
     --foreground: 226 23% 94%;
 
     --scrollbarThumb: 230.2 10% 89%;
@@ -29,7 +29,7 @@
 
     --input: 220 10% 91.4%;
 
-    --primary: 220 10% 11.2%;
+    /* --primary: 220 10% 11.2%; */
     --primary-foreground: 210 10% 98%;
 
     --secondary: 0 0% 100%;
@@ -54,7 +54,7 @@
     --primary-dark: var(--color-primary-700);
     --primary-darkest: var(--color-primary-800);
     --primary-transparent: var(--color-primary-50);
-    --primary-highlight: var(--color-primary-600);
+    --primary-highlight: var(--color-primary-500);
 
     --primary-text: var(--color-primary-700);
     --primary-hover: var(--color-primary-100);
@@ -76,7 +76,7 @@
     --secondary-text: 0 0% 30%;
 
     --text-main: 226 4% 16%;
-    --text-secondary: 222 11% 34%;
+    --text-secondary: 222 11% 44%;
     --text-muted: 226 11% 60%;
 
     --border-neutral: 220 35% 80%;
@@ -119,7 +119,7 @@
 
     --input: 226.2 32.6% 17.5%;
 
-    --primary: 226 9% 91%;
+    /* --primary: 226 9% 91%; */
     --primary-foreground: 220 47.4% 11.2%;
 
     --primary-border: var(--color-primary-500);

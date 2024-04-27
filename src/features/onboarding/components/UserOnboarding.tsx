@@ -9,9 +9,9 @@ import { ChangeEvent, useRef, useState } from 'react';
 import { ArrowRightCircle, Camera } from 'react-bootstrap-icons';
 import { getAvatarUrl } from '../../workspaces/utils/avatarUrls';
 
-type Props = { incrementStep: () => void };
+type Props = { finalizeSetup: () => void; setStep: (val: number) => void };
 
-const UserOnboarding = observer(({ incrementStep }: Props) => {
+const UserOnboarding = observer(({ finalizeSetup, setStep }: Props) => {
   const { uploadProfileImageApi } = useStore('userStore');
   const { updatePrimaryColorApi } = useStore('userPreferencesStore');
 
@@ -39,11 +39,17 @@ const UserOnboarding = observer(({ incrementStep }: Props) => {
   };
 
   const handleClickNext = async () => {
-    setIsLoading(true);
-    await updatePrimaryColorApi(selectedColor as PrimaryColors);
-    await uploadProfileImageApi(selectedImage);
-    setIsLoading(false);
-    incrementStep();
+    try {
+      setStep(5);
+      setIsLoading(true);
+      await updatePrimaryColorApi(selectedColor as PrimaryColors);
+      await uploadProfileImageApi(selectedImage);
+      await finalizeSetup();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSelectPrimaryColor = (primaryColor: string) => {

@@ -8,14 +8,13 @@ import VerificationSuccessful from '@/features/auth/components/VerificationSucce
 
 const AppRoutes = observer(() => {
   const { currentUser } = useStore('userStore');
-  const { workspaces } = useStore('workspaceStore');
 
   const commonRoutes = [
     { path: '/verified', element: <VerificationSuccessful /> },
     { path: '*', element: <Navigate to="/" /> },
   ];
 
-  const routes = currentUser && workspaces ? protectedRoutes : publicRoutes;
+  const routes = currentUser ? protectedRoutes : publicRoutes;
 
   return useRoutes([...routes, ...commonRoutes]);
 });
