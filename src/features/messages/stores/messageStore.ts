@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { v4 as uuid } from 'uuid';
@@ -6,8 +6,7 @@ import timezone from 'dayjs/plugin/timezone';
 import messageApi from '@/features/messages/api';
 import reactionsApi from '@/features/reactions/api';
 import { CreateMesssage, Message, UpdateMessage } from '@/features/messages/types';
-import { CreateReaction } from '@/features/reactions/types';
-import { convertToDayJs } from '@/utils/convertToDayjs';
+import { CreateReaction, Reaction } from '@/features/reactions/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -18,34 +17,10 @@ export class MessageStore {
   isLoading = true;
   hasMore = true;
   thread: Message | undefined = undefined;
+  messageEditId?: string;
 
   constructor() {
-    makeObservable(this, {
-      messages: observable,
-      threadMessages: computed,
-      page: observable,
-      thread: observable,
-      hasMore: observable,
-      findMessageByUuid: action,
-      closeThread: action,
-      addMessage: action,
-      addMessages: action,
-      updateMessage: action,
-      removeMessage: action,
-      removeMessageApi: action,
-      fetchMessagesApi: action,
-      addReactionApi: action,
-      incrementPage: action,
-      formatAutomatedMessage: action,
-      fetchThreadMessagesApi: action,
-      createMessageApi: action,
-      setMessages: action,
-      setPage: action,
-      setIsLoading: action,
-      updateMessageApi: action,
-      setHasMore: action,
-      groupedMessagesWithUser: computed,
-    });
+    makeAutoObservable(this, undefined, { autoBind: true });
   }
 
   get groupedMessagesWithUser() {
@@ -78,6 +53,15 @@ export class MessageStore {
 
   incrementPage = () => {
     this.page = this.page + 1;
+  };
+
+  isMessageEditing = (messageId: string): boolean => {
+    const isEditing = messageId === this.messageEditId;
+    return isEditing;
+  };
+
+  setMessageEditId = (messageId?: string) => {
+    this.messageEditId = messageId;
   };
 
   setPage = (page: number) => {
@@ -145,7 +129,7 @@ export class MessageStore {
 
     if (!message) return;
 
-    Object.assign(message, convertToDayJs(updatedMessage));
+    Object.assign(message, updatedMessage);
   };
 
   removeMessage = (uuid: string) => {
@@ -205,16 +189,14 @@ export class MessageStore {
   fetchMessagesApi = async (channelId: string) => {
     this.setIsLoading(true);
 
-    const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const [messages] = await Promise.all([
-      messageApi.getMessages(this.page, channelId),
-      minimumLoadingTimePromise,
-    ]);
+    const messages = await messageApi.getMessages(this.page, channelId);
 
     const formattedMessages = messages.map((message: Message) => ({
       ...message,
       createdAt: dayjs(message.createdAt),
+      reactions: message.reactions.sort((a: Reaction, b: Reaction) =>
+        a.emojiId.localeCompare(b.emojiId),
+      ),
     }));
 
     this.setHasMore(false);

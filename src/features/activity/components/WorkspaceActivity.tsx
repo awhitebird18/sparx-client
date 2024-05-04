@@ -1,58 +1,53 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { ActivityRow } from './ActivityRow';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
+import SkeletonPlaceholder from './ActivitySkeleton';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import { useActivityStore } from '../hooks/useActivityStore';
 
-type IntersectionObserverEntry = {
-  isIntersecting: boolean;
-};
-
-export type Props = { endpoint: string };
-
-const WorkspaceActivity = observer(({ endpoint }: Props) => {
-  const { activities, hasMore, isLoading, fetchMoreActivities, page, incrementPage } =
-    useStore('activityStore');
+const WorkspaceActivity = observer(() => {
+  const {
+    displayActivities,
+    hasMore,
+    isLoading,
+    fetchActivities,
+    page,
+    incrementPage,
+    initialLoad,
+    setInitialLoad,
+  } = useActivityStore();
+  const { currentWorkspaceId } = useStore('workspaceStore');
+  const { currentProfileUserId } = useStore('userStore');
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  const handleIncrementPage = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && hasMore) {
-        incrementPage();
-      }
-    },
-    [hasMore, incrementPage],
-  );
+  const loadMoreActivities = useCallback(() => {
+    if (hasMore && !isLoading) {
+      incrementPage();
+    }
+  }, [hasMore, isLoading, incrementPage]);
+
+  useIntersectionObserver(sentinelRef, loadMoreActivities);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleIncrementPage);
-    if (sentinelRef.current) observer.observe(sentinelRef.current);
+    if (!currentWorkspaceId) return;
+    setInitialLoad(page === 1);
+    fetchActivities(currentWorkspaceId, currentProfileUserId).finally(() => setInitialLoad(false));
+  }, [page, fetchActivities, currentWorkspaceId, currentProfileUserId, setInitialLoad]);
 
-    return () => observer.disconnect();
-  }, [handleIncrementPage, hasMore, incrementPage, isLoading]);
-
-  useEffect(() => {
-    fetchMoreActivities(endpoint);
-  }, [page, endpoint, fetchMoreActivities]);
-
-  if (isLoading)
-    return (
-      <div className="card rounded-2xl opacity-90 h-full">
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-      </div>
-    );
+  if (initialLoad && isLoading) {
+    return <SkeletonPlaceholder count={5} />;
+  }
 
   return (
-    <div className="h-full pr-2 overflow-auto prose dark:prose-invert">
-      {activities.map((activity) => {
-        return <ActivityRow key={activity.uuid} activity={activity} />;
-      })}
-
+    <div className="h-full prose dark:prose-invert overflow-hidden">
+      <h3 className="p-5 mb-3">Workspace Activity</h3>
+      <div className="overflow-auto h-full px-5 space-y-9">
+        {displayActivities.map((activity) => (
+          <ActivityRow key={activity.uuid} activity={activity} />
+        ))}
+      </div>
+      {isLoading && <SkeletonPlaceholder count={1} />}
       {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
     </div>
   );

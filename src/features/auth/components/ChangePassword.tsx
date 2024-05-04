@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import authApi from '@/features/auth/api';
 import { useAuth } from '@/providers/contexts/useAuth';
 import { ChangePasswordData } from '../types/changePasswordData';
+import { LogoTextBanner } from '@/components/logo/LogoBanner';
 
 const ChangePassword: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ChangePassword: React.FC = () => {
       if (!token) return;
 
       await authApi.changePassword({ password: data.password, token });
-      await verifyAndLoginUser();
+      verifyAndLoginUser();
       navigate('/app');
     } catch (err) {
       console.error(err);
@@ -24,9 +25,7 @@ const ChangePassword: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background">
-      <div className="flex gap-2 items-center absolute top-4 left-5">
-        <span className="text-2xl font-bold">Sparx</span>
-      </div>
+      <LogoTextBanner />
       <div className="card border border-border p-8 shadow-lg rounded-2xl bg-card w-full max-w-md">
         <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
           <Logo size={28} />
@@ -34,10 +33,8 @@ const ChangePassword: React.FC = () => {
           <p className="mt-2 text-center font-light">Set yourself a new password below</p>
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="sm:rounded-lg">
-            <ChangePasswordForm onSubmit={onSubmit} />
-          </div>
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md sm:rounded-lg">
+          <ChangePasswordForm onSubmit={onSubmit} />
         </div>
       </div>
     </div>

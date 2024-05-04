@@ -1,74 +1,91 @@
 import { Button } from '@/components/ui/Button';
-import { useState } from 'react';
-import { Magic, Map } from 'react-bootstrap-icons';
-import paths from '@/assets/images/paths.png';
-import GenerateRoadmap from '@/features/onboarding/components/GenerateRoadmap';
+import { Magic } from 'react-bootstrap-icons';
+import { useOnboardingStore } from '../hooks/useOnboardingStore';
+import { ONBOARDING_STEPS } from '../utils/onboardingSteps';
+import { useCallback } from 'react';
+import { useStore } from '@/stores/RootStore';
+import workspaceApi from '@/features/nodemap/api';
+import Spinner from '@/components/ui/Spinner';
+import { observer } from 'mobx-react-lite';
+import Header from './Header';
 
-type Props = { setStep: (val: number) => void };
+const points = [
+  'You may choose to have AI generate a roamdap as a starting point. This can help explore a topic you are interested in. You will have the opportunity review the roadmap once created.',
+  'Would you like to generate a roadmap?',
+];
 
-const RoadmapOnboarding = ({ setStep }: Props) => {
-  const [showRoadmap, setShowRoadmap] = useState(false);
+const RoadmapOnboarding = observer(() => {
+  const { setSubscribedChannels } = useStore('channelStore');
+  const { currentWorkspace } = useStore('workspaceStore');
+  const { setStep, isLoading, setIsLoading } = useOnboardingStore();
 
   const handleSubmit = async () => {
-    setStep(3);
+    setStep(ONBOARDING_STEPS.THEME);
   };
 
-  const handleShowRoadmapModal = () => {
-    setShowRoadmap(true);
+  const handleGenerateRoadmap = useCallback(async () => {
+    if (!currentWorkspace) return;
+
+    try {
+      setIsLoading(true);
+
+      const channels = await workspaceApi.generateRoadmap(
+        currentWorkspace.name,
+        currentWorkspace.uuid,
+      );
+      setSubscribedChannels(channels);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentWorkspace, setIsLoading, setSubscribedChannels]);
+
+  const handleShowRoadmapModal = async () => {
+    await handleGenerateRoadmap();
+    setStep(ONBOARDING_STEPS.GENERATE_ROADMAP);
   };
 
-  if (showRoadmap) {
-    return <GenerateRoadmap setStep={setStep} />;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center prose dark:prose-invert flex-col gap-12">
+        <Header
+          title={`Generating ${currentWorkspace?.name} Roadmap`}
+          description="This will only take a moment..."
+        />
+
+        <Spinner size={24} />
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center text-center prose dark:prose-invert">
-      <h2 className="text-main">Roadmap</h2>
-      <p className="text-secondary">
-        This will be the shared roadmap for you workspace. It should be a broad topics such as
-        "Frotend Development" or "Nursing".
-      </p>
-      <div className="flex gap-12 items-center w-[65rem] h-[32rem] mt-6">
-        <div className="flex flex-col gap-3 items-center w-1/2  h-full">
-          <img src={paths} className="object-cover h-full opacity-80 rounded-2xl" />
-        </div>
-        <div className="flex flex-col gap-6 w-1/2 h-full prose dark:prose-invert">
-          <p className="text-left text-secondary">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ex placeat ipsam aut quam
-            similique.
-          </p>
-          <p className="text-left text-secondary">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
-          <p className="text-left text-secondary">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ex placeat ipsam aut quam
-            similique.
-          </p>
-          <p className="text-left text-secondary">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe ex placeat ipsam aut quam
-            similique.
-          </p>
+    <div className="flex flex-col items-center text-center prose dark:prose-invert gap-8">
+      <Header title={`Generate ${currentWorkspace?.name} Roadmap`} />
 
-          <div className="h-full flex justify-between gap-6">
-            <Button
-              className="flex-col items-center h-full w-full gap-4"
-              onClick={handleSubmit}
-              variant="outline"
-            >
-              <Map size={36} /> <p className="h-10 text-lg">Nah, I will start from scratch</p>
-            </Button>
-            <Button
-              className="flex-col items-center h-full w-full gap-4"
-              onClick={handleShowRoadmapModal}
-            >
-              <Magic size={36} />
-              <p className="h-10 text-lg">Yes, please generate me a roadmap</p>
-            </Button>
-          </div>
-        </div>
+      <div className="flex flex-col justify-center gap-4 h-full prose dark:prose-invert mb-4">
+        {points.map((point, index) => (
+          <p key={index} className="text-center text-secondary">
+            {point}
+          </p>
+        ))}
+      </div>
+      <div className="flex gap-6">
+        <Button
+          className="flex items-center px-4 ml-auto"
+          onClick={handleSubmit}
+          variant="secondary"
+          size="lg"
+        >
+          Start from scratch
+        </Button>
+        <Button className="flex items-center gap-3 px-4" size="lg" onClick={handleShowRoadmapModal}>
+          <Magic size={16} />
+          <p>Generate AI Roadmap</p>
+        </Button>
       </div>
     </div>
   );
-};
+});
 
 export default RoadmapOnboarding;

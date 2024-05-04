@@ -1,0 +1,8 @@
+export const ONBOARDING_STEPS = {
+  CREATE_WORKSPACE: 1,
+  ROADMAP: 2,
+  GENERATE_ROADMAP: 3,
+  THEME: 4,
+  USER: 5,
+  SETUP: 6,
+};

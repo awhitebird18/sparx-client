@@ -27,37 +27,35 @@ const NewCardsModal = observer(() => {
   }, [getCardsAddedStats]);
 
   return (
-    <Modal title="New cards">
-      <div className="h-96 w-[40rem]">
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            width={500}
-            height={400}
-            data={stats}
-            margin={{
-              top: 20,
-              right: 0,
-              bottom: 0,
-              left: -20,
+    <Modal title="New cards" className="h-96 w-[40rem]">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart
+          width={500}
+          height={400}
+          data={stats}
+          margin={{
+            top: 20,
+            right: 0,
+            bottom: 0,
+            left: -20,
+          }}
+        >
+          <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
+          <XAxis dataKey="date" scale="auto" stroke="#6b7280" />
+          <YAxis stroke="#6b7280" />
+          <Tooltip
+            contentStyle={{
+              background: '#11151c',
+              borderColor: '#ffffff22',
+              boxShadow: '2px 2px 10px #000000AA',
+              borderRadius: '0.5rem',
             }}
-          >
-            <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
-            <XAxis dataKey="date" scale="auto" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
-            <Tooltip
-              contentStyle={{
-                background: '#11151c',
-                borderColor: '#ffffff22',
-                boxShadow: '2px 2px 10px #000000AA',
-                borderRadius: '0.5rem',
-              }}
-            />
-            <Legend />
+          />
+          <Legend />
 
-            <Bar dataKey="count" fill="#10b981" label="Cards added" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
+          <Bar dataKey="count" fill="#10b981" label="Cards added" />
+        </ComposedChart>
+      </ResponsiveContainer>
     </Modal>
   );
 });

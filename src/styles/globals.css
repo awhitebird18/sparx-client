@@ -5,7 +5,7 @@
 @layer base {
   :root,
   .light {
-    --background: 226 12% 94%;
+    --background: 226 16% 96%;
     --foreground: 226 23% 94%;
 
     --scrollbarThumb: 230.2 10% 89%;
@@ -32,8 +32,8 @@
     /* --primary: 220 10% 11.2%; */
     --primary-foreground: 210 10% 98%;
 
-    --secondary: 0 0% 100%;
-    --secondary-hover: 220 28% 94.1%;
+    --secondary: 226 16% 93%;
+    --secondary-hover: 226 16% 91%;
     --secondary-foreground: 220 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
@@ -73,11 +73,11 @@
 
     --text-neutral: 220 20% 30%;
 
-    --secondary-text: 0 0% 30%;
+    --secondary-text: 226 16% 24%;
 
-    --text-main: 226 4% 16%;
-    --text-secondary: 222 11% 44%;
-    --text-muted: 226 11% 60%;
+    --text-main: 226 16% 30%;
+    --text-secondary: 222 16% 50%;
+    --text-muted: 226 16% 65%;
 
     --border-neutral: 220 35% 80%;
 
@@ -89,9 +89,17 @@
   }
 
   .card {
+    --background: 0 0% 100%;
     --border: 226 20% 88%;
     --border-input: 226 10% 76%;
-    --hover: 225 10% 96%;
+    --hover: 225 16% 98%;
+  }
+
+  .card .card {
+    --background: 0 0% 100%;
+    --border: 226 14% 22%;
+    --hover: 226 14% 19%;
+    --border-input: 226 22% 84%;
   }
   .dark {
     --background: 226 13% 12%;
@@ -115,7 +123,7 @@
 
     --border: 226 20% 18%;
     --border-disabled: 226 25% 14%;
-    --border-light: 220 11% 30%;
+    --border-light: 226 18% 45%;
 
     --input: 226.2 32.6% 17.5%;
 
@@ -180,9 +188,17 @@
   }
 
   .dark .card {
-    --border: 226 18% 24%;
-    --hover: 226 15% 18%;
-    --border-input: 226 22% 30%;
+    --background: 226 12% 16%;
+    --border: 226 14% 23%;
+    --hover: 226 15% 19%;
+    --border-input: 226 22% 80%;
+  }
+
+  .dark .card .card {
+    --background: 226 14% 18%;
+    --border: 226 14% 22%;
+    --hover: 226 14% 19%;
+    --border-input: 226 22% 84%;
   }
 }
 

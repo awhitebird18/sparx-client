@@ -23,34 +23,24 @@ const Note = observer(() => {
   };
 
   return (
-    <div className="h-full flex">
-      <div className="w-full h-full flex">
-        <div className="flex flex-col rounded-xl h-full max-w-7xl w-full p-6 items-center">
-          <div className="max-w-4xl w-full">
-            <div className="w-full h-full items-center ">
-              <div className="px-8 w-full">
-                <input
-                  type="text"
-                  value={selectedNote.title}
-                  onChange={(e) => handleChangeTitle(e.target.value)}
-                  placeholder="Untitled"
-                  className="w-full border-none outline-none bg-transparent text-3xl font-semibold leading-snug"
-                  onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-                    handleSaveTitle(e.target.value)
-                  }
-                />
-              </div>
+    <div className="flex flex-col rounded-xl h-full max-w-7xl w-full p-6 items-center">
+      <div className="px-8 w-full">
+        <input
+          type="text"
+          value={selectedNote.title}
+          onChange={(e) => handleChangeTitle(e.target.value)}
+          placeholder="Untitled"
+          className="w-full border-none outline-none bg-transparent text-3xl font-semibold leading-snug"
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) => handleSaveTitle(e.target.value)}
+        />
+      </div>
 
-              <div className="w-full">
-                <Editor
-                  key={Date.now().toString()}
-                  content={selectedNote.content}
-                  onBlur={handleContentChange}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="w-full">
+        <Editor
+          key={Date.now().toString()}
+          content={selectedNote.content}
+          onBlur={handleContentChange}
+        />
       </div>
     </div>
   );

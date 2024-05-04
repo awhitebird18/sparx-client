@@ -1,10 +1,8 @@
-import { Base } from '@/types/base';
-
-export interface NodemapSettings extends Base {
+export interface NodemapSettings {
   userCountVisible: boolean;
   flashcardsDueVisible: boolean;
   unreadMessageCountVisible: boolean;
-  zoomLevel: number;
-  xPosition: number;
-  yPosition: number;
+  scale: number;
+  x: number;
+  y: number;
 }

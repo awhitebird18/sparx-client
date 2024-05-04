@@ -35,10 +35,12 @@ export function AutoFocusPlugin({ defaultSelection }: Props): null {
           const editorContainer = document.getElementById('editor-container');
 
           container?.classList.remove(
-            'border-userLight',
-            'dark:border-userMedium',
+            'border-borderLight',
+            'dark:border-borderLight',
             'dark:shadow-userMedium',
           );
+
+          container?.classList.add('border-border');
           editorContainer?.classList.add('opacity-60');
           return false;
         },
@@ -55,12 +57,14 @@ export function AutoFocusPlugin({ defaultSelection }: Props): null {
           const container = document.getElementById('focus-ring');
           const editorContainer = document.getElementById('editor-container');
 
+          container?.classList.remove('border-border');
+          editorContainer?.classList.remove('opacity-60');
+
           container?.classList.add(
-            'border-userLight',
-            'dark:border-userMedium',
+            'border-borderLight',
+            'dark:border-borderLight',
             'dark:shadow-userMedium',
           );
-          editorContainer?.classList.remove('opacity-60');
           return false;
         },
         COMMAND_PRIORITY_LOW,

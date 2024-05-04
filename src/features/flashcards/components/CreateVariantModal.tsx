@@ -18,20 +18,18 @@ const CreateVariantModal = observer(({ templateId }: CreateVariantModalProps) =>
   };
 
   return (
-    <Modal title="Create variant">
-      <div className="space-y-6 pt-2">
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter variant name"
-        />
+    <Modal title="Create variant" className="space-y-6 pt-2">
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter variant name"
+      />
 
-        <div className="flex gap-4 justify-end">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateTemplate}>Submit</Button>
-        </div>
+      <div className="flex gap-4 justify-end">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleCreateTemplate}>Submit</Button>
       </div>
     </Modal>
   );

@@ -35,24 +35,27 @@ const FlashcardsNav = observer(() => {
   ]);
 
   return (
-    <div className="w-full overflow-auto flex flex-col gap-5 prose dark:prose-invert">
-      <h3>Quick links</h3>
-      {navOptions.map((option) => {
-        const Icon = option.icon;
+    <div className="w-full prose dark:prose-invert">
+      <h3 className="p-5 mb-3">Quick links</h3>
+      <div className="px-5 space-y-5">
+        {navOptions.map((option) => {
+          const Icon = option.icon;
 
-        return (
-          <Button
-            variant="ghost"
-            className="card flex items-center justify-between card p-2 flex-1 w-full h-min"
-            onClick={() => handleOpenMainPanel(option.id)}
-          >
-            <div className="flex gap-3 items-center text-left prose dark:prose-invert text-main">
-              {<Icon />}
-              <p className="text-main leading-none !m-0">{option.title}</p>
-            </div>
-          </Button>
-        );
-      })}
+          return (
+            <Button
+              key={option.id}
+              variant="ghost"
+              className="flex items-center justify-between p-2 flex-1 w-full h-min"
+              onClick={() => handleOpenMainPanel(option.id)}
+            >
+              <div className="flex gap-3 items-center text-left prose dark:prose-invert text-main">
+                {<Icon />}
+                <p className="text-main leading-none !m-0">{option.title}</p>
+              </div>
+            </Button>
+          );
+        })}
+      </div>
     </div>
   );
 });

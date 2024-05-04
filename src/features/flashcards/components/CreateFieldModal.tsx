@@ -18,20 +18,18 @@ const CreateFieldModal = observer(({ templateId }: CreateFieldModalProps) => {
   };
 
   return (
-    <Modal title="Add field">
-      <div className="space-y-6">
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter field name"
-        />
+    <Modal title="Add field" className="space-y-6">
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter field name"
+      />
 
-        <div className="flex gap-4 justify-end">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateField}>Submit</Button>
-        </div>
+      <div className="flex gap-4 justify-end">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleCreateField}>Submit</Button>
       </div>
     </Modal>
   );

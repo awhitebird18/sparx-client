@@ -1,5 +1,4 @@
 import { makeAutoObservable, reaction } from 'mobx';
-
 import { PrimaryColors, Theme } from '../enums';
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
@@ -7,11 +6,11 @@ import storage from '@/utils/storage';
 import { UserPreferences } from '../types';
 
 export class UserPreferencesStore {
-  primaryColor: PrimaryColors | undefined;
-  theme: Theme | undefined;
+  primaryColor?: PrimaryColors;
+  theme?: Theme;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, undefined, { autoBind: true });
 
     reaction(
       () => this.theme,
@@ -72,7 +71,7 @@ export class UserPreferencesStore {
   };
 
   resetPreferences = () => {
-    this.setTheme(Theme.DARK);
+    this.setTheme(Theme.LIGHT);
     this.setPrimaryColor(PrimaryColors.BLUE);
   };
 

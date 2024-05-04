@@ -1,15 +1,14 @@
 import { Button } from '@/components/ui/Button';
 import { ArrowsAngleContract, ArrowsAngleExpand, Bullseye, House } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
-import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useControls, useTransformEffect } from 'react-zoom-pan-pinch';
+import { useNodemapStore } from '../hooks/useNodemapStore';
 
 const TransformControls = observer(() => {
   const { zoomIn, zoomOut, instance, zoomToElement, setTransform, resetTransform } = useControls();
   const { currentChannelId, channels } = useStore('channelStore');
-  const { toggleFullScreen, isFullscreen } = useStore('sidebarStore');
-  const [scale, setScale] = useState(1);
+  const { setScale, scale, toggleFullScreen, isFullscreen } = useNodemapStore();
 
   const handleViewFullscreen = () => {
     toggleFullScreen();
@@ -37,7 +36,7 @@ const TransformControls = observer(() => {
   });
 
   return (
-    <div className="flex gap-1 items-center z-10 p-1 rounded-md bg-card absolute bottom-2 right-2 shadow-md border border-border card">
+    <div className="card-base flex gap-1 items-center z-10 p-1 absolute bottom-2 right-2 h-12">
       <Button className="w-10 h-10 p-0 " variant="ghost" onClick={() => resetTransform()}>
         <House size={18} />
       </Button>

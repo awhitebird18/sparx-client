@@ -3,19 +3,15 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  purge: {
-    options: {
-      safelist: [
-        { pattern: /^from-/, variants: ['500'] },
-        { pattern: /^to-/, variants: ['500'] },
-      ],
-    },
-  },
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+  ],
+  safelist: [
+    { pattern: /^from-/, variants: ['500'] },
+    { pattern: /^to-/, variants: ['500'] },
   ],
   theme: {
     screens: {
@@ -237,7 +233,7 @@ module.exports = {
     function ({ addComponents }) {
       addComponents({
         '.card-base': {
-          '@apply card bg-card border border-border shadow-sm rounded-lg': {},
+          '@apply card bg-background border border-border rounded-lg shadow-sm': {},
         },
       });
     },

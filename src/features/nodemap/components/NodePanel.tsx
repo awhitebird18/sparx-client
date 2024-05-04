@@ -1,5 +1,3 @@
-import Logo from '@/components/logo/Logo';
-import { Button } from '@/components/ui/Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,125 +10,80 @@ import {
   BookmarkCheck,
   HandIndex,
   InfoCircle,
+  Magic,
   Pencil,
   ThreeDots,
   Trash,
 } from 'react-bootstrap-icons';
 import { observer } from 'mobx-react-lite';
+import { useChannelOperations } from '../hooks/useChannelOperations';
+import NodePanelButton from './NodePanelButton';
+import NodeStatusDropdown from './NodeStatusDropdown';
 
 type Props = { uuid: string };
 
 const NodePanel = observer(({ uuid }: Props) => {
-  const {
-    setCurrentChannelUuid,
-    updateChannelApi,
-    userChannelData,
-    joinChannelApi,
-    currentChannelId,
-    leaveChannelApi,
-  } = useStore('channelStore');
-  const { findDefaultSection } = useStore('sectionStore');
-  const { currentWorkspaceId } = useStore('workspaceStore');
   const { setActiveModal } = useStore('modalStore');
   const { setSidePanelComponent } = useStore('sidePanelStore');
-  const userChannelDetails = userChannelData.find((el) => el.channelId === uuid);
-  const isSubscribed = userChannelDetails?.isSubscribed;
-
-  const updateChannel = async (name: string) => {
-    await updateChannelApi(uuid, { name }, currentWorkspaceId);
-  };
+  const {
+    handleJoin,
+    handleLeaveChannel,
+    handleUpdate,
+    isSubscribed,
+    handleRemove,
+    handleSelectChannel,
+  } = useChannelOperations(uuid);
 
   const handleApplyToFavorites = (channelId: string) => {
     setActiveModal({ type: 'AddChannelToSectionModal', payload: { channelId } });
   };
 
-  const handleJoin = async (channelId: string) => {
-    const defaultSection = findDefaultSection();
-
-    // if (!defaultSection) return;
-
-    await joinChannelApi({ channelId, sectionId: defaultSection?.uuid });
-  };
-
-  const handleLeaveChannel = async (channelId: string) => {
-    await leaveChannelApi(channelId);
-    const navHistoryString = window.localStorage.getItem('navigationHistory');
-    const historyParsed = navHistoryString && JSON.parse(navHistoryString);
-    if (historyParsed?.length && currentChannelId === channelId) {
-      setCurrentChannelUuid(historyParsed[historyParsed.length - 2].nodeId);
-    }
-  };
-
   return (
     <div
       data-node-id={uuid}
-      className="absolute -top-16 left-0 flex gap-2 bg-card card border border-border card rounded-lg p-1 items-center z-30"
+      className="card-base !shadow-md border-gray-300 !shadow-black/30 !dark:bg-card-hover dark:border-slate-300/20 absolute -top-16 left-0 flex gap-2 p-1 items-center z-50"
     >
-      <Button
-        variant="ghost"
-        className={`h-12 w-12 text-secondary ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
-        size="icon"
-        onClick={() => setCurrentChannelUuid(uuid)}
-      >
+      <NodePanelButton isSubscribed={isSubscribed} onClick={handleSelectChannel}>
         <HandIndex size={20} />
-      </Button>
+      </NodePanelButton>
 
-      {/* Node Status Dropdown */}
-      <Button
-        variant="ghost"
-        className={`h-12 w-12 text-secondary ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
-        size="icon"
-        onClick={() => handleApplyToFavorites(uuid)}
-      >
+      <NodePanelButton isSubscribed={isSubscribed} onClick={() => handleApplyToFavorites(uuid)}>
         <BookmarkCheck size={19} />
-      </Button>
-      <Button
-        variant="ghost"
-        className={`h-12 w-12 ${!isSubscribed && 'opacity-40 pointer-events-none'}`}
-        size="icon"
+      </NodePanelButton>
+
+      <NodeStatusDropdown uuid={uuid} />
+
+      <NodePanelButton
+        isSubscribed={isSubscribed}
         onClick={() => setSidePanelComponent({ type: 'assistant' })}
       >
-        <Logo size={7} />
-      </Button>
+        <Magic size={19} />
+      </NodePanelButton>
+
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button className="p-0 w-12 h-12 text-main" variant="ghost" size="icon">
+        <DropdownMenuTrigger>
+          <NodePanelButton isSubscribed>
             <ThreeDots size={20} />
-          </Button>
+          </NodePanelButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-40 p-1">
-          {isSubscribed ? (
-            <DropdownMenuItem
-              className="flex items-center gap-4 px-2"
-              onClick={() => handleLeaveChannel(uuid)}
-            >
-              <AlignStart /> Leave node
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem className="flex items-center gap-3" onClick={() => handleJoin(uuid)}>
-              <AlignStart /> Start node
-            </DropdownMenuItem>
-          )}
+
+        <DropdownMenuContent align="start" sideOffset={8} className="w-40 p-1">
           <DropdownMenuItem
-            className="gap-4 h-9 px-2"
-            onClick={() => {
-              if (!currentWorkspaceId) return;
-              setActiveModal({
-                type: 'CreateChannelModal',
-                payload: { channelId: uuid, onSubmit: updateChannel },
-              });
-            }}
+            className="flex items-center gap-4 px-2"
+            onClick={isSubscribed ? handleLeaveChannel : handleJoin}
           >
+            {isSubscribed ? <AlignStart /> : <AlignStart />}
+            {isSubscribed ? 'Leave channel' : 'Join channel'}
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="gap-4 h-9 px-2" onClick={handleUpdate}>
             <Pencil /> Edit
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="gap-4 h-9 px-2"
-            onClick={() => {
-              setActiveModal({ type: 'RemoveChannelModal', payload: { uuid } });
-            }}
-          >
+
+          <DropdownMenuItem className="gap-4 h-9 px-2" onClick={handleRemove}>
             <Trash /> Delete
           </DropdownMenuItem>
+
           <DropdownMenuItem className="gap-4 h-9 px-2">
             <InfoCircle /> Info
           </DropdownMenuItem>

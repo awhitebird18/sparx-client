@@ -143,19 +143,21 @@
 }
 
 /* Target the first and last cell of the last row for bottom rounded corners */
-tr:last-child td:first-child {
-  border-bottom-left-radius: 12px;
+tr:last-child th:first-child {
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
-tr:last-child td:last-child {
-  border-bottom-right-radius: 12px;
+tr:last-child th:last-child {
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
-tr td,
+/* tr td,
 tr th {
   padding-left: 24px !important;
   padding-right: 24px !important;
-}
+} */
 
 .activeListItem {
   position: relative;
@@ -171,4 +173,8 @@ tr th {
   top: 0;
   height: 100%;
   background-color: var(--primary);
+}
+
+.collapsible[data-state='open'] > .toggler {
+  transform: rotate(90deg);
 }

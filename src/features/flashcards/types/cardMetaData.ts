@@ -1,9 +1,9 @@
-export type CardMetaData = {
+export interface CardMetaData {
   content: string;
   createdAt: string;
-  newReviewDate: string;
+  nextReviewDate: string;
   repetitions: number;
   userId: string;
-  uuid?: string;
-  private?: boolean;
-};
+  uuid: string;
+  private: boolean;
+}

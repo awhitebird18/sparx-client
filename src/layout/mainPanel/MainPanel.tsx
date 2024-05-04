@@ -18,7 +18,7 @@ export const MainPanel = observer(() => {
         sidePanelComponent ? 'w-2/3 4xl:w-3/4' : 'w-full'
       } transition-transform z-40 duration-300 ease-in-out`}
     >
-      <div className="flex flex-col gap-5 bg-card card h-full p-5 mr-6 rounded-md shadow-md border border-border card">
+      <div className="card-base flex flex-col gap-5 h-full p-5 mr-6">
         <div className="flex justify-between items-center prose dark:prose-invert mb-8">
           <h3 className="font-normal">{`${activeComponent.type
             .charAt(0)
@@ -28,7 +28,7 @@ export const MainPanel = observer(() => {
             <X size={34} />
           </Button>
         </div>
-        {Component(activeComponent?.payload as any)}
+        {Component()}
       </div>
     </div>
   );

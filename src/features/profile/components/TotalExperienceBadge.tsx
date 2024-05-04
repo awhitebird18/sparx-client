@@ -1,17 +1,14 @@
 import { Skeleton } from '@/components/ui/Skeleton';
+import { useProfileStore } from '../hooks/useProfileStore';
+import { observer } from 'mobx-react-lite';
 
-type Props = { isLoading: boolean; totalExp: number };
+const TotalExperienceBadge = observer(() => {
+  const { isLoading, groupedExperienceByDayAndTotalExperience } = useProfileStore();
+  if (isLoading) return <Skeleton className="w-16 h-full" />;
 
-const TotalExperienceBadge = ({ isLoading, totalExp }: Props) => {
-  return (
-    <>
-      {!isLoading ? (
-        <h3 className="text-main">{`${totalExp} XP`}</h3>
-      ) : (
-        <Skeleton className="w-16 h-full" />
-      )}
-    </>
-  );
-};
+  const totalExperience = groupedExperienceByDayAndTotalExperience.totalPoints ?? 0;
+
+  return <h3 className="text-main">{`${totalExperience} XP`}</h3>;
+});
 
 export default TotalExperienceBadge;

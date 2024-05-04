@@ -7,20 +7,20 @@ interface RowData {
   uuid: string;
 }
 
-interface Props<T extends object> {
-  columns: Column<T>[];
+interface Props<T extends object, R extends object> {
+  columns: Column<R>[];
   data: T[];
   onRowClick?: (row: T) => void;
   activeId?: string;
   isLoading?: boolean;
-  tableClasses?: string | undefined;
+  tableClasses?: string;
   headerClasses?: string;
   rowClasses?: string;
   emptyElement?: ReactNode;
 }
 
 const Table = observer(
-  <T extends object>({
+  <T extends object, R extends object>({
     columns,
     data,
     onRowClick,
@@ -29,7 +29,7 @@ const Table = observer(
     headerClasses = '',
     rowClasses = '',
     emptyElement,
-  }: Props<T>): JSX.Element => {
+  }: Props<T, R>): JSX.Element => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<T>({
       columns,
       data,
@@ -38,7 +38,7 @@ const Table = observer(
 
     return (
       <div
-        className={`w-full border border-border bg-card card rounded-xl h-fit shadow-sm overflow-auto ${tableClasses}`}
+        className={`card-base border-none w-full h-fit rounded-none shadow-none overflow-auto ${tableClasses}`}
       >
         <table {...getTableProps()} className="m-0 w-full border-collapse">
           <thead>
@@ -47,7 +47,7 @@ const Table = observer(
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps()}
-                    className={`py-3 h-12 text-left align-middle font-medium text-main text-base border-b border-border truncate ${headerClasses}`}
+                    className={`text-sm font-normal text-main px-3 py-2 !border-transparent border-b !bg-hover text-base truncate ${headerClasses}`}
                   >
                     {column.render('Header')}
                   </th>
@@ -55,40 +55,38 @@ const Table = observer(
               </tr>
             ))}
           </thead>
+          <tbody {...getTableBodyProps()} className="divide-y rounded-none">
+            {rows.map((row, index) => {
+              prepareRow(row);
+
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  onDoubleClick={() => onRowClick && onRowClick(row.original)}
+                  className={`cursor-pointer text-main hover:bg-hover border-border ${
+                    index === rows.length && 'border-none'
+                  } h-16 px-2 not-prose ${rowClasses}`}
+                >
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps({
+                          style: {
+                            minWidth: cell.column.minWidth,
+                            width: cell.column.width,
+                          },
+                        })}
+                        className="px-3 h-full text-base text-secondary truncate"
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
-
-        {!isLoading && rows.length ? (
-          <div className="h-full w-full">
-            <table {...getTableProps()} className="m-0 w-full border-collapse">
-              <tbody {...getTableBodyProps()} className="divide-y">
-                {rows.map((row, index) => {
-                  prepareRow(row);
-
-                  return (
-                    <tr
-                      {...row.getRowProps()}
-                      onDoubleClick={() => onRowClick && onRowClick(row.original)}
-                      className={`cursor-pointer text-main hover:bg-hover border-border rounded-xl ${
-                        index === rows.length && 'border-none'
-                      } h-16 not-prose ${rowClasses}`}
-                    >
-                      {row.cells.map((cell) => {
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-                            className="py-3 h-full text-base text-secondary truncate"
-                          >
-                            {cell.render('Cell')}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : null}
 
         {isLoading ? (
           <Skeleton className="w-full h-16 rounded-none bg-card dark:bg-slate-500/5" />

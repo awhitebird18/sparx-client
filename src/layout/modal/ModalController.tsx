@@ -12,6 +12,7 @@ const ModalController = observer(() => {
 
   if (!Modal) return;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <Suspense fallback={null}>{Modal(activeModal?.payload as any)}</Suspense>;
 });
 

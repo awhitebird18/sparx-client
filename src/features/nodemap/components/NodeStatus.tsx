@@ -24,7 +24,7 @@ const NodeStatus = observer(({ status, isActive }: Props) => {
 
   return (
     <span
-      className={`transition-all duration-[3000ms] flex items-center text-muted w-16 leading-tight whitespace-nowrap relative ${
+      className={`flex items-center text-muted pointer-events-none w-16 leading-tight whitespace-nowrap relative ${
         status === CompletionStatus.Complete && 'text-yellow-400'
       } ${status === CompletionStatus.InProgress && 'text-primary'} text-sm ${
         isActive && 'text-white'

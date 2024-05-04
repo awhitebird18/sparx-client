@@ -1,51 +1,24 @@
 import Modal from '@/layout/modal/Modal';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/Form';
-import { Input } from '@/components/ui/Input';
+import { Form } from '@/components/ui/Form';
 import { useStore } from '@/stores/RootStore';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
 import { Button } from '@/components/ui/Button';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Calendar } from '@/components/ui/Calendar';
-import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
 import { observer } from 'mobx-react-lite';
-import { Calendar2 } from 'react-bootstrap-icons';
 import { Task } from '../types/task';
 import { CreateTask } from '../types/createTask';
-
-const formSchema = z.object({
-  name: z.string().min(2).max(30),
-  dueDate: z.date({
-    required_error: 'A due date is required.',
-  }),
-});
+import useUpdateTaskForm, { formSchema } from '@/hooks/useUpdateTaskForm';
+import TaskNameField from './TaskNameField';
+import DueDateField from './DueDateField';
 
 export type Props = { task: Task; onSubmit: (data: Partial<CreateTask>) => void };
 
 const UpdateTask = observer(({ task, onSubmit }: Props) => {
   const { closeModal } = useStore('modalStore');
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: useMemo(() => {
-      return {
-        name: task?.name,
-        dueDate: task ? new Date(task.dueDate) : new Date(),
-      };
-    }, [task]),
-  });
+  const form = useUpdateTaskForm(task);
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await onSubmit(values);
+      onSubmit(values);
       closeModal();
     } catch (err) {
       console.error(err);
@@ -60,62 +33,8 @@ const UpdateTask = observer(({ task, onSubmit }: Props) => {
           className="mt-2 flex flex-col space-y-12 w-72"
         >
           <div className="flex flex-col gap-8">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>Task Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter task name" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="dueDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col w-full">
-                  <FormLabel>Due Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={`w-full pl-3 text-left font-normal ${
-                            !field.value && 'text-muted-foreground'
-                          }`}
-                        >
-                          {field.value ? (
-                            format(new Date(field.value), 'PPP')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <Calendar2 className="ml-auto h-4 w-4 opacity-30 !z-[200]" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0 bg-red-200 " align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(day) => {
-                          if (day) {
-                            field.onChange(day);
-                          }
-                        }}
-                        // disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                      />
-                    </PopoverContent>
-                  </Popover>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <TaskNameField form={form} />
+            <DueDateField form={form} />
           </div>
 
           <div className="flex ml-auto gap-3 mt-10">

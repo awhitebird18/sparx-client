@@ -5,6 +5,7 @@ import { useStore } from '@/stores/RootStore';
 
 const Nodes = observer(() => {
   const { hoverOffset, channelTree } = useStore('channelStore');
+
   const renderNode = (node: ChannelTreeNode): JSX.Element => {
     return (
       <div key={node.channel.uuid}>

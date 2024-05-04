@@ -7,11 +7,11 @@ export const uploadWorkspaceImage = async (
   workspaceImg: string,
 ): Promise<Workspace> => {
   try {
-    const res = await axios.patch(`/workspaces/${workspaceId}/image-upload`, {
+    const { data } = await axios.patch(`/workspaces/${workspaceId}/image-upload`, {
       imgUrl: workspaceImg,
     });
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

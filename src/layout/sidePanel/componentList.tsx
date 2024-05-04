@@ -1,3 +1,4 @@
+import { ActivityStoreProvider } from '@/features/activity/providers/activityStoreProvider';
 import {
   Users,
   ChatRoom,
@@ -10,19 +11,70 @@ import {
   NotesSidePanel,
   StatsPanel,
 } from './lazyLoadComponents';
-import { Props as WorkspaceActivityProps } from '@/features/activity/components/WorkspaceActivity';
+import { AssistantStoreProvider } from '@/features/assistant/providers/assistantStoreProvider';
+import { UserTypingStoreProvider } from '@/features/chatroom/hooks/useChatroomStore';
+import { MessageStoreProvider } from '@/features/messages/providers/messageStoreProvider';
+import SuspenseWrapper from '@/components/SuspenseWrapper';
 
 const sidePanelComponents = {
-  users: () => <Users />,
-  discussions: () => <ChatRoom />,
-  flashcards: () => <Overview />,
-  notes: () => <ViewNotes />,
-  tasks: () => <TaskList />,
-  activity: (props: WorkspaceActivityProps) => <WorkspaceActivity {...props} />,
-  shortcutKeys: () => <ShortcutMenu />,
-  assistant: () => <Assistant />,
-  note: () => <NotesSidePanel />,
-  stats: () => <StatsPanel />,
+  users: () => (
+    <SuspenseWrapper>
+      <Users />
+    </SuspenseWrapper>
+  ),
+  discussions: () => (
+    <MessageStoreProvider>
+      <UserTypingStoreProvider>
+        <SuspenseWrapper>
+          <ChatRoom />
+        </SuspenseWrapper>
+      </UserTypingStoreProvider>
+    </MessageStoreProvider>
+  ),
+  flashcards: () => (
+    <SuspenseWrapper>
+      <Overview />
+    </SuspenseWrapper>
+  ),
+  notes: () => (
+    <SuspenseWrapper>
+      <ViewNotes />
+    </SuspenseWrapper>
+  ),
+  tasks: () => (
+    <SuspenseWrapper>
+      <TaskList />
+    </SuspenseWrapper>
+  ),
+  activity: () => (
+    <ActivityStoreProvider>
+      <SuspenseWrapper>
+        <WorkspaceActivity />
+      </SuspenseWrapper>
+    </ActivityStoreProvider>
+  ),
+  shortcutKeys: () => (
+    <SuspenseWrapper>
+      <ShortcutMenu />
+    </SuspenseWrapper>
+  ),
+  assistant: () => (
+    <AssistantStoreProvider>
+      <SuspenseWrapper>
+        <Assistant />
+      </SuspenseWrapper>
+    </AssistantStoreProvider>
+  ),
+  note: () => (
+    <SuspenseWrapper>
+      <NotesSidePanel />
+    </SuspenseWrapper>
+  ),
+  stats: () => (
+    <SuspenseWrapper>
+      <StatsPanel />
+    </SuspenseWrapper>
+  ),
 };
 
 export type SidePanelComponent = keyof typeof sidePanelComponents;

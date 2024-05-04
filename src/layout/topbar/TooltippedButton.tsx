@@ -19,7 +19,7 @@ const TooltippedButton = observer(({ type, icon: IconComponent, tooltipText }: P
       <TooltipTrigger asChild>
         <Button
           variant={sidePanelComponent?.type === type ? 'outline-primary' : 'ghost'}
-          className="h-10 w-10"
+          className="h-10 w-10 p-1"
           size="icon"
           onClick={() => toggleSidePanelComponent({ type })}
         >

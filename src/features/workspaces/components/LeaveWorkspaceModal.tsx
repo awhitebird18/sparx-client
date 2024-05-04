@@ -15,20 +15,18 @@ const LeaveWorkspaceModal = observer(() => {
   };
 
   return (
-    <Modal title={`Leave ${currentWorkspace?.name}?`}>
-      <div className="flex flex-col gap-6 max-w-lg">
-        <p>
-          This action cannot be undone. You will no longer be able to access this workspace unless
-          reinvited.
-        </p>
-        <div className="ml-auto space-x-4">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleLeave} variant="destructive">
-            Delete
-          </Button>
-        </div>
+    <Modal title={`Leave ${currentWorkspace?.name}?`} className="flex flex-col gap-6 max-w-lg">
+      <p>
+        This action cannot be undone. You will no longer be able to access this workspace unless
+        reinvited.
+      </p>
+      <div className="ml-auto space-x-4">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleLeave} variant="destructive">
+          Delete
+        </Button>
       </div>
     </Modal>
   );

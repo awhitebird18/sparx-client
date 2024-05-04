@@ -5,6 +5,7 @@ import { verify } from './verify';
 import { resetPassword } from './resetPassword';
 import { changePassword } from './changePassword';
 import { registerAnonymous } from './registerAnonymous';
+import { removeTemporaryWorkspace } from './removeTemporaryWorkspace';
 
 export default {
   login,
@@ -14,4 +15,5 @@ export default {
   resetPassword,
   changePassword,
   registerAnonymous,
+  removeTemporaryWorkspace,
 };

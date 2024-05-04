@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useDrop, DropTargetMonitor } from 'react-dnd';
 import GridPattern from './GridPattern';
 import Lines from './Lines';
@@ -13,17 +13,22 @@ const DropArea = () => {
   useSyncNodemapSettings();
   const { handleDrop, handleHover } = useDropLogic({ ref });
 
-  const dropConfig = {
-    accept: 'node',
-    canDrop: () => {
-      return true;
-    },
-    drop: handleDrop,
-    hover: handleHover,
-    collect: (monitor: DropTargetMonitor) => ({
-      isOver: monitor.isOver(),
+  const dropConfig = useMemo(
+    () => ({
+      accept: 'node',
+      canDrop: (item: any) => {
+        return item;
+      },
+      drop: handleDrop,
+      hover: handleHover,
+      collect: (monitor: DropTargetMonitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+        itemType: monitor.getItemType(),
+      }),
     }),
-  };
+    [handleDrop, handleHover],
+  );
 
   const [, drop] = useDrop(dropConfig);
   drop(ref);

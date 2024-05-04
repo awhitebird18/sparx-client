@@ -1,4 +1,3 @@
-import { useStore } from '@/stores/RootStore';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -17,10 +16,12 @@ import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import CancelButtonPlugin from './plugins/CancelButtonPlugin';
 import { editorConfig } from '@/features/messageInput/configs/editorConfig';
 import { Message } from '@/features/messages/types';
+import { Send } from 'react-bootstrap-icons';
+import { useStore } from '@/stores/RootStore';
 
 type Props = {
   message: Message;
-  setIsEditing: (bool: boolean) => void;
+  setIsEditing: (messageId?: string) => void;
 };
 
 export default function MessageEditor({ message, setIsEditing }: Props) {
@@ -28,18 +29,18 @@ export default function MessageEditor({ message, setIsEditing }: Props) {
 
   const handleSubmit = async (messageContent: string) => {
     await updateMessageApi(message.uuid, { content: messageContent });
-    setIsEditing(false);
+    setIsEditing(undefined);
   };
 
   return (
     <LexicalComposer initialConfig={{ ...editorConfig, editorState: message.content }}>
       <div
         id="focus-ring"
-        className="transition-colors editor-container border border-border rounded-md bg-card dark:bg-background"
+        className="transition-colors border border-border shadow-sm mt-2 pb-2 rounded-md relative"
       >
-        <div id="editor-container" className="mx-1 my-3 p-2 rounded-lg">
+        <div id="editor-container">
           <TopToolbarPlugin />
-          <div className="editor-inner">
+          <div className="editor-inner mb-6">
             <RichTextPlugin
               contentEditable={<ContentEditable className="editor-input" />}
               placeholder={<></>}
@@ -56,7 +57,10 @@ export default function MessageEditor({ message, setIsEditing }: Props) {
           </div>
           <div className="absolute right-1.5 bottom-1.5 gap-2 flex">
             <CancelButtonPlugin setIsEditing={setIsEditing} />
-            <SubmitButtonPlugin onSubmit={handleSubmit} label="Update" />
+            <SubmitButtonPlugin
+              onSubmit={handleSubmit}
+              label={<Send size={10} className="mt-0.5" />}
+            />
           </div>
         </div>
       </div>

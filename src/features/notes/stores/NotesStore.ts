@@ -7,9 +7,10 @@ export class NotesStore {
   notes: Note[] = [];
   selectedNoteId: string | undefined = undefined;
   isLoading = true;
+  searchValue = '';
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, undefined, { autoBind: true });
   }
 
   get selectedNote(): Note | undefined {
@@ -18,9 +19,21 @@ export class NotesStore {
     return channel;
   }
 
+  get filteredNotes() {
+    const filteredNotes = this.notes.filter((note) =>
+      this.searchValue ? note.title?.toLowerCase().includes(this.searchValue) : note,
+    );
+
+    return filteredNotes;
+  }
+
   setSelectedNoteId = (noteId: string | undefined) => {
     this.selectedNoteId = noteId;
   };
+
+  setSearchValue(value: string) {
+    this.searchValue = value;
+  }
 
   setNotes(notes: Note[]) {
     this.notes = notes;

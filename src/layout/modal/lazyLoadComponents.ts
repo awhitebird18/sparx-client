@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelModal'));
-const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
+const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionModal'));
 const InviteUserModal = lazy(() => import('@/features/users/components/InviteUserModal'));
 const NewCardsModal = lazy(() => import('@/features/flashcards/components/NewCardsModal'));
 const FutureDueModal = lazy(() => import('@/features/flashcards/components/FutureDueModal'));
@@ -54,7 +54,6 @@ const LeaveWorkspaceModal = lazy(
 );
 const UpdateTask = lazy(() => import('@/features/tasks/components/UpdateTask'));
 const DeleteTask = lazy(() => import('@/features/tasks/components/DeleteTask'));
-const GenerateRoadmap = lazy(() => import('@/features/nodemap/components/GenerateRoadmap'));
 
 export {
   CreateChannelModal,
@@ -90,5 +89,4 @@ export {
   LeaveWorkspaceModal,
   UpdateTask,
   DeleteTask,
-  GenerateRoadmap,
 };

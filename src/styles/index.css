@@ -985,6 +985,6 @@ table {
   border-color: white;
 }
 
-table thead tr:first-child {
+/* table thead tr:first-child {
   border: 1px solid transparent !important;
-}
+} */

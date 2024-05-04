@@ -19,16 +19,14 @@ const UpdateField = observer(({ uuid, updateFields }: UpdateFieldProps) => {
   };
 
   return (
-    <Modal title="Update field">
-      <div className="flex flex-col space-y-6 pt-3">
-        <Input value={value} onChange={(e) => setValue(e.target.value)} />
+    <Modal title="Update field" className="flex flex-col space-y-6 pt-3">
+      <Input value={value} onChange={(e) => setValue(e.target.value)} />
 
-        <div className="flex gap-4 ml-auto">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateField}>Submit</Button>
-        </div>
+      <div className="flex gap-4 ml-auto">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleUpdateField}>Submit</Button>
       </div>
     </Modal>
   );

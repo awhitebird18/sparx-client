@@ -8,7 +8,7 @@ export const generateFlashcardIdeas = async (
 ): Promise<FlashcardIdea[]> => {
   try {
     const { data } = await axios.post(
-      `/cards/generate-flashcard-ideas?noteId=${noteId}?channelId=${channelId}`,
+      `/cards/generate-flashcard-ideas?noteId=${noteId}&channelId=${channelId}`,
     );
 
     return data;

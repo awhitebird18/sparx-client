@@ -1,25 +1,18 @@
-import { action, computed, makeAutoObservable, observable, reaction } from 'mobx';
-import workspaceSpaceApi from '@/features/workspaces/api';
+import { makeAutoObservable, reaction } from 'mobx';
+import workspaceApi from '@/features/workspaces/api';
 import { CreateWorkspace } from '../types';
 import { Workspace } from '../types/workspace';
-import { NodemapState } from '../types/nodemapState';
 import { WorkspaceDetails } from '../types/workspaceDetails';
+import dayjs from 'dayjs';
 
 export class WorkspaceStore {
   workspaces: Workspace[] = [];
   currentWorkspaceId: string | undefined = undefined;
   userWorkspaceData: WorkspaceDetails[] = [];
   lastViewedWorkspace: WorkspaceDetails | null = null;
-  nodemapState?: NodemapState;
 
   constructor() {
-    makeAutoObservable(this, {
-      workspaces: observable,
-      userWorkspaceData: observable,
-      currentWorkspaceId: observable,
-      resetAll: action,
-      currentUserWorkspaceData: computed,
-    });
+    makeAutoObservable(this, undefined, { autoBind: true });
 
     reaction(
       () => this.userWorkspaceData,
@@ -38,51 +31,47 @@ export class WorkspaceStore {
     this.currentWorkspaceId = undefined;
   };
 
+  // Computed values
   get currentUserWorkspaceData(): WorkspaceDetails | undefined {
     const userWorkspace = this.userWorkspaceData.find(
       (userWorkspace) => userWorkspace.workspaceId === this.currentWorkspaceId,
     );
-
     return userWorkspace;
   }
 
   get currentWorkspace(): Workspace | undefined {
     const channel = this.workspaces.find((workspace) => workspace.uuid === this.currentWorkspaceId);
-
     return channel;
   }
 
-  setNodemapState = (nodemapState: NodemapState) => {
-    this.nodemapState = nodemapState;
-  };
-
+  // Create
   addWorkspace = (workspace: Workspace) => {
     this.workspaces.push(workspace);
   };
 
+  addUserWorkspace = (userWorkspace: WorkspaceDetails) => {
+    this.userWorkspaceData.push(userWorkspace);
+  };
+
+  // Setters
   setWorkspaces = (workspaces: Workspace[]) => {
     this.workspaces = workspaces;
   };
 
+  setUserWorkspaceData = (userWorkspaceData: WorkspaceDetails[]) => {
+    this.userWorkspaceData = userWorkspaceData;
+  };
+
   setLastViewedWorkspace = () => {
     if (this.userWorkspaceData.length === 0) return;
-
-    const lastViewedWorkspace = this.userWorkspaceData.reduce((latest, current) => {
-      if (!latest.lastViewed) {
-        return current;
+    const lastViewedWorkspace = this.userWorkspaceData?.reduce((prev, curr) => {
+      if (!prev) {
+        return curr;
       }
-
-      const latestTime = new Date(latest.lastViewed).getTime();
-      const currentTime = new Date(current.lastViewed).getTime();
-
-      return latestTime > currentTime ? latest : current;
+      return dayjs(curr.lastViewed).isAfter(dayjs(prev.lastViewed)) ? curr : prev;
     });
 
-    // Assuming you want to do something with lastViewedWorkspace after finding it
-    // For example, setting it as a state or property
-
     const workspaceId = lastViewedWorkspace.workspaceId;
-
     this.lastViewedWorkspace = lastViewedWorkspace;
     this.selectWorkspace(workspaceId);
   };
@@ -91,27 +80,16 @@ export class WorkspaceStore {
     this.lastViewedWorkspace = userWorkspaceData;
   };
 
-  addUserWorkspace = (userWorkspace: WorkspaceDetails) => {
-    this.userWorkspaceData.push(userWorkspace);
-  };
-
   selectWorkspace = (workspaceId: string) => {
     this.currentWorkspaceId = workspaceId;
   };
 
-  switchWorkspaceApi = async (workspaceId: string) => {
-    await workspaceSpaceApi.switchWorkspace(workspaceId);
-
-    this.selectWorkspace(workspaceId);
-  };
-
+  // Update
   updateWorkspace = (updatedWorkspace: Partial<Workspace>) => {
     const workspaceFound = this.workspaces.find(
       (workspace) => workspace.uuid === updatedWorkspace.uuid,
     );
-
     if (!workspaceFound) return;
-
     Object.assign(workspaceFound, updatedWorkspace);
   };
 
@@ -119,61 +97,57 @@ export class WorkspaceStore {
     const workspaceFound = this.userWorkspaceData.find(
       (workspace) => workspace.uuid === updatedUserWorkspace.uuid,
     );
-
     if (!workspaceFound) return;
-
     Object.assign(workspaceFound, updatedUserWorkspace);
   };
 
-  createWorkspaceApi = async (createWorkspace: CreateWorkspace) => {
-    const workspace = await workspaceSpaceApi.createWorkspace(createWorkspace);
+  // Api Operations
+  async createWorkspaceAndJoinApi(createWorkspace: CreateWorkspace) {
+    const workspace = await workspaceApi.createWorkspace(createWorkspace);
 
-    // Todo: add back
+    await this.joinWorkspaceApi(workspace.uuid);
     this.addWorkspace(workspace);
-
     return workspace;
-  };
+  }
 
-  updateWorkspaceApi = async (id: string, updateWorkspace: Partial<Workspace>) => {
-    const workspace = await workspaceSpaceApi.updateWorkspace(id, updateWorkspace);
-
+  async updateWorkspaceApi(id: string, updateWorkspace: Partial<Workspace>) {
+    const workspace = await workspaceApi.updateWorkspace(id, updateWorkspace);
     this.updateWorkspace(workspace);
-  };
+  }
 
-  leaveWorkspaceApi = async (userId: string, workspaceId: string) => {
-    await workspaceSpaceApi.leaveWorkspace(userId, workspaceId);
-  };
+  async switchWorkspaceApi(workspaceId: string) {
+    await workspaceApi.switchWorkspace(workspaceId);
+    this.selectWorkspace(workspaceId);
+  }
 
-  joinWorkspaceApi = async (workspaceId: string) => {
-    const userWorkspace = await workspaceSpaceApi.joinWorkspace(workspaceId);
+  async leaveWorkspaceApi(userId: string, workspaceId: string) {
+    await workspaceApi.leaveWorkspace(userId, workspaceId);
+  }
 
+  async joinWorkspaceApi(workspaceId: string) {
+    const userWorkspace = await workspaceApi.joinWorkspace(workspaceId);
     this.addUserWorkspace(userWorkspace);
-
     return userWorkspace;
-  };
+  }
 
-  uploadWorkspaceImageApi = async (workspaceId: string, imgUrl: string) => {
-    const workspace = await workspaceSpaceApi.uploadWorkspaceImage(workspaceId, imgUrl);
-
+  async uploadWorkspaceImageApi(workspaceId: string, imgUrl: string) {
+    const workspace = await workspaceApi.uploadWorkspaceImage(workspaceId, imgUrl);
     this.updateWorkspace(workspace);
-  };
+  }
 
-  setUserWorkspaceData = (userWorkspaceData: WorkspaceDetails[]) => {
-    this.userWorkspaceData = userWorkspaceData;
-  };
-
-  fetchUserWorkspacesApi = async () => {
-    const workspaceData = await workspaceSpaceApi.getUserWorkspaces();
-
+  async fetchUserWorkspacesApi() {
+    const workspaceData = await workspaceApi.getUserWorkspaces();
     this.setUserWorkspaceData(workspaceData);
-  };
+  }
 
-  markUserWorkspaceViewedApi = async (userWorkspaceId: string) => {
-    const userWorkspaceData = await workspaceSpaceApi.markUserWorkspaceViewed(userWorkspaceId);
-
+  async markUserWorkspaceViewedApi(userWorkspaceId: string) {
+    const userWorkspaceData = await workspaceApi.markUserWorkspaceViewed(userWorkspaceId);
     this.lastViewedWorkspace = userWorkspaceData;
-    // this.setLastViewedWorkspace();
-
     this.updateUserWorkspaceData(userWorkspaceData);
-  };
+  }
+
+  async removeTemporaryWorkspaceApi(): Promise<void> {
+    if (!this.currentWorkspaceId) return;
+    await workspaceApi.removeTemporaryWorkspace(this.currentWorkspaceId);
+  }
 }

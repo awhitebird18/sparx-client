@@ -6,7 +6,7 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const updateUser = async (updateUser: UpdateUser): Promise<User> => {
   try {
-    const res = await axios.patch(`/users/self`, updateUser);
+    const { data } = await axios.patch(`/users/self`, updateUser);
 
     stores.notificationStore.addNotification({
       title: 'Profile updated',
@@ -14,7 +14,7 @@ export const updateUser = async (updateUser: UpdateUser): Promise<User> => {
       show: true,
     });
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

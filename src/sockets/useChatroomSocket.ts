@@ -1,25 +1,27 @@
-import { UserTyping } from '@/features/channels/types';
+import { useUserTypingStore } from '@/features/chatroom/hooks/useUserTypingStore';
 import { useStore } from '@/stores/RootStore';
 import { useEffect } from 'react';
 
 const useChatroomSocket = () => {
   const { currentUser } = useStore('userStore');
   const { connectSocket } = useStore('socketStore');
-  const { addUserTyping, removeUserTyping } = useStore('userTypingStore');
+  const { addUserTyping, removeUserTyping } = useUserTypingStore();
 
   // User typing
   useEffect(() => {
-    return connectSocket('typing', (data: UserTyping) => {
-      if (data.userId === currentUser?.uuid) return;
+    connectSocket('typing', (data) => {
+      const { payload } = data;
+      if (payload.userId === currentUser?.uuid) return;
 
-      addUserTyping(data);
+      addUserTyping(payload);
     });
   }, [addUserTyping, connectSocket, currentUser]);
 
   // Remove user typing
   useEffect(() => {
-    return connectSocket('stopped-typing', (data: UserTyping) => {
-      removeUserTyping(data.userId);
+    connectSocket('stopped-typing', (data) => {
+      const { payload } = data;
+      removeUserTyping(payload.userId);
     });
   }, [removeUserTyping, connectSocket, currentUser]);
 

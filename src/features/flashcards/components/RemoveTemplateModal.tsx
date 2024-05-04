@@ -15,18 +15,16 @@ const RemoveTemplateModal = observer(({ uuid }: RemoveTemplateModalProps) => {
   };
 
   return (
-    <Modal title="Remove field?">
-      <div className="space-y-6">
-        <p>Are you sure you would like to remove this template?</p>
+    <Modal title="Remove field?" className="space-y-6">
+      <p>Are you sure you would like to remove this template?</p>
 
-        <div className="flex gap-4 justify-end">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleRemoveTemplate} variant="destructive">
-            Submit
-          </Button>
-        </div>
+      <div className="flex gap-4 justify-end">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleRemoveTemplate} variant="destructive">
+          Submit
+        </Button>
       </div>
     </Modal>
   );

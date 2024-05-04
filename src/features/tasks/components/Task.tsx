@@ -10,53 +10,39 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { ThreeDots } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
+import { Task as TaskType } from '../types/task';
+import { useTaskStore } from '../hooks/useTaskStore';
 
 interface Props {
-  task: {
-    id: number;
-    text: string;
-    isComplete: boolean;
-    dueDate: string;
-    actionUrl: string;
-    channelId: string;
-  };
-  onDelete: (id: number) => void;
-  onComplete: (id: number) => void;
-  dueDate: string;
+  task: TaskType;
 }
 
-const Task: React.FC<Props> = observer(({ task, onDelete, onComplete }) => {
+const Task: React.FC<Props> = observer(({ task }) => {
   const { setActiveModal } = useStore('modalStore');
-  const { setCurrentChannelUuid } = useStore('channelStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
+  const { updateTaskApi, removeTaskApi } = useTaskStore();
 
-  const handleUpdateTask = () => {
-    setActiveModal({ type: 'UpdateTask', payload: { task: { ...task, dueDate: '03/08/2024' } } });
+  const handleShowUpdateTaskModal = () => {
+    setActiveModal({
+      type: 'UpdateTask',
+      payload: { task, onSubmit: (name: string) => updateTaskApi(task.uuid, { name }) },
+    });
     setDropdownOpen(false);
   };
 
-  const handleDeleteTask = () => {
-    setActiveModal({ type: 'DeleteTask', payload: { task, onDelete } });
+  const handleShowRemoveTaskModal = () => {
+    setActiveModal({
+      type: 'DeleteTask',
+      payload: { task, onDelete: () => removeTaskApi(task.uuid) },
+    });
     setDropdownOpen(false);
-  };
-
-  const handleClickAction = () => {
-    if (task.channelId) {
-      setCurrentChannelUuid(task.channelId);
-    }
-
-    if (task.actionUrl) {
-      navigate(task.actionUrl);
-    }
   };
 
   return (
     <div className="flex gap-4 justify-between items-start">
       <div className="flex gap-6">
         <Checkbox
-          onChange={() => onComplete(task.id)}
+          onChange={() => updateTaskApi(task.uuid, { isComplete: !task.isComplete })}
           checked={task.isComplete}
           className="h-4 w-4 border-main mt-0.5"
         />
@@ -66,12 +52,12 @@ const Task: React.FC<Props> = observer(({ task, onDelete, onComplete }) => {
             style={{ textDecoration: task.isComplete ? 'line-through' : 'none' }}
             className="text-main text-lg font-medium leading-none"
           >
-            {task.text}
+            {task.name}
           </h3>
           <p className="text-muted">Due today</p>
         </div>
 
-        <Button onClick={handleClickAction} variant="outline-primary" className="bg-card" size="sm">
+        <Button variant="outline-primary" className="bg-card" size="sm">
           Start Task
         </Button>
       </div>
@@ -81,8 +67,8 @@ const Task: React.FC<Props> = observer(({ task, onDelete, onComplete }) => {
           <ThreeDots />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
-          <DropdownMenuItem onClick={() => handleUpdateTask()}>Update Task</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleDeleteTask()}>Delete Task</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleShowUpdateTaskModal}>Update Task</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleShowRemoveTaskModal}>Delete Task</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

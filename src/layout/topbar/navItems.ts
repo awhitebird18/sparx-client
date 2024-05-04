@@ -14,8 +14,8 @@ import {
   Collection,
   CollectionFill,
   Icon,
+  Magic,
 } from 'react-bootstrap-icons';
-import Logo from '@/components/logo/Logo';
 import { SidePanelComponent } from '../sidePanel/componentList';
 
 const navItems: {
@@ -24,7 +24,7 @@ const navItems: {
   iconFilled: Icon | (({ size }: { size?: number }) => JSX.Element);
   tooltip: string;
 }[] = [
-  { type: 'assistant', icon: Logo, iconFilled: Logo, tooltip: 'AI Assistant' },
+  { type: 'assistant', icon: Magic, iconFilled: Magic, tooltip: 'AI Assistant' },
   { type: 'notes', icon: FileText, iconFilled: FileTextFill, tooltip: 'Notes' },
   { type: 'flashcards', icon: Collection, iconFilled: CollectionFill, tooltip: 'Flashcards' },
   { type: 'stats', icon: Star, iconFilled: StarFill, tooltip: 'Stats' },

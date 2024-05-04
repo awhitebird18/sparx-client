@@ -34,7 +34,6 @@ const StudyFlashcardsModal = observer(() => {
       if (prev < flashcards.length - 1) {
         prev++;
       }
-
       return prev;
     });
 
@@ -111,7 +110,7 @@ const StudyFlashcardsModal = observer(() => {
         </div>
       ) : (
         <>
-          <div className="card flex flex-col items-center w-3/4 h-[32rem] flip-card-inner rounded-2xl bg-hover border border-border shadow-lg">
+          <div className="flex flex-col items-center w-3/4 h-[32rem] flip-card-inner rounded-2xl bg-hover border border-border shadow-lg">
             <div className="text-xl text-center flex flex-col items-center prose">
               <h2
                 className={`flex w-min items-center m-0 h-16 mt-2 text-main ${

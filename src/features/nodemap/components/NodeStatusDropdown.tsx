@@ -9,7 +9,7 @@ import {
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { useStore } from '@/stores/RootStore';
 import { updateUserChannel } from '@/features/channels/api/updateUserChannel';
-import { Alarm, ChevronDoubleRight, PlayCircle, StarFill } from 'react-bootstrap-icons';
+import { Alarm, ChevronDoubleRight, PlayCircle, Star, StarFill } from 'react-bootstrap-icons';
 import { Button } from '@/components/ui/Button';
 
 const NodeStatusDropdown = ({ uuid }: { uuid: string }) => {
@@ -31,17 +31,19 @@ const NodeStatusDropdown = ({ uuid }: { uuid: string }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="h-10 w-10 text-secondary"
+          className="h-12 w-12 text-secondary"
           size="icon"
           onClick={() => setSidePanelComponent({ type: 'assistant' })}
         >
-          <StarFill size={17} />
+          <Star size={17} />
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-52">
+      <DropdownMenuContent className="w-52 p-2 space-y-1" align="start" sideOffset={10}>
         <>
-          <DropdownMenuLabel>Set Status</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-secondary font-normal text-sm py-1">
+            Set Status
+          </DropdownMenuLabel>
 
           <DropdownMenuItem
             className={`flex items-center gap-3 ${

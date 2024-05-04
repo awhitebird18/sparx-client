@@ -1,3 +1,3 @@
-import { getWorkspaceActivities } from './getWorkspaceActivities';
+import { getActivities } from './getActivities';
 
-export default { getWorkspaceActivities };
+export default { getActivities };

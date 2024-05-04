@@ -12,7 +12,7 @@ const NavigationBar = observer(() => {
 
   return (
     <div
-      className={`card-base top-2 right-2 p-1 ${
+      className={`card-base top-2 h-12 right-2 p-1 ${
         sidePanelComponent ? 'w-1/3 4xl:w-1/4' : 'w-fit'
       }  absolute z-30 overflow-hidden justify-end items-center gap-2 flex p-1 px-1.5`}
     >
@@ -35,6 +35,7 @@ const NavigationBar = observer(() => {
 
       {navItems.map((navItem) => (
         <TooltippedButton
+          key={navItem.type}
           type={navItem.type}
           tooltipText={navItem.tooltip}
           icon={sidePanelComponent?.type === navItem.type ? navItem.iconFilled : navItem.icon}

@@ -20,7 +20,7 @@ export class SidebarStore {
   isShortcutKeysOpen: boolean;
   isMembersOpen: boolean;
   isFullscreen: boolean;
-  ref: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement> | null;
 
   constructor(channelStore: ChannelStore, sectionStore: SectionStore) {
     makeObservable(this, {
@@ -168,7 +168,7 @@ export class SidebarStore {
   };
 
   enterFullScreen = () => {
-    const element = this.ref.current;
+    const element = this?.ref?.current;
     if (element) {
       if (element.requestFullscreen) {
         element.requestFullscreen();

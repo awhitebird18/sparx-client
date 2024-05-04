@@ -1,42 +1,42 @@
+import { Section } from '@/features/sections/types';
 import { useStore } from '@/stores/RootStore';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const useSectionSocket = () => {
   const { connectSocket } = useStore('socketStore');
   const { addSection, updateSection, removeSection, setSections } = useStore('sectionStore');
 
-  // New section
+  const listeners = useMemo(
+    () => [
+      {
+        event: 'new-section',
+        callback: (data: { payload: { section: Section } }) => addSection(data.payload.section),
+      },
+      {
+        event: 'update-section',
+        callback: (data: { payload: { section: Section } }) => updateSection(data.payload.section),
+      },
+      {
+        event: 'remove-section',
+        callback: (data: { payload: { sectionId: string } }) =>
+          removeSection(data.payload.sectionId),
+      },
+      {
+        event: 'user-sections',
+        callback: (data: { payload: { sections: Section[] } }) =>
+          setSections(data.payload.sections),
+      },
+    ],
+    [addSection, removeSection, setSections, updateSection],
+  );
+
   useEffect(() => {
-    return connectSocket('new-section', (data) => {
-      const { section } = data.payload;
+    const cleanupFunctions = listeners.map((listener) =>
+      connectSocket(listener.event, listener.callback),
+    );
 
-      addSection(section);
-    });
-  }, [connectSocket, addSection]);
-
-  useEffect(() => {
-    return connectSocket('user-sections', (data) => {
-      const { sections } = data.payload;
-
-      setSections(sections);
-    });
-  }, [connectSocket, setSections]);
-
-  // Update section
-  useEffect(() => {
-    return connectSocket('update-section', (data) => {
-      const { section } = data.payload;
-
-      delete section.channelIds;
-
-      updateSection(section);
-    });
-  }, [connectSocket, updateSection]);
-
-  // Remove section
-  useEffect(() => {
-    return connectSocket('remove-section', removeSection);
-  }, [connectSocket, removeSection]);
+    return () => cleanupFunctions.forEach((cleanup) => cleanup?.());
+  }, [connectSocket, listeners]);
 
   return null;
 };

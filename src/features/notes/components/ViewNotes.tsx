@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import {
   ArrowReturnRight,
-  CaretDownFill,
   Eye,
   FileEarmarkTextFill,
   Lock,
-  PencilSquare,
-  Plus,
   ThreeDotsVertical,
   Unlock,
 } from 'react-bootstrap-icons';
@@ -19,7 +16,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/DropdownMenu';
-import UserAvatar from '@/features/users/components/UserAvatar';
 import { UpdateNote } from '../types/updateNote';
 import dayjs from 'dayjs';
 import NoteMetaData from './NoteMetaData';
@@ -28,7 +24,6 @@ import SearchInput from '@/components/ui/SearchInput';
 
 const ViewNotes: React.FC = observer(() => {
   const {
-    notes,
     createNote,
     selectNote,
     updateNoteApi,
@@ -36,16 +31,14 @@ const ViewNotes: React.FC = observer(() => {
     setIsLoading,
     fetchNotes,
     setSelectedNoteId,
+    searchValue,
+    setSearchValue,
+    filteredNotes,
   } = useStore('noteStore');
   const { currentChannelId, currentChannel } = useStore('channelStore');
-  const { findUserByUuid, currentUser } = useStore('userStore');
+  const { currentUser } = useStore('userStore');
   const { setActiveModal } = useStore('modalStore');
-  const [searchValue, setSearchValue] = useState('');
   const { setMainPanel, activeComponent } = useStore('mainPanelStore');
-
-  const filteredNotes = notes.filter((note) =>
-    searchValue ? note.title?.toLowerCase().includes(searchValue) : note,
-  );
 
   const handleCreateNote = async () => {
     if (!currentChannelId) return;
@@ -92,160 +85,121 @@ const ViewNotes: React.FC = observer(() => {
       {activeComponent?.type === 'note' ? (
         <NoteMetaData />
       ) : (
-        <div className="flex-1 flex flex-col h-full prose">
-          <div className="flex flex-col gap-8">
-            {isLoading || (!isLoading && filteredNotes.length) ? (
-              <div className="rounded-xl flex flex-col items-center text-main gap-6">
-                <div className="flex justify-between items-center w-full py-0">
-                  <div className="flex gap-3 items-center w-full">
-                    <div className="w-52">
-                      <SearchInput
-                        placeholder="Search"
-                        value={searchValue}
-                        setValue={setSearchValue}
-                        disabled={isLoading}
-                      />
-                    </div>
-                    <Button
-                      variant="secondary"
-                      className="flex gap-3 w-fit items-center rounded-lg h-8"
-                      size="sm"
-                      disabled={isLoading}
-                    >
-                      Owner
-                      <CaretDownFill size={11} className="mt-0.5 text-secondary" />
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      className="flex gap-3 w-fit items-center rounded-lg h-8"
-                      size="sm"
-                      disabled={isLoading}
-                    >
-                      People
-                      <CaretDownFill size={11} className="mt-0.5 text-secondary" />
-                    </Button>
-                    <Button
-                      className="gap-3 ml-auto h-8 rounded-lg"
-                      onClick={handleCreateNote}
-                      disabled={isLoading}
-                      size="sm"
-                    >
-                      <PencilSquare /> Add Note
-                    </Button>
-                  </div>
-                </div>
+        <div className="flex-1 flex flex-col h-full">
+          <div className="flex flex-col">
+            <div className="overflow-hidden h-full prose dark:prose-invert">
+              <div className="flex justify-between items-center p-5 mb-3">
+                <h3>Notes</h3>
 
-                <div className="w-full grid grid-cols-2 gap-4">
-                  {notes.map((note) => {
-                    const user = findUserByUuid(note.createdBy);
+                <div className="flex items-center gap-3">
+                  <div className="w-52">
+                    <SearchInput
+                      placeholder="Search"
+                      value={searchValue}
+                      setValue={setSearchValue}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <Button
+                    className="gap-3 ml-auto whitespace-nowrap"
+                    onClick={handleCreateNote}
+                    disabled={isLoading}
+                    size="sm"
+                  >
+                    Add Note
+                  </Button>
+                </div>
+              </div>
+
+              {isLoading || (!isLoading && filteredNotes.length) ? (
+                <div className="w-full grid grid-cols-2 gap-4 px-5">
+                  {filteredNotes.map((note) => {
                     return (
-                      <div
+                      <Button
+                        variant="outline"
                         key={note.uuid}
                         onClick={() => handleViewNote(note.uuid)}
-                        className="p-4 bg-hover card border border-border rounded-lg space-y-4 prose dark:prose-invert"
+                        className="card-base flex-col p-5 px-6 border border-border rounded-lg space-y-1 prose dark:prose-invert relative h-fit items-start"
                       >
-                        <div className="flex relative">
-                          <div className="flex items-center gap-3 text-main font-medium overflow-hidden flex-shrink-0 truncate w-full pr-6">
-                            <div className="flex-shrink-0">
-                              <FileEarmarkTextFill className="text-blue-500" size={16} />
-                            </div>
-
-                            <p className="truncate">{note.title ?? 'Untitled'}</p>
-                          </div>
-                          <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger
-                              className="p-2"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="top-1/2 -translate-y-1/2 -right-2 absolute"
-                              >
-                                <ThreeDotsVertical size={16} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="start"
-                              className="p-1.5 border border-border rounded-md text-sm bg-background"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                            >
-                              <DropdownMenuItem
-                                className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
-                                onClick={() => handleViewNote(note.uuid)}
-                              >
-                                <Eye /> View
-                              </DropdownMenuItem>
-                              {note.createdBy === currentUser?.uuid && (
-                                <DropdownMenuItem
-                                  className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
-                                  onClick={async () =>
-                                    await handleUpdateNote(note.uuid, {
-                                      isPrivate: !note.isPrivate,
-                                    })
-                                  }
-                                >
-                                  {note.isPrivate ? <Unlock /> : <Lock />}
-                                  {note.isPrivate ? 'Set public' : 'Set private'}
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem
-                                className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
-                                onClick={() => handleMoveNote(note.uuid)}
-                              >
-                                <ArrowReturnRight /> Move to
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer text-rose-500 hover:text-rose-500"
-                                onClick={() => handleClickDelete(note.uuid)}
-                              >
-                                <ArrowReturnRight /> Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                        <div className="flex-shrink-0 -ml-2 mb-2">
+                          <FileEarmarkTextFill className="text-blue-400" size={50} />
                         </div>
 
-                        <div className="bg-card w-full h-28 rounded-sm" />
-                        <div className="flex items-center gap-2">
-                          <UserAvatar
-                            userId={note.createdBy}
-                            size={24}
-                            profileImage={user?.profileImage}
-                          />
-
-                          <p className="text-secondary text-sm">{`Last viewed: ${dayjs(
-                            note.createdAt,
-                          ).format('MMM DD, YYYY')}`}</p>
+                        <div className="flex items-center gap-3 p-0.5 text-main font-medium overflow-hidden flex-shrink-0 truncate w-full">
+                          <p className="truncate">{note.title ?? 'Untitled'}</p>
                         </div>
-                      </div>
+
+                        <p className="text-muted text-xs">{`Last viewed on ${dayjs(
+                          note.createdAt,
+                        ).format('MMM DD, YYYY')}`}</p>
+
+                        <DropdownMenu modal={false}>
+                          <DropdownMenuTrigger
+                            className="p-1"
+                            onClick={(e) => e.stopPropagation()}
+                            asChild
+                          >
+                            <Button variant="ghost" size="icon" className="top-2 right-2 absolute">
+                              <ThreeDotsVertical size={20} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="start"
+                            className="p-1.5 border border-border rounded-md text-sm bg-background"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <DropdownMenuItem
+                              className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
+                              onClick={() => handleViewNote(note.uuid)}
+                            >
+                              <Eye /> View
+                            </DropdownMenuItem>
+                            {note.createdBy === currentUser?.uuid && (
+                              <DropdownMenuItem
+                                className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
+                                onClick={async () =>
+                                  await handleUpdateNote(note.uuid, {
+                                    isPrivate: !note.isPrivate,
+                                  })
+                                }
+                              >
+                                {note.isPrivate ? <Unlock /> : <Lock />}
+                                {note.isPrivate ? 'Set public' : 'Set private'}
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer"
+                              onClick={() => handleMoveNote(note.uuid)}
+                            >
+                              <ArrowReturnRight /> Move to
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="flex items-center gap-3 h-8 hover:bg-white/10 cursor-pointer text-rose-500 hover:text-rose-500"
+                              onClick={() => handleClickDelete(note.uuid)}
+                            >
+                              <ArrowReturnRight /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Button>
                     );
                   })}
                 </div>
-              </div>
-            ) : null}
-
-            <div className="flex items-start gap-6"></div>
+              ) : null}
+            </div>
 
             {!isLoading && !filteredNotes.length ? (
-              <div className="pt-12">
-                <EmptyFallback
-                  title="No Notes Found."
-                  description={
-                    <>
-                      All of your{' '}
-                      <span className="text-primary px-0.5">{currentChannel?.name}</span> notes will
-                      appear here.
-                    </>
-                  }
-                  action={{
-                    icon: <Plus size={20} />,
-                    title: 'Start a new note',
-                    callback: handleCreateNote,
-                  }}
-                />
-              </div>
+              <EmptyFallback
+                title="No Notes Found."
+                description={
+                  <>
+                    All of your <span className="text-primary px-0.5">{currentChannel?.name}</span>{' '}
+                    notes will appear here.
+                  </>
+                }
+              />
             ) : null}
           </div>
         </div>

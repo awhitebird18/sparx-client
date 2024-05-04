@@ -10,33 +10,29 @@ import {
 } from '@/components/ui/Select';
 import { Section } from '../types';
 
-export type AddChannelToSectionModalProps = { channelId: string };
+export type Props = { channelId: string };
 
-const AddChannelToSectionModal = observer(({ channelId }: AddChannelToSectionModalProps) => {
-  const { sections, updateChannelSectionApi } = useStore('sectionStore');
-  const { findChannelByUuid } = useStore('channelStore');
-  const channel = findChannelByUuid(channelId);
+const AddChannelToSectionModal = observer(({ channelId }: Props) => {
+  const { sortedSections, updateChannelSectionApi } = useStore('sectionStore');
   const { closeModal } = useStore('modalStore');
 
-  const handleSelectClick = async (sectionId: string) => {
+  const handleSelectChange = async (sectionId: string) => {
     await updateChannelSectionApi(sectionId, channelId);
     closeModal();
   };
 
   return (
-    <Modal title={`Add ${channel?.name} to section`}>
-      <div>
-        <Select onValueChange={(val: string) => handleSelectClick(val)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a fruit" />
-          </SelectTrigger>
-          <SelectContent>
-            {sections.map((section: Section) => (
-              <SelectItem value={section.uuid}>{section.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <Modal title={`Assign to bookmarks`}>
+      <Select onValueChange={(val: string) => handleSelectChange(val)}>
+        <SelectTrigger className="w-80">
+          <SelectValue placeholder="Select a node" />
+        </SelectTrigger>
+        <SelectContent>
+          {sortedSections.map((section: Section) => (
+            <SelectItem value={section.uuid}>{section.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </Modal>
   );
 });

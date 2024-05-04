@@ -15,7 +15,7 @@ export const Card = ({
 }) => {
   return (
     <div
-      className={`flex-col items-start h-full text-left p-6 px-10 shadow rounded-xl ${className} bg-hover card break-words shadow-md hover:bg-card cursor-pointer`}
+      className={`card-base hover:bg-hover flex-col items-start h-full text-left p-6 px-10 ${className} break-words cursor-pointer`}
       onClick={onClick}
     >
       <div>{icon}</div>

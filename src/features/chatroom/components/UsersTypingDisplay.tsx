@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite';
-import { useStore } from '@/stores/RootStore';
 import { UserTyping } from '@/features/chatroom/types';
+import { useUserTypingStore } from '../hooks/useUserTypingStore';
 
 const UsersTypingDisplay = observer(() => {
-  const { usersTyping } = useStore('userTypingStore');
+  const { usersTyping } = useUserTypingStore();
   if (!usersTyping?.length) return null;
 
   return (

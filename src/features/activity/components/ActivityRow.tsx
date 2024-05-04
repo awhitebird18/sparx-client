@@ -1,5 +1,4 @@
 import UserAvatar from '@/features/users/components/UserAvatar';
-import dayjs from 'dayjs';
 import { Activity } from '../types/activity';
 import { useStore } from '@/stores/RootStore';
 
@@ -12,18 +11,17 @@ export const ActivityRow = ({ activity }: Props) => {
   const userName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <div className="card border border-border flex gap-4 w-full rounded-xl items-start bg-card card shadow-sm p-4 z-10 mb-4 h-24">
+    <div className="flex gap-5 w-full items-start z-10 h-fit">
       <UserAvatar size={36} userId={user.uuid} profileImage={user.profileImage} showStatus />
 
       <div className={`flex flex-col w-full gap-1`}>
-        <h4 className="text-main leading-snug">
+        <h4 className="text-main font-medium leading-none flex items-center gap-2">
           {userName}{' '}
-          <span className="text-secondary font-normal tracking-wide">{activity.text}</span>
+          <span className="text-muted text-xs font-medium whitespace-nowrap leading-none mt-0.5">
+            {activity?.createdAt}
+          </span>
         </h4>
-
-        <p className="font-medium text-muted text-sm leading-none whitespace-nowrap">
-          {dayjs(activity.createdAt).format('h:mm a')}
-        </p>
+        <span className="text-secondary !font-normal text-sm tracking-wide">{activity.text}</span>
       </div>
     </div>
   );

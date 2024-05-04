@@ -4,83 +4,57 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { ChevronLeft, CupHot, Play, StarFill } from 'react-bootstrap-icons';
+import NodeStatBadge from './NodeStatBadge';
+import NodeStatsSkeleton from './NodeStatsSkeleton';
+import { useNodemapStore } from '../hooks/useNodemapStore';
 
 const NodeStats = observer(() => {
   const [isOpen, setIsOpen] = useState(true);
-  const { userChannelData, channels } = useStore('channelStore');
-  const channelCount = channels.length;
+  const { completionPercentage, channelStats } = useStore('channelStore');
+  const { isLoading } = useNodemapStore();
 
-  const handleToggleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  const stats = userChannelData.reduce(
-    (
-      acc: {
-        [CompletionStatus.Complete]: number;
-        [CompletionStatus.OnHold]: number;
-        [CompletionStatus.InProgress]: number;
-        [CompletionStatus.Skip]: number;
-      },
-      channel,
-    ) => {
-      acc[channel.status] = (acc[channel.status] || 0) + 1;
-      return acc;
-    },
-    {
-      [CompletionStatus.Complete]: 0,
-      [CompletionStatus.OnHold]: 0,
-      [CompletionStatus.InProgress]: 0,
-      [CompletionStatus.Skip]: 0,
-    },
-  );
-
-  if (!stats[CompletionStatus.Complete]) stats[CompletionStatus.Complete] = 0;
-  if (!stats[CompletionStatus.OnHold]) stats[CompletionStatus.OnHold] = 0;
-  if (!stats[CompletionStatus.Skip]) stats[CompletionStatus.Skip] = 0;
-  if (!stats[CompletionStatus.InProgress]) stats[CompletionStatus.InProgress] = 0;
-
-  const completionPercentage =
-    channelCount === 0 ? 0 : Math.round((stats[CompletionStatus.Complete] / channelCount) * 100);
+  if (isLoading) return <NodeStatsSkeleton />;
 
   return (
-    <div className="card rounded-md flex gap-2.5 shadow-lg whitespace-nowrap items-center fixed bottom-2 left-2  bg-card p-1 pr-5 border border-border">
-      <div className="flex items-center gap-1.5 bg-primary-transparent border border-primary flex-shrink-0 h-9 w-14 justify-center rounded-md text-main">
-        {`${completionPercentage}%`}
-      </div>
+    <div className="card-base flex gap-2.5 whitespace-nowrap items-center fixed bottom-2 left-2 p-1 pr-5 h-12">
+      <Button variant="outline-primary">{`${completionPercentage}%`}</Button>
 
       <div
         className={`flex items-center whitespace-nowrap gap-2.5 transition-all ease-in-out duration-300 ${
           isOpen ? 'max-w-lg' : 'max-w-0'
         } overflow-hidden`}
       >
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
-          {`${stats[CompletionStatus.Complete]}`}
-          <StarFill className="text-yellow-400" />
-        </div>
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
-          {`${stats[CompletionStatus.OnHold]}`}
-          <CupHot />
-        </div>
-        <div className="flex-shrink-0 whitespace-nowrap flex items-center gap-1.5 h-10 w-12 justify-center rounded-md">
-          {`${stats[CompletionStatus.InProgress]}`}
-          <Play />
-        </div>
-      </div>
-
-      <Button
-        onClick={handleToggleOpen}
-        className="card absolute -right-3 top-1/2 -translate-y-1/2 h-7 w-7 p-0.5 ml-auto bg-card !border-border"
-        variant="default"
-      >
-        <ChevronLeft
-          className={`transition-transform transform duration-300 text-muted ${
-            !isOpen && 'rotate-180'
-          }`}
+        <NodeStatBadge
+          count={channelStats[CompletionStatus.Complete]}
+          icon={<StarFill className="text-yellow-400" />}
         />
-      </Button>
+        <NodeStatBadge count={channelStats[CompletionStatus.OnHold]} icon={<CupHot />} />
+        <NodeStatBadge count={channelStats[CompletionStatus.InProgress]} icon={<Play />} />
+      </div>
+      <CloseButton isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 });
 
 export default NodeStats;
+
+type CloseButtonProps = { isOpen: boolean; setIsOpen: (value: boolean) => void };
+const CloseButton = ({ isOpen, setIsOpen }: CloseButtonProps) => {
+  const handleToggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <Button
+      onClick={handleToggleOpen}
+      className="absolute -right-3 top-1/2 -translate-y-1/2 h-7 w-7 p-0.5 ml-auto bg-card !border-border"
+      variant="default"
+    >
+      <ChevronLeft
+        className={`transition-transform transform duration-300 text-muted ${
+          !isOpen && 'rotate-180'
+        }`}
+      />
+    </Button>
+  );
+};

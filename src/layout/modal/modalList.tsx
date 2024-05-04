@@ -30,7 +30,6 @@ import {
   LeaveWorkspaceModal,
   UpdateTask,
   DeleteTask,
-  GenerateRoadmap,
   DeleteNote,
 } from './lazyLoadComponents';
 
@@ -41,7 +40,7 @@ import { UserDetailsProps } from '@/features/profile/components/UserDetails';
 import { Props as DeleteSectionProps } from '@/features/sections/components/DeleteSection';
 import { DeleteNoteProps } from '@/features/notes/components/DeleteNoteModal';
 import { MoveNoteProps } from '@/features/notes/components/MoveNote';
-import { AddChannelToSectionModalProps } from '@/features/sections/components/AddChannelToSectionModal';
+import { Props as AddChannelToSectionModalProps } from '@/features/sections/components/AddChannelToSectionModal';
 import { CreateFieldModalProps } from '@/features/flashcards/components/CreateFieldModal';
 import { UpdateFieldProps } from '@/features/flashcards/components/UpdateFieldModal';
 import { RemoveFieldModalProps } from '@/features/flashcards/components/RemoveFieldModal';
@@ -54,7 +53,7 @@ import { RemoveVariantModalProps } from '@/features/flashcards/components/Remove
 import { Props as UpdateTaskProps } from '@/features/tasks/components/UpdateTask';
 import { Props as DeleteTaskProps } from '@/features/tasks/components/DeleteTask';
 import { CreateChannelModalProps } from '@/features/channels/components/CreateChannelModal';
-import { Props as CreateSectionModalProps } from '@/features/sections/components/CreateSectionForm';
+import { Props as CreateSectionModalProps } from '@/features/sections/components/CreateSectionModal';
 import { RemoveChannelModalProps } from '@/features/channels/components/RemoveChannelModal';
 
 const modalList = {
@@ -93,7 +92,6 @@ const modalList = {
   LeaveWorkspaceModal: () => <LeaveWorkspaceModal />,
   UpdateTask: (props: UpdateTaskProps) => <UpdateTask {...props} />,
   DeleteTask: (props: DeleteTaskProps) => <DeleteTask {...props} />,
-  GenerateRoadmap: () => <GenerateRoadmap />,
 };
 
 export type ModalName = keyof typeof modalList;

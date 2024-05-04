@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import channelApi from '@/features/channels/api';
 import { ChannelUnread } from '../types';
 
@@ -6,17 +6,10 @@ export class ChannelUnreadStore {
   channelUnreads: ChannelUnread[] = [];
 
   constructor() {
-    makeObservable(this, {
-      channelUnreads: observable,
-      incrementChannelUnreads: action,
-      setChannelUnreads: action,
-      clearChannelUnreads: action,
-      channelUnreadsCount: computed,
-      updateUnreadCountApi: action,
-      findChannelUnreads: computed,
-    });
+    makeAutoObservable(this, undefined, { autoBind: true });
   }
 
+  // Computed Values
   get channelUnreadsCount() {
     return this.channelUnreads.reduce(
       (prev: number, curr: ChannelUnread) => prev + curr.unreadCount,
@@ -32,13 +25,19 @@ export class ChannelUnreadStore {
     };
   }
 
+  // Setters
   setChannelUnreads = (channelUnreads: ChannelUnread[]) => {
     this.channelUnreads = channelUnreads;
   };
 
+  clearChannelUnreads = (channelId: string) => {
+    this.channelUnreads = this.channelUnreads.filter(
+      (channelUnread: ChannelUnread) => channelUnread.channelId !== channelId,
+    );
+  };
+
   incrementChannelUnreads = (channelId: string) => {
     const channelUnread = this.findChannelUnreads(channelId);
-
     if (channelUnread) {
       channelUnread.unreadCount += 1;
     } else {
@@ -46,13 +45,8 @@ export class ChannelUnreadStore {
     }
   };
 
+  // Update
   updateUnreadCountApi = async (channelId: string) => {
     await channelApi.updateLastRead(channelId);
-  };
-
-  clearChannelUnreads = (channelId: string) => {
-    this.channelUnreads = this.channelUnreads.filter(
-      (channelUnread: ChannelUnread) => channelUnread.channelId !== channelId,
-    );
   };
 }

@@ -1,5 +1,6 @@
 import { UserPreferences } from '@/features/preferences/types';
 import { UserStatus } from '@/features/userStatus/types/userStatus';
+import { WorkspaceDetails } from '@/features/workspaces/types/workspaceDetails';
 import { Base } from '@/types/base';
 
 export interface User extends Base {
@@ -11,4 +12,5 @@ export interface User extends Base {
   isAdmin: boolean;
   status?: UserStatus;
   preferences: UserPreferences;
+  userWorkspaces: WorkspaceDetails[];
 }

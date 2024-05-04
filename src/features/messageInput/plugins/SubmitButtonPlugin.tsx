@@ -39,7 +39,7 @@ const SubmitButtonPlugin = ({ onSubmit, label }: Props) => {
   }, [editor, onEnterPress]);
 
   return (
-    <Button id="submit-button" onClick={handleSubmit} size="sm">
+    <Button id="submit-button" onClick={handleSubmit} size="icon" className="h-8 w-8">
       {label}
     </Button>
   );

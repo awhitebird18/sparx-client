@@ -15,18 +15,16 @@ const RemoveVariantModal = observer(({ uuid }: RemoveVariantModalProps) => {
   };
 
   return (
-    <Modal title="Remove variant?">
-      <div className="space-y-6">
-        <p>Are you sure you would like to remove this variant?</p>
+    <Modal title="Remove variant?" className="space-y-6">
+      <p>Are you sure you would like to remove this variant?</p>
 
-        <div className="flex gap-4 justify-end">
-          <Button onClick={closeModal} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleRemoveTemplate} variant="destructive">
-            Submit
-          </Button>
-        </div>
+      <div className="flex gap-4 justify-end">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleRemoveTemplate} variant="destructive">
+          Submit
+        </Button>
       </div>
     </Modal>
   );

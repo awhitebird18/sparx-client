@@ -33,6 +33,5 @@ const avatarUrls = [
 
 export const getAvatarUrl = () => {
   const index = Math.floor(Math.random() * 29);
-
   return avatarUrls[index];
 };

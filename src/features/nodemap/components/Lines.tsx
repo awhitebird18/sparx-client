@@ -2,17 +2,19 @@ import LineRenderer from './LineRenderer';
 import { ChannelTreeNode } from '../types/channelTreeNode';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/stores/RootStore';
+import React from 'react';
 
 const Lines = observer(() => {
   const { channelTree } = useStore('channelStore');
+
   const renderLine = (node: ChannelTreeNode): JSX.Element => {
     return (
-      <>
+      <React.Fragment key={node.channel.uuid}>
         {node.children.map((childNode) => (
-          <LineRenderer node={node} childNode={childNode} />
+          <LineRenderer key={childNode.channel.uuid} node={node} childNode={childNode} />
         ))}
         {node.children.map(renderLine)}
-      </>
+      </React.Fragment>
     );
   };
 

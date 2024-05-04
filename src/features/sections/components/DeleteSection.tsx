@@ -1,15 +1,16 @@
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
 import Modal from '@/layout/modal/Modal';
+import { observer } from 'mobx-react-lite';
 
-export type Props = { id: string; name: string };
+export type Props = { sectionId: string; name: string };
 
-const DeleteSection = ({ id, name }: Props) => {
+const DeleteSection = observer(({ sectionId, name }: Props) => {
   const { removeSectionApi } = useStore('sectionStore');
   const { closeModal } = useStore('modalStore');
 
   async function handleDelete() {
-    await removeSectionApi(id);
+    await removeSectionApi(sectionId);
     closeModal();
   }
 
@@ -35,6 +36,6 @@ const DeleteSection = ({ id, name }: Props) => {
       </div>
     </Modal>
   );
-};
+});
 
 export default DeleteSection;

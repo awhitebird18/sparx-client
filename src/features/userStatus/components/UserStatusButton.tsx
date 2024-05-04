@@ -8,13 +8,13 @@ const SetUserStatusButton = observer(() => {
   const { activeUserStatus } = useStore('userStatusStore');
 
   return (
-    <Button className="w-full rounded-sm p-2 gap-2 bg-transparent" variant="outline">
-      <div className="h-6 border-r border-border pr-2">
+    <Button className="w-full rounded-md p-2 gap-2 text-muted" variant="outline">
+      <div className="h-6.5 border-r border-border pr-2">
         <em-emoji
           id={activeUserStatus ? activeUserStatus.emoji : 'smiley'}
           set="apple"
-          style={{ fontSize: '1.3rem', lineHeight: '1.1rem' }}
-        ></em-emoji>
+          style={{ fontSize: '1.5rem', lineHeight: '1.1rem' }}
+        />
       </div>
       <p className="flex-1 last:text-left">
         {activeUserStatus ? activeUserStatus.text : 'Update your status'}

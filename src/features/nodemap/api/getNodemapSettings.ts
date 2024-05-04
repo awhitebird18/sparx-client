@@ -4,9 +4,9 @@ import { NodemapSettings } from '../types/nodemapSettings';
 
 export const getNodemapSettings = async (workspaceId: string): Promise<NodemapSettings> => {
   try {
-    const res = await axios.get(`/nodemap-settings/${workspaceId}`);
+    const { data } = await axios.get(`/nodemap-settings/${workspaceId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

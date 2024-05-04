@@ -1,3 +1,3 @@
 export * from './loginData';
-export * from './registrationData';
+export * from './registerFormData';
 export * from './inviteUser';

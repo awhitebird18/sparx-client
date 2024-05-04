@@ -1,4 +1,5 @@
 import AnimatedLogo from '@/components/logo/AnimatedLogo';
+import { LogoTextBanner } from '@/components/logo/LogoBanner';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
@@ -23,10 +24,8 @@ const VerifyEmail = ({ userId }: VerifyEmailProps) => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-background relative">
-      <div className="flex gap-2 items-center absolute top-4 left-5">
-        <span className="text-2xl font-bold">Sparx</span>
-      </div>
-      <div className="card bg-card flex flex-col items-center gap-0 rounded-xl border border-border p-8 prose">
+      <LogoTextBanner />
+      <div className="card-base flex flex-col items-center gap-0 p-8 prose">
         <AnimatedLogo />
         <h2 className="text-main mb-4  text-3xl">Verification Email Sent</h2>
         <p className="text-secondary">

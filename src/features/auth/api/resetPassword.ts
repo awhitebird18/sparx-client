@@ -3,7 +3,7 @@ import { NotificationType } from '@/stores/NotificationStore';
 import { stores } from '@/stores/RootStore';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const resetPassword = async (email: string) => {
+export const resetPassword = async (email: string): Promise<void> => {
   try {
     const { data } = await axios.post('/auth/reset-password', { email });
 

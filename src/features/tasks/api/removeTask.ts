@@ -1,9 +1,9 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const removeTask = async (taskId: string, workspaceId: string): Promise<void> => {
+export const removeTask = async (taskId: string): Promise<void> => {
   try {
-    await axios.delete(`/tasks/${taskId}/${workspaceId}`);
+    await axios.delete(`/tasks/${taskId}`);
   } catch (error) {
     return handleApiError(error);
   }

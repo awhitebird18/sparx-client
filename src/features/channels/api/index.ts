@@ -11,6 +11,8 @@ import { updateNodePosition } from './updateNodePosition';
 import { removeChannel } from './removeChannel';
 import { getChannelUserCounts } from './getChannelUserCounts';
 import { updateLastRead } from './updateLastRead';
+import { updateChannelPositions } from './updateManyChannels';
+import { moveChannel } from './moveChannel';
 
 export default {
   createChannel,
@@ -26,4 +28,6 @@ export default {
   removeChannel,
   getChannelUserCounts,
   updateLastRead,
+  updateChannelPositions,
+  moveChannel,
 };

@@ -2,6 +2,6 @@ import { Dayjs } from 'dayjs';
 
 export type Base = {
   uuid: string;
-  createdAt: Dayjs | string;
+  createdAt: string;
   updatedAt?: Dayjs | string;
 };

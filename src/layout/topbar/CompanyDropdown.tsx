@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   ArrowReturnRight,
   ArrowsMove,
@@ -28,10 +28,6 @@ const CompanyDropdown = observer(() => {
   const { setActiveModal } = useStore('modalStore');
   const { workspaces, switchWorkspaceApi, currentWorkspace } = useStore('workspaceStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const focusRef = useRef<any>(null);
-
   const handleOpenModal = ({ type }: { type: ModalName }) => {
     setActiveModal({ type, payload: {} });
     setDropdownOpen(false);
@@ -96,19 +92,19 @@ const CompanyDropdown = observer(() => {
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      <DropdownMenuTrigger className="top-2 left-2 fixed card bg-card border border-border p-1 rounded-sm flex-shrink-0 flex flex-1 items-center gap-3 w-fit h-11 z-30">
-        <div className="w-9 h-9 flex-shrink-0 rounded-md overflow-hidden border border-border bg-primary">
+      <DropdownMenuTrigger className="card-base top-2 left-2 fixed px-1.5 flex-shrink-0 flex flex-1 items-center gap-3 w-fit h-12 z-30">
+        <div className=" flex-shrink-0 rounded-md overflow-hidden border border-border bg-primary">
           <img
             src={currentWorkspace?.imgUrl ?? getCurrentWorkspaceImage()}
-            className="w-full h-full flex-shrink-0"
+            className="w-[35px] h-[35px] flex-shrink-0"
           />
         </div>
 
-        <div className="flex items-center gap-3 text-lg truncate pr-3">
+        <div className="flex items-center gap-2 text-lg truncate pr-3">
           <span className="text-xl font-semibold tracking leading-tight truncate w-full">
             {currentWorkspace?.name}
           </span>
-          <ChevronDown size={15} className="flex-shrink-0 mt-0.5  text-secondary" />
+          <ChevronDown size={13} className="flex-shrink-0 mt-0.5  text-secondary" />
         </div>
       </DropdownMenuTrigger>
 
@@ -117,13 +113,6 @@ const CompanyDropdown = observer(() => {
         align="start"
         alignOffset={0}
         sideOffset={5}
-        onCloseAutoFocus={(event) => {
-          if (focusRef.current) {
-            focusRef.current.focus();
-            focusRef.current = null;
-            event.preventDefault();
-          }
-        }}
       >
         {workspacesToDisplay.length ? (
           <>
@@ -192,3 +181,5 @@ const CompanyDropdown = observer(() => {
 });
 
 export default CompanyDropdown;
+
+// w-[35px] h-[35px]

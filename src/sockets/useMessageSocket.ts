@@ -28,7 +28,7 @@ const useMessageSocket = () => {
   // New message
   useEffect(() => {
     if (!currentUser) return;
-    return connectSocket('new-message', (data) => {
+    connectSocket('new-message', (data) => {
       const { message } = data.payload;
 
       if (message.channelId === currentChannelId) {
@@ -65,7 +65,7 @@ const useMessageSocket = () => {
 
   // Update message
   useEffect(() => {
-    return connectSocket('update-message', (data) => {
+    connectSocket('update-message', (data) => {
       const { message } = data.payload;
       if (message.channelId !== currentChannelId) return;
 
@@ -75,7 +75,7 @@ const useMessageSocket = () => {
 
   // Remove message
   useEffect(() => {
-    return connectSocket('remove-message', (data) => {
+    connectSocket('remove-message', (data) => {
       const { messageId, channelId } = data.payload;
 
       if (channelId !== currentChannelId) return;

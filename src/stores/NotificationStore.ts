@@ -68,6 +68,7 @@ export class NotificationStore {
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
+  // Setters
   loadNotificationSound = async () => {
     try {
       const { default: notificationSound } = await import('@/assets/audio/coin.mp3');
@@ -76,36 +77,6 @@ export class NotificationStore {
     } catch (error) {
       console.error('Failed to load notification sound', error);
     }
-  };
-
-  sendBrowserNotification = async ({
-    title,
-    body,
-    icon,
-  }: {
-    title: string;
-    body?: string;
-    icon?: string;
-  }) => {
-    // Ask the user for permission to show notifications.
-    const permission = await Notification.requestPermission();
-
-    // If the user granted permission, show a notification.
-    if (permission === 'granted' && !this.isWindowVisible) {
-      new Notification(title, { body, icon });
-    }
-  };
-
-  addNotification = (notification: Notification) => {
-    this.notifications = [
-      ...this.notifications,
-      {
-        ...notification,
-        uuid: uuidv4(),
-        show: true,
-        type: notification.type ?? NotificationType.SUCCESS,
-      },
-    ];
   };
 
   dismissNotification = (uuid: string) => {
@@ -119,6 +90,10 @@ export class NotificationStore {
     document.title = `${title} - Sparx`;
   };
 
+  handleVisibilityChange = () => {
+    this.isWindowVisible = document.visibilityState === 'visible';
+  };
+
   // method to set unreadsCount
   setUnreadsCount = (count: number) => {
     this.unreadsCount = count;
@@ -129,8 +104,34 @@ export class NotificationStore {
     setFavicon();
   };
 
-  handleVisibilityChange = () => {
-    this.isWindowVisible = document.visibilityState === 'visible';
+  sendBrowserNotification = async ({
+    title,
+    body,
+    icon,
+  }: {
+    title: string;
+    body?: string;
+    icon?: string;
+  }) => {
+    // Ask the user for permission to show notifications.
+    const permission = await Notification.requestPermission();
+    // If the user granted permission, show a notification.
+    if (permission === 'granted' && !this.isWindowVisible) {
+      new Notification(title, { body, icon });
+    }
+  };
+
+  // Create
+  addNotification = (notification: Notification) => {
+    this.notifications = [
+      ...this.notifications,
+      {
+        ...notification,
+        uuid: uuidv4(),
+        show: true,
+        type: notification.type ?? NotificationType.SUCCESS,
+      },
+    ];
   };
 
   dispose = () => {

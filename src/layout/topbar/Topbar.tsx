@@ -1,13 +1,18 @@
 import { observer } from 'mobx-react-lite';
 import CompanyDropdown from './CompanyDropdown';
-import CurrentNode from './CurrentNode';
+import HistoryDropdown from '@/features/history/components/HistoryDropdown';
 import NavigationBar from './NavigationBar';
+import { HistoryStoreProvider } from '@/features/history/providers/historyStoreProvider';
 
 const Topbar = observer(() => {
   return (
     <>
       <CompanyDropdown />
-      <CurrentNode />
+
+      <HistoryStoreProvider>
+        <HistoryDropdown />
+      </HistoryStoreProvider>
+
       <NavigationBar />
     </>
   );
