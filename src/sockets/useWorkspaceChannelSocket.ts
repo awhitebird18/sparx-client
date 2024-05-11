@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 
 const useWorkspaceChannelSocket = () => {
   const { connectSocket } = useStore('socketStore');
-  const { removeWorkspaceChannel, updateChannelUserCount } = useStore('workspaceChannelStore');
+  const { removeSubscribedChannel, updateChannelUserCount } = useStore('channelStore');
 
   // Update channel count
   useEffect(() => {
-    return connectSocket('update-channel-user-count', (data) => {
+    connectSocket('update-channel-user-count', (data) => {
       const { channelUserCount } = data.payload;
 
       updateChannelUserCount(channelUserCount);
@@ -16,8 +16,8 @@ const useWorkspaceChannelSocket = () => {
 
   // Remove workspace channel
   useEffect(() => {
-    return connectSocket(`channels/remove`, removeWorkspaceChannel);
-  }, [connectSocket, removeWorkspaceChannel]);
+    connectSocket(`channels/remove`, ({ payload }) => removeSubscribedChannel(payload.uuid));
+  }, [connectSocket, removeSubscribedChannel]);
 
   return null;
 };

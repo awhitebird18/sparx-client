@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { StatDailyStudiedCount } from '../types/statDailyStudiedCount';
 
-export const getYearlyStats = async (): Promise<any[]> => {
+export const getYearlyStats = async (): Promise<StatDailyStudiedCount[]> => {
   try {
-    const res = await axios.get('review-history/yearly-stats');
+    const { data } = await axios.get('review-history/yearly-stats');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

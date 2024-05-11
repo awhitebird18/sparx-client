@@ -1,5 +1,3 @@
-export interface UpdateNote {
-  title: string;
-  content: string;
-  isPrivate: boolean;
-}
+import { Note } from './note';
+
+export type UpdateNote = Partial<Note>;

@@ -9,20 +9,20 @@ type Props = { status: UserStatus };
 const UserStatusDisplay = observer(({ status }: Props) => {
   return (
     <Tooltip>
-      <Button size="icon" className="" variant="link">
-        <TooltipTrigger asChild>
+      <TooltipTrigger asChild>
+        <Button size="icon" className="" variant="link">
           <div className="mb-0.5 ml-1">
             <Emoji id={status.emoji} size={21} />
           </div>
-        </TooltipTrigger>
+        </Button>
+      </TooltipTrigger>
 
-        <TooltipContent alignOffset={-8} align="end">
-          <div className="flex flex-col gap-3 px-2 py-1 items-center">
-            <Emoji id={status.emoji} size={26} />
-            <p>{status?.text}</p>
-          </div>
-        </TooltipContent>
-      </Button>
+      <TooltipContent alignOffset={-8} align="end">
+        <div className="flex flex-col gap-3 px-2 py-1 items-center">
+          <Emoji id={status.emoji} size={26} />
+          <p>{status?.text}</p>
+        </div>
+      </TooltipContent>
     </Tooltip>
   );
 });

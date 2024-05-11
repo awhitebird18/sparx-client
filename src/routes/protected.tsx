@@ -1,36 +1,41 @@
 import { Navigate } from 'react-router-dom';
 import { navigateToLastPage } from '@/utils/navigateToLastPage';
-import NotesRoutes from '@/features/notes/routes';
-import FlashcardRoutes from '@/features/flashcards/routes';
-import Nodemap from '@/features/workspaceChannels/components/Nodemap';
-import Search from '@/features/search/components/Search';
-import Onboarding from '@/features/workspaces/components/Onboarding';
-import { UserRoutes, ChatroomRoutes } from './lazyLoadComponents';
+import Onboarding from '@/features/onboarding/components/Onboarding';
 import App from './App';
+import { OnboardingStoreProvider } from '@/features/onboarding/providers/onboardingStoreProvider';
+import { NodemapStoreProvider } from '@/features/nodemap/providers/nodemapStoreProvider';
+import OnboardingGuard from '@/features/onboarding/components/OnboardingGuard';
+import AppGuard from './AppGuard';
 
 const protectedRoutes = [
   {
     path: '/app',
-    element: <App />,
+    element: (
+      <AppGuard>
+        <App />
+      </AppGuard>
+    ),
     children: [
-      { path: '', element: <Navigate to="nodemap" /> },
-      { path: 'members/*', element: <UserRoutes /> },
-      { path: 'nodemap/*', element: <Nodemap /> },
-      { path: 'user/*', element: <Nodemap /> },
-      { path: 'notes/*', element: <NotesRoutes /> },
-      { path: 'search/*', element: <Search /> },
-      { path: 'flashcards/*', element: <FlashcardRoutes /> },
-      { path: ':channelId/*', element: <ChatroomRoutes /> },
+      {
+        path: '',
+        element: <NodemapStoreProvider />,
+      },
       { path: '*', element: <Navigate to={navigateToLastPage()} /> },
     ],
   },
   {
     path: '/onboarding',
-    element: <Onboarding />,
+    element: (
+      <OnboardingGuard>
+        <OnboardingStoreProvider>
+          <Onboarding />
+        </OnboardingStoreProvider>
+      </OnboardingGuard>
+    ),
   },
   {
     path: '*',
-    element: <Navigate to={navigateToLastPage()} />,
+    element: <Navigate to="/app" />,
   },
 ];
 

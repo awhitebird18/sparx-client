@@ -4,9 +4,9 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const getSections = async (): Promise<Section[]> => {
   try {
-    const res = await axios.get('/sections');
+    const { data } = await axios.get('/sections');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

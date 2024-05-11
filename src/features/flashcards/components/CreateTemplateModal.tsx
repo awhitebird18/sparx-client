@@ -7,35 +7,30 @@ import { useState } from 'react';
 
 const CreateTemplateModal = observer(() => {
   const { createTemplateApi, handleSelectTemplate } = useStore('flashcardStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const [value, setValue] = useState('');
+  const { currentWorkspaceId } = useStore('workspaceStore');
 
   const handleCreateTemplate = async () => {
-    const template = await createTemplateApi(value);
-    setActiveModal(null);
-
+    if (!currentWorkspaceId) return;
+    const template = await createTemplateApi(value, currentWorkspaceId);
+    closeModal();
     handleSelectTemplate(template.uuid);
   };
 
-  const handleCancel = () => {
-    setActiveModal(null);
-  };
-
   return (
-    <Modal title="Create template">
-      <div className="space-y-6 pt-2">
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Enter template name"
-        />
+    <Modal title="Create template" className="space-y-6 pt-2">
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter template name"
+      />
 
-        <div className="flex gap-4 justify-end">
-          <Button onClick={handleCancel} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateTemplate}>Submit</Button>
-        </div>
+      <div className="flex gap-4 justify-end">
+        <Button onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button onClick={handleCreateTemplate}>Submit</Button>
       </div>
     </Modal>
   );

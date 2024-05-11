@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 const CreateChannelModal = lazy(() => import('@/features/channels/components/CreateChannelModal'));
-const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionForm'));
+const CreateSectionModal = lazy(() => import('@/features/sections/components/CreateSectionModal'));
 const InviteUserModal = lazy(() => import('@/features/users/components/InviteUserModal'));
 const NewCardsModal = lazy(() => import('@/features/flashcards/components/NewCardsModal'));
 const FutureDueModal = lazy(() => import('@/features/flashcards/components/FutureDueModal'));
@@ -10,15 +10,14 @@ const CardsReviewedModal = lazy(
 const CardCountModal = lazy(() => import('@/features/flashcards/components/CardCountModal'));
 const CardCalendarModal = lazy(() => import('@/features/flashcards/components/CardCalendarModal'));
 const RemoveChannelModal = lazy(() => import('@/features/channels/components/RemoveChannelModal'));
-const AddUserModal = lazy(() => import('@/features/channels/components/AddUserModal'));
 const RemoveUserModal = lazy(() => import('@/features/channels/components/RemoveUserModal'));
 const DeleteMessage = lazy(() => import('@/features/messages/components/DeleteMessage'));
 const PreferencesModal = lazy(() => import('@/features/preferences/components/PreferencesModal'));
 const UserDetails = lazy(() => import('@/features/profile/components/UserDetails'));
 const DeleteSection = lazy(() => import('@/features/sections/components/DeleteSection'));
-const ChangePasswordModal = lazy(() => import('@/features/auth/components/ChangePasswordModal'));
+const ChangePasswordModal = lazy(() => import('@/features/auth/components/ChangePasswordForm'));
 const UserStatusModal = lazy(() => import('@/features/userStatus/components/UserStatusModal'));
-const DeleteNote = lazy(() => import('@/features/notes/components/DeleteNote'));
+const DeleteNote = lazy(() => import('@/features/notes/components/DeleteNoteModal'));
 const MoveNote = lazy(() => import('@/features/notes/components/MoveNote'));
 const AddChannelToSectionModal = lazy(
   () => import('@/features/sections/components/AddChannelToSectionModal'),
@@ -55,9 +54,6 @@ const LeaveWorkspaceModal = lazy(
 );
 const UpdateTask = lazy(() => import('@/features/tasks/components/UpdateTask'));
 const DeleteTask = lazy(() => import('@/features/tasks/components/DeleteTask'));
-const GenerateRoadmap = lazy(
-  () => import('@/features/workspaceChannels/components/GenerateRoadmap'),
-);
 
 export {
   CreateChannelModal,
@@ -69,7 +65,6 @@ export {
   CardCountModal,
   CardCalendarModal,
   RemoveChannelModal,
-  AddUserModal,
   RemoveUserModal,
   DeleteMessage,
   PreferencesModal,
@@ -94,5 +89,4 @@ export {
   LeaveWorkspaceModal,
   UpdateTask,
   DeleteTask,
-  GenerateRoadmap,
 };

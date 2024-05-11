@@ -7,7 +7,7 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>((props: InputProp
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="mt-1 relative">
+    <div className="relative">
       <Input type={showPassword ? 'text' : 'password'} {...props} ref={ref} />
 
       <Button

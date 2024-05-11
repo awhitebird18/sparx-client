@@ -44,7 +44,7 @@ export const defaultCreateCard = [
         version: 1,
       },
     }),
-    onChange: (value: string) => {
+    onChange: () => {
       console.info('to implement');
     },
     isOpen: true,
@@ -75,7 +75,7 @@ export const defaultCreateCard = [
         version: 1,
       },
     }),
-    onChange: (value: string) => {
+    onChange: () => {
       console.info('to implement');
     },
     isOpen: true,

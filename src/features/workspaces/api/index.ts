@@ -6,6 +6,7 @@ import { getUserWorkspaces } from './getUserWorkspaces';
 import { switchWorkspace } from './switchWorkspace';
 import { uploadWorkspaceImage } from './uploadWorkspaceImage';
 import { markUserWorkspaceViewed } from './markUserWorkspaceViewed';
+import { removeTemporaryWorkspace } from './removeTemporaryWorkspace';
 
 export default {
   createWorkspace,
@@ -16,4 +17,5 @@ export default {
   switchWorkspace,
   uploadWorkspaceImage,
   markUserWorkspaceViewed,
+  removeTemporaryWorkspace,
 };

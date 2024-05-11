@@ -1,5 +1,6 @@
-import { ChannelType } from '../enums/channelType';
 import { Base } from '@/types/base';
+import { ChannelSubscription } from './channelSubscription';
+import { CompletionStatus } from '../enums/completionStatus';
 
 export interface Channel extends Base {
   name: string;
@@ -8,11 +9,12 @@ export interface Channel extends Base {
   icon?: string;
   isDefault?: boolean;
   isPrivate?: boolean;
-  type: ChannelType;
   isTemp?: boolean;
   x: number;
   y: number;
-  status: string;
+  status: CompletionStatus;
   isSubscribed: boolean;
-  subscriptionDetails: any;
+  subscriptionDetails: ChannelSubscription;
+  parentChannelId?: string;
+  childChannelIds?: string[];
 }

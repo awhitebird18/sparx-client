@@ -1,8 +1,14 @@
-export const getNextInterval = (currentInterval: any, easeFactor: any, rating: any) => {
+import { PerformanceRating } from '../enums/performanceRating';
+
+export const getNextInterval = (
+  currentInterval: number,
+  easeFactor: number,
+  rating: PerformanceRating,
+) => {
   let newInterval;
   switch (rating) {
     case 'again':
-      newInterval = 1; // Reset interval if the card was forgotten
+      newInterval = 1;
       break;
     case 'hard':
       newInterval = Math.max(currentInterval * (easeFactor - 0.2), 1);

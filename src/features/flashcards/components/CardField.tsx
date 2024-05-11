@@ -6,7 +6,7 @@ import { emptyInputState } from '@/utils/emptyInputState';
 
 export type CardFieldProps = {
   title: string;
-  content: string;
+  content?: string;
   onFieldChange: (value: string) => void;
 };
 
@@ -23,7 +23,7 @@ const CardField = ({ title, content, onFieldChange }: CardFieldProps) => {
           <h2>{title}</h2>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="card h-full">
+      <CollapsibleContent className="h-full">
         <div className="relative bg-hover rounded-lg shadow-md h-full py-4">
           <Editor content={content ?? emptyInputState} onChange={onFieldChange} />
         </div>

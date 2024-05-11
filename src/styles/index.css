@@ -984,7 +984,3 @@ hr.selected {
 table {
   border-color: white;
 }
-
-table thead tr:first-child {
-  border: 1px solid transparent !important;
-}

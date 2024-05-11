@@ -18,7 +18,7 @@ const useUserSocket = () => {
 
   // Online users
   useEffect(() => {
-    return connectSocket('online-users', setOnlineUsers);
+    connectSocket('online-users', ({ payload }) => setOnlineUsers(payload.users));
   }, [connectSocket, setOnlineUsers]);
 
   // User heartbeat
@@ -40,12 +40,14 @@ const useUserSocket = () => {
 
   // New user
   useEffect(() => {
-    return connectSocket('users/new', addUser);
+    connectSocket('users/new', ({ payload }) => {
+      addUser(payload.user);
+    });
   }, [connectSocket, addUser]);
 
   // Update user
   useEffect(() => {
-    return connectSocket('update-user', (data) => {
+    connectSocket('update-user', (data) => {
       const { user } = data.payload;
 
       updateUser(user);
@@ -54,7 +56,7 @@ const useUserSocket = () => {
 
   // Remove user
   useEffect(() => {
-    return connectSocket('remove-user', removeUser);
+    connectSocket('remove-user', ({ payload }) => removeUser(payload));
   }, [connectSocket, removeUser]);
 
   return null;

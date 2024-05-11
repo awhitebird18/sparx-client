@@ -24,7 +24,8 @@ const UserDropdown: React.FC = observer(() => {
   const { setActiveModal } = useStore('modalStore');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { userLogout } = useAuth();
-  const { currentUser, setUserOnlineStatus, userOnlineStatus } = useStore('userStore');
+  const { currentUser, setUserOnlineStatus, userOnlineStatus, setCurrentUserProfileId } =
+    useStore('userStore');
   const { emitSocket } = useStore('socketStore');
   const { currentWorkspace } = useStore('workspaceStore');
   const { toggleMainPanel } = useStore('mainPanelStore');
@@ -39,13 +40,14 @@ const UserDropdown: React.FC = observer(() => {
     emitSocket('change-status', { status: userStatus });
   };
 
+  const handleViewUserProfile = async (userId: string) => {
+    setCurrentUserProfileId(userId);
+    toggleMainPanel({ type: 'profile', payload: { userId } });
+  };
+
   if (!currentUser) return;
 
   const transformedImage = transformCloudinaryUrl(currentUser.profileImage, 60, 60);
-
-  const handleViewUserProfile = async (userId: string) => {
-    toggleMainPanel({ type: 'profile', payload: { userId } });
-  };
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -81,7 +83,12 @@ const UserDropdown: React.FC = observer(() => {
         </Tooltip>
       </div>
 
-      <DropdownMenuContent align="end" sideOffset={5} className=" w-80 p-4 space-y-4">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={13}
+        alignOffset={-5}
+        className="w-80 p-4 space-y-4"
+      >
         <div className="flex gap-2 overflow-hidden">
           <UserAvatar size={50} userId={currentUser.uuid} profileImage={transformedImage} />
           <div style={{ height: '40px' }} className="flex flex-col justify-between w-full">
@@ -101,7 +108,7 @@ const UserDropdown: React.FC = observer(() => {
           <SetUserStatusButton />
         </div>
         <div>
-          <DropdownMenuSeparator className="DropdownMenuSeparator dark:bg-slate-500/40 my-1" />
+          <DropdownMenuSeparator className="DropdownMenuSeparator bg-border/50 h-px my-2 mx-1" />
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => handleViewUserProfile(currentUser.uuid)}

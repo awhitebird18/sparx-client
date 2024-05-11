@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useScrollToMiddle = (ref: any, width = 8000, height = 8000) => {
+const useScrollToMiddle = (ref: React.RefObject<HTMLDivElement>, width = 8000, height = 8000) => {
   useEffect(() => {
     if (ref.current) {
       const containerRect = ref.current.getBoundingClientRect();

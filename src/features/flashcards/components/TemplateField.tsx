@@ -1,13 +1,14 @@
 import { Button } from '@/components/ui/Button';
 import { GripVertical, X } from 'react-bootstrap-icons';
+import { Field } from '../types/field';
 
-type TemplateFieldProps = { field: any; onRemove: any };
+type TemplateFieldProps = { field: Field; onRemove: () => void };
 
 const TemplateField = ({ field, onRemove }: TemplateFieldProps) => {
   return (
     <div
       key={field.uuid}
-      className="card flex items-center border border-border bg-card h-9 rounded-lg px-2 pr-4 gap-2 w-full justify-between"
+      className="flex items-center border border-border bg-card h-9 rounded-lg px-2 pr-4 gap-2 w-full justify-between"
     >
       <div className="flex items-center gap-1 cursor-grab">
         <GripVertical size={18} /> {field.title}

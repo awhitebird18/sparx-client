@@ -1,39 +1,24 @@
-import { action, makeObservable, observable, reaction } from 'mobx';
-
-import { NotificationType, PrimaryColors, Theme } from '../enums';
+import { makeAutoObservable, reaction } from 'mobx';
+import { PrimaryColors, Theme } from '../enums';
 import userPreferencesApi from '../api';
 import { primaryColors } from '@/utils/primaryColors';
 import storage from '@/utils/storage';
+import { UserPreferences } from '../types';
 
 export class UserPreferencesStore {
-  primaryColor: PrimaryColors | undefined;
-  notificationType: NotificationType | undefined;
-  theme: Theme | undefined;
+  primaryColor?: PrimaryColors;
+  theme?: Theme;
 
   constructor() {
-    makeObservable(this, {
-      primaryColor: observable,
-      theme: observable,
-      notificationType: observable,
-      setPrimaryColor: action,
-      setTheme: action,
-      setNotificationType: action,
-      updateThemeApi: action,
-      updatePrimaryColorApi: action,
-      updateNotificationTypeApi: action,
-      setInitialPreferences: action,
-      resetPreferences: action,
-    });
+    makeAutoObservable(this, undefined, { autoBind: true });
 
     reaction(
       () => this.theme,
       (newTheme) => {
-        if (newTheme === 'dark') {
+        if (newTheme === Theme.DARK) {
           document.body.classList.add(Theme.DARK);
           document.body.classList.remove(Theme.LIGHT);
-        }
-
-        if (newTheme === 'light') {
+        } else {
           document.body.classList.add(Theme.LIGHT);
           document.body.classList.remove(Theme.DARK);
         }
@@ -44,7 +29,6 @@ export class UserPreferencesStore {
       () => this.primaryColor,
       (newPrimaryColor) => {
         if (!newPrimaryColor) return;
-        // Remove primary color class from body
         for (let i = 0; i < primaryColors.length; i++) {
           document.body.classList.remove(primaryColors[i]);
         }
@@ -52,22 +36,24 @@ export class UserPreferencesStore {
         document.body.classList.add(newPrimaryColor);
       },
     );
-
-    // this.setNotificationType(NotificationType.DIRECT);
-    // this.setPrimaryColor(getValidPrimaryColor(storage.getPrimaryColor()));
-    // this.setTheme(getValidTheme(storage.getTheme()));
   }
 
-  setPrimaryColor = (color: PrimaryColors) => {
+  setPrimaryColor(color: PrimaryColors) {
     this.primaryColor = color;
-  };
+  }
 
-  setTheme = (theme: Theme) => {
+  setTheme(theme: Theme) {
     this.theme = theme;
-  };
+  }
 
-  setNotificationType = (notificationType: NotificationType) => {
-    this.notificationType = notificationType;
+  createUserPreferences = async (userPreferences: Partial<UserPreferences>) => {
+    const data = await userPreferencesApi.createUserPreferences(userPreferences);
+
+    this.primaryColor = data.primaryColor;
+    storage.setPrimaryColor(data.primaryColor);
+
+    this.theme = data.theme;
+    storage.setTheme(data.theme);
   };
 
   updatePrimaryColorApi = async (primaryColor: PrimaryColors) => {
@@ -84,33 +70,29 @@ export class UserPreferencesStore {
     storage.setTheme(userPreferences.theme);
   };
 
-  updateNotificationTypeApi = (notificationType: NotificationType) => {
-    this.notificationType = notificationType;
-  };
-
   resetPreferences = () => {
-    this.setTheme(Theme.DARK);
+    this.setTheme(Theme.LIGHT);
     this.setPrimaryColor(PrimaryColors.BLUE);
-    this.setNotificationType(NotificationType.DIRECT);
   };
 
   setInitialPreferences = ({
     theme,
     primaryColor,
-    notificationType,
   }: {
     theme: Theme;
     primaryColor: PrimaryColors;
-    notificationType: NotificationType;
   }) => {
     if (theme) {
       this.setTheme(theme);
       storage.setTheme(theme);
+    } else {
+      this.setTheme(Theme.LIGHT);
     }
     if (primaryColor) {
       this.setPrimaryColor(primaryColor);
       storage.setPrimaryColor(primaryColor);
+    } else {
+      this.setPrimaryColor(PrimaryColors.PURPLE);
     }
-    if (notificationType) this.setNotificationType(notificationType);
   };
 }

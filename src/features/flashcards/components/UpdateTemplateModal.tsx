@@ -10,16 +10,12 @@ export type UpdateTemplateModalProps = { uuid: string; updateFields: Partial<Tem
 
 const UpdateTemplateModal = observer(({ uuid, updateFields }: UpdateTemplateModalProps) => {
   const { updateTemplateApi } = useStore('flashcardStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const [value, setValue] = useState(updateFields.title);
 
   const handleUpdateField = () => {
     updateTemplateApi(uuid, { title: value });
-    setActiveModal(null);
-  };
-
-  const handleCancel = () => {
-    setActiveModal(null);
+    closeModal();
   };
 
   return (
@@ -28,7 +24,7 @@ const UpdateTemplateModal = observer(({ uuid, updateFields }: UpdateTemplateModa
         <Input value={value} onChange={(e) => setValue(e.target.value)} />
 
         <div className="flex gap-4 justify-end">
-          <Button onClick={handleCancel} variant="outline">
+          <Button onClick={closeModal} variant="outline">
             Cancel
           </Button>
           <Button onClick={handleUpdateField}>Submit</Button>

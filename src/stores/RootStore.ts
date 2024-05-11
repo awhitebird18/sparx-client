@@ -5,8 +5,6 @@ import { UserStore } from '@/features/users/stores/userStore';
 import { UserPreferencesStore } from '@/features/preferences/stores/UserPreferencesStore';
 import { ChannelStore } from '@/features/channels/stores/ChannelStore';
 import { SectionStore } from '@/features/sections/stores/SectionStore';
-import { WorkspaceChannelStore } from '@/features/workspaceChannels/stores/WorkspaceChannelStore';
-import { UserTypingStore } from '@/features/chatroom/stores/UserTypingStore';
 import { ChannelUnreadStore } from '@/features/channels/stores/ChannelUnreadStore';
 import { NotificationStore } from '@/stores/NotificationStore';
 import { ModalStore } from '@/stores/ModalStore';
@@ -16,17 +14,14 @@ import { UserStatusStore } from '@/features/userStatus/stores/userStatusStore';
 import { NotesStore } from '@/features/notes/stores/NotesStore';
 import { FlashcardStore } from '@/features/flashcards/stores/FlashcardStore';
 import { WorkspaceStore } from '@/features/workspaces/stores/workspaceStore';
-import { ChannelConnectorStore } from '@/features/workspaceChannels/stores/ChannelConnectorStore';
 import { SidePanelStore } from '@/layout/sidePanel/SidePanelStore';
 import { MainPanelStore } from '@/layout/mainPanel/MainPanelStore';
 
 interface RootStore {
   userStore: UserStore;
   userPreferencesStore: UserPreferencesStore;
-  userTypingStore: UserTypingStore;
   channelStore: ChannelStore;
   channelUnreadStore: ChannelUnreadStore;
-  workspaceChannelStore: WorkspaceChannelStore;
   messageStore: MessageStore;
   sectionStore: SectionStore;
   sidebarStore: SidebarStore;
@@ -37,7 +32,6 @@ interface RootStore {
   noteStore: NotesStore;
   flashcardStore: FlashcardStore;
   workspaceStore: WorkspaceStore;
-  channelConnectorStore: ChannelConnectorStore;
   sidePanelStore: SidePanelStore;
   mainPanelStore: MainPanelStore;
 }
@@ -45,10 +39,8 @@ interface RootStore {
 class RootStoreImpl implements RootStore {
   userStore = new UserStore();
   userPreferencesStore = new UserPreferencesStore();
-  userTypingStore = new UserTypingStore();
   channelStore = new ChannelStore();
   channelUnreadStore = new ChannelUnreadStore();
-  workspaceChannelStore = new WorkspaceChannelStore();
   messageStore = new MessageStore();
   sectionStore = new SectionStore();
   sidebarStore = new SidebarStore(this.channelStore, this.sectionStore);
@@ -59,7 +51,6 @@ class RootStoreImpl implements RootStore {
   noteStore = new NotesStore();
   flashcardStore = new FlashcardStore();
   workspaceStore = new WorkspaceStore();
-  channelConnectorStore = new ChannelConnectorStore();
   sidePanelStore = new SidePanelStore();
   mainPanelStore = new MainPanelStore();
 }

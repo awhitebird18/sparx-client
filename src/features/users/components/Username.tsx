@@ -11,7 +11,7 @@ const Username = observer(({ firstName, lastName }: Props) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <p className="text-ellipsis whitespace-nowrap overflow-hidden font-medium">
+        <p className="text-ellipsis leading-none mb-0.5 whitespace-nowrap overflow-hidden font-medium">
           {formattedName}
         </p>
       </TooltipTrigger>

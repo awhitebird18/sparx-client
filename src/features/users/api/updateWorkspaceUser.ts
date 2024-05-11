@@ -7,9 +7,9 @@ export const updateWorkspaceUser = async (
   updateUser: UpdateUser,
 ): Promise<User> => {
   try {
-    const res = await axios.patch(`/users/${userUuid}`, updateUser);
+    const { data } = await axios.patch(`/users/${userUuid}`, updateUser);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

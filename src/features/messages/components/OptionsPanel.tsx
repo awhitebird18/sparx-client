@@ -1,77 +1,34 @@
-import { useState, useRef } from 'react';
-import { ChatDots, EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
+import { EmojiSmile, Pencil, Plus, Trash } from 'react-bootstrap-icons';
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
-import { ModalName } from '@/layout/modal/modalList';
 import EmojiPicker from '@/features/reactions/components/EmojiPicker';
 import { Message } from '../types';
 import { observer } from 'mobx-react-lite';
+import useEmojiPicker from '../hooks/useEmojiPicker';
+import useUserActions from '../hooks/useUserActions';
 
 type OptionsPanelProps = {
   message: Message;
-  setIsEditing: (bool: boolean) => void;
-  setThread?: (message: Message) => void;
-  isThread?: boolean;
+  setIsEditing: (messageId: string) => void;
 };
 
-const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanelProps) => {
-  const { setActiveModal } = useStore('modalStore');
+const OptionsPanel = observer(({ message }: OptionsPanelProps) => {
   const { currentUser } = useStore('userStore');
-  const { fetchThreadMessagesApi, addReactionApi } = useStore('messageStore');
-  const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
-    null,
-  );
-  const emojiButtonRef = useRef<any>(null);
+  const { handleAddReaction, handleCloseEmojiPicker, handleShowEmojiPicker, ref, showEmojiPicker } =
+    useEmojiPicker({ message });
+  const { handleDeleteMessage, handleEditMessage } = useUserActions(message);
 
-  const handleOpenModal = ({
-    type,
-    payload,
-  }: {
-    type: ModalName;
-    payload: { message: Message };
-  }) => {
-    setActiveModal({ type, payload });
-  };
-
-  const handleEditMessage = () => {
-    setIsEditing(true);
-  };
-
-  const handleShowEmojiPicker = () => {
-    if (emojiButtonRef.current) {
-      const rect = emojiButtonRef.current.getBoundingClientRect();
-
-      setShowEmojiPicker({ top: rect.top - 435, left: rect.left - 315 });
-    }
-  };
-
-  const handleCloseEmojiPicker = () => {
-    setShowEmojiPicker(null);
-  };
-
-  const handleReply = () => {
-    fetchThreadMessagesApi(message);
-  };
-
-  const handleAddReaction = async (emojiId: string) => {
-    if (!currentUser) return;
-    await addReactionApi({
-      emojiId,
-      userId: currentUser.uuid,
-      messageId: message.uuid,
-    });
-    handleCloseEmojiPicker();
-  };
+  const isCurrentUserMessage = message.userId === currentUser?.uuid;
 
   return (
     <div
-      className={`card options-panel flex absolute border border-border -top-5 right-5 rounded-xl bg-card shadow-md ${
+      className={`options-panel flex absolute border border-border -top-5 right-2 rounded-lg bg-card shadow-md ${
         !showEmojiPicker && 'hidden'
       }`}
     >
       <div className="relative">
         <Button
-          ref={emojiButtonRef}
+          ref={ref}
           size="icon"
           variant="ghost"
           className="p-0 w-10 h-10 relative"
@@ -88,12 +45,7 @@ const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanel
           />
         )}
       </div>
-      {!isThread && (
-        <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleReply}>
-          <ChatDots size={13} />
-        </Button>
-      )}
-      {message.userId === currentUser?.uuid && (
+      {isCurrentUserMessage && (
         <>
           <Button size="icon" variant="ghost" className="p-0 w-10 h-10" onClick={handleEditMessage}>
             <Pencil size={13} />
@@ -102,7 +54,7 @@ const OptionsPanel = observer(({ message, setIsEditing, isThread }: OptionsPanel
             size="icon"
             variant="ghost"
             className="p-0 w-10 h-10 text-rose-500"
-            onClick={() => handleOpenModal({ type: 'DeleteMessageModal', payload: { message } })}
+            onClick={handleDeleteMessage}
           >
             <Trash size={13} />
           </Button>

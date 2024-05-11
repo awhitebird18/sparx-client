@@ -4,8 +4,8 @@ import { logout } from './logout';
 import { verify } from './verify';
 import { resetPassword } from './resetPassword';
 import { changePassword } from './changePassword';
-import { healthCheck } from './health-check';
 import { registerAnonymous } from './registerAnonymous';
+import { removeTemporaryWorkspace } from './removeTemporaryWorkspace';
 
 export default {
   login,
@@ -14,6 +14,6 @@ export default {
   verify,
   resetPassword,
   changePassword,
-  healthCheck,
   registerAnonymous,
+  removeTemporaryWorkspace,
 };

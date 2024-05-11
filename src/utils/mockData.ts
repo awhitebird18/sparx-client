@@ -1,63 +1,70 @@
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
-export const history = [
+type HistoryItem = {
+  createdOn: Dayjs;
+  label: string;
+  status: CompletionStatus;
+  id: number;
+};
+
+export const history: HistoryItem[] = [
   {
-    uuid: '1',
+    id: 1,
     label: 'Arrays',
     createdOn: dayjs('01/02/2024'),
     status: CompletionStatus.Complete,
   },
   {
-    uuid: '2',
+    id: 2,
     label: 'Objects',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.InProgress,
   },
   {
-    uuid: '3',
+    id: 3,
     label: 'Docker',
     createdOn: dayjs('01/05/2024'),
     status: CompletionStatus.InProgress,
   },
   {
-    uuid: '4',
+    id: 4,
     label: 'Objects',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.Complete,
   },
   {
-    uuid: '5',
+    id: 5,
     label: 'Dates',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.OnHold,
   },
   {
-    uuid: '6',
+    id: 6,
     label: 'React',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.Complete,
   },
   {
-    uuid: '7',
+    id: 7,
     label: 'Vue',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.Complete,
   },
   {
-    uuid: '8',
+    id: 8,
     label: 'Dates',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.OnHold,
   },
   {
-    uuid: '9',
+    id: 9,
     label: 'React',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.Complete,
   },
   {
-    uuid: '10',
+    id: 10,
     label: 'Vue',
     createdOn: dayjs('01/03/2024'),
     status: CompletionStatus.Complete,

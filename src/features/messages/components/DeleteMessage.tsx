@@ -9,37 +9,29 @@ export type DeletemessageProps = { message: MessageType };
 
 const DeleteMessage = observer(({ message }: DeletemessageProps) => {
   const { removeMessageApi } = useStore('messageStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
 
   const handleDeleteMessage = () => {
     removeMessageApi(message.uuid);
-    handleCloseModal();
-  };
-
-  const handleCloseModal = () => {
-    setActiveModal(null);
+    closeModal();
   };
 
   if (!message) return null;
 
   return (
-    <Modal title="Delete message">
-      <div className="flex flex-col w-96 space-y-8">
-        <div className="flex flex-col gap-3">
-          <p>Are you sure you wnat to delete this message? This cannot be undone.</p>
+    <Modal title="Delete message" className="flex flex-col min-w-[32rem] space-y-8">
+      <div className="flex flex-col gap-3">
+        <p>Are you sure you wnat to delete this message? This cannot be undone.</p>
 
-          <div className="border border-border pl-2 py-2 rounded-md">
-            <Message message={message} showUser disabled />
-          </div>
-        </div>
-        <div className="flex gap-2 ml-auto">
-          <Button className=" w-28" onClick={handleCloseModal} variant="outline">
-            Cancel
-          </Button>
-          <Button className="ml-auto w-28" onClick={handleDeleteMessage} variant="destructive">
-            Submit
-          </Button>
-        </div>
+        <Message message={message} showUser disabled />
+      </div>
+      <div className="flex gap-2 ml-auto">
+        <Button className="w-28" onClick={closeModal} variant="outline">
+          Cancel
+        </Button>
+        <Button className="ml-auto w-28" onClick={handleDeleteMessage} variant="destructive">
+          Submit
+        </Button>
       </div>
     </Modal>
   );

@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { Task } from '../types/task';
 
-export const getTasks = async (workspaceId: string): Promise<any[]> => {
+export const getTasks = async (workspaceId: string): Promise<Task[]> => {
   try {
-    const res = await axios.get(`/tasks/user/${workspaceId}`);
+    const { data } = await axios.get(`/tasks/user/${workspaceId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

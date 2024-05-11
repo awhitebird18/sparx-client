@@ -1,13 +1,16 @@
 import { axios } from '@/lib/axios';
-import { UpdateReaction } from '@/features/reactions/types';
+import { CreateReaction } from '@/features/reactions/types';
 import { Message } from '@/features/messages/types';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const addReaction = async (updateReaction: UpdateReaction): Promise<Message> => {
+export const addReaction = async (createReaction: CreateReaction): Promise<Message> => {
   try {
-    const res = await axios.patch(`/messages/${updateReaction.messageId}/reaction`, updateReaction);
+    const { data } = await axios.patch(
+      `/messages/${createReaction.messageId}/reaction`,
+      createReaction,
+    );
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

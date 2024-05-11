@@ -7,6 +7,7 @@ import { ChangePasswordData } from '../types/changePasswordData';
 
 const ChangePasswordModal = observer(() => {
   const { currentUser } = useStore('userStore');
+
   const onSubmit = async (data: ChangePasswordData) => {
     try {
       if (!currentUser) return;
@@ -19,7 +20,7 @@ const ChangePasswordModal = observer(() => {
 
   return (
     <Modal title="Change password">
-      <div className="w-96 py-4 ">
+      <div className="w-96 py-4">
         <ChangePasswordForm onSubmit={onSubmit} />
       </div>
     </Modal>

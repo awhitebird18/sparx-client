@@ -53,7 +53,7 @@ export default function Editor({ placeholder, config, onSubmit, onChange }: Prop
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </div>
           <div className="absolute right-2 bottom-2 gap-2 flex">
-            <SubmitButtonPlugin onSubmit={onSubmit} label={<Send />} />
+            <SubmitButtonPlugin onSubmit={onSubmit} label={<Send size={10} />} />
           </div>
           {/* <BottomToolbarPLugin /> */}
         </div>

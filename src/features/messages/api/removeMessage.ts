@@ -1,11 +1,11 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const removeMessage = async (messageId: string) => {
+export const removeMessage = async (messageId: string): Promise<string> => {
   try {
-    const res = await axios.delete(`/messages/${messageId}`);
+    const { data } = await axios.delete(`/messages/${messageId}`);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

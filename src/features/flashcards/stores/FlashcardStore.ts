@@ -1,25 +1,32 @@
 import { makeAutoObservable, reaction } from 'mobx';
 import { Flashcard } from '../types/card';
 import flashcardsApi from '../api';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 import { Template } from '../types/template';
 import { Variant } from '../types/variant';
-import { CreateVariant } from '../types/CreateVariant';
+import { CreateVariant } from '../types/createVariant';
+import { StatCardsDuePerChannelCount } from '../types/statCardsDuePerChannelCount';
+import { CardReview } from '../types/cardReview';
+import { FieldValue } from '../types/fieldValue';
+import { CardMetaData } from '../types/cardMetaData';
+import { extractTextFromLexicalState } from '@/utils/extractTextFromLexicalState';
 
 export class FlashcardStore {
   flashcards: Flashcard[] = [];
   cardsDue = 0;
   selectedFlashcard?: Flashcard = undefined;
-  flashcardsDueCounts: { channelId: string; count: number }[] = [];
+  flashcardsDueCounts: StatCardsDuePerChannelCount[] = [];
   isLoading = false;
   templates: Template[] = [];
   selectedTemplate?: Template = undefined;
   fields: Field[] = [];
   variants: Variant[] = [];
   selectedVariant?: Variant = undefined;
+  browseFlashcards: CardMetaData[] = [];
+  browseSearchValue = '';
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, undefined, { autoBind: true });
     reaction(
       () => this.selectedTemplate,
       (current, prev) => {
@@ -41,7 +48,7 @@ export class FlashcardStore {
       (templates) => {
         if (templates?.length) {
           const localStorageTemplate = window.localStorage.getItem('selectedTemplate');
-          const template = templates.find((template: any) => {
+          const template = templates.find((template: Template) => {
             return localStorageTemplate
               ? template.uuid === localStorageTemplate
               : template.isDefault;
@@ -64,8 +71,25 @@ export class FlashcardStore {
     );
   }
 
+  get channelCardDetails() {
+    const cards = this.browseFlashcards
+      .filter((card) => card.content.includes(this.browseSearchValue))
+      .map((card) => ({
+        ...card,
+        content: extractTextFromLexicalState(card.content),
+      }));
+
+    return cards;
+  }
+
+  // Setters
   setSelectedFlashcard = (flashcard: Flashcard | undefined) => {
     this.selectedFlashcard = flashcard;
+  };
+
+  handleSelectVariant = (uuid: string) => {
+    const variant = this.variants.find((variant) => variant.uuid === uuid);
+    this.selectedVariant = variant;
   };
 
   setFlashcards(flashcards: Flashcard[]) {
@@ -76,6 +100,15 @@ export class FlashcardStore {
     this.isLoading = bool;
   };
 
+  setBrowseFlashcards(cards: CardMetaData[]) {
+    this.browseFlashcards = cards;
+  }
+
+  setBrowseSearchValue(value: string) {
+    this.browseSearchValue = value;
+  }
+
+  // Create
   createFlashcard = async () => {
     try {
       this.setIsLoading(true);
@@ -88,6 +121,7 @@ export class FlashcardStore {
     }
   };
 
+  // Update
   updateFlashcard = async (uuid: string, updatedFields: Partial<Flashcard>) => {
     try {
       this.setIsLoading(true);
@@ -100,7 +134,14 @@ export class FlashcardStore {
     }
   };
 
-  removeFlashcard = async (uuid: string) => {
+  updateVariant = (updatedVariant: Variant) => {
+    const variantFound = this.variants.find((variant) => variant.uuid === updatedVariant.uuid);
+    if (!variantFound) return;
+    Object.assign(variantFound, updatedVariant);
+  };
+
+  // Remove
+  async removeFlashcard(uuid: string) {
     try {
       this.setIsLoading(true);
       await flashcardsApi.removeFlashcard(uuid);
@@ -110,55 +151,50 @@ export class FlashcardStore {
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  fetchFlashcard = async (uuid: string) => {
+  // Api Operations
+  async fetchFlashcard(uuid: string) {
     try {
       this.setIsLoading(true);
       const flashcard = await flashcardsApi.getFlashcard(uuid);
-
       this.setSelectedFlashcard(flashcard);
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  fetchFlashcardsApi = async (channelId: string) => {
+  async fetchFlashcardsApi(channelId: string) {
     try {
       this.setIsLoading(true);
       const flashcards = await flashcardsApi.getFlashcards(channelId);
-
       this.setFlashcards(flashcards);
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  // Fields
-  createFieldApi = async (createField: { title: string; templateId: string }) => {
+  async createFieldApi(createField: { title: string; templateId: string }) {
     try {
       this.setIsLoading(true);
       const field = await flashcardsApi.createField(createField);
-
       this.fields.push(field);
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  updateFieldApi = async (uuid: string, updateField: Partial<Field>) => {
+  async updateFieldApi(uuid: string, updateField: Partial<Field>) {
     try {
       this.setIsLoading(true);
       const updatedField = await flashcardsApi.updateField(uuid, updateField);
-
       const fieldIndex = this.fields.findIndex((field) => field.uuid === uuid);
-
       if (fieldIndex > -1) {
         this.fields.splice(fieldIndex, 1, {
           ...this.fields[fieldIndex],
@@ -172,9 +208,9 @@ export class FlashcardStore {
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  removeFieldApi = async (uuid: string) => {
+  async removeFieldApi(uuid: string) {
     try {
       this.setIsLoading(true);
       await flashcardsApi.removeField(uuid);
@@ -184,70 +220,61 @@ export class FlashcardStore {
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  fetchFieldsApi = async (templateId: string) => {
+  async fetchFieldsApi(templateId: string) {
     try {
       this.setIsLoading(true);
       const fields = await flashcardsApi.getFields(templateId);
-
       this.fields = fields;
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  // Templates
-  fetchTemplatesApi = async () => {
+  async fetchTemplatesApi(workspaceId: string) {
     try {
       this.setIsLoading(true);
-      const templates = await flashcardsApi.getTemplates();
-
+      const templates = await flashcardsApi.getTemplates(workspaceId);
       this.templates = templates;
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  handleSelectTemplate = async (templateId: string) => {
+  async handleSelectTemplate(templateId: string) {
     const template = this.templates.find((template) => template.uuid === templateId);
-
     window.localStorage.setItem('selectedTemplate', templateId);
-
     this.selectedTemplate = template;
-  };
+  }
 
-  createTemplateApi = async (title: string) => {
-    const template = await flashcardsApi.createTemplate(title);
+  async createTemplateApi(title: string, workspaceId: string) {
+    const template = await flashcardsApi.createTemplate(title, workspaceId);
     this.templates?.push(template);
-
     return template;
-  };
+  }
 
-  updateTemplateApi = async (uuid: string, updateField: Partial<Field>) => {
+  async updateTemplateApi(uuid: string, updateField: Partial<Field>) {
     try {
       this.setIsLoading(true);
       const updatedTemplate = await flashcardsApi.updateTemplate(uuid, updateField);
-
       const templateFound = this.templates.find(
         (template) => template.uuid === updatedTemplate.uuid,
       );
-
       if (!templateFound) return;
-
       Object.assign(templateFound, updatedTemplate);
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  removeTemplateApi = async (uuid: string) => {
+  async removeTemplateApi(uuid: string) {
     try {
       this.setIsLoading(true);
       await flashcardsApi.removeTemplate(uuid);
@@ -257,72 +284,51 @@ export class FlashcardStore {
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  // Variants
-  fetchVariantsApi = async (templateId: string) => {
+  async fetchVariantsApi(templateId: string) {
     try {
       this.setIsLoading(true);
       const variants = await flashcardsApi.getVariants(templateId);
-
       this.variants = variants;
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  handleSelectVariant = (uuid: string) => {
-    const variant = this.variants.find((variant) => variant.uuid === uuid);
-    this.selectedVariant = variant;
-  };
-
-  updateVariant = (updatedVariant: Variant) => {
-    const variantFound = this.variants.find((variant) => variant.uuid === updatedVariant.uuid);
-
-    if (!variantFound) return;
-
-    Object.assign(variantFound, updatedVariant);
-  };
-
-  createVariantApi = async (createVariant: CreateVariant) => {
+  async createVariantApi(createVariant: CreateVariant) {
     const variant = await flashcardsApi.createVariant(createVariant);
     this.variants.push(variant);
-  };
+  }
 
-  addVariantField = async (
-    variantId: string,
-    data: { fieldId: string; cardSide: 'front' | 'back' },
-  ) => {
-    const variant = await flashcardsApi.addVariantField(variantId, data);
-
+  async addVariantField(variantId: string, data: { fieldId: string; cardSide: 'front' | 'back' }) {
+    const variant = await flashcardsApi.createVariantField(variantId, data);
     this.updateVariant(variant);
-  };
+  }
 
-  removeVariantFieldApi = async (
+  async removeVariantFieldApi(
     variantId: string,
     data: { fieldId: string; cardSide: 'front' | 'back' },
-  ) => {
+  ) {
     const variant = await flashcardsApi.removeVariantField(variantId, data);
-
     this.updateVariant(variant);
-  };
+  }
 
-  updateVariantApi = async (uuid: string, updateField: Partial<Variant>) => {
+  async updateVariantApi(uuid: string, updateField: Partial<Variant>) {
     try {
       this.setIsLoading(true);
       const updatedVariant = await flashcardsApi.updateVariant(uuid, updateField);
-
       this.updateVariant(updatedVariant);
     } catch (error) {
       console.error(error);
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  removeVariantApi = async (uuid: string) => {
+  async removeVariantApi(uuid: string) {
     try {
       this.setIsLoading(true);
       await flashcardsApi.removeVariant(uuid);
@@ -332,66 +338,63 @@ export class FlashcardStore {
     } finally {
       this.setIsLoading(false);
     }
-  };
+  }
 
-  // Flashcards
-  createCardNoteApi = async (
+  async createCardNoteApi(
     templateId: string,
-    fieldValues: any,
+    fieldValues: FieldValue[],
     currentChannelId: string,
     workspaceId: string,
-  ) => {
-    await flashcardsApi.createCardNote(templateId, fieldValues, currentChannelId, workspaceId);
-
+  ) {
+    await flashcardsApi.createNote({ templateId, fieldValues, currentChannelId, workspaceId });
     await this.getCardCountDueForChannel(currentChannelId);
-  };
+  }
 
-  // Review
-  submitReviewsApi = async (reviewData: any) => {
-    await flashcardsApi.submitReviewData(reviewData);
-  };
+  async submitReviewsApi(reviewData: CardReview[]) {
+    await flashcardsApi.createReviewEntry(reviewData);
+  }
 
-  getCardCountDueForChannel = async (channelId: string) => {
-    const count = await flashcardsApi.getCardCountDueForChannel(channelId);
+  async getCardCountDueForChannel(channelId: string) {
+    const channelCount = await flashcardsApi.getCardCountDueForChannel(channelId);
+    this.cardsDue = channelCount.count;
+  }
 
-    this.cardsDue = count;
-  };
-
-  // Stats
-  getReviewHistoryApi = async () => {
+  async getReviewHistoryApi() {
     return await flashcardsApi.getReviewHistory();
-  };
+  }
 
-  getFutureDue = async () => {
+  async getFutureDue() {
     return await flashcardsApi.getFutureDue();
-  };
+  }
 
-  getCardsAddedStats = async () => {
+  async getCardsAddedStats() {
     return await flashcardsApi.getCardsAddedStats();
-  };
+  }
 
-  getFlashcardsDueToday = async ({ workspaceId }: { workspaceId: string }) => {
+  async getFlashcardsDueToday(workspaceId: string) {
     const data = await flashcardsApi.getDueToday({ workspaceId });
     this.flashcardsDueCounts = data;
-  };
+  }
 
-  getCardMaturityStats = async () => {
+  async getCardMaturityStats() {
     return await flashcardsApi.getCardMaturityStats();
-  };
+  }
 
-  getYearlyStats = async () => {
+  async getYearlyStats() {
     return await flashcardsApi.getYearlyStats();
-  };
+  }
 
-  createDefaultTemplate = async () => {
+  async createDefaultTemplate() {
     return await flashcardsApi.createDefaultTemplate();
-  };
+  }
 
-  getCardCountReviewedToday = async () => {
+  async getCardCountReviewedToday() {
     return await flashcardsApi.getCardCountReviewedToday();
-  };
+  }
 
-  getChannelCards = async (channelId: string) => {
-    return await flashcardsApi.browseChannelCards(channelId);
-  };
+  async getChannelCardDetails(channelId: string) {
+    const cards = await flashcardsApi.getChannelCardDetails(channelId);
+
+    this.setBrowseFlashcards(cards);
+  }
 }

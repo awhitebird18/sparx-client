@@ -1,10 +1,10 @@
-export interface Flashcard {
-  uuid: string;
-  title: string;
-  topicUuid: string;
-  createdOn: Date;
+import { Base } from '@/types/base';
+
+export interface Flashcard extends Base {
+  frontValues: string[];
+  backValues: string[];
   createdBy: string;
-  front?: string;
-  back?: string;
-  lastReviewed: Date;
+  easeFactor: number;
+  repetitions: number;
+  nextReviewDate: string;
 }

@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { Template } from '../types/template';
 
-export const createTemplate = async (title: string) => {
+export const createTemplate = async (title: string, workspaceId: string): Promise<Template> => {
   try {
-    const res = await axios.post('card-template', { title });
+    const { data } = await axios.post('card-template', { card: { title }, workspaceId });
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

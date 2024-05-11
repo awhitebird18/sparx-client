@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import { Channel } from '@/features/channels/types';
 import { SortOptions } from '@/features/channels/enums';
 
-import { SortBy } from '@/components/layout/sidebar/enums';
-import { ChannelUserCount } from '@/features/workspaceChannels/types/channelUserCount';
+import { SortBy } from '@/layout/sidebar/enums';
+import { ChannelUserCount } from '@/features/channels/types/channelUserCount';
 
 export const sortSectionChannels = (channels: Channel[], sortBy: SortBy) => {
   if (sortBy === SortBy.ALPHA) {
@@ -46,12 +46,12 @@ export const sortWorkspaceChannels = (
   if (sortBy === SortOptions.OLDEST) {
     return workspaceChannelsWithUserCount
       .slice()
-      .sort((a, b) => (b.createdAt?.isBefore(a.createdAt) ? 1 : -1));
+      .sort((a, b) => (dayjs(b.createdAt)?.isBefore(a.createdAt) ? 1 : -1));
   }
   if (sortBy === SortOptions.NEWEST) {
     return workspaceChannelsWithUserCount
       .slice()
-      .sort((a, b) => (b.createdAt?.isAfter(a.createdAt) ? 1 : -1));
+      .sort((a, b) => (dayjs(b.createdAt)?.isAfter(a.createdAt) ? 1 : -1));
   }
   if (sortBy === SortOptions.LEASTMEMBERS) {
     return workspaceChannelsWithUserCount

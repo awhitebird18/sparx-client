@@ -8,9 +8,9 @@ export const updateUserStatus = async (
   updateUserStatus: UpdateUserStatus,
 ): Promise<UserStatus> => {
   try {
-    const res = await axios.patch(`/user-statuses/${userStatusUuid}`, updateUserStatus);
+    const { data } = await axios.patch(`/user-statuses/${userStatusUuid}`, updateUserStatus);
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

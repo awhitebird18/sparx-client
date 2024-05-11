@@ -2,34 +2,33 @@ import { useStore } from '@/stores/RootStore';
 import { useEffect } from 'react';
 import { setFavicon } from '@/utils/setFavicon';
 import { API_URL } from '@/config/api';
-import { observer } from 'mobx-react-lite';
 
 const useMessageSocket = () => {
   const { setUnreadsCount, isWindowVisible, sendBrowserNotification } =
     useStore('notificationStore');
   const { incrementChannelUnreads, channelUnreadsCount } = useStore('channelUnreadStore');
   const { addMessage, removeMessage, updateMessage } = useStore('messageStore');
-  const { currentChannelId, subscribedChannels, findChannelByUuid } = useStore('channelStore');
+  const { currentChannelId, channels, findChannelByUuid } = useStore('channelStore');
   const { connectSocket, emitSocket } = useStore('socketStore');
   const { currentUser } = useStore('userStore');
 
   // Subscribes to messages for each subscribed channel
   useEffect(() => {
-    subscribedChannels.forEach((channel) => {
+    channels.forEach((channel) => {
       emitSocket('joinChannel', channel.uuid);
     });
 
     return () => {
-      subscribedChannels.forEach((channel) => {
+      channels.forEach((channel) => {
         emitSocket('leaveChannel', channel.uuid);
       });
     };
-  }, [emitSocket, subscribedChannels]);
+  }, [emitSocket, channels]);
 
   // New message
   useEffect(() => {
     if (!currentUser) return;
-    return connectSocket('new-message', (data) => {
+    connectSocket('new-message', (data) => {
       const { message } = data.payload;
 
       if (message.channelId === currentChannelId) {
@@ -66,7 +65,7 @@ const useMessageSocket = () => {
 
   // Update message
   useEffect(() => {
-    return connectSocket('update-message', (data) => {
+    connectSocket('update-message', (data) => {
       const { message } = data.payload;
       if (message.channelId !== currentChannelId) return;
 
@@ -76,7 +75,7 @@ const useMessageSocket = () => {
 
   // Remove message
   useEffect(() => {
-    return connectSocket('remove-message', (data) => {
+    connectSocket('remove-message', (data) => {
       const { messageId, channelId } = data.payload;
 
       if (channelId !== currentChannelId) return;

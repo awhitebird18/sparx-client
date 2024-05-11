@@ -1,4 +1,3 @@
-import { Props as ProfileProps } from '@/features/profile/components/Profile';
 import {
   AddFlashcardModal,
   Browse,
@@ -8,10 +7,15 @@ import {
   Note,
   Profile,
 } from './lazyLoadComponents';
+import { ProfileStoreProvider } from '@/features/profile/providers/profileStoreProvider';
 
 const mainPanelComponents = {
   note: () => <Note />,
-  profile: (props: ProfileProps) => <Profile {...props} />,
+  profile: () => (
+    <ProfileStoreProvider>
+      <Profile />
+    </ProfileStoreProvider>
+  ),
   addFlashcard: () => <AddFlashcardModal />,
   studyFlashcards: () => <StudyFlashcardsModal />,
   flashcardTemplates: () => <Templates />,

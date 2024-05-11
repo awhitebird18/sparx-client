@@ -5,7 +5,7 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const leaveChannel = async (channelId: string) => {
   try {
-    const { data } = await axios.delete(`/channel-management/leave/${channelId}`);
+    const { data } = await axios.delete(`/channel-subscription/leave/${channelId}`);
 
     stores.notificationStore.addNotification({
       title: 'Left channel',

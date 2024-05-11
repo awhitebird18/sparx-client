@@ -1,11 +1,9 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
 
-export const removeChannel = async (channelId: string, workspaceId: string) => {
+export const removeChannel = async (channelId: string): Promise<void> => {
   try {
-    const { data } = await axios.delete(`/channels/${channelId}/${workspaceId}`);
-
-    return data;
+    await axios.delete(`/channels/${channelId}`);
   } catch (error) {
     return handleApiError(error);
   }

@@ -8,7 +8,7 @@ interface ActiveSidePanel {
 }
 
 export class SidePanelStore {
-  sidePanelComponent: ActiveSidePanel | null = null;
+  sidePanelComponent: ActiveSidePanel | undefined = undefined;
 
   constructor() {
     makeObservable(this, {
@@ -24,12 +24,12 @@ export class SidePanelStore {
   };
 
   closeSidePanelComponent = () => {
-    this.sidePanelComponent = null;
+    this.sidePanelComponent = undefined;
   };
 
   toggleSidePanelComponent = (sidePanelComponent: ActiveSidePanel) => {
     if (this.sidePanelComponent?.type === sidePanelComponent.type) {
-      this.sidePanelComponent = null;
+      this.sidePanelComponent = undefined;
     } else {
       this.setSidePanelComponent(sidePanelComponent);
     }

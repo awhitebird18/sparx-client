@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { useCallback, useMemo, useRef } from 'react';
 import { CardText } from 'react-bootstrap-icons';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { Field as FieldType } from '../types/Field';
+import { Field, Field as FieldType } from '../types/field';
 import TemplateField from './TemplateField';
 
 type TemplateCardProps = { side: 'front' | 'back' };
@@ -47,7 +47,7 @@ const TemplateCard = observer(({ side }: TemplateCardProps) => {
 
   const fields = selectedVariant?.[side === 'front' ? 'frontFields' : 'backFields'];
 
-  const handleRemoveField = (field: any) => {
+  const handleRemoveField = (field: Field) => {
     if (!selectedVariant) return;
 
     removeVariantFieldApi(selectedVariant.uuid, {
@@ -59,11 +59,13 @@ const TemplateCard = observer(({ side }: TemplateCardProps) => {
   return (
     <div
       ref={ref}
-      className={`rounded-xl w-1/2 p-6 relative shadow-md card bg-hover ${
+      className={`card-base w-1/2 p-10 prose dark:prose-invert flex items-center flex-col relative ${
         isOver && 'outline-dashed outline-primary'
       }`}
     >
-      <h2 className="m-0 mb-4">{side === 'front' ? 'Front side' : 'Back side'}</h2>
+      <h2 className="m-0 mb-4 text-3xl text-muted/50">
+        {side === 'front' ? 'Front side' : 'Back side'}
+      </h2>
 
       {fields ? (
         <div className="space-y-3 my-2">
@@ -72,9 +74,9 @@ const TemplateCard = observer(({ side }: TemplateCardProps) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-muted/70">
-          <CardText size={100} />
-          <h2 className="text-muted/70 m-0">Drag fields here</h2>
+        <div className="flex flex-col items-center text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-muted/20">
+          <CardText size={135} className="mt-3" />
+          <h4 className="text-muted/50 m-0 leading-none">Drag fields here</h4>
         </div>
       )}
     </div>

@@ -1,49 +1,27 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
 import PasswordInput from '@/components/ui/PasswordInput';
+import { ChangePasswordData } from '../types/changePasswordData';
+import { registrationSchema } from '@/features/auth/utils/changePasswordFormValidation';
 
-type FormData = {
-  password: string;
-  confirmPassword: string;
+export type Props = {
+  onSubmit: (data: ChangePasswordData) => Promise<void>;
 };
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-
-const registrationSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, 'Password is required.')
-      .refine(
-        (value) => passwordRegex.test(value),
-        'Password must contain at least one lowercase, upper, and number.',
-      ),
-    confirmPassword: z.string().min(1, 'Confirm password is required.'),
-  })
-  .refine((schema) => schema.password === schema.confirmPassword, {
-    message: 'Passwords must match.',
-    path: ['confirmPassword'],
-  });
-
-type ChangePasswordFormProps = {
-  onSubmit: (data: FormData) => Promise<void>;
-};
-
-const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
+const ChangePasswordForm = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<ChangePasswordData>({
     resolver: zodResolver(registrationSchema),
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const submit = async (data: FormData) => {
+  const submit = async (data: ChangePasswordData) => {
     try {
       setIsLoading(true);
       await onSubmit(data);
@@ -55,24 +33,12 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
 
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit(submit)}>
-      <div className="relative">
-        <label htmlFor="password" className="block text-sm font-medium">
-          Password
-        </label>
-
-        <PasswordInput {...register('password')} placeholder="Password" />
-        {errors.password && <ErrorLabel>{errors.password.message}</ErrorLabel>}
-      </div>
-
-      <div className="relative">
-        <label htmlFor="confirmPassword" className="block text-sm font-medium">
-          Confirm Password
-        </label>
-
-        <PasswordInput {...register('confirmPassword')} placeholder="Confirm Password" />
-
-        {errors.confirmPassword && <ErrorLabel>{errors.confirmPassword.message}</ErrorLabel>}
-      </div>
+      <PasswordField label="Password" error={errors.password?.message} {...register('password')} />
+      <PasswordField
+        label="Confirm Password"
+        error={errors.confirmPassword?.message}
+        {...register('confirmPassword')}
+      />
 
       <Button type="submit" disabled={isLoading} className="mt-4">
         Change password
@@ -82,6 +48,23 @@ const ChangePasswordForm = ({ onSubmit }: ChangePasswordFormProps) => {
 };
 
 export default ChangePasswordForm;
+
+interface PasswordFieldProps {
+  label: string;
+  error?: string;
+  placeholder?: string;
+  name?: string;
+}
+
+const PasswordField = ({ label, error, placeholder, ...rest }: PasswordFieldProps) => (
+  <div className="relative">
+    <label htmlFor={rest.name} className="block text-sm font-medium">
+      {label}
+    </label>
+    <PasswordInput {...rest} placeholder={placeholder || label} />
+    {error && <ErrorLabel>{error}</ErrorLabel>}
+  </div>
+);
 
 const ErrorLabel = ({ children }: { children?: string }) => (
   <p className="absolute -bottom-5 left-1 mt-1 text-red-500 text-xs">{children}</p>

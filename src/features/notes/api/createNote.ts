@@ -1,11 +1,12 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
+import { Note } from '../types/note';
 
-export const createNote = async (nodeUuid: string) => {
+export const createNote = async (nodeUuid: string): Promise<Note> => {
   try {
-    const res = await axios.post('notes', { channelId: nodeUuid });
+    const { data } = await axios.post('notes', { channelId: nodeUuid });
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

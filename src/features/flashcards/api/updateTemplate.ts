@@ -1,6 +1,5 @@
 import { axios } from '@/lib/axios';
 import { handleApiError } from '@/utils/handleApiError';
-
 import { Template } from '../types/template';
 
 export const updateTemplate = async (

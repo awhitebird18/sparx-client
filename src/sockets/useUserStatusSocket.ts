@@ -8,7 +8,7 @@ const useUserStatusSocket = () => {
 
   // Update user
   useEffect(() => {
-    return connectSocket('update-user-status', (data) => {
+    connectSocket('update-user-status', (data) => {
       const { userStatus, userId } = data.payload;
 
       updateUser({ status: userStatus, uuid: userId });

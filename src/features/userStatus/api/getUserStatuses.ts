@@ -4,9 +4,9 @@ import { handleApiError } from '@/utils/handleApiError';
 
 export const getUserStatuses = async (): Promise<UserStatus[]> => {
   try {
-    const res = await axios.get('/user-statuses');
+    const { data } = await axios.get('/user-statuses');
 
-    return res.data;
+    return data;
   } catch (error) {
     return handleApiError(error);
   }

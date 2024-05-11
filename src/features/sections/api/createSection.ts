@@ -1,12 +1,13 @@
 import { axios } from '@/lib/axios';
-import { CreateSection } from '../types';
+import { CreateSection, Section } from '../types';
+import { handleApiError } from '@/utils/handleApiError';
 
-export const createSection = async (createSection: CreateSection) => {
+export const createSection = async (createSection: CreateSection): Promise<Section> => {
   try {
     const { data } = await axios.post('/sections', createSection);
 
     return data;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    return handleApiError(error);
   }
 };

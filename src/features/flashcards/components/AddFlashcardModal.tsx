@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/Select';
 import CardField from './CardField';
+import { FieldValue } from '../types/fieldValue';
 
 const AddFlashcardModal = observer(() => {
   const { closeModal } = useStore('modalStore');
@@ -17,22 +18,21 @@ const AddFlashcardModal = observer(() => {
     useStore('flashcardStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { currentChannelId } = useStore('channelStore');
-  const [fieldValues, setFieldValues] = useState<any>([]);
+  const [fieldValues, setFieldValues] = useState<FieldValue[]>([]);
 
   const handleTemplateChange = (value: string) => {
     handleSelectTemplate(value);
-
     setFieldValues([]);
   };
 
   const handleFieldChange = (uuid: string, value: string) => {
-    const index = fieldValues.findIndex((fv: any) => fv.uuid === uuid);
+    const index = fieldValues.findIndex((fv) => fv.uuid === uuid);
     if (index !== -1) {
       const updatedFieldValues = [...fieldValues];
-      updatedFieldValues[index] = { ...updatedFieldValues[index], value };
+      updatedFieldValues[index] = { ...updatedFieldValues[index], content: value };
       setFieldValues(updatedFieldValues);
     } else {
-      setFieldValues([...fieldValues, { uuid, value }]);
+      setFieldValues([...fieldValues, { fieldId: uuid, content: value }]);
     }
   };
 
@@ -44,15 +44,10 @@ const AddFlashcardModal = observer(() => {
         currentChannelId,
         currentWorkspaceId,
       );
-
-      handleCancel();
+      closeModal();
     } else {
       alert('Please fill in all fields and select a template');
     }
-  };
-
-  const handleCancel = () => {
-    closeModal();
   };
 
   return (
@@ -62,7 +57,7 @@ const AddFlashcardModal = observer(() => {
           <CardField
             key={field.uuid}
             title={field.title}
-            content={fieldValues.find((fv: any) => fv.uuid === field.uuid)?.value || undefined}
+            content={fieldValues.find((fv) => fv.uuid === field.uuid)?.content}
             onFieldChange={(value) => handleFieldChange(field.uuid, value)}
           />
         ))}

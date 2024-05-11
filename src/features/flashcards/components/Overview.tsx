@@ -13,7 +13,6 @@ const Overview = observer(() => {
       {activeComponent?.type === 'flashcardTemplates' && <TemplateList />}
       {activeComponent?.type === 'studyFlashcards' && <FlashcardReviews />}
       {activeComponent?.type === 'addFlashcard' && <RecentlyAdded />}
-
       {!activeComponent && <FlashcardsNav />}
     </div>
   );

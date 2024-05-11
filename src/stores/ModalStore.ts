@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { ModalName } from '@/layout/modal/modalList';
 
 interface ActiveModal {
@@ -10,12 +10,10 @@ export class ModalStore {
   activeModal: ActiveModal | null = null;
 
   constructor() {
-    makeObservable(this, {
-      activeModal: observable,
-      setActiveModal: action,
-    });
+    makeAutoObservable(this, undefined, { autoBind: true });
   }
 
+  // Setters
   setActiveModal = (activeModal: ActiveModal | null) => {
     this.activeModal = activeModal;
   };

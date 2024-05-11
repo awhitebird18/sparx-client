@@ -1,11 +1,9 @@
-import { Dayjs } from 'dayjs';
+import { Base } from '@/types/base';
 
-export interface CreateMesssage {
-  uuid: string;
+export interface CreateMesssage extends Base {
   content: string;
   channelId: string;
   userId: string;
-  createdAt: Dayjs;
-  isSystem?: boolean;
   parentId?: string;
+  isSystem?: boolean;
 }

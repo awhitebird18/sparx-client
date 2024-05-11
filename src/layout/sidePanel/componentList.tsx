@@ -1,3 +1,4 @@
+import { ActivityStoreProvider } from '@/features/activity/providers/activityStoreProvider';
 import {
   Users,
   ChatRoom,
@@ -10,17 +11,33 @@ import {
   NotesSidePanel,
   StatsPanel,
 } from './lazyLoadComponents';
-import { WorkspaceActivityProps } from '@/features/activity/components/WorkspaceActivity';
+import { AssistantStoreProvider } from '@/features/assistant/providers/assistantStoreProvider';
+import { UserTypingStoreProvider } from '@/features/chatroom/hooks/useChatroomStore';
+import { MessageStoreProvider } from '@/features/messages/providers/messageStoreProvider';
 
 const sidePanelComponents = {
   users: () => <Users />,
-  discussions: () => <ChatRoom />,
+  discussions: () => (
+    <MessageStoreProvider>
+      <UserTypingStoreProvider>
+        <ChatRoom />
+      </UserTypingStoreProvider>
+    </MessageStoreProvider>
+  ),
   flashcards: () => <Overview />,
   notes: () => <ViewNotes />,
   tasks: () => <TaskList />,
-  activity: (props: WorkspaceActivityProps) => <WorkspaceActivity {...props} />,
+  activity: () => (
+    <ActivityStoreProvider>
+      <WorkspaceActivity />
+    </ActivityStoreProvider>
+  ),
   shortcutKeys: () => <ShortcutMenu />,
-  assistant: () => <Assistant />,
+  assistant: () => (
+    <AssistantStoreProvider>
+      <Assistant />
+    </AssistantStoreProvider>
+  ),
   note: () => <NotesSidePanel />,
   stats: () => <StatsPanel />,
 };

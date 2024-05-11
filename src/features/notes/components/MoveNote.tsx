@@ -7,14 +7,14 @@ import { Folder } from 'react-bootstrap-icons';
 export type MoveNoteProps = { noteId: string; channelId: string };
 
 const MoveNote = observer(({ noteId, channelId }: MoveNoteProps) => {
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const { moveNote } = useStore('noteStore');
-  const { subscribedChannels } = useStore('channelStore');
+  const { channels } = useStore('channelStore');
   const { addNotification } = useStore('notificationStore');
 
   const handleMoveNote = (channel: Channel) => {
     moveNote(noteId, channel.uuid);
-    setActiveModal(null);
+    closeModal();
     addNotification({
       description: `Note moved to ${channel.name}`,
       title: 'Success',
@@ -25,8 +25,8 @@ const MoveNote = observer(({ noteId, channelId }: MoveNoteProps) => {
     <Modal title="Move note to...">
       <div className="flex flex-col max-w-lg w-96 max-h-96 overflow-auto">
         <ul className="space-y-1 pr-2">
-          {subscribedChannels
-            .filter((channel) => channel.type !== 'direct' && channel.uuid !== channelId)
+          {channels
+            .filter((channel) => channel.uuid !== channelId)
             .map((channel) => (
               <li
                 key={channel.uuid}

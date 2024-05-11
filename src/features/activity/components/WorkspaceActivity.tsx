@@ -1,69 +1,61 @@
-import { useEffect, useRef, useState } from 'react';
-import { axios } from '@/lib/axios';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { useCallback, useEffect, useRef } from 'react';
 import { ActivityRow } from './ActivityRow';
+import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
+import SkeletonPlaceholder from './ActivitySkeleton';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import { useActivityStore } from '../hooks/useActivityStore';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
-export type WorkspaceActivityProps = { endpoint: string };
-
-const WorkspaceActivity = ({ endpoint }: WorkspaceActivityProps) => {
-  const [activities, setActivities] = useState<any[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const observer = useRef<IntersectionObserver | null>(null);
+const WorkspaceActivity = observer(() => {
+  const {
+    displayActivities,
+    hasMore,
+    isLoading,
+    fetchActivities,
+    page,
+    incrementPage,
+    initialLoad,
+    setInitialLoad,
+  } = useActivityStore();
+  const { currentWorkspaceId } = useStore('workspaceStore');
+  const { currentProfileUserId } = useStore('userStore');
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const callback = (entries: any) => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    };
-    observer.current = new IntersectionObserver(callback);
-    const currentObserver = observer.current;
-    if (sentinelRef.current) currentObserver.observe(sentinelRef.current);
+  const loadMoreActivities = useCallback(() => {
+    if (hasMore && !isLoading) {
+      incrementPage();
+    }
+  }, [hasMore, isLoading, incrementPage]);
 
-    return () => currentObserver.disconnect();
-  }, [hasMore, isLoading]);
+  useIntersectionObserver(sentinelRef, loadMoreActivities);
 
   useEffect(() => {
-    const fetchMoreActivities = async () => {
-      setIsLoading(true);
-      const minimumLoadingTimePromise = new Promise((resolve) => setTimeout(resolve, 400));
-      const [{ data }] = await Promise.all([
-        axios.get(`${endpoint}?page=${page}`),
-        minimumLoadingTimePromise,
-      ]);
-      if (data.length < 10) {
-        setIsLoading(false);
-        setHasMore(false);
-      }
-      setActivities((prevActivities) => [...prevActivities, ...data]);
-      setIsLoading(false);
-    };
+    if (!currentWorkspaceId) return;
+    setInitialLoad(page === 1);
+    fetchActivities(currentWorkspaceId, currentProfileUserId).finally(() => setInitialLoad(false));
+  }, [page, fetchActivities, currentWorkspaceId, currentProfileUserId, setInitialLoad]);
 
-    fetchMoreActivities();
-  }, [page, endpoint]);
+  if (initialLoad && isLoading) {
+    return <SkeletonPlaceholder count={5} />;
+  }
 
   return (
-    <div className="h-full pr-2 overflow-auto prose dark:prose-invert">
-      {activities.map((activity) => {
-        return <ActivityRow key={activity.id} activity={activity} />;
-      })}
+    <SidePanelContainer>
+      <HeaderContainer title="Workspace Activity" />
 
-      {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
-      {isLoading && (
-        <div className="card rounded-2xl opacity-90 h-full">
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-          <Skeleton className="h-24 w-full rounded-xl border border-border mb-4" />
-        </div>
-      )}
-    </div>
+      <SidePanelBody className="overflow-y-scroll h-full flex flex-col gap-9">
+        {displayActivities.map((activity) => (
+          <ActivityRow key={activity.uuid} activity={activity} />
+        ))}
+
+        {isLoading && <SkeletonPlaceholder count={1} />}
+        {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
+      </SidePanelBody>
+    </SidePanelContainer>
   );
-};
+});
 
 export default WorkspaceActivity;

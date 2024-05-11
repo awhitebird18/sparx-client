@@ -11,6 +11,7 @@ import { calculateCurrentInterval } from '../utils/calculateCurrentInterval';
 import { formatReviewInterval } from '../utils/formatReviewInterval';
 import { getNextInterval } from '../utils/getNextInterval';
 import { ReviewData } from '../types/reviewData';
+import { Flashcard } from '../types/card';
 
 const StudyFlashcardsModal = observer(() => {
   const { fetchFlashcardsApi, flashcards, submitReviewsApi } = useStore('flashcardStore');
@@ -33,7 +34,6 @@ const StudyFlashcardsModal = observer(() => {
       if (prev < flashcards.length - 1) {
         prev++;
       }
-
       return prev;
     });
 
@@ -44,13 +44,13 @@ const StudyFlashcardsModal = observer(() => {
     setIsFlipped(false);
   };
 
-  const handlePerformanceRating = async (rating: PerformanceRating, currentCard: any) => {
+  const handlePerformanceRating = async (rating: PerformanceRating, currentCard: Flashcard) => {
     const newReview = {
       uuid: currentCard.uuid,
       performanceRating: rating,
     };
 
-    setReviewData((reviewData: any[]) => [...reviewData, newReview]);
+    setReviewData((reviewData) => [...reviewData, newReview]);
 
     if (currentCardIndex === flashcards.length - 1) {
       setIsEnd(true);
@@ -71,14 +71,18 @@ const StudyFlashcardsModal = observer(() => {
 
   const cardsLeft = flashcards.length - reviewData.length - 1;
 
-  const currentCard: any = flashcards[currentCardIndex];
+  const currentCard = flashcards[currentCardIndex];
   if (!currentCard) return null;
 
   const currentInterval = calculateCurrentInterval(currentCard.nextReviewDate);
-  const easeFactor = currentCard.easeFactor;
+  const easeFactor = +currentCard.easeFactor;
 
-  const againInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'again'));
-  const easyInterval = formatReviewInterval(getNextInterval(currentInterval, easeFactor, 'easy'));
+  const againInterval = formatReviewInterval(
+    getNextInterval(currentInterval, easeFactor, PerformanceRating.AGAIN),
+  );
+  const easyInterval = formatReviewInterval(
+    getNextInterval(currentInterval, easeFactor, PerformanceRating.EASY),
+  );
 
   return (
     <div
@@ -106,7 +110,7 @@ const StudyFlashcardsModal = observer(() => {
         </div>
       ) : (
         <>
-          <div className="card flex flex-col items-center w-3/4 h-[32rem] flip-card-inner rounded-2xl bg-hover border border-border shadow-lg">
+          <div className="flex flex-col items-center w-3/4 h-[32rem] flip-card-inner rounded-2xl bg-hover border border-border shadow-lg">
             <div className="text-xl text-center flex flex-col items-center prose">
               <h2
                 className={`flex w-min items-center m-0 h-16 mt-2 text-main ${
@@ -116,7 +120,7 @@ const StudyFlashcardsModal = observer(() => {
             </div>
             {isFront ? (
               <div className="flip-card-front h-full overflow-hidden pt-16 p-8 flex flex-col items-center">
-                {currentCard?.front?.map((field: string, index: number) => (
+                {currentCard?.frontValues?.map((field: string, index: number) => (
                   <DisplayEditor key={index} content={field} />
                 ))}
 
@@ -129,7 +133,7 @@ const StudyFlashcardsModal = observer(() => {
               </div>
             ) : (
               <div className="flip-card-back flex flex-col items-center h-full overflow-hidden pt-16 p-8">
-                {currentCard?.back?.map((fieldValue: string, index: number) => (
+                {currentCard?.backValues?.map((fieldValue: string, index: number) => (
                   <DisplayEditor key={index} content={fieldValue} />
                 ))}
                 <div className="flex justify-between gap-10 w-min">

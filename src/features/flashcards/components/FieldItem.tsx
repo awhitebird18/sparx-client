@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { Field } from '../types/Field';
+import { Field } from '../types/field';
 import { useStore } from '@/stores/RootStore';
 import { ChevronDown, GripVertical } from 'react-bootstrap-icons';
 import { useDrag } from 'react-dnd';
@@ -39,7 +39,7 @@ const FieldItem = observer(({ field }: FieldItemProps) => {
     <div
       key={field.uuid}
       ref={dragRef}
-      className="flex items-center border border-border bg-hover card h-9 rounded-lg px-2 pr-4 gap-2 w-40 justify-between overflow-hidden"
+      className="card-base bg-hover flex items-center h-9 rounded-lg px-2 pr-4 gap-2 w-40 justify-between overflow-hidden"
     >
       <div className="flex items-center gap-1 cursor-grab overflow-hidden">
         <GripVertical size={18} className="flex-shrink-0" />

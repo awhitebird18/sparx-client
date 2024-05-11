@@ -7,7 +7,6 @@ const SearchInput = ({
   setValue,
   placeholder,
   onFocus,
-  dark,
   disabled,
 }: {
   value: string | undefined;
@@ -22,24 +21,22 @@ const SearchInput = ({
   };
 
   return (
-    <div className={`relative flex items-center h-9 rounded-lg w-full`}>
+    <div className={`relative flex items-center h-8 rounded-lg w-full`}>
       <Input
         placeholder={placeholder}
-        className={`pl-9 h-9 rounded-lg`}
+        className={`pl-8 h-full rounded-lg`}
         onChange={(e) => setValue(e.target.value)}
         value={value}
         onFocus={onFocus}
         disabled={disabled}
       />
 
-      <div className="absolute left-3 top-auto text-base text-neutral">
-        <Search size={14} />
+      <div className="absolute left-3 top-auto text-base text-main">
+        <Search size={12} className="mt-0.5" />
       </div>
       {value ? (
         <Button
-          className={`h-6 w-6 absolute right-2 top-auto text-base rounded-full p-0 ${
-            dark ? 'bg-neutral-800 text-white' : ''
-          }`}
+          className={`h-6 w-6 absolute right-1.5 top-auto text-base rounded-md p-0`}
           variant="secondary"
           onClick={handleClearSearch}
         >

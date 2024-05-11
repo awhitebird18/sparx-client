@@ -3,20 +3,15 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
-  purge: {
-    // Your other purge configurations...
-    options: {
-      safelist: [
-        { pattern: /^from-/, variants: ['500'] },
-        { pattern: /^to-/, variants: ['500'] },
-      ],
-    },
-  },
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+  ],
+  safelist: [
+    { pattern: /^from-/, variants: ['500'] },
+    { pattern: /^to-/, variants: ['500'] },
   ],
   theme: {
     screens: {
@@ -28,7 +23,6 @@ module.exports = {
       '2xl': '1536px',
       '3xl': '1920px',
       '4xl': '2000px',
-      // You can continue adding more breakpoints if needed
     },
     container: {
       center: true,
@@ -113,8 +107,8 @@ module.exports = {
           hover: 'hsl(var(--card-hover))',
         },
         scrollbar: {
-          thumb: 'hsl(var(--scrollbarThumb))',
-          track: 'hsl(var(--scrollbarTrack))',
+          thumb: 'hsl(var(--scrollbar-thumb))',
+          track: 'hsl(var(--scrollbar-track))',
         },
         'primary-flashcards': 'var(--primary-flashcards)',
         'border-flashcards': 'var(--border-flashcards)',
@@ -180,7 +174,6 @@ module.exports = {
               marginTop: '0',
               marginBottom: '0',
             },
-            // Define other elements like h3, h4, p as you like
           },
         },
         dark: {
@@ -192,8 +185,6 @@ module.exports = {
                 color: theme('colors.blue.400'),
               },
             },
-
-            // Again, define other elements as needed
           },
         },
       }),
@@ -221,9 +212,6 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         spin: 'spin 1s linear infinite',
       },
-      // boxShadow: {
-      //   md: '0 3px 4px 0px rgba(0, 0, 0, 0.04)',
-      // },
       textColor: {
         main: 'hsl(var(--text-main))',
         primary: 'var(--primary)',
@@ -242,16 +230,21 @@ module.exports = {
     },
   },
   plugins: [
-    require('tailwindcss-animate'),
+    function ({ addComponents }) {
+      addComponents({
+        '.card-base': {
+          '@apply card bg-background border border-border rounded-lg shadow-sm': {},
+        },
+      });
+    },
     function ({ addBase, theme }) {
       addBase({
         '::-webkit-scrollbar': {
           width: theme('spacing.2'),
-          height: theme('spacing.2'),
         },
         '::-webkit-scrollbar-track': {
-          background: theme('colors.secondary.DEFAULT'),
-          borderRadius: '1rem',
+          background: theme('colors.scrollbar.track'),
+          borderRadius: theme('borderRadius.lg'),
         },
         '::-webkit-scrollbar-thumb': {
           backgroundColor: theme('colors.scrollbar.thumb'),

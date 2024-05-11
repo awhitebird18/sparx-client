@@ -200,7 +200,7 @@ export function AutoEmbedDialog({
 }
 
 export default function AutoEmbedPlugin(): JSX.Element {
-  const [modal, showModal] = useState<any>();
+  const [modal] = useState<string>();
 
   const openEmbedModal = (embedConfig: PlaygroundEmbedConfig) => {
     // showModal(`Embed ${embedConfig.contentName}`, (onClose) => (

@@ -1,110 +1,36 @@
-import { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Message } from '@/features/messages/types';
 import { Reaction } from '@/features/reactions/types';
 import { useStore } from '@/stores/RootStore';
 import { Button } from '@/components/ui/Button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/Tooltip';
 import { EmojiSmile, Plus } from 'react-bootstrap-icons';
 import EmojiPicker from './EmojiPicker';
-import Emoji from '@/components/ui/Emoji';
+import EmojiBadge from './EmojiBadge';
+import useEmojiPicker from '@/features/messages/hooks/useEmojiPicker';
 
 type ReactionsDisplayProps = { message: Message };
 
 const ReactionsDisplay = observer(({ message }: ReactionsDisplayProps) => {
-  const { addReactionApi } = useStore('messageStore');
-  const { currentUser, findUserByUuid } = useStore('userStore');
-  const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
-    null,
-  );
-  const emojiButtonRef = useRef<any>(null);
-
-  const handleClickReaction = async (emojiId: string) => {
-    if (!currentUser) return;
-    await addReactionApi({
-      emojiId,
-      userId: currentUser.uuid,
-      messageId: message.uuid,
-    });
-  };
-
-  const handleShowEmojiPicker = () => {
-    if (emojiButtonRef.current) {
-      const rect = emojiButtonRef.current.getBoundingClientRect();
-
-      setShowEmojiPicker({ top: rect.top - 440, left: rect.left });
-    }
-  };
-
-  const handleCloseEmojiPicker = () => {
-    setShowEmojiPicker(null);
-  };
-
-  const handleAddReaction = async (emojiId: string) => {
-    await addReactionApi({
-      emojiId,
-      userId: message.userId,
-      messageId: message.uuid,
-    });
-    handleCloseEmojiPicker();
-  };
+  const { currentUser } = useStore('userStore');
+  const { handleAddReaction, handleCloseEmojiPicker, handleShowEmojiPicker, ref, showEmojiPicker } =
+    useEmojiPicker({ message });
 
   if (!currentUser || !message.reactions?.length) return null;
 
   return (
     <div className="flex gap-1 max-w-xl flex-wrap my-3">
-      {message.reactions
-        .slice()
-        .sort((a: Reaction, b: Reaction) => a.emojiId.localeCompare(b.emojiId))
-        .map((reaction: Reaction) => {
-          const currentUserReacted = reaction.users?.includes(currentUser.uuid);
-          return (
-            <Tooltip key={reaction.emojiId}>
-              <TooltipTrigger asChild>
-                <Button
-                  className={`h-fit rounded-2xl w-10 gap-0.5
-                ${currentUserReacted && 'bg-primary hover:bg-primary-dark'}
-                `}
-                  style={{ padding: '0.15rem 0.2rem' }}
-                  size="icon"
-                  variant="outline"
-                  onClick={() => handleClickReaction(reaction.emojiId)}
-                >
-                  <Emoji id={reaction.emojiId} />
-                  <span
-                    className={`text-primary text-xs ${
-                      currentUserReacted ? 'text-white' : 'text-primary'
-                    }`}
-                  >
-                    {reaction.users.length}
-                  </span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="rounded-xl">
-                <div className="items-center justify-center gap-2 flex flex-col w-52 p-2">
-                  <div className="border border-border rounded-xl p-2 bg-card">
-                    <Emoji id={reaction.emojiId} size={32} />
-                  </div>
+      {/* Display reactions */}
+      {message.reactions.map((reaction: Reaction) => {
+        const isCurrentUser = reaction.users?.includes(currentUser.uuid);
+        return (
+          <EmojiBadge isCurrentUser={isCurrentUser} messageId={message.uuid} reaction={reaction} />
+        );
+      })}
 
-                  <div className="text-center text-sm flex justify-center leading-6">
-                    {reaction.users?.map((userId: string, index: number) => {
-                      const user = findUserByUuid(userId);
-                      if (!user) return;
-                      return `${user.firstName} ${user.lastName}${
-                        index >= reaction.users.length - 1 ? '' : ' and '
-                      }`;
-                    })}{' '}
-                    reacted
-                  </div>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
-
+      {/* Add emoji button */}
       <div className="relative">
         <Button
-          ref={emojiButtonRef}
+          ref={ref}
           className={`h-full rounded-2xl w-10`}
           size="icon"
           variant="outline"

@@ -4,7 +4,6 @@ import { removeTask } from './removeTask';
 import { getTasks } from './getTasks';
 import { toggleComplete } from './toggleComplete';
 import { getExperience } from './getExperience';
-import { getRecentWorkspaceActivity } from './getRecentWorkspaceActivity';
 import { getUserActivity } from './getUserActivity';
 
 export default {
@@ -14,6 +13,5 @@ export default {
   getTasks,
   toggleComplete,
   getExperience,
-  getRecentWorkspaceActivity,
   getUserActivity,
 };

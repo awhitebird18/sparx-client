@@ -19,18 +19,14 @@ const UserStatusModal = observer(() => {
     updateUserStatusApi,
     findUserStatusByUuid,
   } = useStore('userStatusStore');
-  const { setActiveModal } = useStore('modalStore');
+  const { closeModal } = useStore('modalStore');
   const [showEmojiPicker, setShowEmojiPicker] = useState<{ top: number; left: number } | null>(
     null,
   );
   const [currentUserStatus, setCurrentUserStatus] = useState<UserStatus | undefined>(
     activeUserStatus,
   );
-  const emojiButtonRef = useRef<any>(null);
-
-  const handleCloseModal = () => {
-    setActiveModal(null);
-  };
+  const emojiButtonRef = useRef<HTMLDivElement>(null);
 
   const handleShowEmojiPicker = () => {
     if (emojiButtonRef.current) {
@@ -62,7 +58,7 @@ const UserStatusModal = observer(() => {
       });
     }
 
-    handleCloseModal();
+    closeModal();
   };
 
   const handleClickPreviousStatus = (userStatus: UserStatus) => {
@@ -80,7 +76,10 @@ const UserStatusModal = observer(() => {
   const handleAddReaction = (emojiId: string) => {
     handleCloseEmojiPicker();
 
-    setCurrentUserStatus((prev: any) => ({ ...prev, emoji: emojiId }));
+    setCurrentUserStatus((prev: UserStatus | undefined) => {
+      if (!prev) return;
+      return { ...prev, emoji: emojiId };
+    });
   };
 
   return (
@@ -110,10 +109,13 @@ const UserStatusModal = observer(() => {
             placeholder="What's your status?"
             className="pl-14 h-12 border-border"
             onChange={(e) =>
-              setCurrentUserStatus((prev: any) => ({
-                ...prev,
-                text: e.target.value,
-              }))
+              setCurrentUserStatus((prev: UserStatus | undefined) => {
+                if (!prev) return undefined;
+                return {
+                  ...prev,
+                  text: e.target.value,
+                };
+              })
             }
             value={currentUserStatus ? currentUserStatus.text : ''}
           />
@@ -173,14 +175,7 @@ const UserStatusModal = observer(() => {
             </Button>
           ) : (
             <>
-              <Button
-                type="button"
-                className="ml-auto w-32"
-                variant="outline"
-                onClick={() => {
-                  handleCloseModal();
-                }}
-              >
+              <Button type="button" className="ml-auto w-32" variant="outline" onClick={closeModal}>
                 Cancel
               </Button>
               <Button className="ml-auto w-32" onClick={handleSubmit} disabled={!currentUserStatus}>

@@ -1,10 +1,10 @@
-import { LoginData, RegistrationData } from '@/features/auth/types';
-import { User } from '@/features/users/types';
+import { LoginData } from '@/features/auth/types';
+import { RegisterFormData } from '@/features/auth/types/registerFormData';
 
 export interface AuthContextData {
   userLogin: (loginData: LoginData) => Promise<void>;
   userLogout: () => void;
-  registerUser: (registrationData: RegistrationData) => Promise<User | undefined>;
+  registerUser: (registrationData: RegisterFormData) => Promise<{ userId: string }>;
   verifyAndLoginUser: () => void;
   registerAnonymous: () => void;
 }

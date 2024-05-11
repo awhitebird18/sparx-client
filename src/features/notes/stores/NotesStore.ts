@@ -1,15 +1,16 @@
 import { makeAutoObservable } from 'mobx';
-import { Note } from '../types/Note';
+import { Note } from '@/features/notes/types/note';
 import notesApi from '../api';
-import { UpdateNote } from '../types/UpdateNote';
+import { UpdateNote } from '../types/updateNote';
 
 export class NotesStore {
   notes: Note[] = [];
   selectedNoteId: string | undefined = undefined;
   isLoading = true;
+  searchValue = '';
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, undefined, { autoBind: true });
   }
 
   get selectedNote(): Note | undefined {
@@ -18,11 +19,22 @@ export class NotesStore {
     return channel;
   }
 
+  get filteredNotes() {
+    const filteredNotes = this.notes.filter((note) =>
+      this.searchValue ? note.title?.toLowerCase().includes(this.searchValue) : note,
+    );
+
+    return filteredNotes;
+  }
+
   setSelectedNoteId = (noteId: string | undefined) => {
     this.selectedNoteId = noteId;
   };
 
-  // Optional: Action to load notes (e.g., from an API)
+  setSearchValue(value: string) {
+    this.searchValue = value;
+  }
+
   setNotes(notes: Note[]) {
     this.notes = notes;
   }

@@ -1,8 +1,11 @@
 import { axios } from '@/lib/axios';
-import { UpdateWorkspace } from '../types';
 import { handleApiError } from '@/utils/handleApiError';
+import { Workspace } from '../types/workspace';
 
-export const updateWorkspace = async (workspaceId: string, updateWorkspace: UpdateWorkspace) => {
+export const updateWorkspace = async (
+  workspaceId: string,
+  updateWorkspace: Partial<Workspace>,
+): Promise<Workspace> => {
   try {
     const { data } = await axios.patch(`/workspaces/${workspaceId}`, updateWorkspace);
 

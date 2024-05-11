@@ -24,9 +24,7 @@ const Stats = observer(() => {
   useEffect(() => {
     const fn = async () => {
       const count = await getCardCountReviewedToday();
-
       if (!count) return;
-
       setCardsStudiedCount(count);
     };
 
