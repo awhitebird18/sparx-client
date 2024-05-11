@@ -165,7 +165,7 @@ export class MessageStore {
         ...createMessage,
         ...(parentMessage && { parentId: parentMessage.uuid }),
       });
-      newMessage.createdAt = dayjs(newMessage.createdAt);
+      newMessage.createdAt = dayjs(newMessage.createdAt).toISOString();
 
       this.updateMessage(newMessage);
     } catch (err) {
@@ -193,7 +193,7 @@ export class MessageStore {
 
     const formattedMessages = messages.map((message: Message) => ({
       ...message,
-      createdAt: dayjs(message.createdAt),
+      createdAt: dayjs(message.createdAt).toISOString(),
       reactions: message.reactions.sort((a: Reaction, b: Reaction) =>
         a.emojiId.localeCompare(b.emojiId),
       ),

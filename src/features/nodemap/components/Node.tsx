@@ -19,7 +19,7 @@ type Props = {
   parentChannelId?: string;
 };
 
-const Node = observer(({ uuid, label, x, y, isDefault, parentChannelId }: Props) => {
+const Node = observer(({ uuid, label, x, y, parentChannelId }: Props) => {
   const {
     currentChannelId,
     setCurrentChannelUuid,

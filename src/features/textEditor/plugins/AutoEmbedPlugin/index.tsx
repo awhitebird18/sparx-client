@@ -7,7 +7,6 @@ import {
   LexicalAutoEmbedPlugin,
   URL_MATCHER,
 } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { INSERT_YOUTUBE_COMMAND } from '@/features/textEditor/commands/insertYoutubeCommand';
@@ -139,13 +138,12 @@ const debounce = (callback: (text: string) => void, delay: number) => {
 
 export function AutoEmbedDialog({
   embedConfig,
-  onClose,
 }: {
   embedConfig: PlaygroundEmbedConfig;
   onClose: () => void;
 }): JSX.Element {
   const [text, setText] = useState('');
-  const [editor] = useLexicalComposerContext();
+  // const [editor] = useLexicalComposerContext();
   const [embedResult, setEmbedResult] = useState<EmbedMatchResult | null>(null);
 
   const validateText = useMemo(
@@ -163,12 +161,12 @@ export function AutoEmbedDialog({
     [embedConfig, embedResult],
   );
 
-  const onClick = () => {
-    if (embedResult != null) {
-      embedConfig.insertNode(editor, embedResult);
-      onClose();
-    }
-  };
+  // const onClick = () => {
+  //   if (embedResult != null) {
+  //     embedConfig.insertNode(editor, embedResult);
+  //     onClose();
+  //   }
+  // };
 
   return (
     <div style={{ width: '600px' }}>
@@ -202,7 +200,7 @@ export function AutoEmbedDialog({
 export default function AutoEmbedPlugin(): JSX.Element {
   const [modal] = useState<string>();
 
-  const openEmbedModal = (embedConfig: PlaygroundEmbedConfig) => {
+  const openEmbedModal = () => {
     // showModal(`Embed ${embedConfig.contentName}`, (onClose) => (
     //   <AutoEmbedDialog embedConfig={embedConfig} onClose={onClose} />
     // ));

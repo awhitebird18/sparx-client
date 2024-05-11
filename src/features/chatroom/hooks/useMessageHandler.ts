@@ -17,7 +17,7 @@ const useMessageHandler = () => {
       channelId: currentChannelId,
       userId: currentUser.uuid,
       uuid: uuid(),
-      createdAt: dayjs(),
+      createdAt: dayjs().toISOString(),
     });
 
     emitSocket('stopped-typing', {
