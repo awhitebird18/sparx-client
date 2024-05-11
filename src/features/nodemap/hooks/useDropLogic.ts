@@ -17,7 +17,6 @@ const useDropLogic = ({ ref }: Props) => {
     setHoverOffset,
     setDraggingNodeId,
     updateChannelPositions,
-    findCollidingStaticNode,
     findCollisionFreePosition,
   } = useStore('channelStore');
   const { transformState } = useTransformContext();
@@ -40,7 +39,6 @@ const useDropLogic = ({ ref }: Props) => {
   const handleDrop = useCallback(
     async (item: Channel | undefined, monitor: DropTargetMonitor) => {
       if (item && ref.current) {
-        console.log(findCollidingStaticNode());
         const delta = monitor.getDifferenceFromInitialOffset();
         if (delta && draggingNodeId) {
           const collisionOffset = findCollisionFreePosition();
@@ -85,7 +83,6 @@ const useDropLogic = ({ ref }: Props) => {
     [
       draggingNodeId,
       findChannelByUuid,
-      findCollidingStaticNode,
       findCollisionFreePosition,
       nodesDragging,
       ref,

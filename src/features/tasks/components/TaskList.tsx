@@ -6,6 +6,9 @@ import TaskTable from './TaskTable';
 import { useStore } from '@/stores/RootStore';
 import TaskTableHeader from './TaskTableHeader';
 import EmptyFallback from '@/components/EmptyFallback';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
 const TaskList: React.FC = observer(() => {
   const { createTaskApi, taskCount } = useTaskStore();
@@ -20,12 +23,13 @@ const TaskList: React.FC = observer(() => {
   };
 
   return (
-    <div className="overflow-hidden h-full">
-      <div className=" flex justify-between items-center prose dark:prose-invert p-5 mb-3">
-        <h3>Tasks</h3>
-        <TaskTableHeader onCreateTask={handleOpenCreateTaskModal} />
-      </div>
-      <div className="px-5 overflow-auto h-full">
+    <SidePanelContainer>
+      <HeaderContainer
+        title="Tasks"
+        element={<TaskTableHeader onCreateTask={handleOpenCreateTaskModal} />}
+      />
+
+      <SidePanelBody>
         {taskCount ? (
           <TaskTable />
         ) : (
@@ -34,8 +38,8 @@ const TaskList: React.FC = observer(() => {
             description="Add tasks to keep track of your learning goals."
           />
         )}
-      </div>
-    </div>
+      </SidePanelBody>
+    </SidePanelContainer>
   );
 });
 

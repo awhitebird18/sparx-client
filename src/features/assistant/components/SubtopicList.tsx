@@ -1,32 +1,15 @@
 import { Button } from '@/components/ui/Button';
 import assistantApi from '@/features/assistant/api';
 import { useStore } from '@/stores/RootStore';
-import { useEffect, useState } from 'react';
-import { NoteTopic } from '../types/noteTopic';
 import { ConnectionSide } from '@/features/channels/enums/connectionSide';
 import { observer } from 'mobx-react-lite';
-import { useAssistantStore } from '../hooks/useAssistantStore';
+import { NoteTopic } from '../types/noteTopic';
 
-const SubtopicList = observer(() => {
+const SubtopicList = observer(({ noteTopics }: { noteTopics: NoteTopic[] }) => {
   const { currentChannelId, handleCreateNode } = useStore('channelStore');
   const { currentWorkspaceId } = useStore('workspaceStore');
   const { addNote, selectNote } = useStore('noteStore');
   const { setMainPanel } = useStore('mainPanelStore');
-  const [noteTopics, setNoteTopics] = useState<NoteTopic[]>([]);
-  const { getSubtopics } = useAssistantStore();
-
-  useEffect(() => {
-    if (!currentChannelId || !currentWorkspaceId) return;
-
-    const fn = async () => {
-      const subtopics = await getSubtopics(currentChannelId, currentWorkspaceId);
-      if (!subtopics) return;
-
-      setNoteTopics(subtopics);
-    };
-
-    fn();
-  }, [currentChannelId, currentWorkspaceId, getSubtopics]);
 
   const handleSetUpdateModal = async (title: string) => {
     if (!currentWorkspaceId || !currentChannelId) return;
@@ -42,7 +25,8 @@ const SubtopicList = observer(() => {
   const handleCreateNote = async (title: string) => {
     if (!currentWorkspaceId || !currentChannelId) return;
 
-    setNoteTopics((subtopics) => subtopics.filter((subtopic) => subtopic.title !== title));
+    // Todo
+    // setNoteTopics((subtopics) => subtopics.filter((subtopic) => subtopic.title !== title));
     const note = await assistantApi.generateNote(title, currentChannelId, currentWorkspaceId);
     await addNote(note);
     await selectNote(note.uuid);

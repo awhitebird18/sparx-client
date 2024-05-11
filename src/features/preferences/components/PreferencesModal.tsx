@@ -19,8 +19,8 @@ const PreferencesModal: React.FC = () => {
   const listItem = (icon: ReactNode, tab: PreferenceTabs) => (
     <div
       onClick={() => setActiveTab(tab)}
-      className={`card h-9 prose dark:prose-invert rounded-md p-0 px-3 w-full hover:bg-hover text-sm text-main gap-2 flex items-center cursor-pointer overflow-hidden font-medium ${
-        activeTab === tab ? 'bg-hover' : ''
+      className={`h-9 prose dark:prose-invert rounded-md p-0 px-3 w-full hover:bg-hover text-sm text-main gap-2 flex items-center cursor-pointer overflow-hidden font-medium ${
+        activeTab === tab ? 'bg-primary-lightest' : ''
       } ${tab !== PreferenceTabs.THEMING && 'pointer-events-none opacity-30'} `}
     >
       <span className="w-6 text-base">{icon}</span>

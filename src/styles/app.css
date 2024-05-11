@@ -177,4 +177,5 @@ tr th {
 
 .collapsible[data-state='open'] > .toggler {
   transform: rotate(90deg);
+  color: white;
 }

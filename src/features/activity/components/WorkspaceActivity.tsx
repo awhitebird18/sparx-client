@@ -5,6 +5,9 @@ import { observer } from 'mobx-react-lite';
 import SkeletonPlaceholder from './ActivitySkeleton';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import { useActivityStore } from '../hooks/useActivityStore';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
 const WorkspaceActivity = observer(() => {
   const {
@@ -40,16 +43,18 @@ const WorkspaceActivity = observer(() => {
   }
 
   return (
-    <div className="h-full prose dark:prose-invert overflow-hidden">
-      <h3 className="p-5 mb-3">Workspace Activity</h3>
-      <div className="overflow-auto h-full px-5 space-y-9">
+    <SidePanelContainer>
+      <HeaderContainer title="Workspace Activity" />
+
+      <SidePanelBody className="overflow-y-scroll h-full flex flex-col gap-9">
         {displayActivities.map((activity) => (
           <ActivityRow key={activity.uuid} activity={activity} />
         ))}
-      </div>
-      {isLoading && <SkeletonPlaceholder count={1} />}
-      {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
-    </div>
+
+        {isLoading && <SkeletonPlaceholder count={1} />}
+        {hasMore && <div ref={sentinelRef} style={{ height: '1px' }}></div>}
+      </SidePanelBody>
+    </SidePanelContainer>
   );
 });
 

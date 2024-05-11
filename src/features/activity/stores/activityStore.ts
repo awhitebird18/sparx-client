@@ -37,12 +37,6 @@ export class ActivityStore {
   };
 
   get displayActivities() {
-    console.log(
-      this.activities.map((activity) => ({
-        ...activity,
-        createdAt: dayjs(activity.createdAt).fromNow(),
-      })),
-    );
     return this.activities.map((activity) => ({
       ...activity,
       createdAt: dayjs(activity.createdAt).fromNow(),

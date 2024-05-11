@@ -107,8 +107,8 @@ module.exports = {
           hover: 'hsl(var(--card-hover))',
         },
         scrollbar: {
-          thumb: 'hsl(var(--scrollbarThumb))',
-          track: 'hsl(var(--scrollbarTrack))',
+          thumb: 'hsl(var(--scrollbar-thumb))',
+          track: 'hsl(var(--scrollbar-track))',
         },
         'primary-flashcards': 'var(--primary-flashcards)',
         'border-flashcards': 'var(--border-flashcards)',
@@ -241,11 +241,10 @@ module.exports = {
       addBase({
         '::-webkit-scrollbar': {
           width: theme('spacing.2'),
-          height: theme('spacing.2'),
         },
         '::-webkit-scrollbar-track': {
-          background: theme('colors.secondary.DEFAULT'),
-          borderRadius: '1rem',
+          background: theme('colors.scrollbar.track'),
+          borderRadius: theme('borderRadius.lg'),
         },
         '::-webkit-scrollbar-thumb': {
           backgroundColor: theme('colors.scrollbar.thumb'),

@@ -1,42 +1,42 @@
 import { MainPanelComponent } from '@/layout/mainPanel/componentList';
 import {
-  BarChartFill,
-  BookFill,
-  ClipboardCheckFill,
+  BarChart,
+  Book,
+  ClipboardCheck,
   Icon,
-  PlusCircleFill,
-  SearchHeartFill,
+  PlusCircle,
+  SearchHeart,
 } from 'react-bootstrap-icons';
 
 export const navOptions: { id: MainPanelComponent; title: string; icon: Icon; color: string }[] = [
   {
     id: 'studyFlashcards',
     title: 'Study Flashcards',
-    icon: BookFill,
+    icon: Book,
     color: 'text-purple-300',
   },
   {
     id: 'addFlashcard',
     title: 'Add Flashcards',
-    icon: PlusCircleFill,
+    icon: PlusCircle,
     color: 'text-purple-300',
   },
   {
     id: 'flashcardTemplates',
     title: 'Create Template',
-    icon: ClipboardCheckFill,
+    icon: ClipboardCheck,
     color: 'text-red-300',
   },
   {
     id: 'browseFlashcards',
     title: 'Browse Flashcards',
-    icon: SearchHeartFill,
+    icon: SearchHeart,
     color: 'text-green-300',
   },
   {
     id: 'flashcardStats',
     title: 'View Stats',
-    icon: BarChartFill,
+    icon: BarChart,
     color: 'text-teal-300',
   },
 ];

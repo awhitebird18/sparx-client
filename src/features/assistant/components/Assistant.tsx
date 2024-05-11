@@ -4,20 +4,24 @@ import Navigation from './Navigation';
 import GenerateSubtopics from './GenerateSubtopics';
 import GenerateFlashcards from './GenerateFlashcards';
 import { useAssistantStore } from '../hooks/useAssistantStore';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
 const Assistant = observer(() => {
   const { screen } = useAssistantStore();
 
   return (
-    <div className="prose dark:prose-invert overflow-auto h-full">
-      <h3 className="p-5 mb-3">Assistant</h3>
-      <div className="px-5">
+    <SidePanelContainer>
+      <HeaderContainer title="Assistant" />
+
+      <SidePanelBody>
         {!screen ? <Navigation /> : null}
         {screen === 'generateSummary' ? <SummarizeArticle /> : null}
         {screen === 'generateFlashcards' ? <GenerateFlashcards /> : null}
         {screen === 'generateSubtopics' ? <GenerateSubtopics /> : null}
-      </div>
-    </div>
+      </SidePanelBody>
+    </SidePanelContainer>
   );
 });
 

@@ -10,9 +10,17 @@ export const ActivityRow = ({ activity }: Props) => {
   if (!user) return;
   const userName = `${user.firstName} ${user.lastName}`;
 
+  const userColor = user.preferences.primaryColor;
+
   return (
     <div className="flex gap-5 w-full items-start z-10 h-fit">
-      <UserAvatar size={36} userId={user.uuid} profileImage={user.profileImage} showStatus />
+      <UserAvatar
+        size={36}
+        userId={user.uuid}
+        profileImage={user.profileImage}
+        color={userColor}
+        showStatus
+      />
 
       <div className={`flex flex-col w-full gap-1`}>
         <h4 className="text-main font-medium leading-none flex items-center gap-2">

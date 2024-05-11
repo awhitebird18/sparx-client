@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/Button';
 import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useAssistantStore } from '../hooks/useAssistantStore';
+import { Collection, FileText, Lightbulb } from 'react-bootstrap-icons';
 
 const Navigation = observer(() => {
   const { activeComponent } = useStore('mainPanelStore');
@@ -12,37 +13,38 @@ const Navigation = observer(() => {
   };
 
   return (
-    <>
-      <div className="space-y-4">
-        <p className="text-secondary text-lg">Here are a list of things that I can do...</p>
-        <div className="gap-6 rounded-2xl flex">
+    <div className="space-y-4 prose dark:prose-invert">
+      <h4>Here is a list of what I can do</h4>
+      <div className="gap-6 rounded-2xl grid grid-cols-3">
+        <Button
+          onClick={() => handleNavigate('generateSubtopics')}
+          variant="outline"
+          className="w-full flex-col gap-5 h-fit p-6 rounded-3xl whitespace-normal"
+        >
+          <Lightbulb size={40} />
+          Brainstorm new subtopics
+        </Button>
+        <Button
+          onClick={() => handleNavigate('generateSummary')}
+          variant="outline"
+          className="w-full flex-col gap-5 h-fit p-6 rounded-3xl whitespace-normal"
+        >
+          <FileText size={40} />
+          Summarize Article
+        </Button>
+
+        {activeComponent?.type === 'note' ? (
           <Button
-            onClick={() => handleNavigate('generateSubtopics')}
-            variant="outline-primary"
-            className="h-36 w-full"
+            variant="outline"
+            onClick={() => handleNavigate('generateFlashcards')}
+            className="w-full flex-col gap-5 h-fit p-6 rounded-3xl whitespace-normal"
           >
-            Brainstorm new subtopics
+            <Collection size={40} />
+            Generate note flashcards
           </Button>
-          <Button
-            onClick={() => handleNavigate('generateSummary')}
-            variant="outline-primary"
-            className="h-36 w-full"
-          >
-            Summarize article
-          </Button>
-        </div>
+        ) : null}
       </div>
-      {activeComponent?.type === 'note' ? (
-        <div className="mt-12 space-y-4">
-          <h3>For this note we can...</h3>
-          <div className="gap-4  flex flex-col">
-            <Button variant="outline-primary" onClick={() => handleNavigate('generateFlashcards')}>
-              Generate flashcards
-            </Button>
-          </div>
-        </div>
-      ) : null}
-    </>
+    </div>
   );
 });
 

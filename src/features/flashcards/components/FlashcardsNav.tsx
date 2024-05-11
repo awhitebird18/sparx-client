@@ -4,6 +4,9 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import { navOptions } from '../utils/flashcardNavigationOptions';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
 const FlashcardsNav = observer(() => {
   const { getCardCountDueForChannel, setIsLoading, getFlashcardsDueToday } =
@@ -35,9 +38,10 @@ const FlashcardsNav = observer(() => {
   ]);
 
   return (
-    <div className="w-full prose dark:prose-invert">
-      <h3 className="p-5 mb-3">Quick links</h3>
-      <div className="px-5 space-y-5">
+    <SidePanelContainer>
+      <HeaderContainer title="Quick links" />
+
+      <SidePanelBody className="grid gap-6 h-fit grid-cols-3">
         {navOptions.map((option) => {
           const Icon = option.icon;
 
@@ -45,18 +49,16 @@ const FlashcardsNav = observer(() => {
             <Button
               key={option.id}
               variant="ghost"
-              className="flex items-center justify-between p-2 flex-1 w-full h-min"
+              className="card-base flex flex-col h-fit items-center justify-start gap-4 p-6 rounded-3xl prose dark:prose-invert"
               onClick={() => handleOpenMainPanel(option.id)}
             >
-              <div className="flex gap-3 items-center text-left prose dark:prose-invert text-main">
-                {<Icon />}
-                <p className="text-main leading-none !m-0">{option.title}</p>
-              </div>
+              <Icon size={28} className={option.color} />
+              <h4>{option.title}</h4>
             </Button>
           );
         })}
-      </div>
-    </div>
+      </SidePanelBody>
+    </SidePanelContainer>
   );
 });
 

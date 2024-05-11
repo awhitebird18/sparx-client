@@ -7,7 +7,6 @@ import ChannelIntroduction from './ChannelIntroduction';
 import Editor from '@/features/messageInput/Editor';
 import UsersTypingDisplay from './UsersTypingDisplay';
 import { Message as MessageType } from '@/features/messages/types';
-import ContentLayout from '@/layout/contentContainer/ContentLayout';
 import { MessageSkeleton } from './MessageSkeleton';
 import useChannelSocket from '@/sockets/useChannelSocket';
 import MessageGroup from './MessageGroup';
@@ -15,6 +14,9 @@ import useMessageHandler from '../hooks/useMessageHandler';
 import useMessageSocket from '@/sockets/useMessageSocket';
 import useChatroomSocket from '@/sockets/useChatroomSocket';
 import useAutoScroll from '../hooks/useAutoScroll';
+import SidePanelContainer from '@/layout/sidePanel/SidePanelContainer';
+import HeaderContainer from '@/layout/sidePanel/HeaderContainer';
+import SidePanelBody from '@/layout/sidePanel/SidePanelBody';
 
 const ChatRoom: React.FC = observer(() => {
   const { isLoading, groupedMessagesWithUser, fetchMessagesApi, setPage } =
@@ -43,42 +45,40 @@ const ChatRoom: React.FC = observer(() => {
   }, [currentChannelId]);
 
   return (
-    <div className="flex flex-col h-full overflow-hidden py-5">
-      <div className="prose dark:prose-invert px-5 mb-3">
-        <h3 className="mb-5">Discussions</h3>
-      </div>
-      <ContentLayout disablePadding>
-        <div className="relative flex flex-col flex-1 overflow-hidden">
-          <div
-            className="overflow-auto flex flex-col-reverse justify-start mb-2 flex-1 pr-2"
-            ref={scrollRef}
-          >
-            <div ref={bottomRef} className="bg-red-400" />
+    <SidePanelContainer>
+      <HeaderContainer title="Discussions" />
 
-            {groupedMessagesWithUser.map(
-              ({ date, messages }: { date: string; messages: MessageType[] }) => {
-                return <MessageGroup key={date} date={date} messages={messages} />;
-              },
-            )}
+      <SidePanelBody className="pb-6 px-0">
+        <div
+          className="overflow-y-auto flex flex-col-reverse justify-start mb-2 flex-1"
+          ref={scrollRef}
+        >
+          <div ref={bottomRef} className="bg-red-400" />
 
-            {!isLoading ? (
-              <ChannelIntroduction />
-            ) : (
-              [1, 2, 3].map((key) => <MessageSkeleton key={key} />)
-            )}
-          </div>
+          {groupedMessagesWithUser.map(
+            ({ date, messages }: { date: string; messages: MessageType[] }) => {
+              return <MessageGroup key={date} date={date} messages={messages} />;
+            },
+          )}
 
+          {!isLoading ? (
+            <ChannelIntroduction />
+          ) : (
+            [1, 2, 3].map((key) => <MessageSkeleton key={key} />)
+          )}
+        </div>
+        <div className="px-5">
           <Editor
             placeholder={`Message ${currentChannel?.name}`}
             config={editorConfig}
             onSubmit={sendMessage}
             onChange={handleTyping}
           />
-
-          <UsersTypingDisplay />
         </div>
-      </ContentLayout>
-    </div>
+
+        <UsersTypingDisplay />
+      </SidePanelBody>
+    </SidePanelContainer>
   );
 });
 

@@ -31,8 +31,8 @@ const SearchInput = ({
         disabled={disabled}
       />
 
-      <div className="absolute left-3 top-auto text-base text-secondary">
-        <Search size={12} className="text-muted mt-0.5" />
+      <div className="absolute left-3 top-auto text-base text-main">
+        <Search size={12} className="mt-0.5" />
       </div>
       {value ? (
         <Button

@@ -229,8 +229,6 @@ export class ChannelStore {
         bottom: node.y + nodeHeight,
       };
 
-      console.log(coordinates, nodeBox, node.name);
-
       if (this.isOverlapping(coordinates, nodeBox)) {
         const channelCoordinates = this.getUpdatedChannelPosition(node.uuid, ConnectionSide.RIGHT);
 

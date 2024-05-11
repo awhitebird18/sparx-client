@@ -24,7 +24,6 @@ const TaskTable = observer(() => {
             <Checkbox
               checked={value}
               onClick={() => {
-                console.log('clicked', value);
                 toggleTaskApi(task.uuid);
               }}
               className="w-4 h-4 mt-1.5"

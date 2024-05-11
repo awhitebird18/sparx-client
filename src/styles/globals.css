@@ -105,8 +105,8 @@
     --background: 226 13% 12%;
     --foreground: 226 14% 22%;
 
-    --scrollbarThumb: 226 20%, 19%;
-    --scrollbarTrack: 232 25% 16%;
+    --scrollbar-thumb: 226 16% 24%;
+    --scrollbar-track: 226 16% 18%;
 
     --hover: 226 14% 16%;
 

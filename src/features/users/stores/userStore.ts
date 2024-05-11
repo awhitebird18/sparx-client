@@ -9,13 +9,13 @@ import { ChannelSubscription } from '@/features/channels/types';
 
 export class UserStore {
   users: User[] = [];
-  isLoading = false;
+  isLoading = true;
   onlineUsers: OnlineUser[] = [];
   currentPage = 1;
   usersPerPage = 10;
   searchValue = '';
-  completionFilter: CompletionStatus | null = null;
-  privilegesFilter: Privileges = Privileges.ALL;
+  completionFilter: CompletionStatus | '' = '';
+  privilegesFilter: Privileges | '' = '';
   hasMore = true;
   userOnlineStatus = UserStatus.ONLINE;
   currentUserId: string | undefined = undefined;
@@ -62,11 +62,11 @@ export class UserStore {
     this.currentProfileUserId = userId;
   };
 
-  setPrivilegesFilter = (value: Privileges) => {
+  setPrivilegesFilter = (value: Privileges | '') => {
     this.privilegesFilter = value;
   };
 
-  setCompletionFilter = (value: CompletionStatus) => {
+  setCompletionFilter = (value: CompletionStatus | '') => {
     this.completionFilter = value;
   };
 
@@ -100,7 +100,8 @@ export class UserStore {
 
   setFilterToDefault = () => {
     this.setSearchValue('');
-    this.setPrivilegesFilter(Privileges.ALL);
+    this.setCompletionFilter('');
+    this.setPrivilegesFilter('');
   };
 
   // Getters

@@ -40,7 +40,7 @@ const ThemeOption = ({ user, theme, isSelected }: ThemeOptionProps) => {
 
   return (
     <div
-      className={`card flex justify-between items-center border border-border rounded-lg overflow-hidden flex-1 w-full card p-3 gap-4 ${
+      className={`flex justify-between items-center border border-border rounded-lg overflow-hidden flex-1 w-full p-3 gap-4 ${
         isSelected && 'border-borderDark bg-hover'
       }`}
     >

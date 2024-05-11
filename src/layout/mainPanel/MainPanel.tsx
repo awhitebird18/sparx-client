@@ -3,6 +3,7 @@ import { useStore } from '@/stores/RootStore';
 import { observer } from 'mobx-react-lite';
 import { X } from 'react-bootstrap-icons';
 import mainPanelComponents from './componentList';
+import SuspenseWrapper from '@/components/SuspenseWrapper';
 
 export const MainPanel = observer(() => {
   const { activeComponent, closeMainPanel } = useStore('mainPanelStore');
@@ -28,7 +29,7 @@ export const MainPanel = observer(() => {
             <X size={34} />
           </Button>
         </div>
-        {Component()}
+        <SuspenseWrapper>{Component()}</SuspenseWrapper>
       </div>
     </div>
   );

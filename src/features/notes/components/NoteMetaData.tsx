@@ -19,7 +19,7 @@ const NoteMetadata = observer(() => {
   };
 
   return (
-    <div className="h-full space-y-8 px-4">
+    <div className="h-full space-y-8 p-4">
       <div className="flex items-center justify-between">
         <p className="font-semibold">Is private</p>
         <Switch

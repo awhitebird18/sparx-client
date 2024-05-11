@@ -1,5 +1,4 @@
 import SearchInput from '@/components/ui/SearchInput';
-import { Alarm, ChevronDoubleRight, PlayCircle, StarFill } from 'react-bootstrap-icons';
 import {
   Select,
   SelectContent,
@@ -10,52 +9,39 @@ import {
 import { CompletionStatus } from '@/features/channels/enums/completionStatus';
 import { Privileges } from '../enums/privileges';
 import { useStore } from '@/stores/RootStore';
+import { observer } from 'mobx-react-lite';
 
-const UserFilters = () => {
-  const { setSearchValue, searchValue, setCompletionFilter, setPrivilegesFilter } =
-    useStore('userStore');
+const UserFilters = observer(() => {
+  const {
+    setSearchValue,
+    searchValue,
+    setCompletionFilter,
+    completionFilter,
+    setPrivilegesFilter,
+    privilegesFilter,
+  } = useStore('userStore');
 
   return (
     <div className="flex gap-2 items-center">
-      <Select onValueChange={setCompletionFilter}>
-        <SelectTrigger className="w-32 h-8 rounded-lg text-muted">
+      <Select onValueChange={setCompletionFilter} value={completionFilter}>
+        <SelectTrigger className="w-32 h-8 rounded-lg">
           <SelectValue placeholder="Completion" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">
-            <div className="flex gap-3 items-center">
-              <ChevronDoubleRight /> All statuses
-            </div>
-          </SelectItem>
-          <SelectItem value={CompletionStatus.Skip}>
-            <div className="flex gap-3 items-center">
-              <ChevronDoubleRight /> Skip
-            </div>
-          </SelectItem>
-          <SelectItem value={CompletionStatus.InProgress}>
-            <div className="flex gap-3 items-center">
-              <PlayCircle /> In progress
-            </div>
-          </SelectItem>
-          <SelectItem value={CompletionStatus.OnHold}>
-            <div className="flex gap-3 items-center">
-              <Alarm /> On hold
-            </div>
-          </SelectItem>
-          <SelectItem value={CompletionStatus.Complete}>
-            <div className="flex gap-3 items-center">
-              <StarFill className="text-yellow-400" />
-              Complete
-            </div>
-          </SelectItem>
+          <SelectItem value="">All statuses</SelectItem>
+          <SelectItem value={CompletionStatus.Skip}>Skip</SelectItem>
+          <SelectItem value={CompletionStatus.InProgress}>In progress</SelectItem>
+          <SelectItem value={CompletionStatus.OnHold}>On hold</SelectItem>
+          <SelectItem value={CompletionStatus.Complete}>Complete</SelectItem>
         </SelectContent>
       </Select>
-      <Select onValueChange={setPrivilegesFilter}>
-        <SelectTrigger className="w-28 h-8 rounded-lg text-muted">
+
+      <Select onValueChange={setPrivilegesFilter} value={privilegesFilter}>
+        <SelectTrigger className="w-28 h-8 rounded-lg">
           <SelectValue placeholder="Privileges" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={Privileges.ALL}>All users</SelectItem>
+          <SelectItem value="">All users</SelectItem>
           <SelectItem value={Privileges.ADMIN}>Admin</SelectItem>
           <SelectItem value={Privileges.MEMBER}>Member</SelectItem>
         </SelectContent>
@@ -65,6 +51,6 @@ const UserFilters = () => {
       </div>
     </div>
   );
-};
+});
 
 export default UserFilters;

@@ -27,7 +27,7 @@ const ProfileImageSelector: React.FC = () => {
 
   return (
     <div
-      className={`card relative bg-${selectedColor}-500 mx-auto flex-shrink-0 h-80 w-80 w-full shadow-md border border-border rounded-xl justify-center items-center`}
+      className={`card relative bg-${selectedColor}-500 mx-auto flex-shrink-0 h-80 w-80 shadow-md border border-border rounded-xl justify-center items-center`}
     >
       {selectedImage && (
         <img src={selectedImage} className="w-full h-full object-cover rounded-xl" alt="Profile" />
