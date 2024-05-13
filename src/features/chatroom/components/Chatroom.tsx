@@ -44,40 +44,39 @@ const ChatRoom: React.FC = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChannelId]);
 
+  console.log(isLoading);
+
   return (
-    <SidePanelContainer>
-      <HeaderContainer title="Discussions" />
+    <SidePanelContainer className="py-5 pb-7 gap-2">
+      <HeaderContainer className="mb-5" title="Discussions" />
 
-      <SidePanelBody className="pb-6 px-0">
-        <div
-          className="overflow-y-auto flex flex-col-reverse justify-start mb-2 flex-1"
-          ref={scrollRef}
-        >
-          <div ref={bottomRef} className="bg-red-400" />
+      <SidePanelBody
+        ref={scrollRef}
+        className="overflow-y-auto flex flex-col-reverse justify-start flex-1 pr-5"
+      >
+        <div ref={bottomRef} />
 
-          {groupedMessagesWithUser.map(
-            ({ date, messages }: { date: string; messages: MessageType[] }) => {
-              return <MessageGroup key={date} date={date} messages={messages} />;
-            },
-          )}
-
-          {!isLoading ? (
-            <ChannelIntroduction />
-          ) : (
-            [1, 2, 3].map((key) => <MessageSkeleton key={key} />)
-          )}
-        </div>
-        <div className="px-5">
-          <Editor
-            placeholder={`Message ${currentChannel?.name}`}
-            config={editorConfig}
-            onSubmit={sendMessage}
-            onChange={handleTyping}
-          />
-        </div>
+        {groupedMessagesWithUser.map(
+          ({ date, messages }: { date: string; messages: MessageType[] }) => {
+            return <MessageGroup key={date} date={date} messages={messages} />;
+          },
+        )}
+        {!isLoading ? (
+          <ChannelIntroduction />
+        ) : (
+          [1, 2, 3].map((key) => <MessageSkeleton key={key} />)
+        )}
 
         <UsersTypingDisplay />
       </SidePanelBody>
+
+      <Editor
+        placeholder={`Message ${currentChannel?.name}`}
+        config={editorConfig}
+        onSubmit={sendMessage}
+        onChange={handleTyping}
+        className="mx-7"
+      />
     </SidePanelContainer>
   );
 });

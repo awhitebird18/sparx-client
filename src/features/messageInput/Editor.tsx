@@ -15,24 +15,29 @@ import SubmitButtonPlugin from './plugins/SubmitButtonPlugin';
 import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 import { Send } from 'react-bootstrap-icons';
 import { OnChangePlugin } from './plugins/OnChangePlugin';
+import { cn } from '@/utils/utils';
 
 function Placeholder({ value }: { value?: string }) {
   return <div className="editor-placeholder text-muted-foreground">{value}</div>;
 }
 
 type Props = {
+  className?: string;
   placeholder?: string;
   config: InitialConfigType;
   onSubmit: (val: string) => void;
   onChange?: (editorState: string, textContent: string) => void;
 };
 
-export default function Editor({ placeholder, config, onSubmit, onChange }: Props) {
+export default function Editor({ className, placeholder, config, onSubmit, onChange }: Props) {
   return (
     <LexicalComposer initialConfig={config}>
       <div
         id="focus-ring"
-        className="transition-colors border border-border shadow-sm mt-2 pb-2 rounded-md relative"
+        className={cn(
+          'transition-colors border border-border shadow-sm mt-2 pb-2 rounded-md relative',
+          className,
+        )}
       >
         <div id="editor-container">
           <TopToolbarPlugin />

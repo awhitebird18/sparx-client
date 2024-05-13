@@ -10,7 +10,7 @@ interface MessageGroupProps {
 }
 
 const MessageGroup: React.FC<MessageGroupProps> = ({ date, messages }) => (
-  <div className="relative px-5 pr-3">
+  <div className="relative">
     <div className="w-full flex my-2 sticky top-2 z-30">
       <div className="bg-border h-px absolute top-[50%] left-0 w-[95%] left-1/2 -translate-x-1/2 z-30 opacity-40" />
       <Badge
